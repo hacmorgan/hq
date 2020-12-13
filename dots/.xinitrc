@@ -38,8 +38,12 @@ picom &!
 # Set numlock to be on 
 numlockx &
 
+# arrange displays
+use-both-screens
+
 # set backgrounds
-feh --bg-center ~/src/hq/etc/wallpapers/eboy_tok.png
+feh --bg-center ~/src/hq/etc/wallpapers/eboy_tok.png \
+    --bg-center ~/src/hq/etc/wallpapers/eboy_ny.png
 
 # set keyboard params
 xset r rate 250 50

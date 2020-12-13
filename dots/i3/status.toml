@@ -29,7 +29,36 @@ interval = 1
 format = "{barchart} {utilization}% {frequency}GHz"
 
 [[block]]
+block = "nvidia_gpu"
+label = "GTX 980"
+show_memory = true
+show_clocks = true
+interval = 1
+
+[[block]]
+block = "temperature"
+collapsed = false
+interval = 10
+format = "{min}° min, {max}° max, {average}° avg"
+
+[[block]]
+block = "net"
+device = "enp4s0"
+ip = true
+speed_down = true
+speed_up = true
+interval = 1
+use_bits = false
+
+[[block]]
 block = "sound"
+name = "<alsa_input.pci-0000_06_04.0.analog-stereo>"
+format = "{output_name} {volume}"
+
+[[block]]
+block = "sound"
+name = "<alsa_output.pci-0000_0a_00.1.hdmi-stereo.monitor>"
+format = "{output_name} {volume}"
 
 [[block]]
 block = "time"
