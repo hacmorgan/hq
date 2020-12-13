@@ -1,5 +1,7 @@
-[theme]
+
 icons = "awesome"
+
+[theme]
 name = "slick"
 [theme.overrides]
 info_bg = "#ad29c4"
@@ -25,12 +27,6 @@ format_swap = "{SUp}%"
 block = "cpu"
 interval = 1
 format = "{barchart} {utilization}% {frequency}GHz"
-
-[[block]]
-block = "temperature"
-collapsed = false
-interval = 10
-format = "{min}° min, {max}° max, {average}° avg"
 
 [[block]]
 block = "sound"
