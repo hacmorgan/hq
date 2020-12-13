@@ -51,14 +51,22 @@ interval = 1
 use_bits = false
 
 [[block]]
+driver = "pulseaudio"
 block = "sound"
-name = "<alsa_input.pci-0000_06_04.0.analog-stereo>"
-format = "{output_name} {volume}"
 
-[[block]]
-block = "sound"
-name = "<alsa_output.pci-0000_0a_00.1.hdmi-stereo.monitor>"
-format = "{output_name} {volume}"
+# TODO: get dual sound control working
+
+# [[block]]
+# block = "sound"
+# # name = "<alsa_input.pci-0000_06_04.0.analog-stereo>"
+# device = "hw:2,0"
+# format = "{output_name} {volume}"
+
+# [[block]]
+# block = "sound"
+# # name = "<alsa_output.pci-0000_0a_00.1.hdmi-stereo.monitor>"
+# device = "hw:0,0"
+# format = "{output_name} {volume}"
 
 [[block]]
 block = "time"
