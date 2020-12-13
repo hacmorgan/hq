@@ -48,6 +48,10 @@ feh --bg-center ~/src/hq/etc/wallpapers/eboy_tok.png \
 # set keyboard params
 xset r rate 250 50
 
+# constrain wacom pad to rightmost screen
+xsetwacom --set $( xsetwacom list devices | grep stylus | sed 's#.*id: \([0-9]*\).*#\1#' ) \
+          maptooutput 1920x1080+1920+0
+
 # start the emacs server. disown so that exiting x session doesn't kill emacs
 emacs --daemon &!
 
