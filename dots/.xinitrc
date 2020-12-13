@@ -39,7 +39,7 @@ picom &!
 numlockx &
 
 # set backgrounds
-feh --bg-center ~/src/useful-scripts/arch-desktop/eboy_tok.png
+feh --bg-center ~/src/hq/etc/wallpapers/eboy_tok.png
 
 # set keyboard params
 xset r rate 250 50
