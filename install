@@ -48,7 +48,8 @@ function install_scripts()
     for script in $dname/scripts/*; do
         if [[ -z $dry_run ]]; then
             sudo cp $script $INSTALL_PREFIX/bin/
-        elif [[ -n $dry_run || -n $verbose ]]; then
+        fi
+        if [[ -n $dry_run || -n $verbose ]]; then
             say "$script -> $INSTALL_PREFIX/bin/"
         fi
     done
