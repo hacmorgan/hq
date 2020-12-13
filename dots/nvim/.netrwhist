@@ -1,0 +1,10 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =8
+let g:netrw_dirhist_8='/home/hamish/.config/nvim'
+let g:netrw_dirhist_7='/home/hamish/.config'
+let g:netrw_dirhist_6='/home/hamish'
+let g:netrw_dirhist_5='/home/hamish/src'
+let g:netrw_dirhist_4='/home/hamish/src/projects'
+let g:netrw_dirhist_3='/home/hamish/src/projects/machine-learning'
+let g:netrw_dirhist_2='/home/hamish/src/projects/machine-learning/turntable'
+let g:netrw_dirhist_1='/home/hamish/src/projects/machine-learning/turntable/training'

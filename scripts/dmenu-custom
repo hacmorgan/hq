@@ -1,0 +1,154 @@
+#!/usr/bin/env bash
+
+##  This script is intended to be used with keybindings
+
+function get-choice()
+{
+    options="$1"
+    echo $options | tr ',' '\n' | dmenu 
+}
+
+
+function main-run ()
+{
+    function power-run()
+    {
+        local options="shut down,reboot"
+        local selected_option="$( get-choice "$options" )"
+        case "$selected_option" in
+            "shut down")
+                sudo shutdown -P now ;;
+            "reboot")
+                sudo reboot ;;
+        esac
+    }
+    
+    function edit-configs-run ()
+    {
+        local configs="zsh,i3,i3status,emacs,picom,termite,xinit"
+        local selected_config="$( get-choice "$configs" )"
+        case "$selected_config" in
+            "zsh")
+                /home/hamish/src/useful-scripts/generic/em ~/.zshrc ;;
+            "i3")
+                /home/hamish/src/useful-scripts/generic/em ~/.config/i3/config ;;
+            "i3status")
+                /home/hamish/src/useful-scripts/generic/em ~/.config/i3/status.toml ;;
+            "dwm")
+                /home/hamish/src/useful-scripts/generic/em ~/src/foss/dwm/config.h ;;
+            "emacs")
+                /home/hamish/src/useful-scripts/generic/em ~/.emacs.d/config.org ;;
+            "picom")
+                /home/hamish/src/useful-scripts/generic/em ~/.config/picom.conf ;;
+            "sakura")
+                /home/hamish/src/useful-scripts/generic/em ~/.config/sakura/sakura.conf ;;
+            "termite")
+                /home/hamish/src/useful-scripts/generic/em ~/.config/termite/config ;;
+            "st")
+                /home/hamish/src/useful-scripts/generic/em ~/src/foss/st/config.h ;;
+            "xinit")
+                /home/hamish/src/useful-scripts/generic/em ~/.xinitrc ;;
+        esac
+    }
+
+    function screenshot-run()
+    {
+        local screenshot_types="select region,full screen,select region (delay),full screen (delay)"
+        local selected_type="$( get-choice "$screenshot_types" )"
+        case "$selected_type" in
+            "select region")
+                scrot -s -e 'mv $f /tmp/' ;;
+            "full screen")
+                scrot -e 'mv $f /tmp/' ;;
+        esac
+    }
+
+    # TODO - determine appropriate values
+    function keyboard-multiplier-run()
+    {
+        function select-delay()
+        {
+            local delays="150ms,250ms,500ms"
+            local selected_delay="$( get-choice "$delays" | sed 's/ms//g' )"
+            local current_rate=$(xset -q | grep delay | cut -d: -f3 | cut -d ' ' -f3)
+            xset r rate $selected_delay $current_rate
+        }
+        function select-rate()
+        {
+            local rates="25,50,100,200"
+            local selected_rate="$( get-choice "$rates" )"
+            local current_delay=$(xset -q | grep delay | cut -d: -f2 | cut -d ' ' -f3)
+            xset r rate $current_delay $selected_rate
+        }
+        
+        local configurable_params="delay,rate"
+        local selected_param="$( get-choice "$configurable_params" )"
+        case "$selected_param" in
+            "delay")
+                select-delay ;;
+            "rate")
+                select-rate ;;
+        esac
+    }
+
+    function mouse-speed-run()
+    {
+        function select-acceleration()
+        {
+            local delays="150ms,250ms,500ms"
+            local selected_delay="$( get-choice "$delays" | sed 's/ms//g' )"
+            local current_rate=$(xset -q | grep delay | cut -d: -f3 | cut -d ' ' -f3)
+            xset r rate $selected_delay $current_rate
+        }
+        function select-threshold()
+        {
+            local rates="25,50,100,200"
+            local selected_rate="$( get-choice "$rates" )"
+            local current_delay=$(xset -q | grep delay | cut -d: -f2 | cut -d ' ' -f3)
+            xset r rate $current_delay $selected_rate
+        }
+        
+        local configurable_params="acceleration,threshold,restore defaults"
+        local selected_param="$( get-choice "$configurable_params" )"
+        case "$selected_param" in
+            "acceleration")
+                select-acceleration ;;
+            "threshold")
+                select-threshold ;;
+            "restore defaults")
+                xset m default
+        esac
+    }
+
+    function picom-run()
+    {
+        local picom_options="turn on,turn off"
+        local selected_option="$( get-choice "$picom_options" )"
+        case "$selected_option" in
+            "turn on")
+                [ $(ps -aux | grep picom | wc -l) -le 1 ] && exec picom ;;
+            "turn off")
+                killall picom ;;
+        esac
+    }
+       
+    subsetting_options="power,screenshot,keyboard multiplier,edit configs,picom"
+    subsetting="$( get-choice "$subsetting_options" )"
+    echo $subsetting
+    case "$subsetting" in
+        "power")
+            power-run ;;
+        "edit configs")
+            edit-configs-run ;;
+        "keyboard multiplier")
+            keyboard-multiplier-run ;;
+        "screenshot")
+            screenshot-run ;;
+        "picom")
+            picom-run ;;
+    esac
+    
+}
+
+
+main-run

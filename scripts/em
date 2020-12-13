@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# A simple script to open a given file in emacs,
+# and detatch the process from the parent terminal 
+
+file="$(realpath $1)"
+echo "$file" 1>&2
+
+[[ -z "$2" ]] || echo "warning: emacsclient can only open one file at a time" 1>&2
+
+emacsclient -a '' -c "$file" &!

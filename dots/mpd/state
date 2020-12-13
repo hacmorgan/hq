@@ -1,0 +1,32 @@
+sw_volume: 98
+audio_device_state:1:mpd alsamixer-output
+audio_device_state:1:toggle_visualizer
+state: pause
+current: 15
+time: 224.738000
+random: 0
+repeat: 0
+single: 0
+consume: 0
+crossfade: 0
+mixrampdb: 0.000000
+mixrampdelay: -1.000000
+playlist_begin
+0:SD Audio/Hilltop Hoods/The Hard Road_ Restrung/01 The Hard Road Restrung.m4a
+1:SD Audio/Hilltop Hoods/The Hard Road_ Restrung/02 Stopping All Stations Restrung.m4a
+2:SD Audio/Hilltop Hoods/The Hard Road_ Restrung/03 Conversations From A Speakeasy.m4a
+3:SD Audio/Hilltop Hoods/The Hard Road_ Restrung/04 An Audience With The Devil Restrung.m4a
+4:SD Audio/Hilltop Hoods/The Hard Road_ Restrung/05 Monster's Ball Restrung.m4a
+5:SD Audio/Hilltop Hoods/The Hard Road_ Restrung/06 Breathe Restrung.m4a
+6:SD Audio/Hilltop Hoods/The Hard Road_ Restrung/07 Another Great Intro.m4a
+7:SD Audio/Hilltop Hoods/The Hard Road_ Restrung/08 What A Great Night Restrung.m4a
+8:SD Audio/Hilltop Hoods/The Hard Road_ Restrung/09 Obese Lowlifes Restrung.m4a
+9:SD Audio/Hilltop Hoods/The Hard Road_ Restrung/10 City Of Light Restrung.m4a
+10:SD Audio/Hilltop Hoods/The Hard Road_ Restrung/11 Clown Prince Restrung.m4a
+11:SD Audio/Hilltop Hoods/The Hard Road_ Restrung/12 The Captured Vibe Restrung.m4a
+12:SD Audio/Hilltop Hoods/The Hard Road_ Restrung/13 Recapturing The Vibe Restrung.m4a
+13:SD Audio/Hilltop Hoods/The Hard Road_ Restrung/14 Roll On Up Restrung.m4a
+14:MP3/The Funkoars/The Greatest Hits/You Know It.mp3
+15:MP3/The Funkoars/The Greatest Hits/The Symphony.mp3
+16:MP3/The Funkoars/The Greatest Hits/Da Na Na.mp3
+playlist_end

@@ -1,0 +1,59 @@
+Host work
+    User hamish
+    HostName 10.0.0.106
+
+Host thinkpad
+    User hamish
+    HostName 10.0.0.80 
+
+Host pelicomp
+    User hamish
+    HostName 10.0.0.91
+
+Host pelicomp_eth
+    User hamish
+    HostName 10.0.0.90
+
+Host pi
+    User hamish
+    HostName 10.0.0.84
+    
+Host processor
+	User processor
+	HostName 10.0.0.86
+
+Host cse
+    User z5115698
+    Hostname cse.unsw.edu.au
+
+Host freebsd
+    User hamish
+    Hostname 10.0.0.83
+
+Host enzo
+    User hamish
+    Hostname 10.0.0.67
+
+Host collab
+    User collab
+    Hostname 10.0.0.67
+
+Host hippo
+	HostName 10.137.4.1
+	User hmo
+
+Host rhino
+	HostName 10.137.4.2
+	User hmo
+
+Host dingo
+	HostName 10.137.4.3
+	User hmo
+
+Host gecko
+	HostName 10.137.4.4
+	User hmo
+
+Host buffalo
+	HostName 10.137.4.5
+	User hmo

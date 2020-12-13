@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+
+#  simple install script to install config files and scripts
+
+
+INSTALL_PREFIX=/usr/local
+
+
+
