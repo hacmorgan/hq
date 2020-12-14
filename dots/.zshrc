@@ -115,6 +115,9 @@ alias deactivate-metashape='/opt/metashape-pro/metashape.sh --deactivate'
 #################
 #    EXPORTS    #
 #################
+path+=('/home/hamish/.local/bin')
+export PATH
+
 export EDITOR="/usr/bin/nvim"
 
 export MPD_HOST="localhost"
