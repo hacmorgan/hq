@@ -113,6 +113,9 @@ alias ll='ls -la'
 #################
 #    EXPORTS    #
 #################
+path+=('/home/hamish/.local/bin')
+export PATH
+
 export EDITOR="/usr/bin/nvim"
 
 export MPD_HOST="localhost"
