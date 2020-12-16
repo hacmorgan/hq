@@ -1,6 +1,6 @@
-Host work
+Host bruno-abyss
     User hamish
-    HostName 10.0.0.106
+    HostName 10.137.5.46
 
 Host thinkpad
     User hamish
