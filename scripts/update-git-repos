@@ -8,6 +8,7 @@ batch update all repos listed in ~/src/hq/etc/repos.txt
 
 options:
     --help; show this message and exit
+    --pull; pull latest changes in each repo
     --status; run git status in each repo, don't commit anything
 EOF
 }
@@ -17,6 +18,8 @@ function _git()
 {
     if [[ -n "$status" ]]; then
         git status
+    elif [[ -n "$pull" ]]; then
+        git pull
     else
         git commit --all --message "automated update"
     fi
@@ -51,6 +54,8 @@ function parse_args()
                 _help   ; exit 0 ;;
             "--status")
                 status="true" ;;
+            "--pull")
+                pull="true" ;;
         esac
     done
 }
