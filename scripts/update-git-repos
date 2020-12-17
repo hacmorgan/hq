@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+
+function _help()
+{
+    cat <<EOF 1>&2
+batch update all repos listed in ~/src/hq/etc/repos.txt
+
+options:
+    --help; show this message and exit
+    --status; run git status in each repo, don't commit anything
+EOF
+}
+
+
+function _git()
+{
+    if [[ -n "$status" ]]; then
+        git status
+    else
+        git commit --all --message "automated update"
+    fi
+}
+
+
+function print_banner()
+{
+    function underline()
+    {
+        yes '#' | tr '\n' '#' | head -c"$1"
+    }
+    
+    message="updating repo: $( basename $( pwd ) )"
+    cat <<EOF
+
+
+##$( underline ${#message} )##
+# $message #
+##$( underline ${#message} )##
+
+EOF
+}
+
+
+function parse_args()
+{
+    args=( "$@" )
+    for i in ${!args[@]}; do
+        case "${args[$i]}" in
+            "--help")
+                _help   ; exit 0 ;;
+            "--status")
+                status="true" ;;
+        esac
+    done
+}
+
+
+parse_args "$@"
+
+for repo in $( cat ~/src/hq/etc/repos.txt ); do
+    pushd "$repo" > /dev/null
+    print_banner
+    _git
+    popd > /dev/null
+done
