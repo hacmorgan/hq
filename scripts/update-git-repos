@@ -22,6 +22,7 @@ function _git()
         git pull
     else
         git commit --all --message "automated update"
+        git push
     fi
 }
 
