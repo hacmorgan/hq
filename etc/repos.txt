@@ -1,1 +1,3 @@
 /home/hamish/src/hq
+/home/hamish/src/notes
+/home/hamish/src/projects/8-bit-cpu
