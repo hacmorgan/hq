@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+
+source $( type -p bedrock-application-util )
+source $( type -p bedrock-video-util )
+
+
+function usage()
+{
+    cat <<EOF >&2
+$( bedrock-app-swiss-usage operation )
+EOF
+    exit
+}
+
+
+function operation-description() { echo "something"; }
+
+function operation-usage() { echo "something"; }
+
+function operation-examples() { echo "something"; }
+
+function operation-options() { echo "something"; }
+
+function operation-run() { echo "something"; }
+
+
+bedrock-app-swiss-init "$@"
+bedrock-app-swiss-run "$@"
