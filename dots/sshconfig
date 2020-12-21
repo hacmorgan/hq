@@ -32,11 +32,11 @@ Host freebsd
 
 Host enzo
     User hamish
-    Hostname 10.0.0.67
+    Hostname 10.0.0.72
 
 Host collab
     User collab
-    Hostname 10.0.0.67
+    Hostname 10.0.0.72
 
 Host hippo
 	HostName 10.137.4.1
