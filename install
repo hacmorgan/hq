@@ -4,10 +4,6 @@
 ##  simple install script to install config files and scripts
 
 
-INSTALL_PREFIX=/usr/local
-
-
-
 function say()
 {
     echo "$@" 1>&2
@@ -37,11 +33,16 @@ functionality:
 - scripts (in 'scripts' directory) are installed to $INSTALL_PREFIX/bin
   - this invokes sudo, be warned
 - configs (in 'dots' directory) are installed to ~/.config/ unless:
-  - they are present in '.homedots', in which case they are installed to ~/ 
+  - they are present in 'etc/homedots', in which case they are installed to ~/ 
   - 'dots/sshconfig' is installed to ~/.ssh/config
 
 EOF
 }
+
+
+INSTALL_PREFIX=/usr/local
+
+dname="$( dirname $0 )"
 
 
 function install_scripts()
@@ -75,14 +76,14 @@ function install_dots()
 					fi
                 else
                     rm ~/.ssh/config
-                    ln -s $( realpath $dot ) ~/.ssh/config
                 fi
+                ln -s $( realpath $dot ) ~/.ssh/config
             fi
             if (( options_dry_run || options_verbose )); then
                 say "$dot -> ~/.ssh/config"
             fi
-        elif [[ -n "$( grep $bname < $dname/.homedots )" ]]; then  # install some files to ~/
-            if (( options_dry_run )); then
+        elif [[ -n "$( grep $bname < $dname/etc/homedots )" ]]; then  # install some files to ~/
+            if (( ! options_dry_run )); then
                 if [[ -f ~/$bname && ! -L ~/$bname ]]; then
 					if (( options_move_existing )); then
 						mv ~/$bname ~/$bname.old
@@ -94,14 +95,14 @@ function install_dots()
 					fi
                 else
                     rm -rf ~/$bname
-                    ln -s $( realpath $dot ) ~/
                 fi
+                ln -s $( realpath $dot ) ~/
             fi
             if (( options_dry_run || options_verbose )); then
                 say "$dot -> ~/$bname"
             fi
         else                                  # install remaining files to ~/.config
-            if (( options_dry_run )); then
+            if (( ! options_dry_run )); then
                 mkdir -p ~/.config
                 if [[ -f ~/.config/$bname && ! -L ~/.config/$bname ]]; then
 					if (( options_move_existing )); then
@@ -114,8 +115,8 @@ function install_dots()
 					fi
                 else
                     rm -rf ~/.config/$bname
-                    ln -s $( realpath $dot ) ~/.config/
                 fi
+                ln -s $( realpath $dot ) ~/.config/
             fi
             if (( options_dry_run || options_verbose )); then
                 say "$dot -> ~/.config/$bname"
@@ -124,8 +125,6 @@ function install_dots()
     done
 }
 
-
-dname="$( dirname $0 )"
 
 for arg in "$@"; do
     if [[ $arg == "--help" || $arg == "-h" ]]; then
