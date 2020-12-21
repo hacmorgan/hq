@@ -11,7 +11,7 @@
 
 set $mod Mod1
 
-set $TERMINAL sakura
+set $TERMINAL termite
 
 
 # Font for window titles. Will also be used by the bar unless a different font
