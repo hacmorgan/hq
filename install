@@ -25,6 +25,8 @@ install scripts and config files
 
 options:
 --help,-h; display this help message and exit
+--configure-emacs; clone emacs repositiory to ~/.emacs.d
+--configure-zsh; do this after installing oh-my-zsh
 --dry-run; talk the talk but don't walk the walk
 --move-existing; if <file> exists, move it to <file>.old
 --verbose; talk the talk AND walk the walk
@@ -48,7 +50,7 @@ dname="$( dirname $0 )"
 function install_scripts()
 {
     for script in $dname/scripts/*; do
-        if (( options_dry_run )); then
+        if (( ! options_dry_run )); then
             sudo cp $script $INSTALL_PREFIX/bin/
         fi
         if (( options_dry_run || options_verbose )); then
@@ -126,10 +128,36 @@ function install_dots()
 }
 
 
+function configure_zsh()
+{
+	mkdir -p ~/.oh-my-zsh/themes
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/themes/powerlevel10k
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+}
+
+
+function configure_emacs()
+{
+	if [[ -e "~/.emacs.d" ]]; then
+		if (( options_move_existing )); then
+			mv ~/.emacs.d ~/.emacs.d.old
+		else
+			die "~/.emacs.d already exists, use --move-existing to move it to ~/.emacs.d.old"
+		fi
+	fi
+	git clone git@github.com:hacmorgan/emacs.git ~/.emacs.d
+}
+
+
 for arg in "$@"; do
     if [[ $arg == "--help" || $arg == "-h" ]]; then
         _help
         exit 0
+	elif [[ $arg == "--configure-emacs" ]]; then
+		configure_emacs
+	elif [[ $arg == "--configure-zsh" ]]; then
+		configure_zsh
     elif [[ $arg == "--dry-run" ]]; then
         options_dry_run=1
     elif [[ $arg == "--verbose" ]]; then
