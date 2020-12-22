@@ -29,25 +29,25 @@ function main-run ()
         local selected_config="$( get-choice "$configs" )"
         case "$selected_config" in
             "zsh")
-                /home/hamish/src/useful-scripts/generic/em ~/.zshrc ;;
+                em ~/.zshrc ;;
             "i3")
-                /home/hamish/src/useful-scripts/generic/em ~/.config/i3/config ;;
+                em ~/.config/i3/config ;;
             "i3status")
-                /home/hamish/src/useful-scripts/generic/em ~/.config/i3/status.toml ;;
+                em ~/.config/i3/status.toml ;;
             "dwm")
-                /home/hamish/src/useful-scripts/generic/em ~/src/foss/dwm/config.h ;;
+                em ~/src/foss/dwm/config.h ;;
             "emacs")
-                /home/hamish/src/useful-scripts/generic/em ~/.emacs.d/config.org ;;
+                em ~/.emacs.d/config.org ;;
             "picom")
-                /home/hamish/src/useful-scripts/generic/em ~/.config/picom.conf ;;
+                em ~/.config/picom.conf ;;
             "sakura")
-                /home/hamish/src/useful-scripts/generic/em ~/.config/sakura/sakura.conf ;;
+                em ~/.config/sakura/sakura.conf ;;
             "termite")
-                /home/hamish/src/useful-scripts/generic/em ~/.config/termite/config ;;
+                em ~/.config/termite/config ;;
             "st")
-                /home/hamish/src/useful-scripts/generic/em ~/src/foss/st/config.h ;;
+                em ~/src/foss/st/config.h ;;
             "xinit")
-                /home/hamish/src/useful-scripts/generic/em ~/.xinitrc ;;
+                em ~/.xinitrc ;;
         esac
     }
 
