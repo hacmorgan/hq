@@ -45,8 +45,8 @@ floating_modifier $mod
 
 # new terminal commands (standard, python, sshwork)
 bindsym $mod+Return       exec $TERMINAL
-bindsym $mod+Shift+Return exec $TERMINAL -e "python -q"
-bindsym $mod+Ctrl+Return  exec $TERMINAL -e "ssh -X enzo"
+bindsym $mod+Shift+Return exec $TERMINAL -x "python -q"
+bindsym $mod+Ctrl+Return  exec $TERMINAL -x "ssh -X enzo"
 
 # kill focused window
 bindsym $mod+Shift+q kill
