@@ -28,6 +28,7 @@ options:
 --configure-emacs; clone emacs repositiory to ~/.emacs.d
 --configure-zsh; do this after installing oh-my-zsh
 --dry-run; talk the talk but don't walk the walk
+--install-fantasque; unpack fantasque (noLoopK) to /usr/share/fonts/fantasque 
 --move-existing; if <file> exists, move it to <file>.old
 --verbose; talk the talk AND walk the walk
 
@@ -150,6 +151,16 @@ function configure_emacs()
 }
 
 
+function install_fantasque()
+{
+    sudo mkdir /usr/share/fonts/fantasque
+    pushd /usr/share/fonts/fantasque
+    curl -L "https://github.com/belluzj/fantasque-sans/releases/download/v1.8.0/FantasqueSansMono-NoLoopK.tar.gz" \
+        | sudo tar -zxvf -
+    popd
+}
+
+
 for arg in "$@"; do
     if [[ $arg == "--help" || $arg == "-h" ]]; then
         _help
@@ -160,6 +171,8 @@ for arg in "$@"; do
 		configure_zsh
     elif [[ $arg == "--dry-run" ]]; then
         options_dry_run=1
+	elif [[ $arg == "--install-fantasque" ]]; then
+		install_fantasque
     elif [[ $arg == "--verbose" ]]; then
         options_verbose=1
     elif [[ $arg == "--move-existing" ]]; then
