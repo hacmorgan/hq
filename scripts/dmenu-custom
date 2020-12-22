@@ -126,9 +126,9 @@ function main-run ()
         local selected_option="$( get-choice "$picom_options" )"
         case "$selected_option" in
             "turn on")
-                [ $(ps -aux | grep picom | wc -l) -le 1 ] && exec picom ;;
+                [ $(ps -aux | grep compton | wc -l) -le 1 ] && exec compton ;;
             "turn off")
-                killall picom ;;
+                killall compton ;;
         esac
     }
        
