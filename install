@@ -50,7 +50,7 @@ dname="$( dirname $0 )"
 function install_scripts()
 {
     for script in $dname/scripts/*; do
-        if (( options_dry_run )); then
+        if (( ! options_dry_run )); then
             sudo cp $script $INSTALL_PREFIX/bin/
         fi
         if (( options_dry_run || options_verbose )); then
