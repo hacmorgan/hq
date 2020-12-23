@@ -45,7 +45,7 @@ floating_modifier $mod
 
 # new terminal commands (standard, python, sshwork)
 bindsym $mod+Return       exec $TERMINAL
-bindsym $mod+Shift+Return exec $TERMINAL -x "python -q"
+bindsym $mod+Shift+Return exec $TERMINAL -x "python3 -q" --class=floating_term 
 bindsym $mod+Ctrl+Return  exec $TERMINAL -x "ssh -X enzo"
 
 # kill focused window
@@ -223,6 +223,7 @@ bindsym $mod+Ctrl+Shift+Right move workspace to output right
 # Make gnuplot float by default
 for_window [class="gnuplot_qt"] floating enable
 for_window [class="0"] floating enable
+for_window [class="floating_term"] floating enable  # floating python
 
 ###############
 # KEYBINDINGS #
