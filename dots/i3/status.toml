@@ -48,6 +48,7 @@ block = "sound"
 
 [[block]]
 block = "backlight"
+step_width = 1
 
 [[block]]
 block = "battery"
