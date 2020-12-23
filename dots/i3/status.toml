@@ -29,6 +29,37 @@ interval = 1
 format = "{barchart} {utilization}% {frequency}GHz"
 
 [[block]]
+block = "nvidia_gpu"
+label = "GTX 980"
+show_memory = true
+show_clocks = true
+interval = 1
+
+[[block]]
+block = "pomodoro"
+length = 25
+break_length = 5
+message = "Take a break!"
+break_message = "Back to work!"
+use_nag = true
+nag_path = "i3-nagbar"
+
+[[block]]
+block = "apt"
+interval = 1800
+format = "{count} updates available"
+format_singular = "{count} update available"
+format_up_to_date = "system up to date"
+critical_updates_regex = "(linux |linux-lts|linux-zen)"
+
+[[block]]
+block = "net"
+device = "enp4s0"
+format = "{ip} {speed_down} {speed_up}"
+interval = 5
+use_bits = false
+
+[[block]]
 block = "sound"
 
 [[block]]
