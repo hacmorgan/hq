@@ -203,7 +203,12 @@ smart_borders on
 bindsym $mod+Shift+g mode "$mode_gaps"
 
 
-#class                 border  bground text    indicator child_border
+# scratchpad
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+
+# class                 border  bground text    indicator child_border
 client.focused          #aa34f7 #aa34f7 #F8F8F2 #aa34f7   #aa34f7
 client.focused_inactive #44475A #44475A #F8F8F2 #44475A   #44475A
 client.unfocused        #282A36 #282A36 #BFBFBF #282A36   #282A36
@@ -224,6 +229,7 @@ bindsym $mod+Ctrl+Shift+Right move workspace to output right
 for_window [class="gnuplot_qt"] floating enable
 for_window [class="0"] floating enable
 for_window [class="floating_term"] floating enable  # floating python
+
 
 ###############
 # KEYBINDINGS #
