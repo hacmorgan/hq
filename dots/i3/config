@@ -43,7 +43,7 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
-# new terminal commands (standard, python, sshwork)
+# terminals
 bindsym $mod+Return       exec $TERMINAL
 bindsym $mod+Shift+Return exec $TERMINAL -x "python3 -q" --class=floating_term 
 bindsym $mod+Shift+p      exec $TERMINAL -x "pulsemixer" --class=floating_term 
