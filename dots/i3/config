@@ -47,6 +47,7 @@ floating_modifier $mod
 bindsym $mod+Return       exec $TERMINAL
 bindsym $mod+Shift+Return exec $TERMINAL -x "python3 -q" --columns=60 --rows=15 --class=floating_term 
 bindsym $mod+Shift+p      exec $TERMINAL -x "pulsemixer" --columns=60 --rows=10 --class=floating_term 
+bindsym $mod+Shift+n      exec $TERMINAL -x "nmtui"      --columns=70 --rows=25 --class=floating_term 
 bindsym $mod+Ctrl+Return  exec $TERMINAL -x "ssh -X enzo"
 
 # kill focused window
