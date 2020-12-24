@@ -55,7 +55,7 @@ critical_updates_regex = "(linux |linux-lts|linux-zen)"
 [[block]]
 block = "net"
 device = "enp4s0"
-format = "{ip} {speed_down} {speed_up}"
+format = "{ip} {speed_up} {speed_down}"
 interval = 5
 use_bits = false
 

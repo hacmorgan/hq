@@ -1,11 +1,10 @@
 # GIMP user context
 
-(tool "gimp-pencil-tool")
-(paint-info "gimp-pencil")
-(foreground (color-rgb 1 0 0))
+(tool "gimp-rect-select-tool")
+(paint-info "gimp-paintbrush")
 (brush "2. Hardness 050")
 (dynamics "Dynamics Off")
-(mybrush "100% Opaque")
+(mybrush "Standard")
 (pattern "Pine")
 (gradient "FG to BG (RGB)")
 (palette "Color History")
