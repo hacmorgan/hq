@@ -47,7 +47,7 @@ function main-run ()
             "st")
                 em ~/src/foss/st/config.h ;;
             "xinit")
-                em ~/.xinitrc ;;
+                em ~/.xsessionrc ;;
             "dmenu-custom")
                 em ~/src/hq/scripts/dmenu-custom ;;
         esac
