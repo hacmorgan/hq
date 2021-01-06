@@ -28,7 +28,8 @@ options:
 --configure-emacs; clone emacs repositiory to ~/.emacs.d
 --configure-zsh; do this after installing oh-my-zsh
 --dry-run; talk the talk but don't walk the walk
---install-fantasque; unpack fantasque (noLoopK) to /usr/share/fonts/fantasque 
+--install-fantasque; unpack fantasque (noLoopK) to /usr/share/fonts/fantasque
+--install-oh-my-zsh; self explanatory
 --move-existing; if <file> exists, move it to <file>.old
 --verbose; talk the talk AND walk the walk
 
@@ -66,19 +67,19 @@ function install_dots()
     for dot in $( find $dname/dots -maxdepth 1 -mindepth 1 -type f,d ); do
         bname="$( basename $dot )"
         if [[ $bname == "sshconfig" ]]; then
-			if (( ! options_dry_run )); then
+            if (( ! options_dry_run )); then
                 mkdir -p ~/.ssh
                 if [[ -f ~/.ssh/config && ! -L ~/.ssh/config ]]; then
-					if (( options_move_existing )); then
-						mv ~/.ssh/config ~/.ssh/config.old
-						if (( options_verbose )); then
-							say "~/.ssh/config -> ~/.ssh/config.old"
-						fi
-					else
-						die "~/.ssh/config exists and is not a symlink, exiting"
-					fi
+                    if (( options_move_existing )); then
+                        mv ~/.ssh/config ~/.ssh/config.old
+                        if (( options_verbose )); then
+                            say "~/.ssh/config -> ~/.ssh/config.old"
+                        fi
+                    else
+                        die "~/.ssh/config exists and is not a symlink, exiting"
+                    fi
                 else
-                    rm ~/.ssh/config
+                    rm -f ~/.ssh/config
                 fi
                 ln -s $( realpath $dot ) ~/.ssh/config
             fi
@@ -88,14 +89,14 @@ function install_dots()
         elif [[ -n "$( grep $bname < $dname/etc/homedots )" ]]; then  # install some files to ~/
             if (( ! options_dry_run )); then
                 if [[ -f ~/$bname && ! -L ~/$bname ]]; then
-					if (( options_move_existing )); then
-						mv ~/$bname ~/$bname.old
-						if (( options_verbose )); then
-							say "$bname -> $bname.old"
-						fi
-					else
-                    	die "~/$bname exists and is not a symlink, exiting"
-					fi
+                    if (( options_move_existing )); then
+                        mv ~/$bname ~/$bname.old
+                        if (( options_verbose )); then
+                            say "$bname -> $bname.old"
+                        fi
+                    else
+                        die "~/$bname exists and is not a symlink, exiting"
+                    fi
                 else
                     rm -rf ~/$bname
                 fi
@@ -108,14 +109,14 @@ function install_dots()
             if (( ! options_dry_run )); then
                 mkdir -p ~/.config
                 if [[ -f ~/.config/$bname && ! -L ~/.config/$bname ]]; then
-					if (( options_move_existing )); then
-						mv ~/.config/$bname ~/.config/$bname.old
-						if (( options_verbose )); then
-							say ".config/$bname -> .config/$bname.old"
-						fi
-					else
-                    	die "~/.config/$bname exists and is not a symlink, exiting"
-					fi
+                    if (( options_move_existing )); then
+                        mv ~/.config/$bname ~/.config/$bname.old
+                        if (( options_verbose )); then
+                            say ".config/$bname -> .config/$bname.old"
+                        fi
+                    else
+                        die "~/.config/$bname exists and is not a symlink, exiting"
+                    fi
                 else
                     rm -rf ~/.config/$bname
                 fi
@@ -131,7 +132,7 @@ function install_dots()
 
 function configure_zsh()
 {
-	mkdir -p ~/.oh-my-zsh/themes
+    mkdir -p ~/.oh-my-zsh/themes
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/themes/powerlevel10k
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
     git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
@@ -140,14 +141,15 @@ function configure_zsh()
 
 function configure_emacs()
 {
-	if [[ -e "~/.emacs.d" ]]; then
-		if (( options_move_existing )); then
-			mv ~/.emacs.d ~/.emacs.d.old
-		else
-			die "~/.emacs.d already exists, use --move-existing to move it to ~/.emacs.d.old"
-		fi
-	fi
-	git clone git@github.com:hacmorgan/emacs.git ~/.emacs.d
+    type -p emacs > /dev/null || say "warning: emacs is not installed"
+    if [[ -e "~/.emacs.d" ]]; then
+        if (( options_move_existing )); then
+            mv ~/.emacs.d ~/.emacs.d.old
+        else
+            die "~/.emacs.d already exists, use --move-existing to move it to ~/.emacs.d.old"
+        fi
+    fi
+    git clone git@github.com:hacmorgan/emacs.git ~/.emacs.d
 }
 
 
@@ -160,19 +162,29 @@ function install_fantasque()
     popd
 }
 
+function install_oh_my_zsh()
+{
+    type -p zsh  > /dev/null || die "zsh not found, please install it first"
+    type -p curl > /dev/null || die "curL not found, please install it first"
+    sh -c "$( curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh )"
+}    
+
 
 for arg in "$@"; do
     if [[ $arg == "--help" || $arg == "-h" ]]; then
         _help
         exit 0
-	elif [[ $arg == "--configure-emacs" ]]; then
-		configure_emacs
-	elif [[ $arg == "--configure-zsh" ]]; then
-		configure_zsh
+    elif [[ $arg == "--configure-emacs" ]]; then
+        configure_emacs
+    elif [[ $arg == "--configure-zsh" ]]; then
+        configure_zsh
     elif [[ $arg == "--dry-run" ]]; then
         options_dry_run=1
-	elif [[ $arg == "--install-fantasque" ]]; then
-		install_fantasque
+    elif [[ $arg == "--install-fantasque" ]]; then
+        install_fantasque
+    elif [[ $arg == "--install-oh-my-zsh" ]]; then
+        install_oh_my_zsh
+        exit
     elif [[ $arg == "--verbose" ]]; then
         options_verbose=1
     elif [[ $arg == "--move-existing" ]]; then
