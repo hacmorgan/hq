@@ -49,7 +49,7 @@ function main-run ()
             "xinit")
                 em ~/.xinitrc ;;
             "dmenu-custom")
-                em $( realpath $0 ) ;;
+                em ~/src/hq/scripts/dmenu-custom ;;
         esac
     }
 
