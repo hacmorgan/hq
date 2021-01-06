@@ -1,0 +1,38 @@
+section: screens
+	george:
+		halfDuplexCapsLock = false
+		halfDuplexNumLock = false
+		halfDuplexScrollLock = false
+		xtestIsXineramaUnaware = false
+		preserveFocus = false
+		switchCorners = none 
+		switchCornerSize = 0
+	enzo:
+		halfDuplexCapsLock = false
+		halfDuplexNumLock = false
+		halfDuplexScrollLock = false
+		xtestIsXineramaUnaware = false
+		preserveFocus = false
+		switchCorners = none 
+		switchCornerSize = 0
+end
+
+section: aliases
+end
+
+section: links
+	george:
+		right = enzo
+	enzo:
+		left = george
+end
+
+section: options
+	relativeMouseMoves = false
+	screenSaverSync = true
+	win32KeepForeground = false
+	clipboardSharing = true
+	switchCorners = none 
+	switchCornerSize = 0
+end
+
