@@ -144,6 +144,7 @@ function configure_git
 {
     git config --global user.email "ham430@gmail.com"
     git config --global user.name "Hamish Morgan"
+	git config --global pull.rebase false
 }
 
 
