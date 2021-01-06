@@ -34,6 +34,14 @@ Host enzo
     User hamish
     Hostname 10.0.0.72
 
+Host george
+    User hamish
+    Hostname 10.0.0.39
+
+Host george_remote
+    User hamish
+    Hostname thinkingaboudis.zapto.org
+
 Host collab
     User collab
     Hostname 10.0.0.72
