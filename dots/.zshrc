@@ -113,7 +113,7 @@ alias ll='ls -la'
 #################
 #    EXPORTS    #
 #################
-path+=('/home/hamish/.local/bin')
+path=( '/home/hamish/.local/bin' $path )
 export PATH
 
 export EDITOR="/usr/bin/nvim"
