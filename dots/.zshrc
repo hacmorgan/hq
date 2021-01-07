@@ -109,6 +109,8 @@ alias b2s="pwd | sed 's/build/src/g'"
 alias s2b="pwd | sed 's/src/build/g'"
 alias l='ls -l'
 alias ll='ls -la'
+alias activate_metashape='/opt/metashape-pro/metashape.sh --activate ADFXV-42BN8-M7VAR-9AOGY-NGKE6'
+alias deactivate_metashape='/opt/metashape-pro/metashape.sh --deactivate'
 
 #################
 #    EXPORTS    #
