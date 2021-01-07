@@ -45,10 +45,10 @@ floating_modifier $mod
 
 # terminals
 bindsym $mod+Return       exec $TERMINAL
-bindsym $mod+Shift+Return exec $TERMINAL -x "python3 -q" --columns=60 --rows=15 --class=floating_term 
-bindsym $mod+Shift+p      exec $TERMINAL -x "pulsemixer" --columns=60 --rows=10 --class=floating_term 
-bindsym $mod+Shift+n      exec $TERMINAL -x "nmtui"      --columns=70 --rows=25 --class=floating_term 
-bindsym $mod+Ctrl+Return  exec $TERMINAL -x "ssh -X enzo"
+bindsym $mod+Shift+Return exec $TERMINAL -e "python3 -q" --class=floating_term 
+bindsym $mod+Shift+p      exec $TERMINAL -e "pulsemixer" --class=floating_term 
+bindsym $mod+Shift+n      exec $TERMINAL -e "nmtui"      --class=floating_term 
+bindsym $mod+Ctrl+Return  exec $TERMINAL -e "ssh -X enzo"
 
 # kill focused window
 bindsym $mod+Shift+q kill

@@ -25,7 +25,7 @@ function main-run ()
     
     function edit-configs-run ()
     {
-        local configs="zsh,i3,i3status,emacs,picom,sakura,xinit,dmenu-custom"
+        local configs="zsh,i3,i3status,emacs,picom,termite,xinit,dmenu-custom"
         local selected_config="$( get-choice "$configs" )"
         case "$selected_config" in
             "zsh")
