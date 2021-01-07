@@ -117,7 +117,7 @@ alias mnt_tank='abyss-mount-share hmo rhino-tank /mnt/tank'
 #################
 #    EXPORTS    #
 #################
-path+=('/home/hamish/.local/bin')
+path=( '/home/hamish/.local/bin' $path )
 export PATH
 
 export EDITOR="/usr/bin/nvim"
