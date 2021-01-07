@@ -35,7 +35,6 @@ options:
 
 functionality:
 - scripts (in 'scripts' directory) are installed to $INSTALL_PREFIX/bin
-  - this invokes sudo, be warned
 - configs (in 'dots' directory) are installed to ~/.config/ unless:
   - they are present in 'etc/homedots', in which case they are installed to ~/ 
   - 'dots/sshconfig' is installed to ~/.ssh/config
@@ -44,7 +43,7 @@ EOF
 }
 
 
-INSTALL_PREFIX=/usr/local
+INSTALL_PREFIX=/home/users/hmo/.local
 
 dname="$( dirname $0 )"
 
@@ -53,7 +52,7 @@ function install_scripts()
 {
     for script in $dname/scripts/*; do
         if (( ! options_dry_run )); then
-            sudo cp $script $INSTALL_PREFIX/bin/
+            cp $script $INSTALL_PREFIX/bin/
         fi
         if (( options_dry_run || options_verbose )); then
             say "$script -> $INSTALL_PREFIX/bin/"
