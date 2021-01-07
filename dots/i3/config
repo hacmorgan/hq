@@ -48,7 +48,7 @@ bindsym $mod+Return       exec $TERMINAL
 bindsym $mod+Shift+Return exec $TERMINAL -e "python3 -q" --class=floating_term 
 bindsym $mod+Shift+p      exec $TERMINAL -e "pulsemixer" --class=floating_term 
 bindsym $mod+Shift+n      exec $TERMINAL -e "nmtui"      --class=floating_term 
-bindsym $mod+Ctrl+Return  exec $TERMINAL -e "ssh -X enzo"
+bindsym $mod+Ctrl+Return  exec $TERMINAL -e "ssh -Y george || ssh -Y george_remote"
 
 # kill focused window
 bindsym $mod+Shift+q kill
