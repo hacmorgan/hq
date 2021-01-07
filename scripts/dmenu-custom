@@ -65,6 +65,20 @@ function main-run ()
         esac
     }
 
+    function xrandr-run()
+    {
+        local xrandr_options="both screens,flat only,curved only"
+        local selected_option="$( get-choice "$xrandr_options" )"
+        case "$selected_option" in
+            "both screens")
+                use-both-screens ;;
+            "flat only")
+                use-flat-only ;;
+            "curved only")
+                use-curved-only ;;
+        esac
+    }
+
     # TODO - determine appropriate values
     function keyboard-multiplier-run()
     {
@@ -134,7 +148,7 @@ function main-run ()
         esac
     }
        
-    subsetting_options="power,screenshot,keyboard multiplier,edit configs,picom"
+    subsetting_options="power,screenshot,xrandr,keyboard multiplier,edit configs,picom"
     subsetting="$( get-choice "$subsetting_options" )"
     echo $subsetting
     case "$subsetting" in
@@ -146,6 +160,8 @@ function main-run ()
             keyboard-multiplier-run ;;
         "screenshot")
             screenshot-run ;;
+        "xrandr")
+            xrandr-run ;;
         "picom")
             picom-run ;;
     esac
