@@ -4,20 +4,20 @@
 ##  simple install script to install config files and scripts
 
 
-function say()
+function say
 {
     echo "$@" 1>&2
 }
 
 
-function die()
+function die
 {
     say "$@"
     exit 1
 }
 
 
-function _help()
+function _help
 {
     cat <<EOF 1>&2
 
@@ -26,6 +26,7 @@ install scripts and config files
 options:
 --help,-h; display this help message and exit
 --configure-emacs; clone emacs repositiory to ~/.emacs.d
+--configure-git; tell git who you are (so you can commit)
 --configure-zsh; do this after installing oh-my-zsh
 --dry-run; talk the talk but don't walk the walk
 --install-fantasque; unpack fantasque (noLoopK) to /usr/share/fonts/fantasque
@@ -49,7 +50,7 @@ INSTALL_PREFIX=/usr/local
 dname="$( dirname $0 )"
 
 
-function install_scripts()
+function install_scripts
 {
     for script in $dname/scripts/*; do
         if (( ! options_dry_run )); then
@@ -62,7 +63,7 @@ function install_scripts()
 }
 
 
-function install_dots()
+function install_dots
 {
     for dot in $( find $dname/dots -maxdepth 1 -mindepth 1 -type f,d ); do
         bname="$( basename $dot )"
@@ -130,7 +131,7 @@ function install_dots()
 }
 
 
-function configure_zsh()
+function configure_zsh
 {
     mkdir -p ~/.oh-my-zsh/themes
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/themes/powerlevel10k
@@ -139,7 +140,15 @@ function configure_zsh()
 }
 
 
-function configure_emacs()
+function configure_git
+{
+    git config --global user.email "ham430@gmail.com"
+    git config --global user.name "Hamish Morgan"
+	git config --global pull.rebase false
+}
+
+
+function configure_emacs
 {
     type -p emacs > /dev/null || say "warning: emacs is not installed"
     if [[ -e "~/.emacs.d" ]]; then
@@ -153,7 +162,7 @@ function configure_emacs()
 }
 
 
-function install_fantasque()
+function install_fantasque
 {
     sudo mkdir /usr/share/fonts/fantasque
     pushd /usr/share/fonts/fantasque
@@ -162,7 +171,7 @@ function install_fantasque()
     popd
 }
 
-function install_oh_my_zsh()
+function install_oh_my_zsh
 {
     type -p zsh  > /dev/null || die "zsh not found, please install it first"
     type -p curl > /dev/null || die "curL not found, please install it first"
@@ -176,6 +185,8 @@ for arg in "$@"; do
         exit 0
     elif [[ $arg == "--configure-emacs" ]]; then
         configure_emacs
+    elif [[ $arg == "--configure-git" ]]; then
+        configure_git
     elif [[ $arg == "--configure-zsh" ]]; then
         configure_zsh
     elif [[ $arg == "--dry-run" ]]; then
