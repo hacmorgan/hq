@@ -13,7 +13,7 @@ fi
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/home/hamish/.oh-my-zsh"
+export ZSH="/home/users/hmo/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -117,7 +117,7 @@ alias mnt_tank='abyss-mount-share hmo rhino-tank /mnt/tank'
 #################
 #    EXPORTS    #
 #################
-path=( '/home/hamish/.local/bin' $path )
+path=( '/home/users/hmo/.local/bin' $path )
 export PATH
 
 export EDITOR="/usr/bin/nvim"
