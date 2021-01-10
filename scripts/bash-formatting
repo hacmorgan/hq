@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+
+fmt_normal="$(tput sgr0)"
+fmt_bold="$(tput bold)"
+fmt_dim="$(tput dim)"
+fmt_underline_enable="$(tput smul)"
+fmt_underline_disable="$(tput rmul)"
+fmt_black="$(tput setaf 0)"
+fmt_red="$(tput setaf 1)"
+fmt_green="$(tput setaf 2)"
+fmt_yellow="$(tput setaf 3)"
+fmt_blue="$(tput setaf 4)"
+fmt_magenta="$(tput setaf 5)"
+fmt_cyan="$(tput setaf 6)"
+fmt_white="$(tput setaf 7)"
+
+export fmt_normal
+export fmt_bold
+export fmt_dim
+export fmt_underline_enable
+export fmt_underline_disable
+export fmt_black
+export fmt_red
+export fmt_green
+export fmt_yellow
+export fmt_blue
+export fmt_magenta
+export fmt_cyan
+export fmt_white

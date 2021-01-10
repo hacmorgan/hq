@@ -2,62 +2,64 @@
 
 
 ##  simple install script to install config files and scripts
+# functionality:
+# - scripts (in 'scripts' directory) are installed to $options_install_prefix/bin
+#   - this invokes sudo, be warned
+# - configs (in 'dots' directory) are installed to ~/.config/ unless:
+#   - they are present in 'etc/homedots', in which case they are installed to ~/ 
+#   - 'dots/sshconfig' is installed to ~/.ssh/config
 
 
-function say
+function preinstall_comma_applications
 {
-    echo "$@" 1>&2
+    echo "comma utilities not found, press enter to install them to /usr/local/bin..." 1>&2
+    read
+    sudo cp $dname/scripts/comma-* /usr/local/bin/
 }
 
 
-function die
+dname="$( dirname $0 )"
+
+type -p comma-application-util > /dev/null || preinstall_comma_applications
+type -p comma-log-util         > /dev/null || preinstall_comma_applications
+type -p comma-name-value-util  > /dev/null || preinstall_comma_applications
+source $( type -p comma-application-util )
+source $dname/scripts/bash-formatting
+
+
+function options
 {
-    say "$@"
-    exit 1
-}
-
-
-function _help
-{
-    cat <<EOF 1>&2
-
-install scripts and config files
-
-options:
---help,-h; display this help message and exit
+    cat <<EOF
 --configure-emacs; clone emacs repositiory to ~/.emacs.d
 --configure-git; tell git who you are (so you can commit)
 --configure-zsh; do this after installing oh-my-zsh
 --dry-run; talk the talk but don't walk the walk
+--symlink-dots; symlink configs in 'dots' to ~/.config, unless they are present in 'etc/homedots'
 --install-fantasque; unpack fantasque (noLoopK) to /usr/share/fonts/fantasque
---install-oh-my-zsh; self explanatory
+--install-oh-my-zsh; self explanatory. terminates this script, use this option by itself
+--install-prefix=<path>; default=/usr/local; install prefix for scripts
+--install-scripts; copy everything in 'scripts' to --install-prefix
 --move-existing; if <file> exists, move it to <file>.old
 --verbose; talk the talk AND walk the walk
-
-functionality:
-- scripts (in 'scripts' directory) are installed to $INSTALL_PREFIX/bin
-  - this invokes sudo, be warned
-- configs (in 'dots' directory) are installed to ~/.config/ unless:
-  - they are present in 'etc/homedots', in which case they are installed to ~/ 
-  - 'dots/sshconfig' is installed to ~/.ssh/config
-
 EOF
 }
 
 
-INSTALL_PREFIX=/usr/local
+comma-application-init "$@" < <( options )
 
-dname="$( dirname $0 )"
+
+
+
 
 
 function install_scripts
 {
     for script in $dname/scripts/*; do
         if (( ! options_dry_run )); then
-            sudo cp $script $INSTALL_PREFIX/bin/
+            sudo cp $script $options_install_prefix/bin/
         fi
         if (( options_dry_run || options_verbose )); then
-            say "$script -> $INSTALL_PREFIX/bin/"
+            say "$script -> $options_install_prefix/bin/"
         fi
     done
 }
@@ -179,30 +181,13 @@ function install_oh_my_zsh
 }    
 
 
-for arg in "$@"; do
-    if [[ $arg == "--help" || $arg == "-h" ]]; then
-        _help
-        exit 0
-    elif [[ $arg == "--configure-emacs" ]]; then
-        configure_emacs
-    elif [[ $arg == "--configure-git" ]]; then
-        configure_git
-    elif [[ $arg == "--configure-zsh" ]]; then
-        configure_zsh
-    elif [[ $arg == "--dry-run" ]]; then
-        options_dry_run=1
-    elif [[ $arg == "--install-fantasque" ]]; then
-        install_fantasque
-    elif [[ $arg == "--install-oh-my-zsh" ]]; then
-        install_oh_my_zsh
-        exit
-    elif [[ $arg == "--verbose" ]]; then
-        options_verbose=1
-    elif [[ $arg == "--move-existing" ]]; then
-        options_move_existing=1
-    fi
-done
+(( options_install_oh_my_zsh )) && install_oh_my_zsh ; exit
+(( options_configure_emacs ))   && configure_emacs
+(( options_configure_git ))     && configure_git
+(( options_configure_zsh ))     && configure_zsh
+(( options_install_fantasque )) && install_fantasque
+(( options_install_dots ))      && install_dots
+(( options_install_scripts ))   && install_scripts
 
 
-install_scripts
-install_dots
+

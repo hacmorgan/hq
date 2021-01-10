@@ -1,0 +1,349 @@
+#!/bin/bash
+
+# This file is part of comma, a generic and flexible library
+# Copyright (c) 2011 The University of Sydney
+# Copyright (c) 2020 Vsevolod Vlaskine
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+# 3. Neither the name of the University of Sydney nor the
+#    names of its contributors may be used to endorse or promote products
+#    derived from this software without specific prior written permission.
+#
+# NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
+# GRANTED BY THIS LICENSE.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
+# HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+## @page comma-application-util comma-application-util
+# this script is designed to be included in another script directly, for example:
+# @code
+# source $( type -p comma-application-util )
+# @endcode
+#
+# @section comma_application_util_functions Functions
+# @li @link comma_options_from_name_value @endlink
+# @li @link comma_options_has @endlink
+# @li @link comma_options_help @endlink
+
+[[ -n "$comma_application_util_include_guard_" ]] && return 0
+readonly comma_application_util_include_guard_=1
+
+source $( type -p comma-name-value-util ) || { echo "$name: cannot source 'comma-name-value-util' from '$BASH_SOURCE'" >&2; exit 1; }
+
+## @page comma_options_from_name_value comma_options_from_name_value
+# @section comma_options_from_name_value
+# @description convert path-value pairs to bash variables
+# @param some param doing something
+# usage: my_options=( $( cat name-value-pairs | comma_options_from_name_value [<options>] ) )
+#
+# options
+#     --use-equal-sign: options set as --file=foo.txt; default --file foo.txt
+#
+# todo: there still may be trouble with option values with spaces inside; check and test it... later...
+#
+# example (try it)
+#      echo -e hello=\"\\\"world\\\"\"\\nverbose=\"true\" | comma_options_from_name_value
+#
+# TODO: currently, seems to have strange underdocumented semantics with no unit test to verify
+#       seems to be used only at one place
+#       suggested fix (at least at the semantics level, implementation can be different):
+# function comma_options_from_path_value() # quick and dirty
+# {
+#     local valueless=$( all_options | cut -d';' -f1 | grep '=' -v )
+#     local options=$( while IFS='=' read name value; do echo "--${name//_/-}=$value"; done )
+#     echo "$options" | csv-join --delimiter '=' --fields 'id' --string <( echo "$valueless" )";fields=id" --matching | cut -d= -f1
+#     echo "$options" | csv-join --delimiter '=' --fields 'id' --string <( echo "$valueless" )";fields=id" --not-matching
+# }
+function comma_options_from_name_value()
+{
+    local delimiter='\n'
+    if [[ "$1" == "--use-equal-sign" ]] ; then delimiter='=' ; fi
+    sed 's/^/--/g' \
+        | sed 's/="true"$//g' \
+        | sed 's/="false"$//g' \
+        | sed 's/="/=/g' \
+        | sed 's/"$//g' \
+        | sed 's/\\"/"/g' \
+        | tr '=' "$delimiter"
+}
+export -f comma_options_from_name_value
+
+## @page comma_options_has comma_options_has
+# @description outputs 0, if field is present in the output, 0, if it is not
+# @param field_name
+# usage: comma_options_has <what> $@
+# example:
+#     if (( $( comma_options_has --help $@ ) || $( comma_options_has -h $@ ) )) ; then usage ; fi
+function comma_options_has()
+{
+    for a in ${@:2} ; do if [[ "$1" == "$a" || "$a" =~ ${1}= ]] ; then echo 1 ; exit ; fi ; done
+    echo 0
+}
+export -f comma_options_has
+
+## @page comma_options_help comma_options_help
+# @description convenience function, returns 1, if --help or -h is present; 0 otherwise
+# usage: comma_options_help $@ && usage
+function comma_options_help() { return $(( ! ( $( comma_options_has '--help' $@ ) || $( comma_options_has '-h' $@ ) ) )) ; }
+export -f comma_options_help
+
+## @page comma_pretty_description comma_pretty_description
+# @description convenience function, pretty-prints the output of description function for usage help
+# usage: description | comma_pretty_description [arguments]
+# read stdin, write to stdout
+# @param offset the number of spaces to prepend
+# @param marging the right margin where to fold the output
+function comma_pretty_description()
+{
+    local offset=${1:-4}
+    local margin=${2:-120}
+    offset=$( printf "%${offset}s" '' )  # repeat ' ' offset times
+    fold -s -w $margin | sed --regexp-extended 's@^([^--])@  \1@' | sed "s/^/$offset/"
+}
+export -f comma_pretty_description
+
+## @page comma_options_names comma_options_names
+# @description converts a standard comma description to a list of names
+# 
+# example
+#   description | comma_options_names
+function comma_options_names()
+{
+    sed -e '/^$/d' -e '/^[^-]/d' -e 's/=.*//g' -e 's/;.*//g' -e 's/,/\n/g'
+}
+export -f comma_options_names
+
+## @page comma_options_to_bash_completion comma_options_to_bash_completion
+# @description converts a standard comma description to input
+# for the comma bash completion function
+# 
+# example
+#   description | comma_options_to_bash_completion
+function comma_options_to_bash_completion()
+{
+    comma_options_names | sort
+}
+export -f comma_options_to_bash_completion
+
+## @page comma_options_select comma_options_select
+# @description after a set of options have been retrieved as paths convert to
+# options format for a child script
+# 
+# example
+#   comma-test-run $( comma-test-run --description | comma-options-to-name-value $@ | comma_name_value_to_options )
+function comma_name_value_to_options()
+{
+    sed -e '/=/ ! d' -e '/^"/d' -e 's/^/--/g'| csv-quote --delimiter = --unquote --fields ,2 | tr '\n' ' '
+}
+export -f comma_name_value_to_options
+
+# verify the overall exit status of a pipeline ($? reports only the status of the last step
+# in a pipeline); ignore termination by SIGPIPE
+#
+# rationale for ignoring SIGPIPE: if in a pipeline " A | B " the process "B" may exit before A,
+# so that A (pipe writer) has no reader, then A is killed by SIGPIPE and has non-zero exit status
+# however, this may be (and likely is) not an error overall, as B has simply finished
+# processing and terminated
+#
+# example
+# A | B | C | D
+# if ! status_ok ; then echo "failed"; else echo "ok"; fi
+
+# define this value once to avoid calling subprocesses inside status_ok
+comma_sigpipe_exit_status_=$( expr 128 \+ $( kill -l SIGPIPE ) )
+export comma_sigpipe_exit_status_
+
+function comma_status_ok()
+{
+    local pipestatus_copy_status_ok="${PIPESTATUS[@]}"  # make a safe copy
+    # if a pipestatus vector is passed to us, then use that
+    if [[ $# -gt 0 ]]; then
+        local outcome_status_ok=''
+        for outcome_status_ok in $@ ; do
+            (( outcome_status_ok == 0 || outcome_status_ok == comma_sigpipe_exit_status_ )) || return 1
+        done
+        # shall we do this?
+        # return ${@: -1}  # propagate comma_sigpipe_exit_status_ in the last argument
+    else
+        comma_status_ok "$pipestatus_copy_status_ok" || return 1
+    fi
+    return 0
+}
+export -f comma_status_ok
+
+function comma_status_ok_verbose()
+{
+    local pipestatus_copy_status_ok=("${PIPESTATUS[@]}")
+    (( $# == 0 )) || pipestatus_copy_status_ok=( $@ )
+    comma_status_ok ${pipestatus_copy_status_ok[@]} && return 0
+    echo "comma_status_ok_verbose: pipestatus ( ${pipestatus_copy_status_ok[@]} ); called from line $( caller 0 )" >&2
+    return 1
+}
+export -f comma_status_ok_verbose
+
+
+#   invoke io-tee with the text of exported bash functions prepended to command
+#
+#   if command is an application, it is preferable to use io-tee directly
+#
+#   the call signature is exactly the same as that of io-tee (run io-tee -h)
+#
+#   rationale:
+#      io-tee on ubuntu 16.04 fails to work with exported bash functions
+#      due to a bug in bash 4.3.42 and/or lunux function popen()
+#      comma_tee_function passes exported functions in the bash environment to io-tee
+#      hence enabling io-tee to use user-defined bash functions
+function comma_tee_function()
+{
+    local -i file_and_options_end=1 # file is the required first argument of io-tee-worker, so if -- is not present, 1 is the correct index value
+    local -i i
+    for(( i = 1; i <= $#; i++ )); do
+        if [[ "${!i}" == "--" ]]; then
+            file_and_options_end=i
+            break
+        fi
+    done
+
+    local file_and_options=( "${@:1:$file_and_options_end}" )
+    local command="${@:$(( file_and_options_end + 1 )):1}"
+    local command_args=( "${@:$(( file_and_options_end + 2 ))}" )
+
+    local functions="$( declare -fx )"
+
+    io-tee "${file_and_options[@]}" "$functions ${functions:+;} $command" "${command_args[@]}"
+}
+export -f comma_tee_function
+
+function comma-application-common-options()
+{
+    cat <<eof
+--verbose,-v; output more messages to stderr
+eof
+}
+
+export -f comma-application-common-options
+
+function comma-application-init()
+{
+    comma_application_name=$( basename "$0" )
+    local prologue="$1"
+    local epilogue="$2"
+    local common_options=$( cat )
+    if comma_options_help $@; then
+        [[ "$( type -t prologue )" != "function" ]] || { echo; prologue; } >&2
+        cat <<eof >&2
+
+usage: $comma_application_name [<options>]
+
+options
+$( ( [[ -z "$common_options" ]] || echo "$common_options"; comma-application-common-options ) | sed 's#^#    #' )
+
+eof
+        [[ "$( type -t epilogue )" != "function" ]] || { epilogue; echo; } >&2
+        exit 0
+    fi
+    function say() { echo "$comma_application_name: $@" >&2; }
+    function saymore() { (( ! options_verbose )) || echo "$comma_application_name: $@" >&2; }
+    function verbose() { (( ! options_verbose )) || echo "$comma_application_name: $@" >&2; }
+    function die() { say "$@"; exit 1; }
+    local options; options=$( ( echo "$common_options"; comma-application-common-options ) | comma-options-to-name-value "$@" ) || die "invalid options"
+    eval "$( grep -v '^"' <<< "$options" | sed 's#^#options_#' | comma_path_value_mangle )"
+    # declare -a options_unnamed
+    mapfile -t options_unnamed < <( grep '^"' <<< "$options" | sed -e 's#^"##' -e 's#"$##' )
+}
+
+export -f comma-application-init
+
+function comma-application-swiss-init()
+{
+    local name=$( basename "$0" )
+    local common_options=$( cat )
+    [[ -n "$1" ]] || { echo "$name: please specify operation" >&2; exit 1; }
+    comma_application_swiss_operation="$1" # todo? quick and dirty, allow --help anywhere on the command line?
+    if comma_options_help $@; then
+        if [[ "${comma_application_swiss_operation}" == "--help" || "${comma_application_swiss_operation}" == "-h" ]]; then
+            [[ "$( type -t prologue )" != "function" ]] || { echo; prologue; }
+            echo "$common_options" | comma-application-swiss-usage >&2
+            [[ "$( type -t epilogue )" != "function" ]] || { epilogue; echo; }
+        else
+            { [[ -z "$common_options" ]] || echo "$common_options"; comma-application-common-options; } | comma-application-swiss-usage-operation "${comma_application_swiss_operation}" || exit 1
+            echo
+        fi >&2
+        exit 0
+    fi
+    function say() { echo "$name: ${comma_application_swiss_operation}: $@" >&2; }
+    function saymore() { (( ! options_verbose )) || echo "$name: ${comma_application_swiss_operation}: $@" >&2; }
+    function verbose() { (( ! options_verbose )) || echo "$name: ${comma_application_swiss_operation}: $@" >&2; }
+    function die() { say "$@"; exit 1; }
+    [[ $( type -t ${comma_application_swiss_operation}-run ) == "function" ]] || die "expected operation, got '${comma_application_swiss_operation}'" # quick and dirty
+    local options; options=$( ( echo "$common_options"; comma-application-common-options ) | comma-options-to-name-value "$@" ) || die "invalid options"
+    eval "$( grep -v '^"' <<< "$options" | sed 's#^#options_#' | comma_path_value_mangle )"
+    #(( !options_verbose )) || verbose_option="--verbose"
+    #(( !options_input_fields )) || { eval "echo \$${operation//-/_}_input_fields"; exit 0; } # quick and dirty
+    #(( !options_input_format )) || { eval "echo \$${operation//-/_}_input_format"; exit 0; } # quick and dirty
+    #(( !options_output_fields )) || { eval "echo \$${operation//-/_}_output_fields"; exit 0; } # quick and dirty
+    #(( !options_output_format )) || { eval "echo \$${operation//-/_}_output_format"; exit 0; } # quick and dirty
+    if [[ $( type -t ${comma_application_swiss_operation}-options ) == "function" ]]; then
+        local operation_options; operation_options=$( ${comma_application_swiss_operation}-options | comma-options-to-name-value "$@" ) || die "invalid options"
+        eval "$( grep -v '^"' <<< "$operation_options" | sed 's#^#options_#' | comma_path_value_mangle )"
+    fi
+}
+
+export -f comma-application-swiss-init
+
+function comma-application-swiss-usage-operation()
+{
+    local operation="$1"
+    [[ $( type -t ${operation}-run ) == "function" ]] || { echo "$( basename $0 ): expected operation, got: '${comma_application_swiss_operation}', see --help with no other options for more information" >&2; return 1; } # quick and dirty
+    local common_options=$( cat )
+    local found=0
+    if [[ -z "$common_options" ]]; then echo "${operation}"; else echo "$( basename "$0" ) ${operation}"; fi # uber quick and dirty for now
+    [[ $( type -t ${operation}-description ) != "function" ]] || { ${operation}-description | sed 's#^#    #'; found=1; }
+    if [[ $( type -t ${operation}-usage ) == "function" ]]; then echo "    usage"; ${operation}-usage | sed 's#^#        #'; found=1
+    else echo "    usage: $( basename $0 ) ${comma_application_swiss_operation} [<options>]"; fi
+    [[ -z "$common_options" ]] || { echo "    common options"; echo "$common_options" | sed 's#^#        #'; }
+    [[ $( type -t ${operation}-options ) != "function" ]] || { echo "    options"; ${operation}-options | sed 's#^#        #'; found=1; }
+    [[ $( type -t ${operation}-examples ) != "function" ]] || { echo "    examples"; ${operation}-examples | sed 's#^#        #'; found=1; }
+    (( ! found )) || return 0
+    echo "$( basename $0 ): expected operation, got: '${operation}', see --help with no other options for more information" >&2
+    return 1
+}
+
+export -f comma-application-swiss-usage-operation
+
+function comma-application-swiss-usage()
+{
+    local common_options=$( cat )
+    echo
+    echo "usage: $( basename "$0" ) <operation> <options>"
+    echo; echo "common options"
+    { [[ -z "$common_options" ]] || echo "$common_options"; comma-application-common-options; } | sed 's#^#   #'
+    echo; echo "available operations: ${operations[@]}"
+    echo; echo "operations"
+    for operation in ${operations[@]}; do
+        comma-application-swiss-usage-operation "${operation}" | sed 's#^#    #'
+        echo
+    done
+}
+
+export -f comma-application-swiss-usage
+
+function comma-application-swiss-run() { ${comma_application_swiss_operation}-run "$@"; }
+
+export -f comma-application-swiss-run
