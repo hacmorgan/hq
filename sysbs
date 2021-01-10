@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 
 
-##  simple install script to install config files and scripts
-# functionality:
-# - scripts (in 'scripts' directory) are installed to $options_install_prefix/bin
-#   - this invokes sudo, be warned
-# - configs (in 'dots' directory) are installed to ~/.config/ unless:
-#   - they are present in 'etc/homedots', in which case they are installed to ~/ 
-#   - 'dots/sshconfig' is installed to ~/.ssh/config
+# TODO
+# - investigate if possible to include comma-options-to-name-value, as it is required for comma name-value args
+
+
+myself="$0"
+dname="$( dirname $myself )"
 
 
 function preinstall_comma_applications
@@ -16,9 +15,6 @@ function preinstall_comma_applications
     read
     sudo cp $dname/scripts/comma-* /usr/local/bin/
 }
-
-
-dname="$( dirname $0 )"
 
 type -p comma-application-util > /dev/null || preinstall_comma_applications
 type -p comma-log-util         > /dev/null || preinstall_comma_applications
@@ -33,8 +29,9 @@ function options
 --configure-emacs; clone emacs repositiory to ~/.emacs.d
 --configure-git; tell git who you are (so you can commit)
 --configure-zsh; do this after installing oh-my-zsh
+--create-shared-mountpoints; create all mountpoints in 'etc/mountpoints' and transfer ownership to hamish
 --dry-run; talk the talk but don't walk the walk
---symlink-dots; symlink configs in 'dots' to ~/.config, unless they are present in 'etc/homedots'
+--symlink-dots; symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
 --install-fantasque; unpack fantasque (noLoopK) to /usr/share/fonts/fantasque
 --install-oh-my-zsh; self explanatory. terminates this script, use this option by itself
 --install-prefix=<path>; default=/usr/local; install prefix for scripts
@@ -44,7 +41,9 @@ function options
 EOF
 }
 
-
+if [[ -n $( grep -e '--help' -e ' -h ' -e '-h$' <<< "$@" ) ]]; then
+    echo "${fmt_dim}${fmt_cyan}sysbs - system bootstrapper${fmt_white}${fmt_normal}"
+fi
 comma-application-init "$@" < <( options )
 
 
@@ -54,7 +53,7 @@ comma-application-init "$@" < <( options )
 
 function install_scripts
 {
-    for script in $dname/scripts/*; do
+    for script in $myself $dname/scripts/*; do
         if (( ! options_dry_run )); then
             sudo cp $script $options_install_prefix/bin/
         fi
@@ -164,6 +163,15 @@ function configure_emacs
 }
 
 
+function create_shared_mountpoints
+{
+    for mount_point in $( cat $dname/etc/mountpoints | cut -d':' -f1 ); do
+        sudo mkdir -v $mount_point
+        sudo chown hamish:hamish $mount_point
+    done
+}
+
+
 function install_fantasque
 {
     sudo mkdir /usr/share/fonts/fantasque
@@ -181,13 +189,14 @@ function install_oh_my_zsh
 }    
 
 
-(( options_install_oh_my_zsh )) && install_oh_my_zsh ; exit
-(( options_configure_emacs ))   && configure_emacs
-(( options_configure_git ))     && configure_git
-(( options_configure_zsh ))     && configure_zsh
-(( options_install_fantasque )) && install_fantasque
-(( options_install_dots ))      && install_dots
-(( options_install_scripts ))   && install_scripts
+(( options_install_oh_my_zsh ))         && install_oh_my_zsh ; exit
+(( options_configure_emacs ))           && configure_emacs
+(( options_configure_git ))             && configure_git
+(( options_configure_zsh ))             && configure_zsh
+(( options_create_shared_mountpoints )) && create_shared_mountpoints
+(( options_install_fantasque ))         && install_fantasque
+(( options_install_dots ))              && install_dots
+(( options_install_scripts ))           && install_scripts
 
 
 
