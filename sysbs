@@ -8,11 +8,20 @@
 #   - can have other niceties like the bash formatting, and anything else useful
 
 
+
+
 myself="$0"
 hq="$( dirname $myself )"
 
-source $hq/scripts/bash-formatting
+source $hq/scripts/bash-std
 
+
+
+
+function prologue
+{
+    echo -e "\n${fmt_dim}${fmt_cyan}sysbs - system bootstrapper${fmt_white}${fmt_normal}"
+}
 
 function options
 {
@@ -31,12 +40,6 @@ function options
 --verbose; talk the talk AND walk the walk
 EOF
 }
-
-if [[ -n $( grep -e '--help' -e ' -h ' -e '-h$' <<< "$@" ) ]]; then
-    echo "${fmt_dim}${fmt_cyan}sysbs - system bootstrapper${fmt_white}${fmt_normal}"
-fi
-
-
 
 
 
@@ -179,7 +182,11 @@ function install_oh_my_zsh
 }    
 
 
-(( options_install_oh_my_zsh ))         && install_oh_my_zsh ; exit
+
+
+application-init "$@" < <( options ) || die "failed"
+
+(( options_install_oh_my_zsh ))         && { install_oh_my_zsh; exit; }
 (( options_configure_emacs ))           && configure_emacs
 (( options_configure_git ))             && configure_git
 (( options_configure_zsh ))             && configure_zsh

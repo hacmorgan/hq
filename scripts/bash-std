@@ -84,7 +84,7 @@ function argument_type
     local arg_name="$( cut -d'=' -f1 <<< $1 )"
     local definition="$( get_definition "$arg_name" <<< $options )"
     [[ -n $definition ]] || die "invalid option"
-    if [[ -n "$( grep '<.*>' <<< $definition )" ]]; then
+    if [[ -n "$( grep '=<.*>;' <<< $definition )" || -n "$( grep '=\[<.*>\];' <<< $definition )" ]]; then
         if [[ -n "$( grep '=' <<< "$1" )" ]]; then
             echo "comes_with_value"
         else
@@ -138,12 +138,29 @@ function check_all_mandatory_options
     while read definition; do
         local arg_name=$( full_arg_name           <<< $definition )
         local arg_type=$( argument_type $arg_name <<< $definition )
-        if [[ -n "$( grep "value" <<< $arg_type )" && \
-                  -z "$( grep "\[<.*>\]" <<< $definition )" ]]; then
+        if [[ -n "$( grep "value" <<< $arg_type )" && -z "$( grep "\[<.*>\]" <<< $definition )" ]]; then
             variable_name="$( arg_to_option_name "$arg_name" <<< $definition )"
             [[ -n $( eval "echo \$$variable_name" ) ]] || die "$arg_name is required and was not given" 
         fi
     done
+}
+
+function check_for_help
+{
+    local args=( $@ )
+    local _help=0
+    for arg in ${args[@]}; do
+        if [[ $arg == "-h" || $arg == "--help" ]]; then _help=1; break; fi
+    done
+    if (( _help )); then
+        command -v prologue > /dev/null && { prologue; echo; }
+        echo "${fmt_bold}options:${fmt_normal}"
+        cat | sed -e 's#^#    #' -e "s#\(.*\);\(.*\)#\1;${fmt_dim}\2${fmt_normal}#" 1>&2
+        command -v epilogue > /dev/null && epilogue
+        exit 0
+    else
+        cat 1>/dev/null
+    fi
 }
 
 function application-init
@@ -152,6 +169,7 @@ function application-init
     args=( "$@" )
     nargs=$(( ${#args[@]} - 1 ))
 
+    check_for_help ${args[@]} <<< $options
     set_defaults <<< $options
 
     skip=0
