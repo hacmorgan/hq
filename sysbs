@@ -31,12 +31,12 @@ function options
 --configure-zsh; do this after installing oh-my-zsh
 --create-shared-mountpoints; create all mountpoints in 'etc/mountpoints' and transfer ownership to hamish
 --dry-run; talk the talk but don't walk the walk
---symlink-dots; symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
 --install-fantasque; unpack fantasque (noLoopK) to /usr/share/fonts/fantasque
 --install-oh-my-zsh; self explanatory. terminates this script, use this option by itself
 --install-prefix=<path>; default=/usr/local; install prefix for scripts
 --install-scripts; copy everything in 'scripts' to --install-prefix
 --move-existing; if <file> exists, move it to <file>.old
+--symlink-dots; symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
 --verbose; talk the talk AND walk the walk
 EOF
 }
