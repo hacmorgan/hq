@@ -2,10 +2,10 @@
 
 (history-item "file-open" 0)
 (history-item "edit-copy" 0)
-(history-item "file-export" 4)
-(history-item "view-scroll-right-border" 0)
+(history-item "file-export" 2)
 (history-item "file-quit" 2)
-(history-item "edit-paste-as-new-image" 2)
+(history-item "view-scroll-right-border" 1)
+(history-item "edit-paste-as-new-image" 3)
 (history-item "image-new" 0)
 (history-item "edit-paste" 3)
 (history-item "select-all" 1)
