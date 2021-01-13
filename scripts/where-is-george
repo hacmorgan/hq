@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+
+for host in george george_remote; do
+    ssh $host "exit" 2> /dev/null
+    if (( $? == 0 )); then
+        echo $host
+        exit 0
+    fi
+done
+die "could not reach george or george_remote"

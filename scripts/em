@@ -3,9 +3,48 @@
 # A simple script to open a given file in emacs,
 # and detatch the process from the parent terminal 
 
-file="$(realpath $1)"
-echo "$file" 1>&2
+source $( type -p bash-std )
 
-[[ -z "$2" ]] || echo "warning: emacsclient can only open one file at a time" 1>&2
 
-emacsclient -a '' -c "$file" &!
+
+
+function options
+{
+    cat <<EOF
+--buffalo,-b; look for file (if any given) on buffalo
+--george,-g; look for file (if any given) on george
+--terminal,-t; open file in the terminal, don't detach process from parent shell 
+EOF
+}
+
+application-init < <( options ) || die "failed"
+
+
+
+
+function sanitize_inputs
+{
+    if (( options_george + options_buffalo > 1 )); then
+        die "--george and --buffalo are mutually exclusive"
+    fi
+    [[ -z "$2" ]] || die "emacsclient can only open one file at a time"
+}
+
+
+sanitize_inputs $@  # todo: see if this still breaks when given 2 files with "$@" instead of $@
+
+file="$( realpath "$1" )"
+if (( options_george )); then
+    file="/ssh:$( where-is-george ):$file"
+elif (( options_buffalo )); then
+    file="/ssh:$( where-is-george )|ssh:buffalo:$file"
+fi
+    
+
+command="emacsclient -a '' -c $file"
+if (( options_terminal )); then
+    command+=" -nw"
+else
+    command+=" &!"
+fi
+eval "$command"
