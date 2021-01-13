@@ -198,3 +198,13 @@ function application-init
 }
 
 export -f application-init
+
+
+
+
+function whats-my-private-ip
+{
+    ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}'
+}
+
+export -f whats-my-private-ip
