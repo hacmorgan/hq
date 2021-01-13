@@ -17,7 +17,7 @@ function options
 EOF
 }
 
-application-init < <( options ) || die "failed"
+application-init "$@" < <( options ) || die "failed"
 
 
 
@@ -31,16 +31,28 @@ function sanitize_inputs
 }
 
 
+function get_filename
+{
+    local args=( $@ )
+    local num_args=${#args[@]}
+    local last_arg=${args[$(( num_args - 1 ))]}
+    local file=""
+    if [[ -z "$( grep '^-' <<< $last_arg )" ]]; then file="$last_arg"; fi
+    if (( options_george )); then
+        file="/ssh:$( where-is-george ):$file"
+    elif (( options_buffalo )); then
+        file="/ssh:$( where-is-george )|ssh:buffalo:$file"
+    fi
+    
+}
+
+
+
+
+
 sanitize_inputs $@  # todo: see if this still breaks when given 2 files with "$@" instead of $@
 
-file="$( realpath "$1" )"
-if (( options_george )); then
-    file="/ssh:$( where-is-george ):$file"
-elif (( options_buffalo )); then
-    file="/ssh:$( where-is-george )|ssh:buffalo:$file"
-fi
-    
-
+file="$( get_filename $@ )"
 command="emacsclient -a '' -c $file"
 if (( options_terminal )); then
     command+=" -nw"
