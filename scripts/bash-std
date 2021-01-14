@@ -19,7 +19,7 @@ function saymore
 
 function die
 {
-    say "$@"
+    say "${fmt_red}$@${fmt_normal}"
     exit 1
 }
 
@@ -84,7 +84,7 @@ function argument_type
     local options=$( cat )
     local arg_name="$( cut -d'=' -f1 <<< $1 )"
     local definition="$( get_definition "$arg_name" <<< $options )"
-    [[ -n $definition ]] || die "invalid option"
+    [[ -n $definition ]] || { echo "not_an_option"; return; }
     if [[ -n "$( grep '=<.*>;' <<< $definition )" || -n "$( grep '=\[<.*>\];' <<< $definition )" ]]; then
         if [[ -n "$( grep '=' <<< "$1" )" ]]; then
             echo "comes_with_value"
@@ -189,8 +189,8 @@ function application-init
                           <<< $options ;;
             "flag")
                 set_value "${args[$i]}" 1 <<< $options ;;
-            *)
-                die "unparseable argument: ${args[$i]}" ;;
+            # *)
+            #     die "unparseable argument: ${args[$i]}" ;;
         esac
     done
 
@@ -198,3 +198,13 @@ function application-init
 }
 
 export -f application-init
+
+
+
+
+function whats-my-private-ip
+{
+    ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}'
+}
+
+export -f whats-my-private-ip
