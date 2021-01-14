@@ -22,28 +22,33 @@ application-init "$@" < <( options ) || die "failed"
 
 
 
+function get_last_arg
+{
+    local args=( $@ )
+    local num_args=${#args[@]}
+    echo ${args[$(( num_args - 1 ))]}
+}
+
+
 function sanitize_inputs
 {
     if (( options_george + options_buffalo > 1 )); then
         die "--george and --buffalo are mutually exclusive"
     fi
-    [[ -z "$2" ]] || die "emacsclient can only open one file at a time"
 }
 
 
 function get_filename
 {
-    local args=( $@ )
-    local num_args=${#args[@]}
-    local last_arg=${args[$(( num_args - 1 ))]}
+    local last_arg=$( get_last_arg $@ )
     local file=""
     if [[ -z "$( grep '^-' <<< $last_arg )" ]]; then file="$last_arg"; fi
     if (( options_george )); then
         file="/ssh:$( where-is-george ):$file"
     elif (( options_buffalo )); then
-        file="/ssh:$( where-is-george )|ssh:buffalo:$file"
+        file="/ssh:$( where-is-george )\|ssh:buffalo:$file"
     fi
-    
+    echo $file
 }
 
 
