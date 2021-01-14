@@ -5,7 +5,7 @@
 function get-choice()
 {
     options="$1"
-    echo $options | tr ',' '\n' | dmenu 
+    echo $options | tr ',' '\n' | dmenu -fn "Fantasque Sans Mono" -sb "#AD29C4" -f
 }
 
 
