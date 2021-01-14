@@ -1,63 +1,57 @@
 #!/usr/bin/env bash
 
 
-##  simple install script to install config files and scripts
+# TODO
+# x investigate if possible to include comma-options-to-name-value, as it is required for comma name-value args
+#   x too hard
+# - make very basic options() -> options_foo="bar" utility to replace it
+#   - can have other niceties like the bash formatting, and anything else useful
 
 
-function say
+
+
+myself="$0"
+hq="$( dirname $myself )"
+
+source $hq/scripts/bash-std
+
+
+
+
+function prologue
 {
-    echo "$@" 1>&2
+    echo -e "\n${fmt_dim}${fmt_cyan}sysbs - system bootstrapper${fmt_white}${fmt_normal}"
 }
 
-
-function die
+function options
 {
-    say "$@"
-    exit 1
-}
-
-
-function _help
-{
-    cat <<EOF 1>&2
-
-install scripts and config files
-
-options:
---help,-h; display this help message and exit
+    cat <<EOF
 --configure-emacs; clone emacs repositiory to ~/.emacs.d
 --configure-git; tell git who you are (so you can commit)
 --configure-zsh; do this after installing oh-my-zsh
+--create-shared-mountpoints; create all mountpoints in 'etc/mountpoints' and transfer ownership to hamish
 --dry-run; talk the talk but don't walk the walk
 --install-fantasque; unpack fantasque (noLoopK) to /usr/share/fonts/fantasque
---install-oh-my-zsh; self explanatory
+--install-oh-my-zsh; self explanatory. terminates this script, use this option by itself
+--install-prefix=<path>; default=/usr/local; install prefix for scripts
+--install-scripts; copy everything in 'scripts' to --install-prefix
 --move-existing; if <file> exists, move it to <file>.old
+--symlink-dots; symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
 --verbose; talk the talk AND walk the walk
-
-functionality:
-- scripts (in 'scripts' directory) are installed to $INSTALL_PREFIX/bin
-  - this invokes sudo, be warned
-- configs (in 'dots' directory) are installed to ~/.config/ unless:
-  - they are present in 'etc/homedots', in which case they are installed to ~/ 
-  - 'dots/sshconfig' is installed to ~/.ssh/config
-
 EOF
 }
 
 
-INSTALL_PREFIX=/usr/local
-
-dname="$( dirname $0 )"
 
 
 function install_scripts
 {
-    for script in $dname/scripts/*; do
+    for script in $hq/scripts/*; do
         if (( ! options_dry_run )); then
-            sudo cp $script $INSTALL_PREFIX/bin/
+            sudo cp $script $options_install_prefix/bin/
         fi
         if (( options_dry_run || options_verbose )); then
-            say "$script -> $INSTALL_PREFIX/bin/"
+            say "$script -> $options_install_prefix/bin/"
         fi
     done
 }
@@ -65,7 +59,7 @@ function install_scripts
 
 function install_dots
 {
-    for dot in $( find $dname/dots -maxdepth 1 -mindepth 1 -type f,d ); do
+    for dot in $( find $hq/dots -maxdepth 1 -mindepth 1 -type f,d ); do
         bname="$( basename $dot )"
         if [[ $bname == "sshconfig" ]]; then
             if (( ! options_dry_run )); then
@@ -87,7 +81,7 @@ function install_dots
             if (( options_dry_run || options_verbose )); then
                 say "$dot -> ~/.ssh/config"
             fi
-        elif [[ -n "$( grep $bname < $dname/etc/homedots )" ]]; then  # install some files to ~/
+        elif [[ -n "$( grep $bname < $hq/etc/homedots )" ]]; then  # install some files to ~/
             if (( ! options_dry_run )); then
                 if [[ -f ~/$bname && ! -L ~/$bname ]]; then
                     if (( options_move_existing )); then
@@ -162,6 +156,15 @@ function configure_emacs
 }
 
 
+function create_shared_mountpoints
+{
+    for mount_point in $( cat $hq/etc/mountpoints | cut -d':' -f1 ); do
+        sudo mkdir -v $mount_point
+        sudo chown hamish:hamish $mount_point
+    done
+}
+
+
 function install_fantasque
 {
     sudo mkdir /usr/share/fonts/fantasque
@@ -179,30 +182,18 @@ function install_oh_my_zsh
 }    
 
 
-for arg in "$@"; do
-    if [[ $arg == "--help" || $arg == "-h" ]]; then
-        _help
-        exit 0
-    elif [[ $arg == "--configure-emacs" ]]; then
-        configure_emacs
-    elif [[ $arg == "--configure-git" ]]; then
-        configure_git
-    elif [[ $arg == "--configure-zsh" ]]; then
-        configure_zsh
-    elif [[ $arg == "--dry-run" ]]; then
-        options_dry_run=1
-    elif [[ $arg == "--install-fantasque" ]]; then
-        install_fantasque
-    elif [[ $arg == "--install-oh-my-zsh" ]]; then
-        install_oh_my_zsh
-        exit
-    elif [[ $arg == "--verbose" ]]; then
-        options_verbose=1
-    elif [[ $arg == "--move-existing" ]]; then
-        options_move_existing=1
-    fi
-done
 
 
-install_scripts
-install_dots
+application-init "$@" < <( options ) || die "failed"
+
+(( options_install_oh_my_zsh ))         && { install_oh_my_zsh; exit; }
+(( options_configure_emacs ))           && configure_emacs
+(( options_configure_git ))             && configure_git
+(( options_configure_zsh ))             && configure_zsh
+(( options_create_shared_mountpoints )) && create_shared_mountpoints
+(( options_install_fantasque ))         && install_fantasque
+(( options_install_dots ))              && install_dots
+(( options_install_scripts ))           && install_scripts
+
+
+

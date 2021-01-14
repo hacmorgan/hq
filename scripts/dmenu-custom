@@ -147,8 +147,22 @@ function main-run ()
                 killall picom ;;
         esac
     }
+
+    function emacs-run
+    {
+        local emacs_options="local,george,buffalo"
+        local selected_option="$( get-choice "$emacs_options" )"
+        case "$selected_option" in
+            "local")
+                em ;;
+            "george")
+                em --george ;;
+            "buffalo")
+                em --buffalo ;;
+        esac
+    }
        
-    subsetting_options="power,screenshot,xrandr,keyboard multiplier,edit configs,picom"
+    subsetting_options="power,screenshot,xrandr,emacs,keyboard multiplier,edit configs,picom"
     subsetting="$( get-choice "$subsetting_options" )"
     echo $subsetting
     case "$subsetting" in
@@ -164,6 +178,8 @@ function main-run ()
             xrandr-run ;;
         "picom")
             picom-run ;;
+        "emacs")
+            emacs-run ;;
     esac
     
 }

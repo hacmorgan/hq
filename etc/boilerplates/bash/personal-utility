@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+
+source $( type -p comma-application-util )
+source $( type -p bash-formatting )
+
+
+function options { ; }
+
+
+comma-application-init "$@" < <( options )
+
+
+# variables have now been defined.
+# the rest of the application goes here

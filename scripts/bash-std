@@ -1,0 +1,210 @@
+#!/usr/bin/env bash
+
+
+# bash-std: a collection of handy functions that can be sourced in one line:
+#             source $( type -p bash-std )
+
+
+
+
+function say
+{
+    echo -e "$( basename $0 ): $@" 1>&2
+}
+
+function saymore
+{
+    if (( options_verbose )); then say "$@"; fi
+}
+
+function die
+{
+    say "${fmt_red}$@${fmt_normal}"
+    exit 1
+}
+
+export -f say
+export -f saymore
+export -f die
+
+
+
+
+fmt_normal="$(tput sgr0)"
+fmt_bold="$(tput bold)"
+fmt_dim="$(tput dim)"
+fmt_underline_enable="$(tput smul)"
+fmt_underline_disable="$(tput rmul)"
+fmt_black="$(tput setaf 0)"
+fmt_red="$(tput setaf 1)"
+fmt_green="$(tput setaf 2)"
+fmt_yellow="$(tput setaf 3)"
+fmt_blue="$(tput setaf 4)"
+fmt_magenta="$(tput setaf 5)"
+fmt_cyan="$(tput setaf 6)"
+fmt_white="$(tput setaf 7)"
+
+export fmt_normal
+export fmt_bold
+export fmt_dim
+export fmt_underline_enable
+export fmt_underline_disable
+export fmt_black
+export fmt_red
+export fmt_green
+export fmt_yellow
+export fmt_blue
+export fmt_magenta
+export fmt_cyan
+export fmt_white
+
+
+
+
+function get_definition
+{
+    arg="$1"
+    grep --regexp "^$arg;" \
+         --regexp "^$arg," \
+         --regexp "^$arg=" \
+         --regexp ",$arg;" \
+         --regexp ",$arg," \
+         --regexp ",$arg=" 
+}
+
+function full_arg_name
+{
+    sed --expression 's#;.*##' \
+        --expression 's#=.*##' \
+        --expression 's#,.*##'
+}
+
+function argument_type
+{
+    local options=$( cat )
+    local arg_name="$( cut -d'=' -f1 <<< $1 )"
+    local definition="$( get_definition "$arg_name" <<< $options )"
+    [[ -n $definition ]] || { echo "not_an_option"; return; }
+    if [[ -n "$( grep '=<.*>;' <<< $definition )" || -n "$( grep '=\[<.*>\];' <<< $definition )" ]]; then
+        if [[ -n "$( grep '=' <<< "$1" )" ]]; then
+            echo "comes_with_value"
+        else
+            echo "value_in_next_arg"
+        fi
+    else
+        echo "flag"
+    fi
+}
+
+function arg_to_option_name
+{
+    local options=$( cat )
+    local argument="$1"
+    local definition="$( get_definition "$argument" <<< $options )"
+    local full_name="$( full_arg_name <<< $definition )"
+    sed --expression 's#^#options_#' \
+        --expression 's#--##'        \
+        --expression 's#-#_#g'       \
+        <<< "$full_name"
+}
+
+function set_value
+{
+    local options=$( cat )
+    expression="$( arg_to_option_name "$1" <<< $options )=$2"
+    eval "$expression"
+}
+
+function set_defaults
+{
+    local definition=""
+    while read definition; do
+        local arg_name=$( full_arg_name           <<< $definition )
+        local arg_type=$( argument_type $arg_name <<< $definition )
+        if [[ $arg_type == "flag" ]]; then
+            set_value $arg_name 0 <<< $definition
+        else
+            local value=""
+            if [[ -n "$( grep 'default=' <<< $definition )" ]]; then
+                value="$( sed -e 's#.*default=##' -e 's#;.*##' <<< $definition )"
+            fi
+            set_value $arg_name $value <<< $definition
+        fi
+    done
+}
+
+function check_all_mandatory_options
+{
+    local definition=""
+    while read definition; do
+        local arg_name=$( full_arg_name           <<< $definition )
+        local arg_type=$( argument_type $arg_name <<< $definition )
+        if [[ -n "$( grep "value" <<< $arg_type )" && -z "$( grep "\[<.*>\]" <<< $definition )" ]]; then
+            variable_name="$( arg_to_option_name "$arg_name" <<< $definition )"
+            [[ -n $( eval "echo \$$variable_name" ) ]] || die "$arg_name is required and was not given" 
+        fi
+    done
+}
+
+function check_for_help
+{
+    local args=( $@ )
+    local _help=0
+    for arg in ${args[@]}; do
+        if [[ $arg == "-h" || $arg == "--help" ]]; then _help=1; break; fi
+    done
+    if (( _help )); then
+        command -v prologue > /dev/null && { prologue; echo; }
+        echo "${fmt_bold}options:${fmt_normal}"
+        cat | sed -e 's#^#    #' -e "s#\(.*\);\(.*\)#\1;${fmt_dim}\2${fmt_normal}#" 1>&2
+        command -v epilogue > /dev/null && epilogue
+        exit 0
+    else
+        cat 1>/dev/null
+    fi
+}
+
+function application-init
+{
+    local options=$( cat )
+    args=( "$@" )
+    nargs=$(( ${#args[@]} - 1 ))
+
+    check_for_help ${args[@]} <<< $options
+    set_defaults <<< $options
+
+    skip=0
+    for i in $( seq 0 $nargs ); do  # for some reason {0..${#args[@]}} didn't work
+        if (( skip )); then skip=0; continue; fi
+        local arg_type=$( argument_type "${args[$i]}" <<< $options )
+        case $arg_type in
+            "comes_with_value")
+                set_value "$( cut -d'=' -f1              <<< ${args[$i]} )" \
+                          "$( cut -d'=' -f1 --complement <<< ${args[$i]} )" \
+                          <<< $options ;;
+            "value_in_next_arg")
+                skip=1
+                set_value "${args[$i]}"           \
+                          "${args[$(( i + 1 ))]}" \
+                          <<< $options ;;
+            "flag")
+                set_value "${args[$i]}" 1 <<< $options ;;
+            # *)
+            #     die "unparseable argument: ${args[$i]}" ;;
+        esac
+    done
+
+    check_all_mandatory_options <<< $options
+}
+
+export -f application-init
+
+
+
+
+function whats-my-private-ip
+{
+    ip route get 8.8.8.8 | awk -F"src " 'NR==1{split($2,a," ");print a[1]}'
+}
+
+export -f whats-my-private-ip
