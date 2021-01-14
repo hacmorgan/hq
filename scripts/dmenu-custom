@@ -136,7 +136,7 @@ function main-run ()
 
     function emacs-run
     {
-        local emacs_options="local,george,buffalo"
+        local emacs_options="local,george,enzo,buffalo"
         local selected_option="$( get-choice "$emacs_options" )"
         case "$selected_option" in
             "local")
@@ -144,6 +144,8 @@ function main-run ()
             "george")
                 em --george ;;
             "buffalo")
+                em --buffalo ;;
+            "enzo")
                 em --buffalo ;;
         esac
     }
