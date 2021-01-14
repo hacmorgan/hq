@@ -23,9 +23,16 @@ function die
     exit 1
 }
 
+function bash-std-set-verbose
+{
+    if (( options_verbose )); then  verbose="v";  else  verbose=""; fi
+    if (( options_verbose )); then _verbose="-v"; else _verbose=""; fi
+}
+
 export -f say
 export -f saymore
 export -f die
+export -f bash-std-set-verbose
 
 
 
