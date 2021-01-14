@@ -30,6 +30,7 @@ format = "{barchart} {utilization}% {frequency}GHz"
 
 [[block]]
 block = "sound"
+step_width = 1
 
 [[block]]
 block = "time"

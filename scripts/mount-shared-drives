@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+
+
+source $( type -p comma-application-util )
+source $( type -p bash-formatting )
+
+myself="$0"
+dname="$( dirname $myself )"
+
+
+function options
+{
+    cat <<EOF
+--interval=<seconds>; defualt=30; time between mount point checks
+--lan; force using LAN address
+--ddns; force using DDNS address
+EOF
+}
+
+
+comma-application-init "$@" < <( options )
+
+
+
+
+function mountpoints  # local_filesystem:remote_filesystem
+{
+    cat $dname/etc/mountpoints
+}
+
+local_mount_points=$( mountpoints | cut -d':' -f1 )
+remote_mount_points=$( mountpoints | cut -d':' -f2 )
+
+
+function _mount
+{
+    host="$1"
+    for i in {1..${#local_mount_points[@]}}; do
+        umount ${local_mount_points[$i]}
+        sshfs $host:${remote_mount_points[$i]} ${local_mount_points[$i]}
+    done
+}
+
+
+function get_host
+{
+    for host in george george_remote; do
+        ssh $host "exit" 2> /dev/null
+        if (( $? == 0 )); then
+            echo $host
+            return
+        fi
+    done
+    die "FATAL: could not reach george or george_remote"
+}
+
+
+function monitor_mountpoints
+{
+    while true; do
+        for lmp in $local_mount_points; do
+            mountpoint $lmp > /dev/null || exit 1
+            say
+        done
+        sleep $options_interval
+    done
+}
+
+
+
+
+if (( options_lan )); then
+    _mount "george"
+elif (( options_ddns )); then
+    _mount "george_remote"
+else
+    _mount "$( get_host )"
+fi
+
+monitor_mountpoints
+
+
+# TODO:
+# - add --create-shared-mountpoints to sysbs
+# - make both sysbs and mount-shared-srives look at a file in etc for mountpoints
+

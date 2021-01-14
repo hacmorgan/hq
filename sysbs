@@ -1,0 +1,194 @@
+#!/usr/bin/env bash
+
+
+# TODO
+# x investigate if possible to include comma-options-to-name-value, as it is required for comma name-value args
+#   x too hard
+# - make very basic options() -> options_foo="bar" utility to replace it
+#   - can have other niceties like the bash formatting, and anything else useful
+
+
+
+
+myself="$0"
+hq="$( dirname $myself )"
+
+source $hq/scripts/bash-std
+
+
+
+
+function prologue
+{
+    echo -e "\n${fmt_dim}${fmt_cyan}sysbs - system bootstrapper${fmt_white}${fmt_normal}"
+}
+
+function options
+{
+    cat <<EOF
+--configure-emacs; clone emacs repositiory to ~/.emacs.d
+--configure-git; tell git who you are (so you can commit)
+--configure-zsh; do this after installing oh-my-zsh
+--create-shared-mountpoints; create all mountpoints in 'etc/mountpoints' and transfer ownership to hamish
+--dry-run; talk the talk but don't walk the walk
+--install-fantasque; unpack fantasque (noLoopK) to /usr/share/fonts/fantasque
+--install-oh-my-zsh; self explanatory. terminates this script, use this option by itself
+--install-prefix=<path>; default=/usr/local; install prefix for scripts
+--install-scripts; copy everything in 'scripts' to --install-prefix
+--move-existing; if <file> exists, move it to <file>.old
+--symlink-dots; symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
+--symlink-vi; symlink /usr/bin/nvim to /usr/bin/vi
+--verbose; talk the talk AND walk the walk
+EOF
+}
+
+
+
+
+function install_scripts
+{
+    for script in $hq/scripts/*; do
+        if (( options_dry_run )); then
+            say "$script -> $options_install_prefix/bin/"
+        else
+            sudo cp $_verbose $script $options_install_prefix/bin/
+        fi
+    done
+}
+
+
+function install_dots
+{
+    for dot in $( find $hq/dots -maxdepth 1 -mindepth 1 -type f,d ); do
+        local bname="$( basename $dot )"
+        if [[ $bname == "sshconfig" ]]; then
+            if (( options_dry_run )); then
+                say "$dot -> ~/.ssh/config"
+            else
+                mkdir -p$verbose ~/.ssh
+                if [[ -f ~/.ssh/config && ! -L ~/.ssh/config ]]; then
+                    if (( options_move_existing )); then
+                        mv $_verbose ~/.ssh/config ~/.ssh/config.old
+                    else
+                        die "~/.ssh/config exists and is not a symlink, exiting"
+                    fi
+                else
+                    rm -f$verbose ~/.ssh/config
+                fi
+                ln -s$verbose $( realpath $dot ) ~/.ssh/config
+            fi
+        elif [[ -n "$( grep $bname < $hq/etc/homedots )" ]]; then  # install some files to ~/
+            if (( options_dry_run )); then
+                say "$dot -> ~/$bname"
+            else
+                if [[ -f ~/$bname && ! -L ~/$bname ]]; then
+                    if (( options_move_existing )); then
+                        mv $_verbose ~/$bname ~/$bname.old
+                    else
+                        die "~/$bname exists and is not a symlink, exiting"
+                    fi
+                else
+                    rm -rf$verbose ~/$bname
+                fi
+                ln -s$verbose $( realpath $dot ) ~/
+            fi
+        else                                          # install remaining files to ~/.config/
+            if (( options_dry_run )); then
+                say "$dot -> ~/.config/$bname"
+            else
+                mkdir -p$verbose ~/.config
+                if [[ -f ~/.config/$bname && ! -L ~/.config/$bname ]]; then
+                    if (( options_move_existing )); then
+                        mv $_verbose ~/.config/$bname ~/.config/$bname.old
+                    else
+                        die "~/.config/$bname exists and is not a symlink, exiting"
+                    fi
+                else
+                    rm -rf$verbose ~/.config/$bname
+                fi
+                ln -s$verbose $( realpath $dot ) ~/.config/
+            fi
+        fi
+    done
+}
+
+
+function configure_zsh
+{
+    mkdir -p$verbose ~/.oh-my-zsh/themes
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/themes/powerlevel10k
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+}
+
+
+function configure_git
+{
+    git config --global user.email "ham430@gmail.com"
+    git config --global user.name "Hamish Morgan"
+	git config --global pull.rebase false
+}
+
+
+function configure_emacs
+{
+    type -p emacs > /dev/null || say "warning: emacs is not installed"
+    if [[ -e "~/.emacs.d" ]]; then
+        if (( options_move_existing )); then
+            mv ~/.emacs.d ~/.emacs.d.old
+        else
+            die "~/.emacs.d already exists, use --move-existing to move it to ~/.emacs.d.old"
+        fi
+    fi
+    git clone git@github.com:hacmorgan/emacs.git ~/.emacs.d
+}
+
+
+function create_shared_mountpoints
+{
+    for mount_point in $( cat $hq/etc/mountpoints | cut -d':' -f1 ); do
+        sudo mkdir $_verbose $mount_point
+        sudo chown $_verbose hamish:hamish $mount_point
+    done
+}
+
+
+function install_fantasque
+{
+    sudo mkdir /usr/share/fonts/fantasque
+    pushd /usr/share/fonts/fantasque
+    curl -L "https://github.com/belluzj/fantasque-sans/releases/download/v1.8.0/FantasqueSansMono-NoLoopK.tar.gz" \
+        | sudo tar -zxf$verbose -
+    popd
+}
+
+function install_oh_my_zsh
+{
+    type -p zsh  > /dev/null || die "zsh not found, please install it first"
+    type -p curl > /dev/null || die "curL not found, please install it first"
+    sh -c "$( curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh )"
+}
+
+function symlink_vi
+{
+    sudo ln -s$verbose /usr/bin/nvim /usr/bin/vi 
+}
+
+
+
+
+application-init "$@" < <( options ) || die "failed"
+bash-std-set-verbose
+
+(( options_install_oh_my_zsh ))         && { install_oh_my_zsh; exit; }
+(( options_configure_emacs ))           && configure_emacs
+(( options_configure_git ))             && configure_git
+(( options_configure_zsh ))             && configure_zsh
+(( options_create_shared_mountpoints )) && create_shared_mountpoints
+(( options_install_fantasque ))         && install_fantasque
+(( options_symlink_dots ))              && symlink_dots
+(( options_symlink_vi ))                && symlink_vi
+(( options_install_scripts ))           && install_scripts
+
+
+

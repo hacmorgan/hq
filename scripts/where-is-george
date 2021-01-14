@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+
+source $( type -p bash-std )
+
+
+hosts=()
+if [[ $( whats-my-private-ip | cut -d'.' -f'1-3' ) == "10.0.0" ]]; then
+    hosts+=( george )
+fi
+hosts+=( george_remote )
+
+for host in ${hosts[@]}; do
+    ssh $host "exit" 2> /dev/null
+    if (( $? == 0 )); then
+        echo $host
+        exit 0
+    fi
+done
+die "could not reach george or george_remote"
