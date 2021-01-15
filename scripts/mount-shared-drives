@@ -18,7 +18,7 @@ EOF
 }
 
 
-comma-application-init "$@" < <( options )
+bash-std-application-init "$@" < <( options )
 
 
 
@@ -74,7 +74,7 @@ if (( options_lan )); then
 elif (( options_ddns )); then
     _mount "george_remote"
 else
-    _mount "$( get_host )"
+    _mount "$( where-is-george )"
 fi
 
 monitor_mountpoints

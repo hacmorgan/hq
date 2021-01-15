@@ -177,7 +177,7 @@ function symlink_vi
 
 
 
-application-init "$@" < <( options ) || die "failed"
+bash-std-application-init "$@" < <( options ) || die "failed"
 bash-std-set-verbose
 
 (( options_install_oh_my_zsh ))         && { install_oh_my_zsh; exit; }

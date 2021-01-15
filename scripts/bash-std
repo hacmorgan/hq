@@ -171,7 +171,7 @@ function check_for_help
     fi
 }
 
-function application-init
+function bash-std-application-init
 {
     local options=$( cat )
     args=( "$@" )
