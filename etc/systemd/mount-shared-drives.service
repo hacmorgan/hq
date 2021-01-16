@@ -1,0 +1,15 @@
+[Unit]
+Description=Mount Shared Drives
+# After=systemd-timesyncd.service
+After=network-online.target
+
+[Service]
+ExecStart=mount-shared-drives
+StandardOutput=inherit
+StandardError=inherit
+Restart=on-failure
+RestartSec=5
+User=hamish
+
+[Install]
+WantedBy=multi-user.target
