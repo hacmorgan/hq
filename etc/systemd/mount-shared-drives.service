@@ -1,0 +1,16 @@
+[Unit]
+Description=Mount Shared Drives
+After=network.target
+# After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=mount-shared-drives
+StandardOutput=inherit
+StandardError=inherit
+Restart=on-failure
+RestartSec=5
+User=hamish
+
+[Install]
+WantedBy=default.target
