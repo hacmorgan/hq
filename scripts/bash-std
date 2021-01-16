@@ -204,7 +204,7 @@ function bash-std-application-init
     check_all_mandatory_options <<< $options
 }
 
-export -f application-init
+export -f bash-std-application-init
 
 
 
