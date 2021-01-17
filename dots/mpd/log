@@ -12004,3 +12004,9 @@ Jun 18 20:38 : exception: OutputThread could not get realtime scheduling, contin
 Jun 18 20:38 : alsa_output: Decoder is too slow; playing silence to avoid xrun
 Jun 18 20:42 : player: played "MP3/The Funkoars/The Greatest Hits/You Know It.mp3"
 Jun 19 10:02 : player: played "MP3/The Funkoars/The Greatest Hits/The Symphony.mp3"
+Jan 17 18:49 : exception: Failed to access /mnt/storage/Music: No such file or directory
+Jan 17 19:02 : exception: Failed to open /home/hamish/.config/mpd/playlists: No such file or directory
+Jan 17 19:02 : exception: Failed to open /home/hamish/.config/mpd/playlists: No such file or directory
+Jan 17 19:02 : exception: Failed to open /home/hamish/.config/mpd/playlists: No such file or directory
+Jan 17 19:02 : exception: Failed to open /home/hamish/.config/mpd/playlists: No such file or directory
+Jan 17 19:02 : exception: Failed to open /home/hamish/.config/mpd/playlists: No such file or directory
