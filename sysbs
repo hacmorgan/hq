@@ -58,7 +58,7 @@ function install_scripts
 }
 
 
-function install_dots
+function symlink_dots
 {
     for dot in $( find $hq/dots -maxdepth 1 -mindepth 1 -type f,d ); do
         local bname="$( basename $dot )"
