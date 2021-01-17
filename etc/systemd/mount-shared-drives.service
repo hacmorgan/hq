@@ -1,0 +1,18 @@
+[Unit]
+Description=Mount Shared Drives
+After=graphical.target
+# After=network-online.target
+
+[Service]
+Type=simple
+ExecStartPre=sleep 10
+ExecStart=mount-shared-drives
+# StandardOutput=inherit
+# StandardError=inherit
+Restart=no
+# Restart=on-failure
+# RestartSec=15
+User=root
+
+[Install]
+WantedBy=default.target

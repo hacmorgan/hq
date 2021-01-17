@@ -37,6 +37,7 @@ function options
 --install-scripts; copy everything in 'scripts' to --install-prefix
 --move-existing; if <file> exists, move it to <file>.old
 --symlink-dots; symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
+--symlink-systemd-services; symlink service files in etc/systemd to /etc/systemd/system/
 --symlink-vi; symlink /usr/bin/nvim to /usr/bin/vi
 --verbose; talk the talk AND walk the walk
 EOF
@@ -174,10 +175,20 @@ function symlink_vi
     sudo ln -s$verbose /usr/bin/nvim /usr/bin/vi 
 }
 
+function symlink_systemd_services
+{
+    # mkdir -p$verbose ~/.local/share/systemd/user
+    for service in $hq/etc/systemd/*; do
+        sudo ln -sf$verbose $( realpath $service ) /etc/systemd/system/
+        sudo systemctl enable $( basename $service )
+        # systemctl start  --user $( basename $service )
+    done
+}
 
 
 
-application-init "$@" < <( options ) || die "failed"
+
+bash-std-application-init "$@" < <( options ) || die "failed"
 bash-std-set-verbose
 
 (( options_install_oh_my_zsh ))         && { install_oh_my_zsh; exit; }
@@ -187,6 +198,7 @@ bash-std-set-verbose
 (( options_create_shared_mountpoints )) && create_shared_mountpoints
 (( options_install_fantasque ))         && install_fantasque
 (( options_symlink_dots ))              && symlink_dots
+(( options_symlink_systemd_services ))  && symlink_systemd_services
 (( options_symlink_vi ))                && symlink_vi
 (( options_install_scripts ))           && install_scripts
 
