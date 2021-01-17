@@ -34,7 +34,8 @@ function _mount
     host="$1"
     num_mount_points=${#local_mount_points[@]}
     for i in $( seq 0 $(( num_mount_points - 1 )) ); do
-        umount ${local_mount_points[$i]}
+        mountpoint --quiet ${local_mount_points[$i]} \
+            && umount ${local_mount_points[$i]}
         sshfs $host:${remote_mount_points[$i]} ${local_mount_points[$i]}
     done
 }
@@ -52,7 +53,7 @@ function monitor_mountpoints
 {
     while true; do
         for lmp in $local_mount_points; do
-            mountpoint $lmp > /dev/null || exit 1
+            mountpoint --quiet $lmp || exit 1
         done
         sleep $options_interval
     done

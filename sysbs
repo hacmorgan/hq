@@ -177,11 +177,11 @@ function symlink_vi
 
 function symlink_systemd_services
 {
-    mkdir -p$verbose ~/.local/share/systemd/user
+    # mkdir -p$verbose ~/.local/share/systemd/user
     for service in $hq/etc/systemd/*; do
-        ln -sf$verbose $( realpath $service ) ~/.local/share/systemd/user/
-        systemctl enable --user $( basename $service )
-        systemctl start  --user $( basename $service )
+        sudo ln -sf$verbose $( realpath $service ) /etc/systemd/system/
+        sudo systemctl enable $( basename $service )
+        # systemctl start  --user $( basename $service )
     done
 }
 
