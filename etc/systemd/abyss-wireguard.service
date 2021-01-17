@@ -1,12 +1,12 @@
 [Unit]
 Description=Mount Shared Drives
-After=graphical.target
-# After=network-online.target
+# After=graphical.target
+After=network.target
 
 [Service]
 Type=simple
 ExecStartPre=sleep 10
-ExecStart=mount-shared-drives
+ExecStart=wg-quick up abyss
 # StandardOutput=inherit
 # StandardError=inherit
 Restart=no
