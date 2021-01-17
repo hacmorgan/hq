@@ -23,9 +23,16 @@ function die
     exit 1
 }
 
+function bash-std-set-verbose
+{
+    if (( options_verbose )); then  verbose="v";  else  verbose=""; fi
+    if (( options_verbose )); then _verbose="-v"; else _verbose=""; fi
+}
+
 export -f say
 export -f saymore
 export -f die
+export -f bash-std-set-verbose
 
 
 
@@ -164,7 +171,7 @@ function check_for_help
     fi
 }
 
-function application-init
+function bash-std-application-init
 {
     local options=$( cat )
     args=( "$@" )
@@ -197,7 +204,7 @@ function application-init
     check_all_mandatory_options <<< $options
 }
 
-export -f application-init
+export -f bash-std-application-init
 
 
 

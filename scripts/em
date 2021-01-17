@@ -11,13 +11,14 @@ source $( type -p bash-std )
 function options
 {
     cat <<EOF
---buffalo,-b; look for file (if any given) on buffalo
+--buffalo,-b; look for file (if any given) on buffalo, via george
+--enzo,-e; look for file (if any given) on enzo, via george
 --george,-g; look for file (if any given) on george
 --terminal,-t; open file in the terminal, don't detach process from parent shell 
 EOF
 }
 
-application-init "$@" < <( options ) || die "failed"
+bash-std-application-init "$@" < <( options ) || die "failed"
 
 
 
@@ -32,8 +33,8 @@ function get_last_arg
 
 function sanitize_inputs
 {
-    if (( options_george + options_buffalo > 1 )); then
-        die "--george and --buffalo are mutually exclusive"
+    if (( options_george + options_buffalo + options_enzo > 1 )); then
+        die "--george, --enzo and --buffalo are mutually exclusive"
     fi
 }
 
@@ -47,6 +48,8 @@ function get_filename
         file="/ssh:$( where-is-george ):$file"
     elif (( options_buffalo )); then
         file="/ssh:$( where-is-george )\|ssh:buffalo:$file"
+    elif (( options_enzo )); then
+        file="/ssh:$( where-is-george )\|ssh:enzo:$file"
     fi
     echo $file
 }

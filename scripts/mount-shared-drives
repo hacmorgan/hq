@@ -1,57 +1,51 @@
 #!/usr/bin/env bash
 
 
-source $( type -p comma-application-util )
-source $( type -p bash-formatting )
-
-myself="$0"
-dname="$( dirname $myself )"
+source $( type -p bash-std )
 
 
 function options
 {
     cat <<EOF
---interval=<seconds>; defualt=30; time between mount point checks
+--interval=<seconds>; default=30; time between mount point checks
+--george; mount pond and tank
 --lan; force using LAN address
 --ddns; force using DDNS address
 EOF
 }
 
 
-comma-application-init "$@" < <( options )
+bash-std-application-init "$@" < <( options )
 
 
 
 
 function mountpoints  # local_filesystem:remote_filesystem
 {
-    cat $dname/etc/mountpoints
+    cat ~/src/hq/etc/mountpoints
 }
 
-local_mount_points=$( mountpoints | cut -d':' -f1 )
-remote_mount_points=$( mountpoints | cut -d':' -f2 )
+local_mount_points=(  $( mountpoints | cut -d':' -f1 ) )
+remote_mount_points=( $( mountpoints | cut -d':' -f2 ) )
 
 
 function _mount
 {
     host="$1"
-    for i in {1..${#local_mount_points[@]}}; do
-        umount ${local_mount_points[$i]}
+    num_mount_points=${#local_mount_points[@]}
+    for i in $( seq 0 $(( num_mount_points - 1 )) ); do
+        mountpoint --quiet ${local_mount_points[$i]} \
+            && umount ${local_mount_points[$i]}
         sshfs $host:${remote_mount_points[$i]} ${local_mount_points[$i]}
     done
 }
 
 
-function get_host
+function mount_abyss_drives
 {
-    for host in george george_remote; do
-        ssh $host "exit" 2> /dev/null
-        if (( $? == 0 )); then
-            echo $host
-            return
-        fi
+    for drive in pond tank; do
+        sudo mount -t cifs //10.137.4.2/rhino-$drive /mnt/$drive -ousername=hmo,domain=WORKGROUP,uid=$USER
     done
-    die "FATAL: could not reach george or george_remote"
 }
 
 
@@ -59,8 +53,7 @@ function monitor_mountpoints
 {
     while true; do
         for lmp in $local_mount_points; do
-            mountpoint $lmp > /dev/null || exit 1
-            say
+            mountpoint --quiet $lmp || exit 1
         done
         sleep $options_interval
     done
@@ -68,19 +61,17 @@ function monitor_mountpoints
 
 
 
-
-if (( options_lan )); then
-    _mount "george"
-elif (( options_ddns )); then
-    _mount "george_remote"
+if (( options_george )); then
+    mount_abyss_drives
 else
-    _mount "$( get_host )"
+    if (( options_lan )); then
+        _mount "george"
+    elif (( options_ddns )); then
+        _mount "george_remote"
+    else
+        _mount "$( where-is-george )"
+    fi
 fi
 
-monitor_mountpoints
-
-
-# TODO:
-# - add --create-shared-mountpoints to sysbs
-# - make both sysbs and mount-shared-srives look at a file in etc for mountpoints
-
+## this just seems to hang
+# monitor_mountpoints
