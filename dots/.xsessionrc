@@ -34,14 +34,8 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
 fi
 
 
-# start picom
-picom &!
-
 # set numlock to be on 
 numlockx &!
-
-# set backgrounds
-feh --bg-center ~/src/hq/etc/wallpapers/eboy_tok.png &!
 
 # set keyboard params
 xset r rate 250 50 &!
@@ -52,8 +46,8 @@ setxkbmap -option caps:super &!
 # start the emacs server. disown so that exiting x session doesn't kill emacs
 emacs --daemon &!
 
-# self-explanatory
-mount-shared-drives &!
+# start barrier client to enzo
+barrierc 10.0.0.72
 
 # this is the last thing we do!
 exec i3
