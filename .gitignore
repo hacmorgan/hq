@@ -1,2 +1,2 @@
-dots/GIMP/2.10/*
-!dots/GIMP/2.10/scripts
+/dots/GIMP/2.10/*
+!/dots/GIMP/2.10/scripts
