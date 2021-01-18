@@ -84,25 +84,25 @@
     (monitor 0))
 (session-info "toplevel"
     (factory-entry "gimp-image-new-dialog")
-    (position 625 310)
-    (monitor 0))
+    (position 623 310)
+    (monitor 1))
 (session-info "toplevel"
     (factory-entry "gimp-preferences-dialog")
     (position 449 258)
     (size 802 664))
 (session-info "toplevel"
     (factory-entry "gimp-file-export-dialog")
-    (position 444 30)
-    (size 1008 690)
-    (monitor 0))
+    (position 440 30)
+    (size 888 595)
+    (monitor 1))
 (session-info "toplevel"
     (factory-entry "gimp-file-save-dialog")
     (position 325 342)
     (size 1008 690))
 (session-info "toplevel"
     (factory-entry "gimp-toolbox-color-dialog")
-    (position 0 0)
-    (monitor 0))
+    (position 1498 0)
+    (monitor 1))
 (session-info "toplevel"
     (factory-entry "gimp-keyboard-shortcuts-dialog")
     (position 0 417)

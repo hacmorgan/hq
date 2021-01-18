@@ -55,5 +55,12 @@ emacs --daemon &!
 # self-explanatory
 mount-shared-drives &!
 
+# constrain wacom pad to rightmost screen
+xsetwacom --set $( xsetwacom list devices | grep stylus | sed 's#.*id: \([0-9]*\).*#\1#' ) \
+          maptooutput 1920x1080+1920+0
+
+# start barrier server
+barriers -c ~/.config/barrier/enzo-george.conf &!
+
 # this is the last thing we do!
 exec i3
