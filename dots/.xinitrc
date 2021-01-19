@@ -52,8 +52,5 @@ setxkbmap -option caps:super &!
 # start the emacs server. disown so that exiting x session doesn't kill emacs
 emacs --daemon &!
 
-# self-explanatory
-mount-shared-drives &!
-
 # this is the last thing we do!
 exec i3

@@ -1,12 +1,11 @@
 [Unit]
-Description=Mount Shared Drives
-# After=graphical.target
+Description=What this service does
 After=network.target
 
 [Service]
 Type=simple
 ExecStartPre=sleep 10
-ExecStart=wg-quick up abyss
+ExecStart=echo hi
 # StandardOutput=inherit
 # StandardError=inherit
 Restart=no
