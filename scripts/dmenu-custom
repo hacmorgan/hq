@@ -149,8 +149,18 @@ function main-run ()
                 em --buffalo ;;
         esac
     }
+
+    function display-run
+    {
+        local display_options="turn off"
+        local selected_option="$( get-choice "$display_options" )"
+        case "$selected_option" in
+            "turn off")
+                xset -display :0.0 dpms force off ;;
+        esac
+    }
        
-    subsetting_options="power,screenshot,emacs,keyboard multiplier,edit configs,picom"
+    subsetting_options="power,screenshot,emacs,display,edit configs,keyboard multiplier,picom"
     subsetting="$( get-choice "$subsetting_options" )"
     echo $subsetting
     case "$subsetting" in
@@ -166,6 +176,8 @@ function main-run ()
             picom-run ;;
         "emacs")
             emacs-run ;;
+        "display")
+            display-run ;;
     esac
     
 }
