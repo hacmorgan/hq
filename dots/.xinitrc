@@ -52,9 +52,6 @@ setxkbmap -option caps:super &!
 # start the emacs server. disown so that exiting x session doesn't kill emacs
 emacs --daemon &!
 
-# self-explanatory
-mount-shared-drives &!
-
 # constrain wacom pad to rightmost screen
 xsetwacom --set $( xsetwacom list devices | grep stylus | sed 's#.*id: \([0-9]*\).*#\1#' ) \
           maptooutput 1920x1080+1920+0
