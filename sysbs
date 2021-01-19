@@ -201,7 +201,7 @@ function symlink_systemd_services
 }
 
 
-function autostart_abyss-wireguard
+function autostart_abyss_wireguard
 {
     sudo systemctl enable wg-quick@abyss.service
 }
