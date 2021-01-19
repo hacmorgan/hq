@@ -1,0 +1,11 @@
+[Unit]
+Description=Mount scratch over sshfs with fuse
+
+[Install]
+WantedBy=multi-user.target
+
+[Mount]
+What=hamish@10.0.0.39:/mnt/pond
+Where=/mnt/pond
+Type=fuse.sshfs
+Options=_netdev,allow_other,IdentityFile=/home/hamish/.ssh/id_rsa,reconnect,x-systemd.automount,uid=1000,gid=1000

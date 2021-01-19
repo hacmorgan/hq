@@ -26,11 +26,13 @@ function prologue
 function options
 {
     cat <<EOF
+--autostart-abyss-wireguard; use systemd to effectively run 'sudo wg-quick up abyss' on boot
 --configure-emacs; clone emacs repositiory to ~/.emacs.d
 --configure-git; tell git who you are (so you can commit)
 --configure-zsh; do this after installing oh-my-zsh
 --create-shared-mountpoints; create all mountpoints in 'etc/mountpoints' and transfer ownership to hamish
 --dry-run; talk the talk but don't walk the walk
+--enable-systemd-services; enable services symlinked by --symlink-systemd-services
 --install-fantasque; unpack fantasque (noLoopK) to /usr/share/fonts/fantasque
 --install-oh-my-zsh; self explanatory. terminates this script, use this option by itself
 --install-prefix=<path>; default=/usr/local; install prefix for scripts
@@ -92,6 +94,21 @@ function symlink_dots
                     rm -rf$verbose ~/$bname
                 fi
                 ln -s$verbose $( realpath $dot ) ~/
+            fi
+        elif [[ -n "$( grep $bname < $hq/etc/etcdots )" ]]; then  # install some files to /etc/
+            if (( options_dry_run )); then
+                say "$dot -> /etc/$bname"
+            else
+                if [[ -f ~/$bname && ! -L ~/$bname ]]; then
+                    if (( options_move_existing )); then
+                        sudo mv $_verbose /etc/$bname /etc/$bname.old
+                    else
+                        die "~/$bname exists and is not a symlink, exiting"
+                    fi
+                else
+                    sudo rm -rf$verbose /etc/$bname
+                fi
+                sudo ln -s$verbose $( realpath $dot ) /etc/
             fi
         else                                          # install remaining files to ~/.config/
             if (( options_dry_run )); then
@@ -177,12 +194,16 @@ function symlink_vi
 
 function symlink_systemd_services
 {
-    # mkdir -p$verbose ~/.local/share/systemd/user
     for service in $hq/etc/systemd/*; do
         sudo ln -sf$verbose $( realpath $service ) /etc/systemd/system/
-        sudo systemctl enable $( basename $service )
-        # systemctl start  --user $( basename $service )
+        (( options_enable_systemd_services )) && sudo systemctl enable $( basename $service )
     done
+}
+
+
+function autostart_abyss-wireguard
+{
+    sudo systemctl enable wg-quick@abyss.service
 }
 
 
@@ -201,6 +222,6 @@ bash-std-set-verbose
 (( options_symlink_systemd_services ))  && symlink_systemd_services
 (( options_symlink_vi ))                && symlink_vi
 (( options_install_scripts ))           && install_scripts
-
+(( options_autostart_abyss_wireguard )) && autostart_abyss_wireguard
 
 
