@@ -47,7 +47,4 @@ setxkbmap -option caps:super &!
 emacs --daemon &!
 
 # start barrier client to enzo
-barrierc 10.0.0.72
-
-# this is the last thing we do!
-exec i3
+barrierc 10.0.0.72 &!
