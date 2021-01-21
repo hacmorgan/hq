@@ -35,7 +35,7 @@ function _mount
     num_mount_points=${#local_mount_points[@]}
     for i in $( seq 0 $(( num_mount_points - 1 )) ); do
         mountpoint --quiet ${local_mount_points[$i]} \
-            && umount ${local_mount_points[$i]}
+            && sudo umount ${local_mount_points[$i]}
         sshfs $host:${remote_mount_points[$i]} ${local_mount_points[$i]}
     done
 }
