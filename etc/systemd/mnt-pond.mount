@@ -1,11 +1,12 @@
 [Unit]
 Description=Mount scratch over sshfs with fuse
+After=wg-quick@abyss.service
 
 [Install]
 WantedBy=multi-user.target
 
 [Mount]
-What=hamish@10.0.0.39:/mnt/pond
+What=hmo@10.137.4.2:/mnt/pond
 Where=/mnt/pond
 Type=fuse.sshfs
-Options=_netdev,allow_other,IdentityFile=/home/hamish/.ssh/id_rsa,reconnect,x-systemd.automount,uid=1000,gid=1000
+Options=_netdev,allow_other,IdentityFile=/home/hamish/.ssh/id_rsa,reconnect,x-systemd.automount,uid=1000,gid=1000,cache_max_size=1000000,cache_timeout=120
