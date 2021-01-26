@@ -45,6 +45,7 @@ use_bits = false
 
 [[block]]
 block = "sound"
+step_width = 1
 
 [[block]]
 block = "backlight"

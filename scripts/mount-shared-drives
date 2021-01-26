@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+
+source $( type -p bash-std )
+
+
+function options
+{
+    cat <<EOF
+--interval=<seconds>; default=30; time between mount point checks
+--george; mount pond and tank
+--lan; force using LAN address
+--ddns; force using DDNS address
+EOF
+}
+
+
+bash-std-application-init "$@" < <( options )
+
+
+
+
+function mountpoints  # local_filesystem:remote_filesystem
+{
+    cat ~/src/hq/etc/mountpoints
+}
+
+local_mount_points=(  $( mountpoints | cut -d':' -f1 ) )
+remote_mount_points=( $( mountpoints | cut -d':' -f2 ) )
+
+
+function _mount
+{
+    host="$1"
+    num_mount_points=${#local_mount_points[@]}
+    for i in $( seq 0 $(( num_mount_points - 1 )) ); do
+        mountpoint --quiet ${local_mount_points[$i]} \
+            && sudo umount ${local_mount_points[$i]}
+        sshfs $host:${remote_mount_points[$i]} ${local_mount_points[$i]}
+    done
+}
+
+
+function mount_abyss_drives
+{
+    for drive in pond tank; do
+        sudo mount -t cifs //10.137.4.2/rhino-$drive /mnt/$drive -ousername=hmo,domain=WORKGROUP,uid=$USER
+    done
+}
+
+
+function monitor_mountpoints
+{
+    while true; do
+        for lmp in $local_mount_points; do
+            mountpoint --quiet $lmp || exit 1
+        done
+        sleep $options_interval
+    done
+}
+
+
+
+if (( options_george )); then
+    mount_abyss_drives
+else
+    if (( options_lan )); then
+        _mount "george"
+    elif (( options_ddns )); then
+        _mount "george_remote"
+    else
+        _mount "$( where-is-george )"
+    fi
+fi
+
+## this just seems to hang
+# monitor_mountpoints

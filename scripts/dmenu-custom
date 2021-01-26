@@ -5,7 +5,7 @@
 function get-choice()
 {
     options="$1"
-    echo $options | tr ',' '\n' | dmenu 
+    echo $options | tr ',' '\n' | dmenu -fn "Fantasque Sans Mono" -sb "#AD29C4" -f
 }
 
 
@@ -133,8 +133,34 @@ function main-run ()
                 killall compton ;;
         esac
     }
+
+    function emacs-run
+    {
+        local emacs_options="local,george,enzo,buffalo"
+        local selected_option="$( get-choice "$emacs_options" )"
+        case "$selected_option" in
+            "local")
+                em ;;
+            "george")
+                em --george ;;
+            "buffalo")
+                em --buffalo ;;
+            "enzo")
+                em --buffalo ;;
+        esac
+    }
+
+    function display-run
+    {
+        local display_options="turn off"
+        local selected_option="$( get-choice "$display_options" )"
+        case "$selected_option" in
+            "turn off")
+                xset -display :0.0 dpms force off ;;
+        esac
+    }
        
-    subsetting_options="power,screenshot,keyboard multiplier,edit configs,picom"
+    subsetting_options="power,screenshot,emacs,display,edit configs,keyboard multiplier,picom"
     subsetting="$( get-choice "$subsetting_options" )"
     echo $subsetting
     case "$subsetting" in
@@ -148,6 +174,10 @@ function main-run ()
             screenshot-run ;;
         "picom")
             picom-run ;;
+        "emacs")
+            emacs-run ;;
+        "display")
+            display-run ;;
     esac
     
 }

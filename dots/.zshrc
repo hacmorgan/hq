@@ -109,6 +109,9 @@ alias b2s="pwd | sed 's/build/src/g'"
 alias s2b="pwd | sed 's/src/build/g'"
 alias l='ls -l'
 alias ll='ls -la'
+alias display_off='xset -display :0.0 dpms force off'
+alias display_on='xset -display :0.0 dpms force on'
+
 
 #################
 #    EXPORTS    #
