@@ -40,7 +40,8 @@ compton --config ~/.config/picom.conf &!
 numlockx &!
 
 # set backgrounds
-feh --bg-center ~/src/hq/etc/wallpapers/eboy_tok.png &!
+feh --bg-center ~/src/hq/etc/wallpapers/eboy_ny.png \
+    --bg-center ~/src/hq/etc/wallpapers/eboy_tok.png
 
 # set keyboard params
 xset r rate 250 50 &!
@@ -50,6 +51,14 @@ setxkbmap -option caps:super &!
 
 # start the emacs server. disown so that exiting x session doesn't kill emacs
 emacs --daemon &!
+
+# display arrangement
+xrandr --output HDMI-0 --primary --mode 1920x1080 --pos 1920x0 --rotate normal --output eDP-1-1 --mode 1920x1080 --pos 0x0 --rotate normal &!
+
+# set a few nice touchpad settings
+xinput set-prop "DELL09E2:00 04F3:30CB Touchpad" "libinput Tapping Enabled" 1
+xinput set-prop "DELL09E2:00 04F3:30CB Touchpad" "libinput Natural Scrolling Enabled" 1
+xinput set-prop "DELL09E2:00 04F3:30CB Touchpad" "libinput Middle Emulation Enabled" 1
 
 # this is the last thing we do!
 exec i3
