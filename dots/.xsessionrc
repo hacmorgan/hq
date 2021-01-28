@@ -61,4 +61,4 @@ xinput set-prop "DELL09E2:00 04F3:30CB Touchpad" "libinput Natural Scrolling Ena
 xinput set-prop "DELL09E2:00 04F3:30CB Touchpad" "libinput Middle Emulation Enabled" 1
 
 # this is the last thing we do!
-exec i3
+# exec i3
