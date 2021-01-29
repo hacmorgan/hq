@@ -9,5 +9,4 @@ WantedBy=multi-user.target
 What=hmo@10.137.4.2:/mnt/tank
 Where=/mnt/tank
 Type=fuse.sshfs
-User=hamish
 Options=_netdev,allow_other,IdentityFile=/home/hamish/.ssh/id_rsa,reconnect,x-systemd.automount,uid=1000,gid=1000,cache_max_size=1000000,cache_timeout=120
