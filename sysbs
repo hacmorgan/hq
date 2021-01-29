@@ -195,7 +195,7 @@ function symlink_vi
 function symlink_systemd_services
 {
     for service in $hq/etc/systemd/*; do
-        sudo ln -sf$verbose $( realpath $service ) /etc/systemd/system/
+        sudo ln -sf$verbose $( realpath $service ) /lib/systemd/system/
         (( options_enable_systemd_services )) && sudo systemctl enable $( basename $service )
     done
 }
