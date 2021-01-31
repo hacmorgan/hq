@@ -7,10 +7,10 @@ source $( type -p bash-std )
 function options
 {
     cat <<EOF
---interval=<seconds>; default=30; time between mount point checks
---george; mount pond and tank
---lan; force using LAN address
+--abyss; mount pond and tank
 --ddns; force using DDNS address
+--interval=<seconds>; default=30; time between mount point checks
+--lan; force using LAN address
 EOF
 }
 
@@ -44,7 +44,7 @@ function _mount
 function mount_abyss_drives
 {
     for drive in pond tank; do
-        sudo mount -t cifs //10.137.4.2/rhino-$drive /mnt/$drive -ousername=hmo,domain=WORKGROUP,uid=$USER
+        sshfs rhino:/mnt/$drive /mnt/$drive -o cache_max_size=1000000 -o cache_timeout=120 -o allow_other
     done
 }
 
@@ -61,7 +61,7 @@ function monitor_mountpoints
 
 
 
-if (( options_george )); then
+if (( options_abyss )); then
     mount_abyss_drives
 else
     if (( options_lan )); then
