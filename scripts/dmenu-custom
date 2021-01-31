@@ -136,7 +136,7 @@ function main-run ()
 
     function emacs-run
     {
-        local emacs_options="local,george,enzo,buffalo"
+        local emacs_options="local,george,buffalo"
         local selected_option="$( get-choice "$emacs_options" )"
         case "$selected_option" in
             "local")
