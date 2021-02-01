@@ -148,7 +148,7 @@ function main-run ()
             "buffalo")
                 em --buffalo ;;
             "enzo")
-                em --buffalo ;;
+                em --enzo ;;
         esac
     }
 
