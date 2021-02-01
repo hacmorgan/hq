@@ -12,6 +12,7 @@ function options
 {
     cat <<EOF
 --buffalo,-b; look for file (if any given) on buffalo, via george
+--buffalo-local,-l; look for file (if any given) on buffalo
 --enzo,-e; look for file (if any given) on enzo, via george
 --george,-g; look for file (if any given) on george
 --terminal,-t; open file in the terminal, don't detach process from parent shell 
@@ -48,6 +49,8 @@ function get_filename
         file="/ssh:$( where-is-george ):$file"
     elif (( options_buffalo )); then
         file="/ssh:$( where-is-george )\|ssh:buffalo:$file"
+    elif (( options_buffalo_local )); then
+        file="/ssh:buffalo:$file"
     elif (( options_enzo )); then
         file="/ssh:$( where-is-george )\|ssh:enzo:$file"
     fi
