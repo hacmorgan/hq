@@ -154,11 +154,17 @@ function main-run ()
 
     function display-run
     {
-        local display_options="turn off"
+        local display_options="turn off,both screens,laptop only,external only"
         local selected_option="$( get-choice "$display_options" )"
         case "$selected_option" in
             "turn off")
                 xset -display :0.0 dpms force off ;;
+            "both screens")
+                use-both-screens ;;
+            "laptop only")
+                use-laptop-only ;;
+            "external only")
+                use-external-only ;;
         esac
     }
        
