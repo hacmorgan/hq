@@ -46,8 +46,8 @@ function main-run ()
                 em ~/.config/termite/config ;;
             "st")
                 em ~/src/foss/st/config.h ;;
-            "xinit")
-                em ~/.xinitrc ;;
+            "xsessionrc")
+                em ~/.xsessionrc ;;
             "dmenu-custom")
                 em ~/src/hq/scripts/dmenu-custom ;;
         esac

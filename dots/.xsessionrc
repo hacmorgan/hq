@@ -53,7 +53,7 @@ setxkbmap -option caps:super &!
 emacs --daemon &!
 
 # display arrangement
-xrandr --output HDMI-0 --primary --mode 1920x1080 --pos 1920x0 --rotate normal --output eDP-1-1 --mode 1920x1080 --pos 0x0 --rotate normal &!
+# xrandr --output HDMI-0 --primary --mode 1920x1080 --pos 1920x0 --rotate normal --output eDP-1-1 --mode 1920x1080 --pos 0x0 --rotate normal &!
 
 # set a few nice touchpad settings
 xinput set-prop "DELL09E2:00 04F3:30CB Touchpad" "libinput Tapping Enabled" 1           &!
