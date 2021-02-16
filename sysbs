@@ -173,7 +173,7 @@ function create_shared_mountpoints
 
 function install_fantasque
 {
-    sudo mkdir /usr/share/fonts/fantasque
+    sudo mkdir -p /usr/share/fonts/fantasque
     pushd /usr/share/fonts/fantasque
     curl -L "https://github.com/belluzj/fantasque-sans/releases/download/v1.8.0/FantasqueSansMono-NoLoopK.tar.gz" \
         | sudo tar -zxf$verbose -
