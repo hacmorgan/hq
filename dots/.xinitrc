@@ -46,10 +46,11 @@ feh --bg-center ~/src/hq/etc/wallpapers/eboy_tok.png &!
 # set keyboard params
 xset r rate 250 50 &!
 
-# set some touchpad settings
+# set some touchpad & trackpoint settings
 xinput set-prop 'SynPS/2 Synaptics TouchPad' 'libinput Tapping Enabled' 1
 xinput set-prop 'SynPS/2 Synaptics TouchPad' 'libinput Natural Scrolling Enabled' 1
 xinput set-prop 'SynPS/2 Synaptics TouchPad' 'libinput Accel Speed' 0.6
+xinput set-prop 'TPPS/2 Elan TrackPoint' 'libinput Natural Scrolling Enabled' 1
 
 # map caps-lock to super
 setxkbmap -option caps:super &!
