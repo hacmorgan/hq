@@ -148,7 +148,7 @@ function main-run ()
             "buffalo")
                 em --buffalo ;;
             "enzo")
-                em --buffalo ;;
+                em --enzo ;;
         esac
     }
 
@@ -161,8 +161,9 @@ function main-run ()
                 xset -display :0.0 dpms force off ;;
         esac
     }
-       
-    subsetting_options="power,screenshot,emacs,display,edit configs,keyboard multiplier,picom"
+
+    
+    subsetting_options="power,screenshot,emacs,display,edit configs,mount shared drives,keyboard multiplier,picom"
     subsetting="$( get-choice "$subsetting_options" )"
     echo $subsetting
     case "$subsetting" in
@@ -180,6 +181,8 @@ function main-run ()
             emacs-run ;;
         "display")
             display-run ;;
+        "mount shared drives")
+            mount-shared-drives ;;
     esac
     
 }
