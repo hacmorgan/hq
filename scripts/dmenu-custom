@@ -25,7 +25,7 @@ function main-run ()
     
     function edit-configs-run ()
     {
-        local configs="zsh,i3,i3status,emacs,picom,sakura,xinit,dmenu-custom"
+        local configs="zsh,i3,i3status,emacs,picom,kitty,xinit,dmenu-custom"
         local selected_config="$( get-choice "$configs" )"
         case "$selected_config" in
             "zsh")
@@ -40,6 +40,8 @@ function main-run ()
                 em ~/.emacs.d/config.org ;;
             "picom")
                 em ~/.config/picom.conf ;;
+            "kitty")
+                em ~/.config/kitty/kitty.conf ;;
             "sakura")
                 em ~/.config/sakura/sakura.conf ;;
             "termite")
@@ -146,7 +148,7 @@ function main-run ()
             "buffalo")
                 em --buffalo ;;
             "enzo")
-                em --buffalo ;;
+                em --enzo ;;
         esac
     }
 
@@ -159,8 +161,9 @@ function main-run ()
                 xset -display :0.0 dpms force off ;;
         esac
     }
-       
-    subsetting_options="power,screenshot,emacs,display,edit configs,keyboard multiplier,picom"
+
+    
+    subsetting_options="power,screenshot,emacs,display,edit configs,mount shared drives,keyboard multiplier,picom"
     subsetting="$( get-choice "$subsetting_options" )"
     echo $subsetting
     case "$subsetting" in
@@ -178,6 +181,8 @@ function main-run ()
             emacs-run ;;
         "display")
             display-run ;;
+        "mount shared drives")
+            mount-shared-drives ;;
     esac
     
 }
