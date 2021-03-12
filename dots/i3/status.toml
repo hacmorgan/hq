@@ -26,7 +26,7 @@ format_swap = "{SUp}%"
 [[block]]
 block = "cpu"
 interval = 1
-format = "{barchart} {utilization}% {frequency}GHz"
+format = "{barchart} {utilization} {frequency}"
 
 [[block]]
 block = "nvidia_gpu"
@@ -61,6 +61,7 @@ use_bits = false
 
 [[block]]
 block = "sound"
+step_width = 1
 
 [[block]]
 block = "time"

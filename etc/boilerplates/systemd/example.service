@@ -1,0 +1,17 @@
+[Unit]
+Description=What this service does
+After=network.target
+
+[Service]
+Type=simple
+ExecStartPre=sleep 10
+ExecStart=echo hi
+# StandardOutput=inherit
+# StandardError=inherit
+Restart=no
+# Restart=on-failure
+# RestartSec=15
+User=root
+
+[Install]
+WantedBy=default.target

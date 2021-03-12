@@ -11,12 +11,10 @@
 
 set $mod Mod1
 
-set $TERMINAL sakura
-
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:monospace 8
+font pango:Fantasque Sans Mono, FontAwesome 9
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -42,13 +40,6 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
-
-# terminals
-bindsym $mod+Return       exec $TERMINAL
-bindsym $mod+Shift+Return exec $TERMINAL -x "python3 -q" --columns=60 --rows=15 --class=floating_term 
-bindsym $mod+Shift+p      exec $TERMINAL -x "pulsemixer" --columns=60 --rows=10 --class=floating_term 
-bindsym $mod+Shift+n      exec $TERMINAL -x "nmtui"      --columns=70 --rows=25 --class=floating_term 
-bindsym $mod+Ctrl+Return  exec $TERMINAL -x "ssh -Y george"
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -183,7 +174,7 @@ bindsym $mod+Ctrl+Down resize shrink height 5px
 bindsym $mod+Ctrl+Up resize grow height 5px
 
 
-
+# bar
 bar {
     font pango:Fantasque Sans Mono, FontAwesome 12.9
     position top
@@ -199,6 +190,7 @@ bar {
     }
 }
 
+# gaps
 gaps inner 12
 smart_gaps on
 smart_borders on
@@ -209,14 +201,12 @@ bindsym $mod+Shift+g mode "$mode_gaps"
 bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
 
-
 # class                 border  bground text    indicator child_border
 client.focused          #aa34f7 #aa34f7 #F8F8F2 #aa34f7   #aa34f7
 client.focused_inactive #44475A #44475A #F8F8F2 #44475A   #44475A
 client.unfocused        #282A36 #282A36 #BFBFBF #282A36   #282A36
 client.urgent           #44475A #FF5555 #F8F8F2 #FF5555   #FF5555
 client.placeholder      #282A36 #282A36 #F8F8F2 #282A36   #282A36
-
 client.background       #F8F8F2
 
 # Turn window borders off
@@ -228,14 +218,29 @@ bindsym $mod+Ctrl+Shift+Left move workspace to output left
 bindsym $mod+Ctrl+Shift+Right move workspace to output right
 
 # Make gnuplot float by default
-for_window [class="gnuplot_qt"] floating enable
-for_window [class="0"] floating enable
-for_window [class="floating_term"] floating enable  # floating python
+for_window [class="gnuplot_qt"]    floating enable
+for_window [class="csv-plot"]      floating enable
+for_window [class="0"]             floating enable
+for_window [class="floating_term"] floating enable
 
+# $TERMINAL = default terminal
+set $TERMINAL kitty
 
 ###############
 # KEYBINDINGS #
 ###############
+
+# terminals
+bindsym $mod+Return       exec "$TERMINAL"
+bindsym $mod+Shift+Return exec "$TERMINAL --class=floating_term python3 -q" 
+bindsym $mod+Shift+p      exec "$TERMINAL --class=floating_term pulsemixer" 
+bindsym $mod+Shift+n      exec "$TERMINAL --class=floating_term nmtui"      
+bindsym $mod+Shift+t      exec "$TERMINAL --class=floating_term htop"      
+bindsym $mod+Ctrl+Return  exec "$TERMINAL ssh -Y $( where-is-george )"
+bindsym $mod+Ctrl+e       exec "$TERMINAL ssh -Y enzo"
+bindsym $mod+Ctrl+Shift+e exec "$TERMINAL ssh -Y -J $( where-is-george ) enzo"
+bindsym $mod+Ctrl+b       exec "$TERMINAL ssh -Y buffalo"
+bindsym $mod+Ctrl+Shift+b exec "$TERMINAL ssh -Y -J $( where-is-george ) buffalo"
 
 # Firefox
 bindsym $mod+Shift+f exec --no-startup-id firefox
@@ -243,7 +248,5 @@ bindsym $mod+Shift+f exec --no-startup-id firefox
 # Emacs
 bindsym $mod+Shift+o exec --no-startup-id "emacsclient -a '' -c"
 
-# pcmanfm
-bindsym $mod+Shift+t exec --no-startup-id pcmanfm
-
+# dmenu-custom
 bindsym --release $mod+Shift+s exec --no-startup-id dmenu-custom
