@@ -50,6 +50,7 @@ step_width = 1
 [[block]]
 block = "backlight"
 step_width = 1
+invert_icons = true
 
 [[block]]
 block = "battery"
