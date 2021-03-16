@@ -93,10 +93,6 @@ source $ZSH/oh-my-zsh.sh
 #################
 #    ALIASES    #
 #################
-alias oldvim=vim
-alias vim=nvim
-alias -g cdu='cd ~/src/useful-scripts/'
-alias tem='emacsclient -a "" -nw'
 alias sdn='sudo shutdown now'
 alias rsn='sudo shutdown -r now'
 alias p3='python3'
@@ -109,8 +105,6 @@ alias b2s="pwd | sed 's/build/src/g'"
 alias s2b="pwd | sed 's/src/build/g'"
 alias l='ls -l'
 alias ll='ls -la'
-alias activate_metashape='/opt/metashape-pro/metashape.sh --activate ADFXV-42BN8-M7VAR-9AOGY-NGKE6'
-alias deactivate_metashape='/opt/metashape-pro/metashape.sh --deactivate'
 alias display_off='xset -display :0.0 dpms force off'
 alias display_on='xset -display :0.0 dpms force on'
 
@@ -130,4 +124,5 @@ export MPD_PORT="6600"
 export ALTERNATE_EDITOR=""
 
 # Fix colours in tmux
-export TERM=xterm-256color
+# export TERM=xterm-256color
+export TERM=screen-256color
