@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+curl                                                                         \
+    --no-progress-meter                                                      \
+    --user hamish@abysssolutions.com.au:$( cat ~/src/hq/etc/jira-api-token ) \
+    "$1"                                                                     \
+        | sed -n '/<title>/{ s|^ *<title>\[||; s|] |/|; s| - Jira</title>||; s|[:]||g; s| |-|gp; }'
