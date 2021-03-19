@@ -38,6 +38,7 @@ function options
 --install-prefix=<path>; default=/usr/local; install prefix for scripts
 --install-scripts; copy everything in 'scripts' to --install-prefix
 --move-existing; if <file> exists, move it to <file>.old
+--no-sudo; don't so anything that requires sudo
 --symlink-dots; symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
 --symlink-systemd-services; symlink service files in etc/systemd to /etc/systemd/system/
 --symlink-vi; symlink /usr/bin/nvim to /usr/bin/vi
@@ -96,6 +97,7 @@ function symlink_dots
                 ln -s$verbose $( realpath $dot ) ~/
             fi
         elif [[ -n "$( grep $bname < $hq/etc/etcdots )" ]]; then  # install some files to /etc/
+			if (( options_no_sudo )); then continue; fi
             if (( options_dry_run )); then
                 say "$dot -> /etc/$bname"
             else
