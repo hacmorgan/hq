@@ -82,6 +82,7 @@ COMPLETION_WAITING_DOTS="true"
 plugins=(git zsh-syntax-highlighting zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
+source /opt/ros/noetic/setup.zsh
 
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
@@ -124,5 +125,5 @@ export MPD_PORT="6600"
 export ALTERNATE_EDITOR=""
 
 # Fix colours in tmux
-# export TERM=xterm-256color
-export TERM=screen-256color
+export TERM=xterm-256color
+# export TERM=screen-256color
