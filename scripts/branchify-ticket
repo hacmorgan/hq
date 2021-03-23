@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+if [[ ! -f ~/src/hq/etc/jira-api-token ]]; then
+    cat <<EOF 1>&2
+~/src/hq/etc/jira-api-token does not exist, please create it.
+It should just contain the API token, nothing else
+EOF
+    exit 1
+fi
+
 curl                                                                         \
     --no-progress-meter                                                      \
     --user hamish@abysssolutions.com.au:$( cat ~/src/hq/etc/jira-api-token ) \
