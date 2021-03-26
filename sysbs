@@ -33,11 +33,12 @@ function options
 --create-shared-mountpoints; create all mountpoints in 'etc/mountpoints' and transfer ownership to hamish
 --dry-run; talk the talk but don't walk the walk
 --enable-systemd-services; enable services symlinked by --symlink-systemd-services
---install-fantasque; unpack fantasque (noLoopK) to /usr/share/fonts/fantasque
+--install-fonts; unpack fantasque (noLoopK) and FiraCode (ligatures) to /usr/share/fonts/fantasque
 --install-oh-my-zsh; self explanatory. terminates this script, use this option by itself
 --install-prefix=<path>; default=/usr/local; install prefix for scripts
 --install-scripts; copy everything in 'scripts' to --install-prefix
 --move-existing; if <file> exists, move it to <file>.old
+--no-sudo; don't do anything that requires sudo
 --symlink-dots; symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
 --symlink-systemd-services; symlink service files in etc/systemd to /etc/systemd/system/
 --symlink-vi; symlink /usr/bin/nvim to /usr/bin/vi
@@ -96,6 +97,7 @@ function symlink_dots
                 ln -s$verbose $( realpath $dot ) ~/
             fi
         elif [[ -n "$( grep $bname < $hq/etc/etcdots )" ]]; then  # install some files to /etc/
+			if (( options_no_sudo )); then continue; fi
             if (( options_dry_run )); then
                 say "$dot -> /etc/$bname"
             else
@@ -145,6 +147,7 @@ function configure_git
     git config --global user.email "ham430@gmail.com"
     git config --global user.name "Hamish Morgan"
 	git config --global pull.rebase false
+    git config --global commit.template $( realpath $hq )/etc/gitmessage
 }
 
 
@@ -171,13 +174,30 @@ function create_shared_mountpoints
 }
 
 
-function install_fantasque
+function install_fonts
 {
-    sudo mkdir -p /usr/share/fonts/fantasque
-    pushd /usr/share/fonts/fantasque
-    curl -L "https://github.com/belluzj/fantasque-sans/releases/download/v1.8.0/FantasqueSansMono-NoLoopK.tar.gz" \
-        | sudo tar -zxf$verbose -
-    popd
+    function fantasque
+    {
+        sudo mkdir -p /usr/share/fonts/fantasque
+        pushd /usr/share/fonts/fantasque
+        curl -L "https://github.com/belluzj/fantasque-sans/releases/download/v1.8.0/FantasqueSansMono-NoLoopK.tar.gz" \
+            | sudo tar -zxf$verbose -
+        popd
+    }
+    
+    function firacode
+    {
+        sudo mkdir -p /usr/share/fonts/firacode
+        pushd /usr/share/fonts/firacode
+        curl -L "https://github.com/tonsky/FiraCode/releases/download/5.2/Fira_Code_v5.2.zip" \
+             > /tmp/firacode.zip
+        sudo unzip /tmp/firacode.zip
+        rm /tmp/firacode.zip
+        popd
+    }
+
+    fantasque
+    firacode
 }
 
 function install_oh_my_zsh
@@ -217,7 +237,7 @@ bash-std-set-verbose
 (( options_configure_git ))             && configure_git
 (( options_configure_zsh ))             && configure_zsh
 (( options_create_shared_mountpoints )) && create_shared_mountpoints
-(( options_install_fantasque ))         && install_fantasque
+(( options_install_fonts ))             && install_fonts
 (( options_symlink_dots ))              && symlink_dots
 (( options_symlink_systemd_services ))  && symlink_systemd_services
 (( options_symlink_vi ))                && symlink_vi
