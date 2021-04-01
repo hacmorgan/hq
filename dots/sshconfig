@@ -44,7 +44,7 @@ Host george_remote
 
 Host collab
     User collab
-    Hostname 10.0.0.72
+    Hostname 10.0.0.39
 
 Host hippo
 	HostName 10.137.4.1
