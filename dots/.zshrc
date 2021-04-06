@@ -93,10 +93,6 @@ source $ZSH/oh-my-zsh.sh
 #################
 #    ALIASES    #
 #################
-alias oldvim=vim
-alias vim=nvim
-alias -g cdu='cd ~/src/useful-scripts/'
-alias tem='emacsclient -a "" -nw'
 alias sdn='sudo shutdown now'
 alias rsn='sudo shutdown -r now'
 alias p3='python3'
@@ -131,5 +127,3 @@ export MPD_PORT="6600"
 # this should start emacs if the daemon is not already running
 export ALTERNATE_EDITOR=""
 
-# Fix colours in tmux
-export TERM=xterm-256color

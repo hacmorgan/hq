@@ -38,7 +38,7 @@ function options
 --install-prefix=<path>; default=/usr/local; install prefix for scripts
 --install-scripts; copy everything in 'scripts' to --install-prefix
 --move-existing; if <file> exists, move it to <file>.old
---no-sudo; don't so anything that requires sudo
+--no-sudo; don't do anything that requires sudo
 --symlink-dots; symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
 --symlink-systemd-services; symlink service files in etc/systemd to /etc/systemd/system/
 --symlink-vi; symlink /usr/bin/nvim to /usr/bin/vi
@@ -147,6 +147,7 @@ function configure_git
     git config --global user.email "ham430@gmail.com"
     git config --global user.name "Hamish Morgan"
 	git config --global pull.rebase false
+    git config --global commit.template $( realpath $hq )/etc/gitmessage
 }
 
 
