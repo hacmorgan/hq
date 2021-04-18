@@ -168,8 +168,22 @@ function main-run ()
         esac
     }
 
+    function sdc-run
+    {
+        local options="all,bedside light,sound system"
+        local selected_option="$( get-choice "$options" )"
+        local states="on,off"
+        local selected_state="$( get-choice "$states" )"
+        case "$selected_state" in
+            "on")
+                sdc --on "$selected_option" ;;
+            "off")
+                sdc --off "$selected_option" ;;
+        esac
+    }
+
     
-    subsetting_options="power,screenshot,emacs,display,edit configs,mount shared drives,keyboard multiplier,picom"
+    subsetting_options="power,screenshot,emacs,display,sdc,mount shared drives,edit configs,keyboard multiplier,picom"
     subsetting="$( get-choice "$subsetting_options" )"
     echo $subsetting
     case "$subsetting" in
@@ -189,6 +203,8 @@ function main-run ()
             display-run ;;
         "mount shared drives")
             mount-shared-drives ;;
+        "sdc")
+            sdc-run ;;
     esac
     
 }
