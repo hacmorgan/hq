@@ -1,0 +1,104 @@
+#!/usr/bin/env python3
+
+
+import argparse
+import sys
+import pyHS100
+
+
+IP = str
+
+
+def getArgs():
+    parser = argparse.ArgumentParser()
+    parser.add_argument( "--list-devices",
+                         "-l",
+                         action="store_true",
+                         help="List all devices on local network" )
+    parser.add_argument( "--off",
+                         "-0",
+                         type=str,
+                         action='append',
+                         nargs='+',
+                         help="Turn off device(s) at given IP address(es). "
+                         "\"all\" to turn everything off" )
+    parser.add_argument( "--on",
+                         "-1",
+                         type=str,
+                         action='append',
+                         nargs='+',
+                         help="Turn on device(s) at given IP address(es). "
+                         "\"all\" to turn everything on" )
+    parser.add_argument( "--verbose",
+                         "-v",
+                         action="store_true",
+                         help="More output"   )
+    return parser.parse_args()
+
+
+def discoverDevices() -> dict[str, pyHS100.smartdevice.SmartDevice]:
+    print( "Discovery message broadcast on LAN, awaiting responses...",
+           file=sys.stderr )
+    return pyHS100.Discover().discover()
+
+
+def listDevices( devices ) -> None:
+    for ip in devices.keys():
+        print( "{}: {} -> {}".format( ip,
+                                      devices[ip].alias,
+                                      "ON" if devices[ip].is_on else "OFF" ) )
+
+def controlDevices( args: argparse.Namespace, devices: dict ):
+
+    def turn( devices: dict, name: str, state: str ):
+
+        def findIpByName( name:    str,
+                          devices: dict[str, pyHS100.smartdevice.SmartDevice] ) -> IP:
+            for ip in devices.keys():
+                if devices[ip].alias == name:
+                    return ip
+            return None
+
+        ip = findIpByName( name, devices )
+        if ip is None:
+            print( "Cannot find ip of {}".format(name), file=sys.stderr )
+            return
+        if state == "on":
+            devices[ip].turn_on()
+        elif state == "off":
+            devices[ip].turn_off()
+
+    def turnAll( devices: dict, state: str ):
+        for ip in devices.keys():
+            turn( devices, devices[ip].alias, state )
+        
+    if args.on is not None:
+        if ["all"] in args.on:
+            turnAll( devices, "on" )
+            args.on.remove(["all"])
+    if args.off is not None:
+        if ["all"] in args.off:
+            turnAll( devices, "off" )
+            args.off.remove(["all"])
+    if args.on is not None:
+        for name in args.on:
+            turn( devices, name[0], "on" )
+    if args.off is not None:
+        for name in args.off:
+            turn( devices, name[0], "off" )
+    
+
+
+def main( args ):
+    devices = discoverDevices()
+
+    if not args.list_devices:
+        controlDevices( args, devices )
+
+    listDevices( devices )
+        
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main(getArgs()))
