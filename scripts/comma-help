@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Display help page for a command.
+# Stderr is redirected to stdout and vim is used as the pager.
+# Usage:
+# comma-help csv-shuffle
+
+command=$1
+$command --help -v 2>&1 |
+	vim -c 'let no_plugin_maps = 1|runtime! macros/less.vim|set ft=help-page' -
