@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 
 
-# bash-std: a collection of handy functions that can be sourced in one line:
+##  bash-std
+#
+# A collection of handy functions that can be sourced in one line:
 #             source $( type -p bash-std )
-
+# 
+# Note: It is easiest to test any changes made to bash-std on sysbs, as it
+#       sources the bash-std in hq, not the system installed one
 
 
 
 function say
 {
-    echo -e "$( basename $0 ): $@" 1>&2
+    echo -e "${fmt_bold}$( basename $0 )${fmt_normal}: $@" 1>&2
 }
 
 function saymore
@@ -91,13 +95,15 @@ function argument_type
     local options=$( cat )
     local arg_name="$( cut -d'=' -f1 <<< $1 )"
     local definition="$( get_definition "$arg_name" <<< $options )"
-    [[ -n $definition ]] || { echo "not_an_option"; return; }
-    if [[ -n "$( grep '=<.*>;' <<< $definition )" || -n "$( grep '=\[<.*>\];' <<< $definition )" ]]; then
+    if [[ -n "$( grep '=<.*>;'     <<< $definition )" || \
+          -n "$( grep '=\[<.*>\];' <<< $definition )" ]]; then
         if [[ -n "$( grep '=' <<< "$1" )" ]]; then
             echo "comes_with_value"
         else
             echo "value_in_next_arg"
         fi
+    elif [[ -z "$definition" ]]; then
+        echo "not_an_option"
     else
         echo "flag"
     fi
@@ -173,6 +179,13 @@ function check_for_help
 
 function bash-std-application-init
 {
+    function check_if_expecting_value
+    {
+        if (( this_is_value )); then
+            die "Was expecting ${args[$i]} to be a value for the argument ${args[$(( i - 1 ))]}"
+        fi
+    }
+
     local options=$( cat )
     args=( "$@" )
     nargs=$(( ${#args[@]} - 1 ))
@@ -180,24 +193,34 @@ function bash-std-application-init
     check_for_help ${args[@]} <<< $options
     set_defaults <<< $options
 
-    skip=0
+    next_is_value=0
+    this_is_value=0
     for i in $( seq 0 $nargs ); do  # for some reason {0..${#args[@]}} didn't work
-        if (( skip )); then skip=0; continue; fi
+        if (( next_is_value )); then
+            next_is_value=0
+            this_is_value=1
+        fi
         local arg_type=$( argument_type "${args[$i]}" <<< $options )
         case $arg_type in
             "comes_with_value")
+                check_if_expecting_value
                 set_value "$( cut -d'=' -f1              <<< ${args[$i]} )" \
                           "$( cut -d'=' -f1 --complement <<< ${args[$i]} )" \
                           <<< $options ;;
             "value_in_next_arg")
-                skip=1
+                check_if_expecting_value
+                next_is_value=1
                 set_value "${args[$i]}"           \
                           "${args[$(( i + 1 ))]}" \
                           <<< $options ;;
             "flag")
+                check_if_expecting_value
                 set_value "${args[$i]}" 1 <<< $options ;;
-            # *)
-            #     die "unparseable argument: ${args[$i]}" ;;
+            "not_an_option")
+                if (( this_is_value )); then this_is_value=0; continue; fi
+                if (( ! BASH_STD_IGNORE_UNKNOWN_ARGS )); then
+                    die "unrecognised argument: ${args[$i]}"
+                fi ;;
         esac
     done
 
