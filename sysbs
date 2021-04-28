@@ -13,7 +13,7 @@
 myself="$0"
 hq="$( dirname $myself )"
 
-source $hq/scripts/bash-std
+source "$hq/scripts/bash-std"
 
 
 
