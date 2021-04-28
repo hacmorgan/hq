@@ -105,13 +105,12 @@ alias b2s="pwd | sed 's/build/src/g'"
 alias s2b="pwd | sed 's/src/build/g'"
 alias l='ls -l'
 alias ll='ls -la'
-alias activate-metashape='/opt/metashape-pro/metashape.sh --activate ADFXV-42BN8-M7VAR-9AOGY-NGKE6'
-alias deactivate-metashape='/opt/metashape-pro/metashape.sh --deactivate'
+alias cdl='{ dir="$(cat)" ; cd "$dir" ; ls -la } <<< '
 alias mnt_pond='abyss-mount-share hmo rhino-pond /mnt/pond'
 alias mnt_tank='abyss-mount-share hmo rhino-tank /mnt/tank'
 alias display_off='xset -display :0.0 dpms force off'
 alias display_on='xset -display :0.0 dpms force on'
-alias gca='git commit -a'
+alias gca='git commit -a -v'
 
 
 #################
