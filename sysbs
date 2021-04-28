@@ -26,23 +26,25 @@ function prologue
 function options
 {
     cat <<EOF
---autostart-abyss-wireguard; use systemd to effectively run 'sudo wg-quick up abyss' on boot
---configure-emacs; clone emacs repositiory to ~/.emacs.d
---configure-git; tell git who you are (so you can commit)
---configure-zsh; do this after installing oh-my-zsh
---create-shared-mountpoints; create all mountpoints in 'etc/mountpoints' and transfer ownership to hamish
---dry-run; talk the talk but don't walk the walk
---enable-systemd-services; enable services symlinked by --symlink-systemd-services
---install-fonts; unpack fantasque (noLoopK) and FiraCode (ligatures) to /usr/share/fonts/fantasque
---install-oh-my-zsh; self explanatory. terminates this script, use this option by itself
---install-prefix=<path>; default=/usr/local; install prefix for scripts
---install-scripts; copy everything in 'scripts' to --install-prefix
---move-existing; if <file> exists, move it to <file>.old
---no-sudo; don't do anything that requires sudo
---symlink-dots; symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
---symlink-systemd-services; symlink service files in etc/systemd to /etc/systemd/system/
---symlink-vi; symlink /usr/bin/nvim to /usr/bin/vi
---verbose; talk the talk AND walk the walk
+--autostart-abyss-wireguard; Use systemd to effectively run 'sudo wg-quick up abyss' on boot
+--configure-emacs; Clone emacs repositiory to ~/.emacs.d
+--configure-git; Tell git who you are (so you can commit)
+--configure-zsh; Do this after installing oh-my-zsh
+--create-shared-mountpoints; Create all mountpoints in 'etc/mountpoints' and transfer ownership to hamish
+--dry-run; Talk the talk but don't walk the walk
+--enable-systemd-services; Enable services symlinked by --symlink-systemd-services
+--install-fonts; Unpack fantasque (noLoopK) and FiraCode (ligatures) to /usr/share/fonts/fantasque
+--install-oh-my-zsh; Self explanatory. terminates this script, use this option by itself
+--install-packages; Install all packages in etc/packagelist that aren't commented out
+--install-prefix=<path>; default=/usr/local; Install prefix for scripts
+--install-scripts; Copy everything in 'scripts' to --install-prefix
+--move-existing; If <file> exists, move it to <file>.old
+--no-sudo; Don't do anything that requires sudo
+--symlink-dots; Symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
+--symlink-systemd-services; Symlink service files in etc/systemd to /etc/systemd/system/
+--symlink-vi; Symlink /usr/bin/nvim to /usr/bin/vi
+--update-package-list; Find installed packages that aren't already in etc/packagelist
+--verbose; Talk the talk AND walk the walk
 EOF
 }
 
@@ -54,6 +56,10 @@ function install_scripts
     for script in $hq/scripts/*; do
         if (( options_dry_run )); then
             say "$script -> $options_install_prefix/bin/"
+        elif [[ -w $options_install_prefix  ]]; then
+            cp $_verbose $script $options_install_prefix/bin/
+        elif (( options_no_sudo )); then
+            say "--no-sudo given but install prefix ($options_install_prefix) is not writable"
         else
             sudo cp $_verbose $script $options_install_prefix/bin/
         fi
@@ -200,6 +206,7 @@ function install_fonts
     firacode
 }
 
+
 function install_oh_my_zsh
 {
     type -p zsh  > /dev/null || die "zsh not found, please install it first"
@@ -207,10 +214,12 @@ function install_oh_my_zsh
     sh -c "$( curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh )"
 }
 
+
 function symlink_vi
 {
     sudo ln -s$verbose /usr/bin/nvim /usr/bin/vi 
 }
+
 
 function symlink_systemd_services
 {
@@ -227,6 +236,101 @@ function autostart_abyss_wireguard
 }
 
 
+function update_package_list
+{
+    function check_packagelist_exists
+    {
+        [[ -f $hq/etc/packagelist ]] || die "$hq/etc/packagelist not found"
+    }
+
+    function remove_additions_file
+    {
+        rm $ADDITIONS_FILE
+    }
+    
+    function list_installed_packages
+    {
+        eval "$( head -n1 $hq/etc/packagelist )"
+    }
+
+    function exclude_known_packages
+    {
+        function uncommented_package_list
+        {
+            tail -n+3 $hq/etc/packagelist | sed 's/^#//'
+        }
+        
+        grep --invert-match  \
+             --fixed-strings \
+             --file <( uncommented_package_list )
+    }
+
+    function write_to_additions_file
+    {
+        function print_instructions
+        {
+            echo "## comment out (with #) any packages you don't want automatically installed in future"
+        }
+        
+        { print_instructions; cat; } > $ADDITIONS_FILE
+    }
+
+    function edit_additions_file
+    {
+        nvim $ADDITIONS_FILE
+    }
+
+    function confirm_and_append
+    {
+        echo "Append these changes to the packagelist? [Y/n]"
+        read answer
+        grep --ignore-case 'n' <<< $answer ||
+            tail -n+2 $ADDITIONS_FILE >> $hq/etc/packagelist
+    }
+
+    ADDITIONS_FILE=/tmp/packagelist.additions
+    check_packagelist_exists
+    remove_additions_file
+    list_installed_packages    |
+        exclude_known_packages |
+        write_to_additions_file
+    edit_additions_file
+    confirm_and_append
+    remove_additions_file
+}
+
+
+function install_packages
+{
+    function install_command
+    {
+        tail -n+2 $hq/etc/packagelist | head -n1
+    }
+
+    function space_separated_packages
+    {
+        function list_packages
+        {
+            tail -n+3 $hq/etc/packagelist
+        }
+
+        function exclude_commented
+        {
+            grep -v '^#'
+        }
+        
+        function convert_newlines_to_spaces
+        {
+            tr '\n' ' '
+        }
+        
+        list_packages         |
+            exclude_commented |
+            convert_newlines_to_spaces
+    }
+
+    eval "$(install_command) $(space_separated_packages)"
+}
 
 
 bash-std-application-init "$@" < <( options ) || die "failed"
@@ -243,5 +347,6 @@ bash-std-set-verbose
 (( options_symlink_vi ))                && symlink_vi
 (( options_install_scripts ))           && install_scripts
 (( options_autostart_abyss_wireguard )) && autostart_abyss_wireguard
-
+(( options_update_package_list ))       && update_package_list
+(( options_install_packages ))          && install_packages
 
