@@ -138,6 +138,18 @@ function main-run ()
 
     function emacs-run
     {
+        function is_remote
+        {
+            local options="local,remote"
+            local selected_option="$( get-choice "$options" )"
+            case "$selected_option" in
+                "local")
+                    echo 0 ;;
+                "remote")
+                    echo 1 ;;
+            esac
+        }
+        
         local emacs_options="local,george,buffalo"
         local selected_option="$( get-choice "$emacs_options" )"
         case "$selected_option" in
@@ -146,9 +158,17 @@ function main-run ()
             "george")
                 em --george ;;
             "buffalo")
-                em --buffalo ;;
+                if (( $(is_remote) )); then
+                    em --buffalo --via-george
+                else
+                    em --buffalo
+                fi ;;
             "enzo")
-                em --enzo ;;
+                if (( $(is_remote) )); then
+                    em --enzo --via-george
+                else
+                    em --enzo
+                fi ;;
         esac
     }
 
