@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 
 
+##  mount-shared-drives
+#
+# Mounts directories on george to local directories, specified by --mountpoints-file.
+#
+# If --abyss is given, mount pond and tank 
+#
+# Author: Hamish Morgan
+# Date:   
+
+
 source $( type -p bash-std )
 
 
@@ -11,6 +21,7 @@ function options
 --ddns; force using DDNS address
 --interval=<seconds>; default=30; time between mount point checks
 --lan; force using LAN address
+--mountpoints-file=<file>; default=~/src/hq/etc/mountpoints; File storing local:remote pars of filepaths
 EOF
 }
 
