@@ -1,16 +1,37 @@
 #!/usr/bin/env bash
 
 
+##  mount-shared-drives
+#
+# - Mounts directories on george to local directories, specified by --mountpoints-file.
+# - If --abyss is given, mount pond and tank (for george or Abyss LAN)
+#
+# Author:  Hamish Morgan
+# Date:    02/05/2021
+# License: BSD
+
+
 source $( type -p bash-std )
 
+
+function prologue
+{
+    cat <<EOF
+
+${fmt_blue}mount-shared-srives - mount remote drives over sshfs${fmt_normal}
+EOF
+}
 
 function options
 {
     cat <<EOF
---abyss; mount pond and tank
---ddns; force using DDNS address
+--abyss; Mount pond and tank
 --interval=<seconds>; default=30; time between mount point checks
---lan; force using LAN address
+--local; Force using local address (for george)
+--mountpoints-file=<file>; default=~/src/hq/etc/mountpoints; File storing local:remote pars of filepaths
+--remote; Force using remote address (for george)
+--notify; Produce notify-send notifications for each mount
+--verbose; Output messages on each mount
 EOF
 }
 
@@ -22,21 +43,62 @@ bash-std-application-init "$@" < <( options )
 
 function mountpoints  # local_filesystem:remote_filesystem
 {
-    cat ~/src/hq/etc/mountpoints
+    cat $options_mountpoints_file
 }
 
 local_mount_points=(  $( mountpoints | cut -d':' -f1 ) )
 remote_mount_points=( $( mountpoints | cut -d':' -f2 ) )
 
 
+function notify
+{
+    saymore "$0: $@"
+    if (( options_notify && BASH_STD_NOTIFY_SEND_INSTALLED )); then
+        notify-send "$0" "$@"
+    fi
+}
+
+function notify_fail
+{
+    saymore "${fmt_red}$@${fmt_normal}"
+    if (( options_notify && BASH_STD_NOTIFY_SEND_INSTALLED )); then
+        notify-send --urgency critical "$0" "$@"
+    fi
+}
+
+function notify_mount
+{
+    lan="$1"
+    mount_failed="$2"
+    remote_path="$3"
+    local_path="$4"
+    if (( mount_failed )); then
+        notify_fail "Failed to mount $lan: $remote_path to $local_path"\
+                    ", exit status $mount_failed"
+    else
+        notify "Successfully mounted $lan: $remote_path to $local_path"
+    fi
+}
+
+
 function _mount
 {
+    function unmount_if_mounted
+    {
+        local_mount_point="$1"
+        mountpoint --quiet "$local_mount_point" &&
+            sudo umount "$local_mount_point"
+    }
+    
     host="$1"
     num_mount_points=${#local_mount_points[@]}
     for i in $( seq 0 $(( num_mount_points - 1 )) ); do
-        mountpoint --quiet ${local_mount_points[$i]} \
-            && umount ${local_mount_points[$i]}
-        sshfs $host:${remote_mount_points[$i]} ${local_mount_points[$i]}
+        unmount_if_mounted "${local_mount_points[$i]}"
+        sshfs "$host:${remote_mount_points[$i]}" "${local_mount_points[$i]}"
+        notify_mount "$host"                      \
+                     $?                           \
+                     "${remote_mount_points[$i]}" \
+                     "${local_mount_points[$i]}"
     done
 }
 
@@ -44,7 +106,14 @@ function _mount
 function mount_abyss_drives
 {
     for drive in pond tank; do
-        sshfs rhino:/mnt/$drive /mnt/$drive -o cache_max_size=1000000 -o cache_timeout=120 -o allow_other
+        sshfs rhino:/mnt/$drive /mnt/$drive \
+              -o cache_max_size=1000000     \
+              -o cache_timeout=120          \
+              -o allow_other
+        notify_mount rhino       \
+                     $?          \
+                     /mnt/$drive \
+                     /mnt/$drive
     done
 }
 
@@ -64,9 +133,10 @@ function monitor_mountpoints
 if (( options_abyss )); then
     mount_abyss_drives
 else
-    if (( options_lan )); then
+    if (( options_local )); then
         _mount "george"
-    elif (( options_ddns )); then
+        saymore "mounting george"
+    elif (( options_remote )); then
         _mount "george_remote"
     else
         _mount "$( where-is-george )"
