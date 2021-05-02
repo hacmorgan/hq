@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 
-##  This script is intended to be used with keybindings
+
+##  dmenu-custom - collection of convenient shell commands and routines
+#
+# Intended to be bound to a key combination in a wondow manager
+#
+# Author:  Hamish Morgan
+# Date:    02/05/2021
+# License: BSD
+
+
+source $( type -p bash-std )
+
 
 function get-choice()
 {
@@ -59,11 +70,15 @@ function main-run ()
     {
         local screenshot_types="select region,full screen,select region (delay),full screen (delay)"
         local selected_type="$( get-choice "$screenshot_types" )"
+        local expression='mv $f /tmp/'
+        if (( BASH_STD_NOTIFY_SEND_INSTALLED )); then
+            expression+='; notify-send "screenshot captured" "saved to $f"'
+        fi
         case "$selected_type" in
             "select region")
-                scrot -s -e 'mv $f /tmp/' ;;
+                scrot -s -e "$expression" ;;
             "full screen")
-                scrot -e 'mv $f /tmp/' ;;
+                scrot -e "$expression" ;;
         esac
     }
 
@@ -130,9 +145,15 @@ function main-run ()
         local selected_option="$( get-choice "$picom_options" )"
         case "$selected_option" in
             "turn on")
-                [ $(ps -aux | grep picom | wc -l) -le 1 ] && exec picom ;;
+                [ $(ps -aux | grep picom | wc -l) -le 1 ] && exec picom
+                if (( BASH_STD_NOTIFY_SEND_INSTALLED )); then
+                    notify-send "picom turned on"
+                fi ;;
             "turn off")
-                killall picom ;;
+                killall picom
+                if (( BASH_STD_NOTIFY_SEND_INSTALLED )); then
+                    notify-send "picom turned off"
+                fi ;;
         esac
     }
 
@@ -190,9 +211,9 @@ function main-run ()
         local selected_state="$( get-choice "$states" )"
         case "$selected_state" in
             "on")
-                sdc --on "$selected_option" ;;
+                sdc --notify --on "$selected_option" ;;
             "off")
-                sdc --off "$selected_option" ;;
+                sdc --notify --off "$selected_option" ;;
         esac
     }
 
@@ -216,7 +237,7 @@ function main-run ()
         "display")
             display-run ;;
         "mount shared drives")
-            mount-shared-drives ;;
+            mount-shared-drives --notify ;;
         "sdc")
             sdc-run ;;
     esac
