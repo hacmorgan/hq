@@ -166,3 +166,4 @@ wireguard-dkms
 wireguard-tools
 #yay
 yq
+dunst
