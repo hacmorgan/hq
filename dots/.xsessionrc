@@ -48,3 +48,6 @@ emacs --daemon &!
 
 # start barrier client to enzo
 barrierc 10.0.0.72 &!
+
+# mount Abyss drives
+mount-shared-drives --abyss &!
