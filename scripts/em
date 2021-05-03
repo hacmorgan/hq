@@ -87,7 +87,11 @@ function get_filename
     elif (( ! $(is_local) )); then
         emacs_file_path+=":"
     fi
-    emacs_file_path+="$file"
+    if (( options_sudo )); then
+        emacs_file_path+="$( realpath $file )"
+    else
+        emacs_file_path+="$file"
+    fi
     echo $emacs_file_path
 }
 
