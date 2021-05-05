@@ -195,17 +195,21 @@ function main-run ()
 
     function display-run
     {
-        local display_options="turn off,both screens,flat only,curved only"
+        local display_options="turn off,all monitors,flat only,wide only,curved only,flat and wide"
         local selected_option="$( get-choice "$display_options" )"
         case "$selected_option" in
             "turn off")
                 xset -display :0.0 dpms force off ;;
-            "both screens")
-                use-both-screens ;;
+            "all monitors")
+                use-all-monitors ;;
             "flat only")
                 use-flat-only ;;
+            "wide only")
+                use-wide-only ;;
             "curved only")
                 use-curved-only ;;
+            "flat and wide")
+                use-flat-and-wide ;;
         esac
     }
 
