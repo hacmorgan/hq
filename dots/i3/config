@@ -225,12 +225,13 @@ for_window [class="csv-plot"]      floating enable
 for_window [class="0"]             floating enable
 for_window [class="floating_term"] floating enable
 
-# $TERMINAL = default terminal
-set $TERMINAL kitty
 
 ###############
 # KEYBINDINGS #
 ###############
+
+# $TERMINAL = default terminal
+set $TERMINAL kitty
 
 # terminals
 bindsym $mod+Return       exec "$TERMINAL"
@@ -252,3 +253,9 @@ bindsym $mod+Shift+o exec --no-startup-id "emacsclient -a '' -c"
 
 # dmenu-custom
 bindsym --release $mod+Shift+s exec --no-startup-id dmenu-custom
+
+
+######################
+# Autostart programs #
+######################
+exec --no-startup-id use-all-monitors
