@@ -217,8 +217,14 @@ function main-run ()
         esac
     }
 
+    function bedtime-run
+    {
+        ssh -J $(where-is-george) enzo sudo shutdown now
+        ssh $(where-is-george) xset -display :0.0 dpms force off
+    }
+
     
-    subsetting_options="power,screenshot,emacs,display,sdc,mount shared drives,edit configs,keyboard multiplier,picom"
+    subsetting_options="power,screenshot,emacs,display,sdc,mount shared drives,edit configs,keyboard multiplier,picom,bedtime"
     subsetting="$( get-choice "$subsetting_options" )"
     echo $subsetting
     case "$subsetting" in
@@ -240,6 +246,8 @@ function main-run ()
             mount-shared-drives --notify ;;
         "sdc")
             sdc-run ;;
+        "bedtime")
+            bedtime-run ;;
     esac
     
 }
