@@ -1,0 +1,4 @@
+git@gitlab.com:orthographic/comma.git             /home/hamish/src/foss/comma           /home/hamish/build/foss/comma
+git@gitlab.com:orthographic/snark.git             /home/hamish/src/foss/snark           /home/hamish/build/foss/snark
+git@github.com:abyss-solutions/abyss-bedrock.git  /home/hamish/src/abyss/abyss-bedrock  /home/hamish/build/abyss/abyss-bedrock
+git@github.com:abyss-solutions/abyss-robotics.git /home/hamish/src/abyss/abyss-robotics /home/hamish/build/abyss/abyss-robotics
