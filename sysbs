@@ -225,8 +225,8 @@ function symlink_vi
 function symlink_systemd_services
 {
     for service in $hq/etc/systemd/*; do
-        sudo ln -sf$verbose $( realpath $service ) /lib/systemd/system/
-        (( options_enable_systemd_services )) && sudo systemctl enable $( basename $service )
+        (( options_symlink_systemd_services )) && sudo ln -sf$verbose $( realpath $service ) /lib/systemd/system/
+        (( options_enable_systemd_services  )) && sudo systemctl enable $( basename $service )
     done
 }
 
@@ -352,17 +352,18 @@ function install_cpp_manpages
 bash-std-application-init "$@" < <( options ) || die "failed"
 bash-std-set-verbose
 
-(( options_install_oh_my_zsh ))         && { install_oh_my_zsh; exit; }
-(( options_configure_emacs ))           && configure_emacs
-(( options_configure_git ))             && configure_git
-(( options_configure_zsh ))             && configure_zsh
-(( options_create_shared_mountpoints )) && create_shared_mountpoints
-(( options_install_fonts ))             && install_fonts
-(( options_symlink_dots ))              && symlink_dots
-(( options_symlink_systemd_services ))  && symlink_systemd_services
-(( options_symlink_vi ))                && symlink_vi
-(( options_install_scripts ))           && install_scripts
-(( options_autostart_abyss_wireguard )) && autostart_abyss_wireguard
-(( options_update_package_list ))       && update_package_list
-(( options_install_packages ))          && install_packages
-(( options_install_cpp_manpages ))      && install_cpp_manpages
+(( options_install_oh_my_zsh ))           && { install_oh_my_zsh; exit; }
+(( options_configure_emacs ))             && configure_emacs
+(( options_configure_git ))               && configure_git
+(( options_configure_zsh ))               && configure_zsh
+(( options_create_shared_mountpoints ))   && create_shared_mountpoints
+(( options_install_fonts ))               && install_fonts
+(( options_symlink_dots ))                && symlink_dots
+(( options_symlink_systemd_services ||
+       options_enable_systemd_services )) && symlink_systemd_services
+(( options_symlink_vi ))                  && symlink_vi
+(( options_install_scripts ))             && install_scripts
+(( options_autostart_abyss_wireguard ))   && autostart_abyss_wireguard
+(( options_update_package_list ))         && update_package_list
+(( options_install_packages ))            && install_packages
+(( options_install_cpp_manpages ))        && install_cpp_manpages
