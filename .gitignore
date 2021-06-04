@@ -1,3 +1,4 @@
 /dots/GIMP/2.10/*
 !/dots/GIMP/2.10/scripts
-etc/jira-api-token
+dots/nvim/.netrwhist
+jira-api-token

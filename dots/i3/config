@@ -216,6 +216,8 @@ default_border pixel 2
 # Move workspaces between screens
 bindsym $mod+Ctrl+Shift+Left move workspace to output left
 bindsym $mod+Ctrl+Shift+Right move workspace to output right
+bindsym $mod+Ctrl+Shift+Up move workspace to output up
+bindsym $mod+Ctrl+Shift+Down move workspace to output down
 
 # Make gnuplot float by default
 for_window [class="gnuplot_qt"]    floating enable

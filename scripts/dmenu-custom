@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 
-##  This script is intended to be used with keybindings
+
+##  dmenu-custom - collection of convenient shell commands and routines
+#
+# Intended to be bound to a key combination in a wondow manager
+#
+# Author:  Hamish Morgan
+# Date:    02/05/2021
+# License: BSD
+
+
+source $( type -p bash-std )
+
 
 function get-choice()
 {
@@ -59,11 +70,15 @@ function main-run ()
     {
         local screenshot_types="select region,full screen,select region (delay),full screen (delay)"
         local selected_type="$( get-choice "$screenshot_types" )"
+        local expression='mv $f /tmp/'
+        if (( BASH_STD_NOTIFY_SEND_INSTALLED )); then
+            expression+='; notify-send "screenshot captured" "saved to $f"'
+        fi
         case "$selected_type" in
             "select region")
-                scrot -s -e 'mv $f /tmp/' ;;
+                scrot -s -e "$expression" ;;
             "full screen")
-                scrot -e 'mv $f /tmp/' ;;
+                scrot -e "$expression" ;;
         esac
     }
 
@@ -130,14 +145,32 @@ function main-run ()
         local selected_option="$( get-choice "$picom_options" )"
         case "$selected_option" in
             "turn on")
-                [ $(ps -aux | grep compton | wc -l) -le 1 ] && exec compton ;;
+                [ $(ps -aux | grep compton | wc -l) -le 1 ] && exec compton
+                if (( BASH_STD_NOTIFY_SEND_INSTALLED )); then
+                    notify-send "compton turned on"
+                fi ;;
             "turn off")
-                killall compton ;;
+                killall compton
+                if (( BASH_STD_NOTIFY_SEND_INSTALLED )); then
+                    notify-send "compton turned off"
+                fi ;;
         esac
     }
 
     function emacs-run
     {
+        function is_remote
+        {
+            local options="local,remote"
+            local selected_option="$( get-choice "$options" )"
+            case "$selected_option" in
+                "local")
+                    echo 0 ;;
+                "remote")
+                    echo 1 ;;
+            esac
+        }
+        
         local emacs_options="local,george,buffalo local,enzo,buffalo"
         local selected_option="$( get-choice "$emacs_options" )"
         case "$selected_option" in
@@ -148,9 +181,17 @@ function main-run ()
             "buffalo local")
                 em --buffalo-local ;;
             "buffalo")
-                em --buffalo ;;
+                if (( $(is_remote) )); then
+                    em --buffalo --via-george
+                else
+                    em --buffalo
+                fi ;;
             "enzo")
-                em --enzo ;;
+                if (( $(is_remote) )); then
+                    em --enzo --via-george
+                else
+                    em --enzo
+                fi ;;
         esac
     }
 
@@ -170,8 +211,28 @@ function main-run ()
         esac
     }
 
+    function sdc-run
+    {
+        local options="all,bedside light,sound system"
+        local selected_option="$( get-choice "$options" )"
+        local states="on,off"
+        local selected_state="$( get-choice "$states" )"
+        case "$selected_state" in
+            "on")
+                sdc --notify --on "$selected_option" ;;
+            "off")
+                sdc --notify --off "$selected_option" ;;
+        esac
+    }
+
+    function bedtime-run
+    {
+        ssh -J $(where-is-george) enzo sudo shutdown now
+        ssh $(where-is-george) xset -display :0.0 dpms force off
+    }
+
     
-    subsetting_options="power,screenshot,emacs,display,edit configs,mount shared drives,keyboard multiplier,picom"
+    subsetting_options="power,screenshot,emacs,display,sdc,mount shared drives,edit configs,keyboard multiplier,picom,bedtime"
     subsetting="$( get-choice "$subsetting_options" )"
     echo $subsetting
     case "$subsetting" in
@@ -190,7 +251,11 @@ function main-run ()
         "display")
             display-run ;;
         "mount shared drives")
-            mount-shared-drives ;;
+            mount-shared-drives --notify ;;
+        "sdc")
+            sdc-run ;;
+        "bedtime")
+            bedtime-run ;;
     esac
     
 }
