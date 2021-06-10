@@ -16,7 +16,11 @@ source $( type -p bash-std )
 function get-choice()
 {
     options="$1"
-    echo $options | tr ',' '\n' | dmenu -fn "Fantasque Sans Mono" -sb "#AD29C4" -f
+    echo $options                       |
+        tr ',' '\n'                     |
+        dmenu -fn "Fantasque Sans Mono" \
+              -sb "#AD29C4"             \
+              -f
 }
 
 
@@ -229,12 +233,17 @@ function main-run ()
 
     function bedtime-run
     {
+        george-display-off-run
         ssh -J $(where-is-george) enzo sudo shutdown now
+    }
+
+    function george-display-off-run
+    {
         ssh $(where-is-george) xset -display :0.0 dpms force off
     }
 
     
-    subsetting_options="power,screenshot,emacs,display,sdc,mount shared drives,edit configs,keyboard multiplier,picom,bedtime"
+    subsetting_options="power,screenshot,emacs,display,sdc,mount shared drives,edit configs,keyboard multiplier,picom,bedtime,george display off"
     subsetting="$( get-choice "$subsetting_options" )"
     echo $subsetting
     case "$subsetting" in
@@ -258,8 +267,9 @@ function main-run ()
             sdc-run ;;
         "bedtime")
             bedtime-run ;;
+        "george display off")
+            george-display-off-run ;;
     esac
-    
 }
 
 
