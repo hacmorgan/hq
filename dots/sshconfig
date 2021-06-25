@@ -69,3 +69,11 @@ Host buffalo
 Host hihi
 	HostName 10.10.5.4
 	User hamish
+
+Host bisous
+    HostName 10.0.0.116
+    User hamish
+
+Host bisous_eth
+    HostName 10.0.0.120
+    User hamish
