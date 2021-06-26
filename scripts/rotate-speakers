@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+
+
+import argparse
+import serial
+import socket
+import sys
+
+
+def getArgs() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument("--positions", "-p",
+                        type=str,
+                        help="Number of positions to turn each speaker (e.g. '100,100')")
+    parser.add_argument("--degrees", "-d",
+                        type=str,
+                        help="Number of degrees to turn each speaker (e.g. '30,-20')")
+    parser.add_argument("--host",
+                        type=str,
+                        default="10.0.0.127",
+                        help="IP address of control computer %(default)s)")
+    parser.add_argument("--port",
+                        type=int,
+                        default=42069,
+                        help="Port no. for TCP connection (default %(default)s)")
+    parser.add_argument("--verbose", "-v", action="store_true", help="More output")
+    return parser.parse_args()
+
+
+def main(args) -> int:
+
+    def sanitiseInputs() -> None:
+        if args.positions is None and args.degrees is None:
+            print("Either --positions or --degrees is required")
+            exit(1)
+        if args.positions is not None and args.degrees is not None:
+            print("--positions or --degrees are mutually exclusive")
+            exit(1)
+
+    def getPositions() -> str:
+        
+        def degreesToPositions(degrees: str) -> str:
+            return str(int(float(degrees)/0.033))
+
+        if args.positions is not None:
+            return args.positions
+        return ",".join(map(degreesToPositions, args.degrees.strip().split(",")))
+
+    sanitiseInputs()
+    # create IPV4 TCP socket
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        # bind to any address the machine has, on port args.port
+        sock.connect((args.host, args.port))
+        sock.sendall(getPositions().strip().encode("utf-8"))
+    
+
+if __name__ == '__main__':
+    sys.exit(main(getArgs()))
