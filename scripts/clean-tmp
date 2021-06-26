@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+
+source $( type -p bash-std )
+
+
+function options
+{
+    cat <<EOF
+--setup,-s; Remove the ~/Downloads directory,  create ~/tmp, symlink ~/tmp to ~/Downloads 
+EOF
+}
+
+bash-std-application-init "$@" < <( options ) || die "failed parsing args"
+
+
+function setup
+{
+    rmdir -v $HOME/Downloads/ &&
+        mkdir -pv $HOME/tmp   &&
+        ln -sv $HOME/tmp $HOME/Downloads
+}
+
+
+function clean_tmp
+{
+    find $HOME/tmp/  \
+         -maxdepth 1 \
+         -mindepth 1 \
+         -delete
+}
+
+
+if (( options_setup )); then setup; fi
+clean_tmp

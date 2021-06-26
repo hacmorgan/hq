@@ -1,0 +1,9 @@
+[Unit]
+Description=Delete everything in ~/tmp
+
+[Service]
+ExecStart=clean-tmp
+User=hamish
+
+[Install]
+WantedBy=multi-user.target

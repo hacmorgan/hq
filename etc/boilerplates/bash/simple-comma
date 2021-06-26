@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+source $( type -p comma-application-util )
+
+function options
+{
+cat <<EOF
+--input-directory,-i=<input-dir>; Mandatory option
+--num-things=<input-dir>; default=5; Option with default
+--config=[<config>]; Optional option
+--verbose,-v; Flag
+EOF
+}
+
+comma-application-init "$@" < <( options )
+
+# now options are defined 

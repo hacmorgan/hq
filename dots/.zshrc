@@ -93,10 +93,6 @@ source $ZSH/oh-my-zsh.sh
 #################
 #    ALIASES    #
 #################
-alias oldvim=vim
-alias vim=nvim
-alias -g cdu='cd ~/src/useful-scripts/'
-alias tem='emacsclient -a "" -nw'
 alias sdn='sudo shutdown now'
 alias rsn='sudo shutdown -r now'
 alias p3='python3'
@@ -109,8 +105,10 @@ alias b2s="pwd | sed 's/build/src/g'"
 alias s2b="pwd | sed 's/src/build/g'"
 alias l='ls -l'
 alias ll='ls -la'
+alias cdl='{ dir="$(cat)" ; cd "$dir" ; ls -la } <<< '
 alias display_off='xset -display :0.0 dpms force off'
 alias display_on='xset -display :0.0 dpms force on'
+alias gca='git commit -a -v'
 
 
 #################
@@ -127,5 +125,3 @@ export MPD_PORT="6600"
 # this should start emacs if the daemon is not already running
 export ALTERNATE_EDITOR=""
 
-# Fix colours in tmux
-export TERM=xterm-256color

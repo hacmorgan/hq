@@ -44,7 +44,7 @@ Host george_remote
 
 Host collab
     User collab
-    Hostname 10.0.0.72
+    Hostname 10.0.0.39
 
 Host hippo
 	HostName 10.137.4.1
@@ -65,3 +65,19 @@ Host gecko
 Host buffalo
 	HostName 10.137.4.5
 	User hmo
+
+Host hihi
+	HostName 10.10.5.4
+	User hamish
+
+Host bisous
+    HostName 10.0.0.116
+    User hamish
+
+Host bisous_eth
+    HostName 10.0.0.120
+    User hamish
+
+Host leroy
+    HostName 10.0.0.127
+    User hamish

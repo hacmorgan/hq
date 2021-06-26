@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+
+
+source $( type -p bash-std )
+
+
+function prologue
+{
+    cat <<EOF 
+
+${fmt_bold}${fmt_red}backup-system - create system backups using rsync and hard links${fmt_normal}
+EOF
+}
+
+function options
+{
+    cat <<EOF
+--backup-directory,--backup-dir,-b=<dir>; default=/mnt/storage/backups/system-restore-points/$( cat /etc/hostname ); Directory to store backups under
+--directories,--dirs,-d=<dirs>; default=/etc; Comma-separated list of directories to back up
+--verbose,-v; More output
+EOF
+}
+
+bash-std-application-init "$@" < <( options ) || die "failed"
+
+
+function checkBackupDirExists
+{
+    if [[ ! -d "$options_backup_directory" ]]; then
+        mkdir -p${options_verbose:+v} "$options_backup_directory" ||
+            die "Backup directory ($options_backup_directory) nonextsitent and cannot be created, exiting"
+    fi
+}
+
+function latestBackup
+{
+    ls -1t "$options_backup_directory" | head -n1
+}
+
+
+function copyPreviousBackup
+{
+    function timestamp
+    {
+        date --iso-8601=seconds |
+            sed -e 's#-##g' \
+                -e 's#:##g' \
+                -e 's#+.*##'
+    }
+
+    if [[ -d "$options_backup_directory/$(latestBackup)" ]]; then
+        cp --archive                                   \
+           --link                                      \
+           --verbose                                   \
+           "$options_backup_directory/$(latestBackup)" \
+           "$options_backup_directory/$(timestamp)"
+    else
+        mkdir -p${options_verbose:+v} "$options_backup_directory/$(latestBackup)"
+    fi
+}
+
+
+function syncDirectories
+{
+    function directories
+    {
+        tr ',' ' ' <<< "$options_directories"
+    }
+
+    rsync -avhP $(directories) "$options_backup_directory/$(latestBackup)"
+}
+
+
+checkBackupDirExists
+copyPreviousBackup
+syncDirectories
