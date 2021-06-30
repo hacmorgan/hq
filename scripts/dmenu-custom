@@ -225,6 +225,7 @@ function main-run ()
     {
         george-display-off-run
         ssh -J $(where-is-george) enzo sudo shutdown now
+        sdc --off "all"
     }
 
     function george-display-off-run
