@@ -1,0 +1,10 @@
+[Unit]
+Description=Receive messages over TCP and send to Arduino over serial
+
+[Service]
+ExecStart=rotate-speakers-receiver
+User=hamish
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
