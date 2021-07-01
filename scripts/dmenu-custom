@@ -224,17 +224,40 @@ function main-run ()
     function bedtime-run
     {
         george-display-off-run
-        ssh -J $(where-is-george) enzo sudo shutdown now
+        ssh -J "$(where-is-george)" enzo sudo shutdown now
         sdc --off "all"
     }
 
     function george-display-off-run
     {
-        ssh $(where-is-george) xset -display :0.0 dpms force off
+        ssh "$(where-is-george)" xset -display :0.0 dpms force off
+    }
+
+    function rotate-speakers-run
+    {
+        function speaker_angle
+        {
+            local desired="$1"
+            local actual="$2"
+            local angle="$3"
+            if [[ "$desired" == "all" || "$desired" == "$actual" ]]; then
+                echo "$angle"
+            else
+                echo 0
+            fi
+        }
+        
+        local speakers="both,left,right"
+        local angles="-90,-75,-60,-45,-30,-15,-5,5,15,30,45,60,75,90"
+        speaker="$( get-choice "$speakers" )"
+        angle="$(   get-choice "$angles"   )"
+        left="$(  speaker_angle left  "$speaker" "$angle" )"
+        right="$( speaker_angle right "$speaker" "$angle" )"
+        rotate-speakers --degrees "$left,$right"
     }
 
     
-    subsetting_options="power,screenshot,emacs,display,sdc,mount shared drives,edit configs,keyboard multiplier,picom,bedtime,george display off"
+    subsetting_options="power,screenshot,emacs,display,sdc,mount shared drives,rotate speakers,edit configs,keyboard multiplier,picom,bedtime,george display off"
     subsetting="$( get-choice "$subsetting_options" )"
     echo $subsetting
     case "$subsetting" in
@@ -260,6 +283,8 @@ function main-run ()
             bedtime-run ;;
         "george display off")
             george-display-off-run ;;
+        "rotate speakers")
+            rotate-speakers-run ;;
     esac
 }
 
