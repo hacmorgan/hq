@@ -2,9 +2,10 @@
 
 
 import argparse
-import serial
 import socket
 import sys
+
+import serial
 
 
 def getArgs() -> argparse.Namespace:
@@ -18,7 +19,7 @@ def getArgs() -> argparse.Namespace:
     parser.add_argument("--host",
                         type=str,
                         default="10.0.0.127",
-                        help="IP address of control computer %(default)s)")
+                        help="IP address of control computer (default %(default)s)")
     parser.add_argument("--port",
                         type=int,
                         default=42069,
@@ -37,9 +38,30 @@ def main(args) -> int:
             print("--positions or --degrees are mutually exclusive")
             exit(1)
 
+    def tcpSocket() -> socket.socket:
+        """
+        Create an IPV4 TCP socket
+
+        @return Socket object
+        """
+        return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
     def getPositions() -> str:
+        """
+        Find how many positions to turn the speakers
+
+        The arduino only deals with positions, so conversion from degrees happens here
+
+        @return Number of positions to turn
+        """
         
         def degreesToPositions(degrees: str) -> str:
+            """
+            Convert an angle in degrees to positions
+
+            @param[in] degrees Angle
+            @return Positions
+            """
             return str(int(float(degrees)/0.033))
 
         if args.positions is not None:
@@ -47,9 +69,7 @@ def main(args) -> int:
         return ",".join(map(degreesToPositions, args.degrees.strip().split(",")))
 
     sanitiseInputs()
-    # create IPV4 TCP socket
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-        # bind to any address the machine has, on port args.port
+    with tcpSocket() as sock:
         sock.connect((args.host, args.port))
         sock.sendall(getPositions().strip().encode("utf-8"))
     
