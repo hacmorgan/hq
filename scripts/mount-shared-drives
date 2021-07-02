@@ -99,7 +99,7 @@ function _mount
     num_mount_points=${#local_mount_points[@]}
     for i in $( seq 0 $(( num_mount_points - 1 )) ); do
         unmount_if_mounted "${local_mount_points[$i]}"
-        sshfs "$host:${remote_mount_points[$i]}" "${local_mount_points[$i]}" $SSHFS_OPTS
+        sshfs "$host:${remote_mount_points[$i]}" "${local_mount_points[$i]}" ${SSHFS_OPTS[@]}
         notify_mount "$host"                      \
                      $?                           \
                      "${remote_mount_points[$i]}" \
@@ -111,7 +111,7 @@ function _mount
 function mount_abyss_drives
 {
     for drive in pond tank; do
-        sshfs rhino:/mnt/$drive /mnt/$drive $SSHFS_OPTS_ABYSS
+        sshfs rhino:/mnt/$drive /mnt/$drive ${SSHFS_OPTS_ABYSS[@]}
         notify_mount rhino       \
                      $?          \
                      /mnt/$drive \
