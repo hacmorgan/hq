@@ -250,7 +250,7 @@ function main-run ()
             local desired="$1"
             local actual="$2"
             local angle="$3"
-            if [[ "$desired" == "all" || "$desired" == "$actual" ]]; then
+            if [[ "$desired" == "both" || "$desired" == "$actual" ]]; then
                 echo "$angle"
             else
                 echo 0
@@ -261,9 +261,10 @@ function main-run ()
         local angles="-90,-75,-60,-45,-30,-15,-5,5,15,30,45,60,75,90"
         speaker="$( get-choice "$speakers" )"
         angle="$(   get-choice "$angles"   )"
-        left="$(  speaker_angle left  "$speaker" "$angle" )"
-        right="$( speaker_angle right "$speaker" "$angle" )"
-        rotate-speakers --degrees "$left,$right"
+        left="$(  speaker_angle "$speaker" left  "$angle" )"
+        right="$( speaker_angle "$speaker" right "$angle" )"
+        echo "rotating speaker $speaker by angle $angle (degrees $left,$right)" 1>&2
+        rotate-speakers --degrees="$left,$right"
     }
 
     
