@@ -39,7 +39,12 @@ EOF
 bash-std-application-init "$@" < <( options )
 
 
-
+SSHFS_OPTS=( -o ServerAliveInterval=15
+             -o reconnect )
+SSHFS_OPTS_ABYSS=( ${SSHFS_OPTS[@]}
+                   -o cache_max_size=1000000
+                   -o cache_timeout=120
+                   -o allow_other )
 
 function mountpoints  # local_filesystem:remote_filesystem
 {
@@ -94,7 +99,7 @@ function _mount
     num_mount_points=${#local_mount_points[@]}
     for i in $( seq 0 $(( num_mount_points - 1 )) ); do
         unmount_if_mounted "${local_mount_points[$i]}"
-        sshfs "$host:${remote_mount_points[$i]}" "${local_mount_points[$i]}"
+        sshfs "$host:${remote_mount_points[$i]}" "${local_mount_points[$i]}" ${SSHFS_OPTS[@]}
         notify_mount "$host"                      \
                      $?                           \
                      "${remote_mount_points[$i]}" \
@@ -106,10 +111,7 @@ function _mount
 function mount_abyss_drives
 {
     for drive in pond tank; do
-        sshfs rhino:/mnt/$drive /mnt/$drive \
-              -o cache_max_size=1000000     \
-              -o cache_timeout=120          \
-              -o allow_other
+        sshfs rhino:/mnt/$drive /mnt/$drive ${SSHFS_OPTS_ABYSS[@]}
         notify_mount rhino       \
                      $?          \
                      /mnt/$drive \
