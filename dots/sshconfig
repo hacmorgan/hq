@@ -1,6 +1,6 @@
-Host bruno-abyss
+Host bruno_abyss
     User hamish
-    HostName 10.137.5.46
+    HostName 10.137.5.202
 
 Host thinkpad
     User hamish
