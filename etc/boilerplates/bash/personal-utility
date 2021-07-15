@@ -1,15 +1,28 @@
 #!/usr/bin/env bash
 
 
-source $( type -p comma-application-util )
-source $( type -p bash-formatting )
+source $( type -p bash-std )
 
 
-function options { ; }
+function prologue
+{
+    cat <<EOF 
+EOF
+}
+
+function options
+{
+    cat <<EOF
+EOF
+}
+
+function epilogue
+{
+    cat <<EOF
+EOF
+}
 
 
-comma-application-init "$@" < <( options )
+bash-std-application-init "$@" < <( options ) || die "failed"
 
-
-# variables have now been defined.
-# the rest of the application goes here
+# command line args are now defined

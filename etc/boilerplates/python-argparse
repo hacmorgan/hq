@@ -5,15 +5,19 @@ import argparse
 import sys
 
 
-def getArgs():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--verbose", "-v", action="store_true", help="more output")
+def getArgs() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument("--port", "-p",
+                        type=str,
+                        default=42069,
+                        help="Port no. for TCP connection (default %(default)s)")
+    parser.add_argument("--verbose", "-v", action="store_true", help="More output")
     return parser.parse_args()
 
 
-def main(args):
+def main(args) -> int:
     return 0
-
+    
 
 if __name__ == '__main__':
     sys.exit(main(getArgs()))

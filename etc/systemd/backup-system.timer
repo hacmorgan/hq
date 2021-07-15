@@ -1,0 +1,10 @@
+[Unit]
+Description=Run backup-system service every day
+Requires=backup-system.service
+
+[Timer]
+Unit=backup-system.service
+OnUnitInactiveSec=24h
+
+[Install]
+WantedBy=multi-user.target

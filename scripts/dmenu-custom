@@ -1,11 +1,26 @@
 #!/usr/bin/env bash
 
-##  This script is intended to be used with keybindings
+
+##  dmenu-custom - collection of convenient shell commands and routines
+#
+# Intended to be bound to a key combination in a wondow manager
+#
+# Author:  Hamish Morgan
+# Date:    02/05/2021
+# License: BSD
+
+
+source $( type -p bash-std )
+
 
 function get-choice()
 {
     options="$1"
-    echo $options | tr ',' '\n' | dmenu -fn "Fantasque Sans Mono" -sb "#AD29C4" -f
+    echo $options                       |
+        tr ',' '\n'                     |
+        dmenu -fn "Fantasque Sans Mono" \
+              -sb "#AD29C4"             \
+              -f
 }
 
 
@@ -59,11 +74,15 @@ function main-run ()
     {
         local screenshot_types="select region,full screen,select region (delay),full screen (delay)"
         local selected_type="$( get-choice "$screenshot_types" )"
+        local expression='mv $f /tmp/'
+        if (( BASH_STD_NOTIFY_SEND_INSTALLED )); then
+            expression+='; notify-send "screenshot captured" "saved to $f"'
+        fi
         case "$selected_type" in
             "select region")
-                scrot -s -e 'mv $f /tmp/' ;;
+                scrot -s -e "$expression" ;;
             "full screen")
-                scrot -e 'mv $f /tmp/' ;;
+                scrot -e "$expression" ;;
         esac
     }
 
@@ -205,14 +224,50 @@ function main-run ()
         local selected_state="$( get-choice "$states" )"
         case "$selected_state" in
             "on")
-                sdc --on "$selected_option" ;;
+                sdc --notify --on "$selected_option" ;;
             "off")
-                sdc --off "$selected_option" ;;
+                sdc --notify --off "$selected_option" ;;
         esac
     }
 
+    function bedtime-run
+    {
+        george-display-off-run
+        ssh -J "$(where-is-george)" enzo sudo shutdown now
+        sdc --off "all"
+    }
+
+    function george-display-off-run
+    {
+        ssh "$(where-is-george)" xset -display :0.0 dpms force off
+    }
+
+    function rotate-speakers-run
+    {
+        function speaker_angle
+        {
+            local desired="$1"
+            local actual="$2"
+            local angle="$3"
+            if [[ "$desired" == "both" || "$desired" == "$actual" ]]; then
+                echo "$angle"
+            else
+                echo 0
+            fi
+        }
+        
+        local speakers="both,left,right"
+        local angles="-90,-75,-60,-45,-30,-15,-5,5,15,30,45,60,75,90"
+        speaker="$( get-choice "$speakers" )"
+        angle="$(   get-choice "$angles"   )"
+        left="$(  speaker_angle "$speaker" left  "$angle" )"
+        right="$( speaker_angle "$speaker" right "$angle" )"
+        echo "rotating speaker $speaker by angle $angle (degrees $left,$right)" 1>&2
+        rotate-speakers --degrees="$left,$right"
+    }
+
     
-    subsetting_options="power,screenshot,emacs,display,sdc,mount shared drives,edit configs,keyboard multiplier,picom"
+    subsetting_options="power,screenshot,emacs,display,sdc,mount shared drives,rotate speakers,edit configs,keyboard multiplier,picom,bedtime,george display off"
     subsetting="$( get-choice "$subsetting_options" )"
     echo $subsetting
     case "$subsetting" in
@@ -233,11 +288,16 @@ function main-run ()
         "display")
             display-run ;;
         "mount shared drives")
-            mount-shared-drives ;;
+            mount-shared-drives --notify ;;
         "sdc")
             sdc-run ;;
+        "bedtime")
+            bedtime-run ;;
+        "george display off")
+            george-display-off-run ;;
+        "rotate speakers")
+            rotate-speakers-run ;;
     esac
-    
 }
 
 
