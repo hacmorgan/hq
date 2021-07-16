@@ -6,7 +6,11 @@ import sys
 
 
 def getArgs() -> argparse.Namespace:
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument("--port", "-p",
+                        type=str,
+                        default=42069,
+                        help="Port no. for TCP connection (default %(default)s)")
     parser.add_argument("--verbose", "-v", action="store_true", help="More output")
     return parser.parse_args()
 
