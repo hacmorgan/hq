@@ -1,0 +1,99 @@
+#!/usr/bin/env python
+
+import serial
+import argparse
+import numpy as np
+import time
+from pynput.mouse import Button, Controller
+
+
+# set up serial connection
+ser = serial.Serial("/dev/ttyUSB0", 9600)
+ser.baudrate = 9600
+
+# initialise mouse controller
+mouse = Controller()
+
+# how many pixels of movement correlate to one scroll bump
+scroll_multiplier = 0.1
+
+# scroll control variables
+global start_pos 
+start_pos = None
+global start_time 
+start_time = None
+global last_pos 
+last_pos = None
+global scroll_delta 
+scroll_delta = np.array((0.0, 0.0))
+global scroll_bumps
+scroll_bumps = np.array((0, 0))
+global is_scrolling
+is_scrolling = False
+
+# battery monitoring
+battery_percentage_file = "/home/hamish/scratch/.battery_level"
+
+
+def read_serial(verbose=False):
+    read_ser = ser.readline()
+    try:
+        message = str(read_ser, "utf-8").strip()
+    except UnicodeDecodeError:
+        return -1
+    if verbose == True:
+        print(message)
+    return message
+
+
+def handle_mouse(message):
+    global start_pos 
+    global start_time 
+    global last_pos 
+    global scroll_delta 
+    global scroll_bumps
+    global is_scrolling
+
+    if message == "scr":
+        scroll_delta += (np.array( mouse.position ) - np.array( last_pos )) * scroll_multiplier
+        last_pos = mouse.position
+        scroll_bumps = scroll_delta.astype(int)
+        scroll_delta -= scroll_bumps
+        if scroll_bumps.any():
+            mouse.scroll( -scroll_bumps[0], scroll_bumps[1] )
+    elif message == "11":
+        mouse.press ( Button.left )
+    elif message == "10":
+        mouse.release ( Button.left )
+    elif message == "21":
+        mouse.press ( Button.right )
+    elif message == "20":
+        mouse.release ( Button.right )
+    elif message == "31":
+        is_scrolling = True
+        start_pos = mouse.position
+        start_time = time.time()
+        last_pos = mouse.position
+    elif message == "30":
+        if time.time() - start_time < 0.5:
+            mouse.press ( Button.middle )
+            mouse.release ( Button.middle )
+        mouse.position = start_pos
+        start_pos = None
+        scroll_delta = np.array((0.0, 0.0))
+    elif message[0] == 'b':
+        update_battery(message[1:])
+    
+
+def update_battery( wma_voltage ):
+    percentage = ( float(wma_voltage) - 625 ) / 1.6
+    with open( battery_percentage_file, 'w') as battfile:
+        battfile.write( str( round( min( percentage, 100 ), 2 ) ) )
+    
+    
+while True:
+    message = read_serial(verbose=True)
+    if message == -1:
+        continue
+
+    handle_mouse(message)

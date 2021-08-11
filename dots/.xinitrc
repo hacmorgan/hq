@@ -52,5 +52,8 @@ setxkbmap -option caps:super &!
 # start the emacs server. disown so that exiting x session doesn't kill emacs
 emacs --daemon &!
 
+# start the pelicomp mouse driver
+pelicomp-mouse-battery-driver &!
+
 # this is the last thing we do!
 exec i3
