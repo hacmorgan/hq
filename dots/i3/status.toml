@@ -40,6 +40,11 @@ block = "sound"
 step_width = 1
 
 [[block]]
+block = "custom"
+command = "cat /home/hamish/scratch/.battery_level"
+interval = 10
+
+[[block]]
 block = "time"
 interval = 60
 format = "%a %d/%m %R"
