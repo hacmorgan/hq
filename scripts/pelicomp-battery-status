@@ -13,7 +13,7 @@ if [[ ! -e "$BATTERY_STATUS_FILE" ]]; then
     state="Idle"
     icon="bat_not_available"
 else
-    text+="$(cat "$BATTERY_STATUS_FILE")"
+    text+="$(cat "$BATTERY_STATUS_FILE")%"
     batteryLevelInt="$(cut -d. -f1 < "$BATTERY_STATUS_FILE")"
     if (( batteryLevelInt > 50 )); then
         state="Good"
