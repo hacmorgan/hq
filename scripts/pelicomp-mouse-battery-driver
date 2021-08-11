@@ -32,7 +32,7 @@ global is_scrolling
 is_scrolling = False
 
 # battery monitoring
-battery_percentage_file = "/home/hamish/scratch/.battery_level"
+battery_percentage_file = "/tmp/.battery_level"
 
 
 def read_serial(verbose=False):
