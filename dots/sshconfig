@@ -66,6 +66,14 @@ Host buffalo
 	HostName 10.137.4.5
 	User hmo
 
+Host quickboy
+    HostName 10.137.4.253
+    User hmo
+
+Host bastion
+    HostName 10.137.9.1
+    User hmo
+
 Host hihi
 	HostName 10.10.5.4
 	User hamish
