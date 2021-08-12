@@ -48,7 +48,6 @@ block = "net"
 device = "wlp3s0"
 format = "{ssid} {signal_strength} {ip} {speed_down} {speed_up}"
 interval = 5
-use_bits = false
 
 [[block]]
 block = "sound"
