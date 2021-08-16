@@ -12,9 +12,9 @@ function prologue
 {
     cat <<EOF 
 
-${fmt_red}em - emacsclient wrapper${fmt_normal}
+${fmt_red}em - emacsclient wrapper${fmt_reset}
 
-${fmt_dim}Note: the filename must be the final argument. bash-std doesn't support positional arguments yet${fmt_normal}
+${fmt_dim}Note: the filename must be the final argument. bash-std doesn't support positional arguments yet${fmt_reset}
 EOF
 }
 

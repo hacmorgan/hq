@@ -18,7 +18,7 @@ function prologue
 {
     cat <<EOF
 
-${fmt_blue}mount-shared-srives - mount remote drives over sshfs${fmt_normal}
+${fmt_blue}mount-shared-srives - mount remote drives over sshfs${fmt_reset}
 EOF
 }
 
@@ -65,7 +65,7 @@ function notify
 
 function notify_fail
 {
-    saymore "${fmt_red}$@${fmt_normal}"
+    saymore "${fmt_red}$@${fmt_reset}"
     if (( options_notify && BASH_STD_NOTIFY_SEND_INSTALLED )); then
         notify-send --urgency critical "$0" "$@"
     fi
