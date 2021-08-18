@@ -46,7 +46,7 @@ critical_updates_regex = "(linux |linux-lts|linux-zen)"
 [[block]]
 block = "net"
 device = "wlp3s0"
-format = "{ssid} {signal_strength} {ip} {speed_down} {speed_up}"
+format = "{ssid} {signal_strength} {ip} {speed_up} {speed_down}"
 interval = 5
 
 [[block]]
