@@ -8,7 +8,7 @@ function prologue
 {
     cat <<EOF 
 
-${fmt_bold}${fmt_red}backup-system - create system backups using rsync and hard links${fmt_normal}
+${fmt_bold}${fmt_red}backup-system - create system backups using rsync and hard links${fmt_reset}
 EOF
 }
 
