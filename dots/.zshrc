@@ -82,7 +82,7 @@ COMPLETION_WAITING_DOTS="true"
 plugins=(git zsh-syntax-highlighting zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
-source /opt/ros/noetic/setup.zsh 
+# source /opt/ros/noetic/setup.zsh 
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -124,3 +124,5 @@ export MPD_PORT="6600"
 
 # this should start emacs if the daemon is not already running
 export ALTERNATE_EDITOR=""
+
+export TERM=xterm-256color

@@ -50,7 +50,7 @@ socat
 sshfs
 stack
 sudo
-termite
+#termite
 texinfo
 tmux
 tree
@@ -162,7 +162,7 @@ usbutils
 virtualbox
 virtualbox-host-modules-arch
 vtk
-wireguard-dkms
+#wireguard-dkms
 wireguard-tools
 #yay
 yq
