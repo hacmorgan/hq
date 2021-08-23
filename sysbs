@@ -9,11 +9,30 @@
 
 
 
+function source_docopts
+{
+    function docopts_installed
+    {
+        command -v docopts > /dev/null
+    }
 
-myself="$0"
-hq="$(dirname "$myself")"
+    function get_docopts
+    {
+        git clone https://github.com/docopt/docopts.git 
+        cd docopts
+        ./get_docopts.sh
+    }
 
-source "$hq/scripts/bash-std"
+    if ! docopts_installed; then
+        get_docopts
+    fi
+}
+
+
+# myself="$0"
+# hq="$(dirname "$myself")"
+
+# source "$hq/scripts/bash-std"
 
 
 
@@ -416,8 +435,12 @@ EOF
 }
 
 
-bash-std-application-init "$@" < <( options ) || die "failed"
-bash-std-set-verbose
+# bash-std-application-init "$@" < <( options ) || die "failed"
+# bash-std-set-verbose
+
+
+source_docopts
+
 
 (( options_install_oh_my_zsh ))           && { install_oh_my_zsh; exit; }
 (( options_configure_emacs ))             && configure_emacs
