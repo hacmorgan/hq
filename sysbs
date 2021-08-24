@@ -1,16 +1,47 @@
 #!/usr/bin/env bash
 
 
-# TODO
-# x investigate if possible to include comma-options-to-name-value, as it is required for comma name-value args
-#   x too hard
-# - make very basic options() -> options_foo="bar" utility to replace it
-#   - can have other niceties like the bash formatting, and anything else useful
+# @file
+#
+# Install standard configs and scripts, and do a whole bunch of other things too
+#
+# See the bottom of this script, or `sysbs -h` to see those other things
+#
+# @author  Hamish Morgan
+# @date    23/08/2021
+# @license BSD
+#
+#
+# Usage: ./sysbs [-vqrh] [FILE] ...
+#        arguments_example.sh (--left | --right) CORRECTION FILE
+#
+# Process FILE and optionally apply correction to either left-hand side or
+# right-hand side.
+#
+# Arguments:
+#   FILE        optional input file
+#   CORRECTION  correction angle, needs FILE, --left or --right to be present
+#
+# Options:
+#   -h --help
+#   -v       verbose mode
+#   -q       quiet mode
+#   -r       make report
+#   --left   use left-hand side
+#   --right  use right-hand side
+#
 
+
+myself="$0"
+hq="$(dirname "$myself")"
+
+source "$hq/scripts/bash-std"
 
 
 function source_docopts
 {
+    # Install docopts if it is not already installed, and source docopts.sh
+
     function docopts_installed
     {
         command -v docopts > /dev/null
@@ -18,7 +49,7 @@ function source_docopts
 
     function get_docopts
     {
-        git clone https://github.com/docopt/docopts.git 
+        git clone https://github.com/docopt/docopts.git
         cd docopts
         ./get_docopts.sh
     }
@@ -27,14 +58,6 @@ function source_docopts
         get_docopts
     fi
 }
-
-
-# myself="$0"
-# hq="$(dirname "$myself")"
-
-# source "$hq/scripts/bash-std"
-
-
 
 
 function prologue
