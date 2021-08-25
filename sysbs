@@ -10,25 +10,35 @@
 # @author  Hamish Morgan
 # @date    23/08/2021
 # @license BSD
+ 
+ 
+# Usage: ./sysbs [<options>] [<operations>]
 #
-#
-# Usage: ./sysbs [-vqrh] [FILE] ...
-#        arguments_example.sh (--left | --right) CORRECTION FILE
-#
-# Process FILE and optionally apply correction to either left-hand side or
-# right-hand side.
-#
-# Arguments:
-#   FILE        optional input file
-#   CORRECTION  correction angle, needs FILE, --left or --right to be present
+# Install standard configs and scripts, and do a whole bunch of other things too
 #
 # Options:
-#   -h --help
-#   -v       verbose mode
-#   -q       quiet mode
-#   -r       make report
-#   --left   use left-hand side
-#   --right  use right-hand side
+#   --autostart-abyss-wireguard; Use systemd to effectively run 'sudo wg-quick up abyss' on boot
+#   --configure-emacs  Clone emacs repositiory to ~/.emacs.d
+#   --configure-vnc  Configure a VNC server
+#   --configure-git  Tell git who you are (so you can commit)
+#   --configure-zsh  Do this after installing oh-my-zsh
+#   --create-shared-mountpoints  Create all mountpoints in 'etc/mountpoints' and transfer ownership to hamish
+#   --dry-run  Talk the talk but don't walk the walk
+#   --enable-systemd-services  Enable services symlinked by --symlink-systemd-services
+#   -h --help    Print this help text and exit
+#   --install-cpp-manpages  Install C++ stdlib manpages using https://github.com/jeaye/stdman
+#   --install-fonts  Unpack fantasque (noLoopK) and FiraCode (ligatures) to /usr/share/fonts/fantasque
+#   --install-oh-my-zsh  Self explanatory. terminates this script, use this option by itself
+#   --install-packages  Install all packages in etc/packagelist that aren't commented out
+#   --install-prefix=<path> Install prefix for scripts [default: /usr/local]
+#   --install-scripts  Copy everything in 'scripts' to --install-prefix
+#   --move-existing  If <file> exists, move it to <file>.old
+#   --no-sudo  Don't do anything that requires sudo
+#   --symlink-dots  Symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
+#   --symlink-systemd-services  Symlink service files in etc/systemd to /etc/systemd/system/
+#   --symlink-vi  Symlink /usr/bin/nvim to /usr/bin/vi
+#   --update-package-list  Find installed packages that aren't already in etc/packagelist
+#   --verbose; Talk the talk AND walk the walk
 #
 
 
@@ -44,19 +54,37 @@ function source_docopts
 
     function docopts_installed
     {
-        command -v docopts > /dev/null
+        command -v docopts.sh > /dev/null
     }
 
     function get_docopts
     {
-        git clone https://github.com/docopt/docopts.git
-        cd docopts
-        ./get_docopts.sh
+        function docopts_clone_path
+        {
+            local default_docopts_clone_path="$HOME/src/foss/docopts"
+            say "${fmt_yellow}${fmt_dim}docopts does not appear to be installed, cloning now...${fmt_reset}"
+            printf "Docopts clone path [$default_docopts_clone_path]: " 1>&2
+            read path
+            if [[ -z "$path" ]]; then
+                printf "$default_docopts_clone_path"
+            else
+                printf "$path"
+            fi
+        }
+
+        local docopts_path="$(docopts_clone_path)"
+        command -v wget > /dev/null || die "wget is not installed, and is required for get_docopts.sh"
+        git clone https://github.com/docopt/docopts.git "$docopts_path"
+        pushd "$docopts_path" || exit 1
+        ./get_docopts.sh || exit 1
+        say "${fmt_yellow}${fmt_dim}Installing to /usr/local/bin...${fmt_reset}"
+        sudo cp docopts docopts.sh /usr/local/bin
     }
 
     if ! docopts_installed; then
         get_docopts
     fi
+    source docopts.sh --auto "$@" || die "${fmt_red}could not source docopts.sh${fmt_reset}"
 }
 
 
@@ -462,8 +490,8 @@ EOF
 # bash-std-set-verbose
 
 
-source_docopts
-
+source_docopts "$@"
+exit 0
 
 (( options_install_oh_my_zsh ))           && { install_oh_my_zsh; exit; }
 (( options_configure_emacs ))             && configure_emacs
