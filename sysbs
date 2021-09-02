@@ -11,7 +11,7 @@
 
 
 myself="$0"
-hq="$( dirname $myself )"
+hq="$(dirname "$myself")"
 
 source "$hq/scripts/bash-std"
 
@@ -20,7 +20,7 @@ source "$hq/scripts/bash-std"
 
 function prologue
 {
-    echo -e "\n${fmt_dim}${fmt_cyan}sysbs - system bootstrapper${fmt_white}${fmt_normal}"
+    echo -e "\n${fmt_dim}${fmt_cyan}sysbs - system bootstrapper${fmt_white}${fmt_reset}"
 }
 
 function options
@@ -28,6 +28,7 @@ function options
     cat <<EOF
 --autostart-abyss-wireguard; Use systemd to effectively run 'sudo wg-quick up abyss' on boot
 --configure-emacs; Clone emacs repositiory to ~/.emacs.d
+--configure-vnc; Configure a VNC server
 --configure-git; Tell git who you are (so you can commit)
 --configure-zsh; Do this after installing oh-my-zsh
 --create-shared-mountpoints; Create all mountpoints in 'etc/mountpoints' and transfer ownership to hamish
@@ -349,12 +350,79 @@ function install_cpp_manpages
 }
 
 
+function configure_vnc
+{
+    ## Configure the machine as a vnc server
+    #
+    # Steps taken from Arch Wiki
+    function check_vnc_installed
+    {
+        command -v vncserver > /dev/null ||
+            die "${fmt_red}vncserver executable not found, is tigervnc installed?${fmt_reset}"
+    }
+
+    function set_vnc_password
+    {
+        say "\n\n${fmt_bold}Creating a vnc password...${fmt_reset}\n\n"
+        vncpasswd
+    }
+
+    function define_user_mappings
+    {
+        say "\n\n${fmt_bold}Defining user mappings...${fmt_reset}\n\n"
+        sudo nvim /etc/tigervnc/vncserver.users
+    }
+
+    function create_vnc_config
+    {
+        if [[ -e ~/.vnc/config ]]; then
+            say "${fmt_yellow}~/.vnc/config already exists${fmt_reset}"
+        else
+            say "\n\n${fmt_bold}Creating the vnc config at ~/.vnc/config...${fmt_reset}\n\n"
+            echo "session=i3" >> ~/.vnc/config
+        fi
+    }
+
+    function start_and_enable_systemd_services
+    {
+        say "\n\n${fmt_bold}Starting systemd service vncserver@:1${fmt_reset}"
+        say "If you wish to start a different display number, or enable the systemd service, do that manually\n\n"
+        sudo systemctl start vncserver@:1
+    }
+
+    function expose_local_display_directly
+    {
+        say "\n\n${fmt_bold}Exposing the local display directly (for better performance)${fmt_reset}"
+        say "You will need to restart X for this to come into effect\n\n"
+        cat <<EOF | sudo tee /etc/X11/xorg.conf.d/10-vnc.conf
+Section "Module"
+Load "vnc"
+EndSection
+
+Section "Screen"
+Identifier "Screen0"
+Option "UserPasswdVerifier" "VncAuth"
+Option "PasswordFile" "/root/.vnc/passwd"
+EndSection
+EOF
+    }
+    
+    check_vnc_installed
+    set_vnc_password
+    define_user_mappings
+    create_vnc_config
+    start_and_enable_systemd_services
+    expose_local_display_directly
+}
+
+
 bash-std-application-init "$@" < <( options ) || die "failed"
 bash-std-set-verbose
 
 (( options_install_oh_my_zsh ))           && { install_oh_my_zsh; exit; }
 (( options_configure_emacs ))             && configure_emacs
 (( options_configure_git ))               && configure_git
+(( options_configure_vnc ))               && configure_vnc
 (( options_configure_zsh ))               && configure_zsh
 (( options_create_shared_mountpoints ))   && create_shared_mountpoints
 (( options_install_fonts ))               && install_fonts

@@ -10,10 +10,10 @@
 # License: BSD
 
 
-source $( type -p bash-std )
+source $(type -p bash-std)
 
 
-function get-choice()
+function get_choice()
 {
     options="$1"
     echo $options                       |
@@ -29,7 +29,7 @@ function main-run ()
     function power-run()
     {
         local options="shut down,reboot"
-        local selected_option="$( get-choice "$options" )"
+        local selected_option="$(get_choice "$options")"
         case "$selected_option" in
             "shut down")
                 sudo shutdown -P now ;;
@@ -41,7 +41,7 @@ function main-run ()
     function edit-configs-run ()
     {
         local configs="zsh,i3,i3status,emacs,picom,kitty,xinit,dmenu-custom"
-        local selected_config="$( get-choice "$configs" )"
+        local selected_config="$(get_choice "$configs")"
         case "$selected_config" in
             "zsh")
                 em ~/.zshrc ;;
@@ -73,7 +73,7 @@ function main-run ()
     function screenshot-run()
     {
         local screenshot_types="select region,full screen,select region (delay),full screen (delay)"
-        local selected_type="$( get-choice "$screenshot_types" )"
+        local selected_type="$(get_choice "$screenshot_types")"
         local expression='mv $f /tmp/'
         if (( BASH_STD_NOTIFY_SEND_INSTALLED )); then
             expression+='; notify-send "screenshot captured" "saved to $f"'
@@ -92,20 +92,20 @@ function main-run ()
         function select-delay()
         {
             local delays="150ms,250ms,500ms"
-            local selected_delay="$( get-choice "$delays" | sed 's/ms//g' )"
+            local selected_delay="$(get_choice "$delays" | sed 's/ms//g')"
             local current_rate=$(xset -q | grep delay | cut -d: -f3 | cut -d ' ' -f3)
             xset r rate $selected_delay $current_rate
         }
         function select-rate()
         {
             local rates="25,50,100,200"
-            local selected_rate="$( get-choice "$rates" )"
+            local selected_rate="$(get_choice "$rates")"
             local current_delay=$(xset -q | grep delay | cut -d: -f2 | cut -d ' ' -f3)
             xset r rate $current_delay $selected_rate
         }
         
         local configurable_params="delay,rate"
-        local selected_param="$( get-choice "$configurable_params" )"
+        local selected_param="$(get_choice "$configurable_params")"
         case "$selected_param" in
             "delay")
                 select-delay ;;
@@ -119,20 +119,20 @@ function main-run ()
         function select-acceleration()
         {
             local delays="150ms,250ms,500ms"
-            local selected_delay="$( get-choice "$delays" | sed 's/ms//g' )"
+            local selected_delay="$(get_choice "$delays" | sed 's/ms//g')"
             local current_rate=$(xset -q | grep delay | cut -d: -f3 | cut -d ' ' -f3)
             xset r rate $selected_delay $current_rate
         }
         function select-threshold()
         {
             local rates="25,50,100,200"
-            local selected_rate="$( get-choice "$rates" )"
+            local selected_rate="$(get_choice "$rates")"
             local current_delay=$(xset -q | grep delay | cut -d: -f2 | cut -d ' ' -f3)
             xset r rate $current_delay $selected_rate
         }
         
         local configurable_params="acceleration,threshold,restore defaults"
-        local selected_param="$( get-choice "$configurable_params" )"
+        local selected_param="$(get_choice "$configurable_params")"
         case "$selected_param" in
             "acceleration")
                 select-acceleration ;;
@@ -146,7 +146,7 @@ function main-run ()
     function picom-run()
     {
         local picom_options="turn on,turn off"
-        local selected_option="$( get-choice "$picom_options" )"
+        local selected_option="$(get_choice "$picom_options")"
         case "$selected_option" in
             "turn on")
                 [ $(ps -aux | grep picom | wc -l) -le 1 ] && exec picom
@@ -166,7 +166,7 @@ function main-run ()
         function is_remote
         {
             local options="local,remote"
-            local selected_option="$( get-choice "$options" )"
+            local selected_option="$(get_choice "$options")"
             case "$selected_option" in
                 "local")
                     echo 0 ;;
@@ -176,7 +176,7 @@ function main-run ()
         }
         
         local emacs_options="local,george,enzo,buffalo"
-        local selected_option="$( get-choice "$emacs_options" )"
+        local selected_option="$(get_choice "$emacs_options")"
         case "$selected_option" in
             "local")
                 em ;;
@@ -200,7 +200,7 @@ function main-run ()
     function display-run
     {
         local display_options="turn off"
-        local selected_option="$( get-choice "$display_options" )"
+        local selected_option="$(get_choice "$display_options")"
         case "$selected_option" in
             "turn off")
                 xset -display :0.0 dpms force off ;;
@@ -209,10 +209,10 @@ function main-run ()
 
     function sdc-run
     {
-        local options="all,bedside light,sound system"
-        local selected_option="$( get-choice "$options" )"
+        local options="all,bedside light,whiteboard light,sound system"
+        local selected_option="$(get_choice "$options")"
         local states="on,off"
-        local selected_state="$( get-choice "$states" )"
+        local selected_state="$(get_choice "$states")"
         case "$selected_state" in
             "on")
                 sdc --notify --on "$selected_option" ;;
@@ -249,17 +249,17 @@ function main-run ()
         
         local speakers="both,left,right"
         local angles="-90,-75,-60,-45,-30,-15,-5,5,15,30,45,60,75,90"
-        speaker="$( get-choice "$speakers" )"
-        angle="$(   get-choice "$angles"   )"
-        left="$(  speaker_angle "$speaker" left  "$angle" )"
-        right="$( speaker_angle "$speaker" right "$angle" )"
+        speaker="$(get_choice "$speakers")"
+        angle="$(get_choice "$angles")"
+        left="$(speaker_angle "$speaker" left "$angle")"
+        right="$(speaker_angle "$speaker" right "$angle")"
         echo "rotating speaker $speaker by angle $angle (degrees $left,$right)" 1>&2
         rotate-speakers --degrees="$left,$right"
     }
 
     
     subsetting_options="power,screenshot,emacs,display,sdc,mount shared drives,rotate speakers,edit configs,keyboard multiplier,picom,bedtime,george display off"
-    subsetting="$( get-choice "$subsetting_options" )"
+    subsetting="$(get_choice "$subsetting_options")"
     echo $subsetting
     case "$subsetting" in
         "power")
