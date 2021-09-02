@@ -102,10 +102,12 @@ alias pm='pulsemixer'
 alias tm='tmux attach || tmux'
 alias d2p="pwd | sed 's/datasets/processed/g'"
 alias p2d="pwd | sed 's/processed/datasets/g'"
+alias r2p="pwd | sed 's/rapid/pond/g'"
+alias p2r="pwd | sed 's/pond/rapid/g'"
 alias b2s="pwd | sed 's/build/src/g'"
 alias s2b="pwd | sed 's/src/build/g'"
 alias l='ls -l'
-alias ll='ls -la'
+alias lt='ls -lt'
 alias cdl='{ dir="$(cat)" ; cd "$dir" ; ls -la } <<< '
 alias display_off='xset -display :0.0 dpms force off'
 alias display_on='xset -display :0.0 dpms force on'
