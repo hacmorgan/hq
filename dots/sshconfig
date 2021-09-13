@@ -79,7 +79,7 @@ Host hihi
 	User hamish
 
 Host bisous
-    HostName 10.0.0.116
+    HostName 10.0.0.124
     User hamish
 
 Host bisous_eth
