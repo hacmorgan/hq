@@ -13,7 +13,7 @@ fi
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/home/hamish/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -101,10 +101,12 @@ alias pm='pulsemixer'
 alias tm='tmux attach || tmux'
 alias d2p="pwd | sed 's/datasets/processed/g'"
 alias p2d="pwd | sed 's/processed/datasets/g'"
+alias r2p="pwd | sed 's/rapid/pond/g'"
+alias p2r="pwd | sed 's/pond/rapid/g'"
 alias b2s="pwd | sed 's/build/src/g'"
 alias s2b="pwd | sed 's/src/build/g'"
 alias l='ls -l'
-alias ll='ls -la'
+alias lt='ls -lt'
 alias cdl='{ dir="$(cat)" ; cd "$dir" ; ls -la } <<< '
 alias display_off='xset -display :0.0 dpms force off'
 alias display_on='xset -display :0.0 dpms force on'
@@ -114,7 +116,7 @@ alias gca='git commit -a -v'
 #################
 #    EXPORTS    #
 #################
-path=( '/home/hamish/.local/bin' $path )
+path=( '$HOME/.local/bin' $path )
 export PATH
 
 export EDITOR="/usr/bin/nvim"
