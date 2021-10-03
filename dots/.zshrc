@@ -126,3 +126,5 @@ export MPD_PORT="6600"
 
 # this should start emacs if the daemon is not already running
 export ALTERNATE_EDITOR=""
+
+export TERM=xterm-256color
