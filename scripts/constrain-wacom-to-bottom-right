@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+
+# @file
+#
+# Constrain wacom pad to the right half of the ultrawide monitor
+
+
+BOTTOM_RIGHT="1920x1080+1920+1080"
+
+
+function device_id
+{
+    xsetwacom list devices |
+        grep "stylus" |
+        sed 's#.*id: \([0-9]*\).*#\1#'
+}
+
+xsetwacom --set "$(device_id)" maptooutput "$BOTTOM_RIGHT"
