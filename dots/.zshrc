@@ -55,6 +55,9 @@ ZSH_THEME=powerlevel10k/powerlevel10k
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
 
+# Allow .oh-my-zsh directory to belong to another user (for collab)
+ZSH_DISABLE_COMPFIX="true"
+
 # Uncomment the following line to display red dots whilst waiting for completion.
 COMPLETION_WAITING_DOTS="true"
 
