@@ -14,9 +14,9 @@ Host pelicomp_eth
     User hamish
     HostName 10.0.0.90
 
-Host pi
-    User hamish
-    HostName 10.0.0.84
+Host oxie_tower_pi
+    User pi
+    HostName 192.168.0.172
     
 Host processor
 	User processor
@@ -79,7 +79,7 @@ Host hihi
 	User hamish
 
 Host bisous
-    HostName 10.0.0.116
+    HostName 10.0.0.124
     User hamish
 
 Host bisous_eth
