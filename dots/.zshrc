@@ -13,7 +13,7 @@ fi
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/home/hamish/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -121,7 +121,7 @@ alias gca='git commit -a -v'
 #################
 #    EXPORTS    #
 #################
-path=( '/home/hamish/.local/bin' $path )
+path=( '$HOME/.local/bin' $path )
 export PATH
 
 export EDITOR="/usr/bin/nvim"
@@ -132,4 +132,4 @@ export MPD_PORT="6600"
 # this should start emacs if the daemon is not already running
 export ALTERNATE_EDITOR=""
 
-export TERM="xterm-256color"
+export "TERM=xterm-256color"
