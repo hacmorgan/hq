@@ -256,11 +256,18 @@ function main-run ()
                 echo 0
             fi
         }
+
+        function strip_shortcut_keys
+        {
+            # Remove embelishments from dmenu hotkeys
+            # i.e. "a [-90]" -> "-90"
+            sed 's#[a-zA-Z ]*\[\([0-9-]*\)\]#\1#g'
+        }
         
         local speakers="both,left,right"
-        local angles="-90,-75,-60,-45,-30,-15,-5,5,15,30,45,60,75,90"
+        local angles="a [-90],s [-45],d [-15],f [-5],g [-1],h [1],j [5],k [15],l [45],; -> 90"
         speaker="$(get_choice "$speakers")"
-        angle="$(get_choice "$angles")"
+        angle="$(get_choice "$angles" | strip_shortcut_keys)"
         left="$(speaker_angle "$speaker" left "$angle")"
         right="$(speaker_angle "$speaker" right "$angle")"
         echo "rotating speaker $speaker by angle $angle (degrees $left,$right)" 1>&2

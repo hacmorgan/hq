@@ -16,7 +16,7 @@ Host pelicomp_eth
 
 Host oxie_tower_pi
     User pi
-    HostName 10.0.0.139
+    HostName 192.168.0.172
     
 Host processor
 	User processor
