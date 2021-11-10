@@ -3,3 +3,4 @@
 .xsessionrc
 .zprofile
 .zshrc
+.flake8
