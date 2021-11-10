@@ -3,3 +3,4 @@
 .xinitrc
 .zprofile
 .zshrc
+.flake8
