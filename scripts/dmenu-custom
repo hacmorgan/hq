@@ -247,8 +247,8 @@ function main-run ()
     {
         function speaker_angle
         {
-            local desired="$1"
-            local actual="$2"
+            local desired="$1"  # "both", "left", or "right" (from dmenu)
+            local actual="$2"   # "left" or "right"
             local angle="$3"
             if [[ "$desired" == "both" || "$desired" == "$actual" ]]; then
                 echo "$angle"
@@ -256,18 +256,11 @@ function main-run ()
                 echo 0
             fi
         }
-
-        function strip_shortcut_keys
-        {
-            # Remove embelishments from dmenu hotkeys
-            # i.e. "a [-90]" -> "-90"
-            sed 's#[a-zA-Z ]*\[\([0-9-]*\)\]#\1#g'
-        }
         
         local speakers="both,left,right"
-        local angles="a [-90],s [-45],d [-15],f [-5],g [-1],h [1],j [5],k [15],l [45],; -> 90"
+        local angles=""  # user inputs number, no defaults
         speaker="$(get_choice "$speakers")"
-        angle="$(get_choice "$angles" | strip_shortcut_keys)"
+        angle="$(get_choice "$angles")"
         left="$(speaker_angle "$speaker" left "$angle")"
         right="$(speaker_angle "$speaker" right "$angle")"
         echo "rotating speaker $speaker by angle $angle (degrees $left,$right)" 1>&2

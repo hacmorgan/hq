@@ -4,3 +4,4 @@
 .Xresources
 .zprofile
 .zshrc
+.flake8

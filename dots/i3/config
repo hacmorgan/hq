@@ -235,7 +235,7 @@ set $TERMINAL kitty
 
 # terminals
 bindsym $mod+Return       exec "$TERMINAL"
-bindsym $mod+Shift+Return exec "$TERMINAL --class=floating_term python3 -q" 
+bindsym $mod+Shift+Return exec "$TERMINAL --class=floating_term ipython3"
 bindsym $mod+Shift+p      exec "$TERMINAL --class=floating_term pulsemixer" 
 bindsym $mod+Shift+n      exec "$TERMINAL --class=floating_term nmtui"      
 bindsym $mod+Shift+t      exec "$TERMINAL --class=floating_term htop"      
