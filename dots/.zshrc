@@ -98,6 +98,7 @@ source /opt/ros/noetic/setup.zsh
 #################
 alias sdn='sudo shutdown now'
 alias rsn='sudo shutdown -r now'
+alias ip3='ipython3'
 alias p3='python3'
 alias p2='python2'
 alias pm='pulsemixer'
