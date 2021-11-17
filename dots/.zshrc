@@ -13,7 +13,7 @@ fi
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/home/users/hmo/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -95,6 +95,7 @@ source $ZSH/oh-my-zsh.sh
 #################
 alias sdn='sudo shutdown now'
 alias rsn='sudo shutdown -r now'
+alias ip3='ipython3'
 alias p3='python3'
 alias p2='python2'
 alias pm='pulsemixer'
@@ -118,7 +119,7 @@ alias gca='git commit -a -v'
 #################
 #    EXPORTS    #
 #################
-path=( '/home/users/hmo/.local/bin' $path )
+path=( '$HOME/.local/bin' $path )
 export PATH
 
 export EDITOR="/usr/bin/nvim"

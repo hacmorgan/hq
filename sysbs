@@ -1,15 +1,6 @@
 #!/usr/bin/env bash
 
 
-# TODO
-# x investigate if possible to include comma-options-to-name-value, as it is required for comma name-value args
-#   x too hard
-# - make very basic options() -> options_foo="bar" utility to replace it
-#   - can have other niceties like the bash formatting, and anything else useful
-
-
-
-
 myself="$0"
 hq="$(dirname "$myself")"
 
@@ -38,6 +29,7 @@ function options
 --install-fonts; Unpack fantasque (noLoopK) and FiraCode (ligatures) to /usr/share/fonts/fantasque
 --install-oh-my-zsh; Self explanatory. terminates this script, use this option by itself
 --install-packages; Install all packages in etc/packagelist that aren't commented out
+--install-pip-packages; Install all pip packages in etc/pip-packagelist
 --install-prefix=<path>; default=/usr/local; Install prefix for scripts
 --install-scripts; Copy everything in 'scripts' to --install-prefix
 --move-existing; If <file> exists, move it to <file>.old
@@ -335,17 +327,23 @@ function install_packages
 }
 
 
+function install_pip_packages
+{
+    xargs python3 -m pip install < "$hq/etc/pip-packagelist"
+}
+
+
 function install_cpp_manpages
 {
     if (( options_no_sudo )); then
         die "Installing manpages requires sudo"
     fi
-    FOSSDIR=~/src/foss
-    mkdir -p $FOSSDIR
-    git clone https://github.com/jeaye/stdman $FOSSDIR/stdman &&
-        pushd $FOSSDIR/stdman                                 &&
-        ./configure                                           &&
-        sudo make install                                     &&
+    FOSSDIR="$HOME/src/foss"
+    mkdir --parents "$FOSSDIR"
+    git clone https://github.com/jeaye/stdman "$FOSSDIR/stdman" &&
+        pushd "$FOSSDIR/stdman"                                 &&
+        ./configure                                             &&
+        sudo make install                                       &&
         popd
 }
 
@@ -434,4 +432,5 @@ bash-std-set-verbose
 (( options_autostart_abyss_wireguard ))   && autostart_abyss_wireguard
 (( options_update_package_list ))         && update_package_list
 (( options_install_packages ))            && install_packages
+(( options_install_pip_packages ))        && install_pip_packages
 (( options_install_cpp_manpages ))        && install_cpp_manpages

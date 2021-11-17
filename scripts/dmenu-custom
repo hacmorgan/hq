@@ -246,8 +246,8 @@ function main-run ()
     {
         function speaker_angle
         {
-            local desired="$1"
-            local actual="$2"
+            local desired="$1"  # "both", "left", or "right" (from dmenu)
+            local actual="$2"   # "left" or "right"
             local angle="$3"
             if [[ "$desired" == "both" || "$desired" == "$actual" ]]; then
                 echo "$angle"
@@ -257,7 +257,7 @@ function main-run ()
         }
         
         local speakers="both,left,right"
-        local angles="-90,-75,-60,-45,-30,-15,-5,5,15,30,45,60,75,90"
+        local angles=""  # user inputs number, no defaults
         speaker="$(get_choice "$speakers")"
         angle="$(get_choice "$angles")"
         left="$(speaker_angle "$speaker" left "$angle")"
