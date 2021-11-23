@@ -95,6 +95,7 @@ source $ZSH/oh-my-zsh.sh
 #################
 alias sdn='sudo shutdown now'
 alias rsn='sudo shutdown -r now'
+alias ip3='ipython3'
 alias p3='python3'
 alias p2='python2'
 alias pm='pulsemixer'
@@ -127,4 +128,4 @@ export MPD_PORT="6600"
 # this should start emacs if the daemon is not already running
 export ALTERNATE_EDITOR=""
 
-export TERM=xterm-256color
+export TERM="xterm-256color"
