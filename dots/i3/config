@@ -243,6 +243,8 @@ bindsym $mod+Ctrl+e       exec "$TERMINAL ssh -Y enzo"
 bindsym $mod+Ctrl+Shift+e exec "$TERMINAL ssh -Y -J $( where-is-george ) enzo"
 bindsym $mod+Ctrl+b       exec "$TERMINAL ssh -Y buffalo"
 bindsym $mod+Ctrl+Shift+b exec "$TERMINAL ssh -Y -J $( where-is-george ) buffalo"
+bindsym $mod+Ctrl+r       exec "$TERMINAL ssh -Y bruno_abyss"
+bindsym $mod+Ctrl+Shift+r exec "$TERMINAL ssh -Y -J $( where-is-george ) bruno_abyss"
 
 # Firefox
 bindsym $mod+Shift+f exec --no-startup-id firefox
