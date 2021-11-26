@@ -122,7 +122,7 @@ alias gca='git commit -a -v'
 #################
 #    EXPORTS    #
 #################
-path=( '$HOME/.local/bin' $path )
+path=( "$HOME/.local/bin" $path )
 export PATH
 
 export EDITOR="/usr/bin/nvim"
@@ -133,4 +133,4 @@ export MPD_PORT="6600"
 # this should start emacs if the daemon is not already running
 export ALTERNATE_EDITOR=""
 
-export "TERM=xterm-256color"
+export TERM="xterm-256color"
