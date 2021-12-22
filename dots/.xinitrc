@@ -57,7 +57,8 @@ xsetwacom --set $( xsetwacom list devices | grep stylus | sed 's#.*id: \([0-9]*\
           maptooutput 1920x1080+1920+0
 
 # start barrier server
-barriers -c ~/.config/barrier/enzo-george.conf &!
+barriers --config $HOME/.config/barrier/enzo-george.conf \
+         --disable-client-cert-checking &!
 
 # this is the last thing we do!
 exec i3
