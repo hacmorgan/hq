@@ -194,7 +194,7 @@ bar {
 gaps inner 12
 smart_gaps on
 smart_borders on
-bindsym $mod+Shift+g mode "$mode_gaps"
+# bindsym $mod+Shift+g mode "$mode_gaps"
 
 
 # scratchpad
