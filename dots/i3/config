@@ -194,7 +194,7 @@ bar {
 gaps inner 12
 smart_gaps on
 smart_borders on
-bindsym $mod+Shift+g mode "$mode_gaps"
+# bindsym $mod+Shift+g mode "$mode_gaps"
 
 
 # scratchpad
@@ -253,7 +253,7 @@ bindsym $mod+Shift+f exec --no-startup-id firefox
 bindsym $mod+Shift+o exec --no-startup-id "emacsclient -a '' -c"
 
 # GIMP
-bindsym $mod+Shift+g exec --no-startup-id "gimp"
+bindsym $mod+Shift+g exec --no-startup-id gimp
 
 # dmenu-custom
 bindsym --release $mod+Shift+s exec --no-startup-id dmenu-custom
