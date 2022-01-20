@@ -72,6 +72,12 @@ function main-run ()
 
     function screenshot-run()
     {
+        function select-delay
+        {
+            local delays="3"
+            get_choice "$delays"
+        }
+        
         local screenshot_types="select region,full screen,select region (delay),full screen (delay)"
         local selected_type="$(get_choice "$screenshot_types")"
         local expression='mv $f /tmp/'
@@ -83,6 +89,10 @@ function main-run ()
                 scrot -s -e "$expression" ;;
             "full screen")
                 scrot -e "$expression" ;;
+            "select region (delay)")
+                sleep "$(select-delay)"; scrot -s -e "$expression" ;;
+            "full screen (delay)")
+                sleep "$(select-delay)"; scrot -e "$expression" ;;
         esac
     }
 
