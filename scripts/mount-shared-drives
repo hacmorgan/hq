@@ -110,6 +110,7 @@ function _mount
 
 function mount_abyss_drives
 {
+    # Mount pond and tank from rhino
     for drive in pond tank; do
         sshfs rhino:/mnt/$drive /mnt/$drive ${SSHFS_OPTS_ABYSS[@]}
         notify_mount rhino       \
@@ -117,11 +118,20 @@ function mount_abyss_drives
                      /mnt/$drive \
                      /mnt/$drive
     done
+
+    # Mount rapid from quickboy
     sshfs quickboy:/mnt/rapid /mnt/rapid ${SSHFS_OPTS_ABYSS[@]}
     notify_mount quickboy   \
                  $?         \
                  /mnt/rapid \
                  /mnt/rapid
+
+    # Mount vault from mammoth
+    sshfs mammoth:/mnt/vault /mnt/vault ${SSHFS_OPTS_ABYSS[@]}
+    notify_mount mammoth   \
+                 $?         \
+                 /mnt/vault \
+                 /mnt/vault
 }
 
 

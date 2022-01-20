@@ -70,6 +70,10 @@ Host quickboy
     HostName 10.137.4.253
     User hmo
 
+Host mammoth
+    HostName 10.137.4.252
+    User hmo
+
 Host bastion
     HostName 10.137.9.1
     User hmo
