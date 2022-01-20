@@ -1,0 +1,10 @@
+[Unit]
+Description=Receive keyscans from arduino over serial, generate keypresses
+
+[Service]
+ExecStart=displaywriter_receiver.py
+User=root
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
