@@ -1,5 +1,5 @@
 [Unit]
-Description=Receive keyscans from arduino over serial, generate keypresses
+Description=Displaywriter Receiver
 
 [Service]
 ExecStart=displaywriter_receiver.py
