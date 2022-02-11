@@ -18,7 +18,7 @@ function prologue
 {
     cat <<EOF
 
-${fmt_blue}mount-shared-srives - mount remote drives over sshfs${fmt_reset}
+${fmt_blue}mount-shared-drives - mount remote drives over sshfs${fmt_reset}
 EOF
 }
 
@@ -39,16 +39,20 @@ EOF
 bash-std-application-init "$@" < <( options )
 
 
-SSHFS_OPTS=( -o ServerAliveInterval=15
-             -o reconnect )
-SSHFS_OPTS_ABYSS=( ${SSHFS_OPTS[@]}
-                   -o cache_max_size=1000000
-                   -o cache_timeout=120
-                   -o allow_other )
+SSHFS_OPTS=(
+    -o ServerAliveInterval=15
+    -o reconnect
+)
+SSHFS_OPTS_ABYSS=(
+    ${SSHFS_OPTS[@]}
+    -o cache_max_size=1000000
+    -o cache_timeout=120
+    -o allow_other
+)
 
 function mountpoints  # local_filesystem:remote_filesystem
 {
-    cat $options_mountpoints_file
+    cat "$options_mountpoints_file"
 }
 
 local_mount_points=(  $( mountpoints | cut -d':' -f1 ) )
@@ -65,7 +69,7 @@ function notify
 
 function notify_fail
 {
-    saymore "${fmt_red}$@${fmt_reset}"
+    saymore "${fmt_red}$0: $@${fmt_reset}"
     if (( options_notify && BASH_STD_NOTIFY_SEND_INSTALLED )); then
         notify-send --urgency critical "$0" "$@"
     fi
@@ -110,6 +114,7 @@ function _mount
 
 function mount_abyss_drives
 {
+    # Mount pond and tank from rhino
     for drive in pond tank; do
         sshfs rhino:/mnt/$drive /mnt/$drive ${SSHFS_OPTS_ABYSS[@]}
         notify_mount rhino       \
@@ -117,11 +122,20 @@ function mount_abyss_drives
                      /mnt/$drive \
                      /mnt/$drive
     done
+
+    # Mount rapid from quickboy
     sshfs quickboy:/mnt/rapid /mnt/rapid ${SSHFS_OPTS_ABYSS[@]}
     notify_mount quickboy   \
                  $?         \
                  /mnt/rapid \
                  /mnt/rapid
+
+    # Mount vault from mammoth
+    sshfs mammoth:/mnt/vault /mnt/vault ${SSHFS_OPTS_ABYSS[@]}
+    notify_mount mammoth   \
+                 $?         \
+                 /mnt/vault \
+                 /mnt/vault
 }
 
 

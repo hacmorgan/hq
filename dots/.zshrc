@@ -107,6 +107,7 @@ alias p2r="pwd | sed 's/pond/rapid/g'"
 alias b2s="pwd | sed 's/build/src/g'"
 alias s2b="pwd | sed 's/src/build/g'"
 alias l='ls -l'
+alias ll='ls -la'
 alias lt='ls -lt'
 alias cdl='{ dir="$(cat)" ; cd "$dir" ; ls -la } <<< '
 alias mnt_pond='abyss-mount-share hmo rhino-pond /mnt/pond'
@@ -119,7 +120,7 @@ alias gca='git commit -a -v'
 #################
 #    EXPORTS    #
 #################
-path=( '$HOME/.local/bin' $path )
+path=( "$HOME/.local/bin" $path )
 export PATH
 
 export EDITOR="/usr/bin/nvim"
