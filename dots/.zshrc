@@ -132,3 +132,6 @@ export MPD_PORT="6600"
 export ALTERNATE_EDITOR=""
 
 export TERM="xterm-256color"
+
+# Set python's debugger as ipython
+export PYTHONBREAKPOINT='IPython.core.debugger.set_trace'
