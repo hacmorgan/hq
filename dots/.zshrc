@@ -107,6 +107,7 @@ alias p2r="pwd | sed 's/pond/rapid/g'"
 alias b2s="pwd | sed 's/build/src/g'"
 alias s2b="pwd | sed 's/src/build/g'"
 alias l='ls -l'
+alias ll='ls -la'
 alias lt='ls -lt'
 alias cdl='{ dir="$(cat)" ; cd "$dir" ; ls -la } <<< '
 alias display_off='xset -display :0.0 dpms force off'
@@ -129,3 +130,6 @@ export MPD_PORT="6600"
 export ALTERNATE_EDITOR=""
 
 export TERM="xterm-256color"
+
+# Set python's debugger as ipython
+export PYTHONBREAKPOINT='IPython.core.debugger.set_trace'

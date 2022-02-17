@@ -66,6 +66,10 @@ Host buffalo
 	HostName 10.137.4.5
 	User hmo
 
+Host bronco
+	HostName 10.137.4.8
+	User hmo
+
 Host quickboy
     HostName 10.137.4.253
     User hmo

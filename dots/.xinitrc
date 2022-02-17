@@ -51,8 +51,8 @@ xinput set-prop 'SynPS/2 Synaptics TouchPad' 'libinput Tapping Enabled' 1
 xinput set-prop 'SynPS/2 Synaptics TouchPad' 'libinput Natural Scrolling Enabled' 1
 xinput set-prop 'SynPS/2 Synaptics TouchPad' 'libinput Accel Speed' 0.6
 
-# map caps-lock to super
-setxkbmap -option caps:super &!
+# map caps-lock to super - only required for IBM Model M. Don't want this for Displaywriter
+# setxkbmap -option caps:super &!
 
 # start the emacs server. disown so that exiting x session doesn't kill emacs
 emacs --daemon &!
