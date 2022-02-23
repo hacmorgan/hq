@@ -135,3 +135,6 @@ export MPD_PORT="6600"
 export ALTERNATE_EDITOR=""
 
 export TERM="xterm-256color"
+
+# AWS Credentials
+export ABYSS_AWS_ENVFILE="$HOME/.aws/credentials.env"
