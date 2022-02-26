@@ -52,7 +52,7 @@ xinput set-prop 'SynPS/2 Synaptics TouchPad' 'libinput Natural Scrolling Enabled
 xinput set-prop 'SynPS/2 Synaptics TouchPad' 'libinput Accel Speed' 0.6
 
 # map caps-lock to super
-setxkbmap -option caps:super &!
+# setxkbmap -option caps:super &!
 
 # start the emacs server. disown so that exiting x session doesn't kill emacs
 emacs --daemon &!
