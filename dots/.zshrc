@@ -123,7 +123,7 @@ alias gca='git commit -a -v'
 #################
 #    EXPORTS    #
 #################
-path=( "$HOME/devtools" $path )
+path=( "$HOME/devtools/bin" $path )
 export PATH
 
 export EDITOR="/usr/bin/nvim"
