@@ -434,3 +434,5 @@ bash-std-set-verbose
 (( options_install_packages ))            && install_packages
 (( options_install_pip_packages ))        && install_pip_packages
 (( options_install_cpp_manpages ))        && install_cpp_manpages
+
+exit 0
