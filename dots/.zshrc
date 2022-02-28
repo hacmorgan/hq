@@ -120,7 +120,7 @@ alias startvnc='systemctl --user restart x0vncserver'
 #################
 #    EXPORTS    #
 #################
-path=( "$HOME/.local/bin" $path )
+path=( "$HOME/devtools/bin" $path )
 export PATH
 
 export EDITOR="/usr/bin/nvim"
@@ -135,3 +135,6 @@ export TERM="xterm-256color"
 
 # Set python's debugger as ipython
 export PYTHONBREAKPOINT='IPython.core.debugger.set_trace'
+
+# AWS Credentials
+export ABYSS_AWS_ENVFILE="$HOME/.aws/credentials.env"
