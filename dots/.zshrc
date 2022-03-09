@@ -107,7 +107,7 @@ alias r2p="pwd | sed 's/rapid/pond/g'"
 alias p2r="pwd | sed 's/pond/rapid/g'"
 alias b2s="pwd | sed 's/build/src/g'"
 alias s2b="pwd | sed 's/src/build/g'"
-alias l='ls -l'
+alias l='ls -lh'
 alias ll='ls -la'
 alias lt='ls -lt'
 alias cdl='{ dir="$(cat)" ; cd "$dir" ; ls -la } <<< '
