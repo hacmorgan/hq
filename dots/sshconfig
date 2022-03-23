@@ -90,6 +90,10 @@ Host bisous
     HostName 10.0.0.124
     User hamish
 
+Host bisous_wifi_em
+    HostName 192.168.0.131
+    User hamish
+
 Host bisous_eth
     HostName 10.0.0.120
     User hamish
