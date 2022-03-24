@@ -119,7 +119,7 @@ alias enzovnc='ssh enzo systemctl --user restart x0vncserver && remmina -c $HOME
 #################
 #    EXPORTS    #
 #################
-path=( "$HOME/devtools/bin" $path )
+path=( "$HOME/devtools/bin" "$HOME/.local/bin" $path )
 export PATH
 
 export EDITOR="/usr/bin/nvim"
