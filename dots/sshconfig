@@ -68,7 +68,7 @@ Host buffalo
 	User hmo
 
 Host dodo
-	HostName 10.137.4.5
+	HostName 10.137.4.6
 	User hmo
 
 Host bronco
