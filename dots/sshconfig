@@ -1,3 +1,4 @@
+
 Host bruno_abyss
     User hamish
     HostName 10.137.5.202
@@ -63,6 +64,10 @@ Host gecko
 	User hmo
 
 Host buffalo
+	HostName 10.137.4.5
+	User hmo
+
+Host dodo
 	HostName 10.137.4.5
 	User hmo
 
