@@ -37,7 +37,6 @@ format = "{barchart} {utilization} {frequency}"
 
 [[block]]
 block = "nvidia_gpu"
-label = "GTX 980"
 show_memory = true
 show_clocks = true
 interval = 1
