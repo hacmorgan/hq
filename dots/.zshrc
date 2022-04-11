@@ -123,6 +123,9 @@ alias startvnc='systemctl --user restart x0vncserver'
 path=( "$HOME/devtools/bin" "$HOME/.local/bin" $path )
 export PATH
 
+ld_library_path=( "$HOME/.local/lib" $ld_library_path )
+export LD_LIBRARY_PATH
+
 export EDITOR="/usr/bin/nvim"
 
 export MPD_HOST="localhost"
