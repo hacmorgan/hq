@@ -98,6 +98,9 @@ alias sdn='sudo shutdown now'
 alias rsn='sudo shutdown -r now'
 alias ip3='ipython3'
 alias p3='python3'
+alias p3m='python3 -m'
+alias p3mp='python3 -m pip'
+alias p3iu='python3 -m pip install --upgrade'
 alias p2='python2'
 alias pm='pulsemixer'
 alias tm='tmux attach || tmux'
@@ -141,3 +144,6 @@ export PYTHONBREAKPOINT='IPython.core.debugger.set_trace'
 
 # AWS Credentials
 export ABYSS_AWS_ENVFILE="$HOME/.aws/credentials.env"
+
+# mlflow
+export MLFLOW_URI="http://10.137.4.4:5000"
