@@ -50,8 +50,9 @@ SSHFS_OPTS_ABYSS=(
     -o cache_max_size=1000000
     -o cache_timeout=120
     -o allow_other
-    -o default_permissions
+    # -o default_permissions  # can't write if this is set
 )
+
 
 function mountpoints  # local_filesystem:remote_filesystem
 {
