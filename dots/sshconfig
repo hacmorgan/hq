@@ -75,6 +75,14 @@ Host bronco
 	HostName 10.137.4.8
 	User hmo
 
+Host burrito
+	HostName 10.137.4.9
+	User hmo
+
+Host taco
+	HostName 10.137.4.10
+	User hmo
+
 Host quickboy
     HostName 10.137.4.253
     User hmo
