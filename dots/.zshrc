@@ -117,6 +117,7 @@ alias cdl='{ dir="$(cat)" ; cd "$dir" ; ls -la } <<< '
 alias display_off='xset -display :0.0 dpms force off'
 alias display_on='xset -display :0.0 dpms force on'
 alias gca='git commit -a -v'
+alias gcp='git cherry-pick'
 
 
 #################
