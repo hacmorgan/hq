@@ -40,7 +40,7 @@ picom &!
 # set numlock to be on 
 numlockx &!
 
-# set backgrounds
+# set backgrounds as a backup
 feh --bg-center ~/src/hq/etc/wallpapers/eboy_tok.png &!
 
 # set keyboard params

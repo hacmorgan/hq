@@ -7,12 +7,26 @@ hq="$(dirname "$myself")"
 source "$hq/scripts/bash-std"
 
 
+STANDARD_OPERATIONS=(
+    --configure-emacs
+    --configure-git
+    --configure-tmux
+    --configure-zsh
+    --install-oh-my-zsh
+    --install-pip-packages
+    --install-scripts
+    --move-existing
+    --no-sudo
+    --symlink-dots
+    --verbose
+)
 
 
 function prologue
 {
     echo -e "\n${fmt_dim}${fmt_cyan}sysbs - system bootstrapper${fmt_white}${fmt_reset}"
 }
+
 
 function options
 {
@@ -28,22 +42,21 @@ function options
 --enable-systemd-services; Enable services symlinked by --symlink-systemd-services
 --install-cpp-manpages; Install C++ stdlib manpages using https://github.com/jeaye/stdman
 --install-fonts; Unpack fantasque (noLoopK) and FiraCode (ligatures) to /usr/share/fonts/fantasque
---install-oh-my-zsh; Self explanatory. terminates this script, use this option by itself
+--install-oh-my-zsh; Self explanatory
 --install-packages; Install all packages in etc/packagelist that aren't commented out
 --install-pip-packages; Install all pip packages in etc/pip-packagelist
---install-prefix=<path>; default=/usr/local; Install prefix for scripts
---install-scripts; Copy everything in 'scripts' to --install-prefix
+--install-prefix,-p=<path>; default=$HOME/.local; Install prefix for scripts
+--install-scripts,-i; Copy everything in 'scripts' to --install-prefix
 --move-existing; If <file> exists, move it to <file>.old
 --no-sudo; Don't do anything that requires sudo
---symlink-dots; Symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
+--standard; Do the standard bootstrap operations: ${STANDARD_OPERATIONS[@]}
+--symlink-dots,-s; Symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
 --symlink-systemd-services; Symlink service files in etc/systemd to /etc/systemd/system/
 --symlink-vi; Symlink /usr/bin/nvim to /usr/bin/vi
 --update-package-list; Find installed packages that aren't already in etc/packagelist
---verbose; Talk the talk AND walk the walk
+--verbose,-v; Talk the talk AND walk the walk
 EOF
 }
-
-
 
 
 function install_scripts
@@ -147,7 +160,7 @@ function configure_git
 {
     git config --global user.email "ham430@gmail.com"
     git config --global user.name "Hamish Morgan"
-	git config --global pull.rebase false
+    git config --global pull.rebase false
     git config --global commit.template $( realpath $hq )/etc/gitmessage
 }
 
@@ -206,7 +219,7 @@ function install_oh_my_zsh
 {
     type -p zsh  > /dev/null || die "zsh not found, please install it first"
     type -p curl > /dev/null || die "curL not found, please install it first"
-    sh -c "$( curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh )"
+    yes "n" | sh -c "$( curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh )"
 }
 
 
@@ -422,10 +435,24 @@ function configure_tmux
 }
 
 
+function arg_name_to_var_name
+{
+    local operation="$1"
+    sed -e 's#^--#options_#' -e 's#-#_#g' <<< "$operation"
+}
+
+
 bash-std-application-init "$@" < <( options ) || die "failed"
 bash-std-set-verbose
 
-(( options_install_oh_my_zsh ))           && { install_oh_my_zsh; exit; }
+if (( options_standard )); then
+    for operation in "${STANDARD_OPERATIONS[@]}"; do
+        eval "$(arg_name_to_var_name "$operation")=1"
+        echo "setting $(arg_name_to_var_name "$operation")=1"
+    done
+fi
+
+(( options_install_oh_my_zsh ))           && install_oh_my_zsh
 (( options_configure_emacs ))             && configure_emacs
 (( options_configure_git ))               && configure_git
 (( options_configure_vnc ))               && configure_vnc

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+
+# Set the OOM killer priority for this process, and execute the given command
+
+
+set -o errexit
+set -o nounset
+
+
+OOM_SCORE=1000  # [-1000, 1000], higher killed first
+
+
+echo "$OOM_SCORE" > /proc/self/oom_score_adj
+exec $@
