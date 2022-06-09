@@ -1,7 +1,7 @@
 
 Host bruno_abyss
     User hamish
-    HostName 10.137.5.202
+    HostName 10.137.6.180
 
 Host thinkpad
     User hamish
@@ -73,6 +73,14 @@ Host dodo
 
 Host bronco
 	HostName 10.137.4.8
+	User hmo
+
+Host burrito
+	HostName 10.137.4.9
+	User hmo
+
+Host taco
+	HostName 10.137.4.10
 	User hmo
 
 Host quickboy

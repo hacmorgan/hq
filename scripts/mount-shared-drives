@@ -43,15 +43,13 @@ SSHFS_OPTS=(
     -o ServerAliveInterval=15
     -o reconnect
     -o allow_other
-    -o default_permissions
 )
 SSHFS_OPTS_ABYSS=(
     ${SSHFS_OPTS[@]}
     -o cache_max_size=1000000
     -o cache_timeout=120
-    -o allow_other
-    -o default_permissions
 )
+
 
 function mountpoints  # local_filesystem:remote_filesystem
 {
