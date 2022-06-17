@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 
 
-##  sdc - smart device control
-#
-# Currently only supports Tp-Link Kasa devices using the pyHS100 library
-#
-# Author:  Hamish Morgan
-# Date:    02/05/2021
-# License: BSD
+"""
+sdc - smart device control
+
+Currently only supports Tp-Link Kasa devices using the pyHS100 library
+
+Author:  Hamish Morgan
+Date:    02/05/2021
+License: BSD
+"""
 
 
 import argparse
@@ -22,44 +24,52 @@ IP = str
 
 def getArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument( "--list-devices",
-                         "-l",
-                         action="store_true",
-                         help="List all devices on local network" )
-    parser.add_argument( "--off",
-                         "-0",
-                         type=str,
-                         action='append',
-                         nargs='+',
-                         help="Turn off device(s) at given IP address(es). "
-                         "\"all\" to turn everything off" )
-    parser.add_argument( "--on",
-                         "-1",
-                         type=str,
-                         action='append',
-                         nargs='+',
-                         help="Turn on device(s) at given IP address(es). "
-                         "\"all\" to turn everything on" )
-    parser.add_argument("--notify",
-                        action="store_true",
-                        help="Produce notify-send dialogues (if notify-send installed)")
-    parser.add_argument( "--verbose",
-                         "-v",
-                         action="store_true",
-                         help="More output"   )
+    parser.add_argument(
+        "--list-devices",
+        "-l",
+        action="store_true",
+        help="List all devices on local network",
+    )
+    parser.add_argument(
+        "--off",
+        "-0",
+        type=str,
+        action="append",
+        nargs="+",
+        help="Turn off device(s) at given IP address(es). "
+        '"all" to turn everything off',
+    )
+    parser.add_argument(
+        "--on",
+        "-1",
+        type=str,
+        action="append",
+        nargs="+",
+        help="Turn on device(s) at given IP address(es). "
+        '"all" to turn everything on',
+    )
+    parser.add_argument(
+        "--notify",
+        action="store_true",
+        help="Produce notify-send dialogues (if notify-send installed)",
+    )
+    parser.add_argument("--verbose", "-v", action="store_true", help="More output")
     return parser.parse_args()
 
 
-def say( message: str ) -> None:
-    print( message, file=sys.stderr )
+def say(message: str) -> None:
+    print(message, file=sys.stderr)
 
-def notify( message: str, shouldNotify, failure=False ) -> None:
+
+def notify(message: str, shouldNotify, failure=False) -> None:
     say(message)
     if shouldNotify and shutil.which("notify-send") is not None:
         if failure:
-            os.system( "notify-send --urgency critical \"{}\" \"{}\"".format(__file__, message) )
+            os.system(
+                'notify-send --urgency critical "{}" "{}"'.format(__file__, message)
+            )
         else:
-            os.system( "notify-send \"{}\" \"{}\"".format(__file__, message) )
+            os.system('notify-send "{}" "{}"'.format(__file__, message))
 
 
 def discoverDevices() -> dict[IP, pyHS100.smartdevice.SmartDevice]:
@@ -67,83 +77,80 @@ def discoverDevices() -> dict[IP, pyHS100.smartdevice.SmartDevice]:
     return pyHS100.Discover().discover()
 
 
-def listDevices( devices: dict[IP, pyHS100.smartdevice.SmartDevice] ) -> None:
+def listDevices(devices: dict[IP, pyHS100.smartdevice.SmartDevice]) -> None:
     for ip in devices.keys():
-        print( "{}: {} -> {}".format( ip,
-                                      devices[ip].alias,
-                                      "ON" if devices[ip].is_on else "OFF" ) )
+        print(
+            "{}: {} -> {}".format(
+                ip, devices[ip].alias, "ON" if devices[ip].is_on else "OFF"
+            )
+        )
 
-def controlDevices( args: argparse.Namespace,
-                    devices: dict[IP, pyHS100.smartdevice.SmartDevice] ):
 
-    def turn( devices: dict[IP, pyHS100.smartdevice.SmartDevice],
-              name: str,
-              state: str ):
-
-        def findIpByName( name:    str,
-                          devices: dict[str, pyHS100.smartdevice.SmartDevice] ) -> IP:
+def controlDevices(
+    args: argparse.Namespace, devices: dict[IP, pyHS100.smartdevice.SmartDevice]
+):
+    def turn(devices: dict[IP, pyHS100.smartdevice.SmartDevice], name: str, state: str, max_attempts: int = 10):
+        def findIpByName(
+            name: str, devices: dict[str, pyHS100.smartdevice.SmartDevice]
+        ) -> IP:
             for ip in devices.keys():
                 if devices[ip].alias == name:
                     return ip
             return None
 
-        ip = findIpByName( name, devices )
-        if ip is None:
-            notify( "Cannot find ip of {}".format(name),
-                    args.notify,
-                    failure=True )
-            return
-        if state == "on":
-            try:
-                devices[ip].turn_on()
-                notify( "Turned {} on".format(name),
-                        args.notify )
-            except pyHS100.SmartDeviceException:
-                notify( "Failed to turn {} on".format(name),
-                        args.notify,
-                        failure=True )
-        elif state == "off":
-            try:
-                devices[ip].turn_off()
-                notify( "Turned {} off".format(name),
-                        args.notify )
-            except pyHS100.SmartDeviceException:
-                notify( "Failed to turn {} off".format(name),
-                        args.notify,
-                        failure=True )
-                
+        ip = findIpByName(name, devices)
 
-    def turnAll( devices: dict, state: str ):
-        for ip in devices.keys():
-            turn( devices, devices[ip].alias, state )
+        if ip is None:
+            notify("Cannot find ip of {}".format(name), args.notify, failure=True)
+            return
+
+        if state == "on":
+            control_device = lambda device: device.turn_on()
+        elif state == "off":
+            control_device = lambda device: device.turn_off()
+
+        for i in range(max_attempts):
+            try:
+                control_device(devices[ip])
+                notify(f"Turned {name} {state}", args.notify)
+                return
+            except pyHS100.SmartDeviceException:
+                notify(f"Attempt {i} to turn {name} {state} failed...", args.notify)
+                time.sleep(1.0)
+                continue
+        notify("Failed to turn {} on".format(name), args.notify, failure=True)
+
         
+    def turnAll(devices: dict, state: str):
+        for ip in devices.keys():
+            turn(devices, devices[ip].alias, state)
+
     if args.on is not None:
         if ["all"] in args.on:
-            turnAll( devices, "on" )
+            turnAll(devices, "on")
             args.on.remove(["all"])
     if args.off is not None:
         if ["all"] in args.off:
-            turnAll( devices, "off" )
+            turnAll(devices, "off")
             args.off.remove(["all"])
     if args.on is not None:
         for name in args.on:
-            turn( devices, name[0], "on" )
+            turn(devices, name[0], "on")
     if args.off is not None:
         for name in args.off:
-            turn( devices, name[0], "off" )
-    
+            turn(devices, name[0], "off")
 
 
-def main( args ):
+def main(args):
     devices = discoverDevices()
 
     if not args.list_devices:
-        controlDevices( args, devices )
+        controlDevices(args, devices)
 
-    listDevices( devices )
-        
+    listDevices(devices)
+
     return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main(getArgs()))

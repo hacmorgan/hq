@@ -97,6 +97,10 @@ alias sdn='sudo shutdown now'
 alias rsn='sudo shutdown -r now'
 alias ip3='ipython3'
 alias p3='python3'
+alias p3m='python3 -m'
+alias p3mp='python3 -m pip'
+alias p3iu='python3 -m pip install --upgrade'
+alias p3iue='python3 -m pip install --upgrade --editable'
 alias p2='python2'
 alias pm='pulsemixer'
 alias tm='tmux attach || tmux'
@@ -115,13 +119,17 @@ alias mnt_tank='abyss-mount-share hmo rhino-tank /mnt/tank'
 alias display_off='xset -display :0.0 dpms force off'
 alias display_on='xset -display :0.0 dpms force on'
 alias gca='git commit -a -v'
+alias gcp='git cherry-pick'
 
 
 #################
 #    EXPORTS    #
 #################
-path=( "$HOME/.local/bin" $path )
+path=( "$HOME/devtools/bin" "$HOME/.local/bin" $path )
 export PATH
+
+ld_library_path=( "$HOME/.local/lib" $ld_library_path )
+export LD_LIBRARY_PATH
 
 export EDITOR="/usr/bin/nvim"
 
@@ -135,3 +143,9 @@ export TERM="xterm-256color"
 
 # Set python's debugger as ipython
 export PYTHONBREAKPOINT='IPython.core.debugger.set_trace'
+
+# AWS Credentials
+export ABYSS_AWS_ENVFILE="$HOME/.aws/credentials.env"
+
+# mlflow
+export MLFLOW_URI="http://10.137.4.4:5000"

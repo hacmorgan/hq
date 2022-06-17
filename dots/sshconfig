@@ -1,6 +1,7 @@
+
 Host bruno_abyss
     User hamish
-    HostName 10.137.5.202
+    HostName 10.137.6.194
 
 Host thinkpad
     User hamish
@@ -66,8 +67,20 @@ Host buffalo
 	HostName 10.137.4.5
 	User hmo
 
+Host dodo
+	HostName 10.137.4.6
+	User hmo
+
 Host bronco
 	HostName 10.137.4.8
+	User hmo
+
+Host burrito
+	HostName 10.137.4.9
+	User hmo
+
+Host taco
+	HostName 10.137.4.10
 	User hmo
 
 Host quickboy
@@ -88,6 +101,10 @@ Host hihi
 
 Host bisous
     HostName 10.0.0.124
+    User hamish
+
+Host bisous_wifi_em
+    HostName 192.168.0.131
     User hamish
 
 Host bisous_eth
