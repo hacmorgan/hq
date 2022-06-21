@@ -265,5 +265,5 @@ bindsym --release $mod+Shift+s exec --no-startup-id dmenu-custom
 ######################
 exec --no-startup-id "sleep 1; use-all-monitors"
 
-exec --no-startup-id "sleep 3; feh --bg-center /home/hamish/src/hq/etc/wallpapers/5YR.jpg --bg-fill /home/hamish/src/hq/etc/wallpapers/koth.jpg --bg-center /home/hamish/src/hq/etc/wallpapers/eboy_tok.png
+exec --no-startup-id "sleep 4; feh --bg-center /home/hamish/src/hq/etc/wallpapers/5YR.jpg --bg-fill /home/hamish/src/hq/etc/wallpapers/koth.jpg --bg-center /home/hamish/src/hq/etc/wallpapers/eboy_tok.png
 "
