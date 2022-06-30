@@ -1,7 +1,7 @@
 
 Host bruno_abyss
     User hamish
-    HostName 10.137.6.194
+    HostName 10.137.6.208
 
 Host thinkpad
     User hamish

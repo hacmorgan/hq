@@ -3,4 +3,5 @@
 .xinitrc
 .zprofile
 .zshrc
+.vimrc
 .flake8

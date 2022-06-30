@@ -117,9 +117,10 @@ alias cdl='{ dir="$(cat)" ; cd "$dir" ; ls -la } <<< '
 alias display_off='xset -display :0.0 dpms force off'
 alias display_on='xset -display :0.0 dpms force on'
 alias backlight_min='sudo bash -c "echo 0 > /sys/class/backlight/amdgpu_bl0/brightness"'
+alias enzovnc='ssh enzo systemctl --user restart x0vncserver && remmina -c $HOME/.local/share/remmina/group_vnc_enzo-himself_10-0-0-72-2.remmina'
 alias gca='git commit -a -v'
 alias gcp='git cherry-pick'
-alias enzovnc='ssh enzo systemctl --user restart x0vncserver && remmina -c $HOME/.local/share/remmina/group_vnc_enzo-himself_10-0-0-72-2.remmina'
+alias gpu='gp || gp --set-upstream origin "$(git branch --show-current)"'
 
 
 #################
