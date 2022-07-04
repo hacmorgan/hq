@@ -117,9 +117,10 @@ alias lt='ls -lt'
 alias cdl='{ dir="$(cat)" ; cd "$dir" ; ls -la } <<< '
 alias display_off='xset -display :0.0 dpms force off'
 alias display_on='xset -display :0.0 dpms force on'
+alias startvnc='systemctl --user restart x0vncserver'
 alias gca='git commit -a -v'
 alias gcp='git cherry-pick'
-alias startvnc='systemctl --user restart x0vncserver'
+alias gpu='gp || gp --set-upstream origin "$(git branch --show-current)"'
 
 
 #################
