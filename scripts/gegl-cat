@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+
+##  gegl-cat
+#
+# Batch modify images from path to folder using gegl commands
+#
+# Author:  Hamish Morgan
+# Date:    02/05/2021
+# License: BSD
+
+
+source "$(type -p bash-std)"
+
+
+function prologue
+{
+    cat <<EOF
+
+${fmt_blue}mount-shared-drives - mount remote drives over sshfs${fmt_reset}
+EOF
+}
+
+function options
+{
+    cat <<EOF
+--input-dir,-i=[<input-dir>]; Directory containing images to be processed
+--gegl-expression,-e=<expr>; Gegl expression (see gegl --list-all)
+EOF
+}
+
+function epilogue
+{
+    cat <<EOF
+
+
+Usage Examples:
+
+      gegl-cat -i <blah> -e 'gegl:brightness-contrast contrast=3.0'
+EOF
+}
+
+
+bash-std-application-init "$@" < <(options)
+
+
+function brightness_contrast
+{
+    local infile="$1"
+    local outfile="/tmp/$(basename "$(dirname "$infile")")/$(basename "$infile")"
+    mkdir -p "$(dirname "$outfile")"
+    gegl \
+        --file "$infile" \
+        --output "$outfile" \
+        -- \
+        "gegl:png-load path=$infile $options_gegl_expression"
+}
+export -f brightness_contrast
+
+
+find "$options_input_dir" -name "*.png" |
+        parallel --bar "brightness_contrast {}"
