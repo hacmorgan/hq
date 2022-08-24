@@ -36,7 +36,7 @@ function epilogue
 
 Usage Examples:
 
-      gegl-cat -i <blah> -e 'gegl:brightness-contrast contrast=3.0'
+      gegl-cat -i <blah> -e 'gegl:brightness-contrast contrast=85'
 EOF
 }
 
@@ -55,8 +55,17 @@ function brightness_contrast
         -- \
         "gegl:png-load path=$infile $options_gegl_expression"
 }
-export -f brightness_contrast
 
+
+export -f brightness_contrast
+export options_gegl_expression
 
 find "$options_input_dir" -name "*.png" |
-        parallel --bar "brightness_contrast {}"
+    sort |
+    while read filepath; do
+        printf "Processing $filepath..."
+        brightness_contrast "$filepath"
+        echo "done"
+    done
+          
+        # parallel --bar "brightness_contrast {}"
