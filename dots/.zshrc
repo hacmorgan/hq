@@ -149,4 +149,4 @@ export PYTHONBREAKPOINT='IPython.core.debugger.set_trace'
 export ABYSS_AWS_ENVFILE="$HOME/.aws/credentials.env"
 
 # mlflow
-export MLFLOW_URI="http://10.137.4.4:5000"
+export MLFLOW_URI="http://10.137.8.100:5000"
