@@ -112,7 +112,7 @@ Host bisous_eth
     User hamish
 
 Host leroy
-    HostName 10.0.0.127
+    HostName 192.168.0.247
     User hamish
 
 Host eddie
