@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+
+##  snapmaker-status - View snapmaker progress from webcams
+
+
+source "$(type -p bash-std)"
+
+
+CAPTURE_DIR=/tmp/.snapmaker_status
+DEVICES=(2)
+
+
+function prepare_leroy
+{
+    ssh leroy "rm -rf $CAPTURE_DIR; mkdir $CAPTURE_DIR"
+}
+
+
+function capture_images
+{
+    function capture_image
+    {
+        local device="$1"
+        ssh leroy "fswebcam --device v4l2:/dev/video${device} --png 9 $CAPTURE_DIR/$device.png --set resolution=640x320"
+    }
+
+    for device in "${DEVICES[@]}"; do
+        capture_image "$device"
+    done
+}
+
+
+function copy_images
+{
+    rm -rf $CAPTURE_DIR
+    scp -r leroy:$CAPTURE_DIR $CAPTURE_DIR
+}
+
+
+function display_images
+{
+    feh -d. $CAPTURE_DIR
+}
+
+
+function main-run
+{
+    prepare_leroy &&
+        capture_images &&
+        copy_images &&
+        display_images
+}
+
+
+main-run
