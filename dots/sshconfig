@@ -37,7 +37,7 @@ Host enzo
 
 Host george
     User hamish
-    Hostname 10.0.0.39
+    Hostname 192.168.0.50
 
 Host george_remote
     User hamish
