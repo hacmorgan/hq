@@ -89,10 +89,6 @@ source $ZSH/oh-my-zsh.sh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 
-# Allow use of the `nvm` command (from the AUR)
-source /usr/share/nvm/init-nvm.sh
-
-
 #################
 #    ALIASES    #
 #################
