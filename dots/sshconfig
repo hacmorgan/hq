@@ -33,11 +33,11 @@ Host freebsd
 
 Host enzo
     User hamish
-    Hostname 10.0.0.72
+    Hostname 192.168.0.95
 
 Host george
     User hamish
-    Hostname 10.0.0.39
+    Hostname 192.168.0.50
 
 Host george_remote
     User hamish
@@ -112,7 +112,7 @@ Host bisous_eth
     User hamish
 
 Host leroy
-    HostName 10.0.0.127
+    HostName 192.168.0.247
     User hamish
 
 Host eddie
