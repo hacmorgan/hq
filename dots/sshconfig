@@ -114,3 +114,7 @@ Host leroy
 Host eddie
     HostName 10.0.0.152
     User hamish
+
+Host skoopi
+    HostName 192.168.0.90
+    User hamish
