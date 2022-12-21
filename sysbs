@@ -7,61 +7,9 @@ hq="$(dirname "$myself")"
 source "$hq/scripts/bash-std"
 
 
-STANDARD_OPERATIONS=(
-    --configure-emacs
-    --configure-git
-    --configure-tmux
-    --configure-zsh
-    --install-oh-my-zsh
-    --install-pip-packages
-    --install-scripts
-    --move-existing
-    --no-sudo
-    --symlink-dots
-    --verbose
-)
-
-
-function prologue
-{
-    echo -e "\n${fmt_dim}${fmt_cyan}sysbs - system bootstrapper${fmt_white}${fmt_reset}"
-}
-
-
-function options
-{
-    cat <<EOF
---autostart-abyss-wireguard; Use systemd to effectively run 'sudo wg-quick up abyss' on boot
---configure-emacs; Clone emacs repositiory to ~/.emacs.d
---configure-vnc; Configure a VNC server
---configure-git; Tell git who you are (so you can commit)
---configure-tmux; Configure tmux with plugins
---configure-zsh; Do this after installing oh-my-zsh
---create-shared-mountpoints; Create all mountpoints in 'etc/mountpoints' and transfer ownership to hamish
---dry-run; Talk the talk but don't walk the walk
---enable-systemd-services; Enable services symlinked by --symlink-systemd-services
---install-cpp-manpages; Install C++ stdlib manpages using https://github.com/jeaye/stdman
---install-fonts; Unpack fantasque (noLoopK) and FiraCode (ligatures) to /usr/share/fonts/fantasque
---install-oh-my-zsh; Self explanatory
---install-packages; Install all packages in etc/packagelist that aren't commented out
---install-pip-packages; Install all pip packages in etc/pip-packagelist
---install-prefix,-p=<path>; default=$HOME/.local; Install prefix for scripts
---install-scripts,-i; Copy everything in 'scripts' to --install-prefix
---move-existing; If <file> exists, move it to <file>.old
---no-sudo; Don't do anything that requires sudo
---standard; Do the standard bootstrap operations: ${STANDARD_OPERATIONS[@]}
---symlink-dots,-s; Symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
---symlink-systemd-services; Symlink service files in etc/systemd to /etc/systemd/system/
---symlink-vi; Symlink /usr/bin/nvim to /usr/bin/vi
---update-package-list; Find installed packages that aren't already in etc/packagelist
---verbose,-v; Talk the talk AND walk the walk
-EOF
-}
-
-
 function install_scripts
 {
-    for script in $hq/scripts/*; do
+    for script in $hq/bin/*; do
         if (( options_dry_run )); then
             say "$script -> $options_install_prefix/bin/"
         elif [[ -w $options_install_prefix  ]]; then
@@ -161,7 +109,9 @@ function configure_git
     git config --global user.email "ham430@gmail.com"
     git config --global user.name "Hamish Morgan"
     git config --global pull.rebase false
-    git config --global commit.template $( realpath $hq )/etc/gitmessage
+    git config --global commit.template $(realpath $hq)/etc/gitmessage
+    git config --global --add push.default current
+    git config --global --add push.autoSetupRemote true
 }
 
 
@@ -435,6 +385,56 @@ function configure_tmux
 }
 
 
+function configure_cctv
+{
+    # Set up CCTV system on this host with Shinobi and MariaDB
+    #
+    # Steps taken from ArchWiki pages for those tools
+    
+    function setup_db
+    {
+        # Install MariaDB (MySQL)
+        sudo pacman -S mariadb
+
+        # Create a DB
+        sudo mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+
+        # Start the systemd service
+        sudo systemctl enable mariadb.service
+        sudo systemctl start mariadb.service
+    }
+
+
+    function setup_shinobi
+    {
+        # Install Shinobi
+        yay -S shinobi-git
+
+        # Create a DB for Shinobi
+        sudo mysql <<< "CREATE DATABASE ccio; flush privileges; \q"
+
+        # Create user majesticflame for shinobi and grant priveliges to the new db
+        sudo mysql < /usr/share/shinobi/sql/user.sql
+
+        # Populate the db with tables
+        sudo mysql ccio < /usr/share/shinobi/sql/framework.sql
+
+        # Copy config into place
+        sudo cp -v "$hq/etc/shinobi/conf.json" /etc/shinobi/conf.json
+
+        # Start the systemd service
+        sudo systemctl enable shinobi.target
+        sudo systemctl start shinobi.target
+    }
+
+    setup_db
+    setup_shinobi
+}
+
+
+# ------------------------------------------------------------------------------------ #
+
+
 function arg_name_to_var_name
 {
     local operation="$1"
@@ -442,8 +442,62 @@ function arg_name_to_var_name
 }
 
 
+function prologue
+{
+    echo -e "\n${fmt_dim}${fmt_cyan}sysbs - system bootstrapper${fmt_white}${fmt_reset}"
+}
+
+
+function options
+{
+    cat <<EOF
+--autostart-abyss-wireguard; Use systemd to effectively run 'sudo wg-quick up abyss' on boot
+--configure-cctv; Configure this host as a CCTV server
+--configure-emacs; Clone emacs repositiory to ~/.emacs.d
+--configure-vnc; Configure a VNC server
+--configure-git; Tell git who you are (so you can commit)
+--configure-tmux; Configure tmux with plugins
+--configure-zsh; Do this after installing oh-my-zsh
+--create-shared-mountpoints; Create all mountpoints in 'etc/mountpoints' and transfer ownership to hamish
+--dry-run; Talk the talk but don't walk the walk
+--enable-systemd-services; Enable services symlinked by --symlink-systemd-services
+--install-cpp-manpages; Install C++ stdlib manpages using https://github.com/jeaye/stdman
+--install-fonts; Unpack fantasque (noLoopK) and FiraCode (ligatures) to /usr/share/fonts/fantasque
+--install-oh-my-zsh; Self explanatory
+--install-packages; Install all packages in etc/packagelist that aren't commented out
+--install-pip-packages; Install all pip packages in etc/pip-packagelist
+--install-prefix,-p=<path>; default=$HOME/.local; Install prefix for scripts
+--install-scripts,-i; Copy everything in 'scripts' to --install-prefix
+--move-existing; If <file> exists, move it to <file>.old
+--no-sudo; Don't do anything that requires sudo
+--standard; Do the standard bootstrap operations: ${STANDARD_OPERATIONS[@]}
+--symlink-dots,-s; Symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
+--symlink-systemd-services; Symlink service files in etc/systemd to /etc/systemd/system/
+--symlink-vi; Symlink /usr/bin/nvim to /usr/bin/vi
+--update-package-list; Find installed packages that aren't already in etc/packagelist
+--verbose,-v; Talk the talk AND walk the walk
+EOF
+}
+
+
+STANDARD_OPERATIONS=(
+    --configure-emacs
+    --configure-git
+    --configure-tmux
+    --configure-zsh
+    --install-oh-my-zsh
+    --install-pip-packages
+    --install-scripts
+    --move-existing
+    --no-sudo
+    --symlink-dots
+    --verbose
+)
+
+
 bash-std-application-init "$@" < <( options ) || die "failed"
 bash-std-set-verbose
+
 
 if (( options_standard )); then
     for operation in "${STANDARD_OPERATIONS[@]}"; do
@@ -453,6 +507,7 @@ if (( options_standard )); then
 fi
 
 (( options_install_oh_my_zsh ))           && install_oh_my_zsh
+(( options_configure_cctv ))              && configure_cctv
 (( options_configure_emacs ))             && configure_emacs
 (( options_configure_git ))               && configure_git
 (( options_configure_vnc ))               && configure_vnc
