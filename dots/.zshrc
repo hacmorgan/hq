@@ -199,6 +199,8 @@ bindkey ^E end-of-line
 # }
 # precmd_functions+=(_fix_cursor)
 
+alias backlight_min='sudo bash -c "echo 1 > /sys/class/backlight/intel_backlight/brightness"'
+
 
 #################
 #    EXPORTS    #
