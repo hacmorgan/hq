@@ -29,6 +29,12 @@ critical_mem = 95
 critical_swap = 95
 
 [[block]]
+block = "net"
+device = "wlp3s0"
+format = "{ssid} {signal_strength} {ip} {speed_up} {speed_down}"
+interval = 5
+
+[[block]]
 block = "cpu"
 interval = 1
 format = " $barchart $utilization $frequency"
@@ -36,6 +42,16 @@ format = " $barchart $utilization $frequency"
 [[block]]
 block = "sound"
 step_width = 1
+
+[[block]]
+block = "backlight"
+step_width = 1
+invert_icons = true
+
+[[block]]
+block = "battery"
+interval = 10
+format = "{percentage} {time}"
 
 [[block]]
 block = "time"
