@@ -181,7 +181,7 @@ bindsym $mod+Shift+m resize set 500 300
 bar {
     font pango:Fantasque Sans Mono, FontAwesome 12.9
     position top
-    status_command i3status-rs ~/.config/i3/status.toml
+    status_command ~/.cargo/bin/i3status-rs ~/.config/i3/status.toml
     colors {
         separator #666666
         background #222222
