@@ -150,6 +150,8 @@ alias grsh='git reset --hard "$(git branch --show-current)"'
 alias pvv='pytest -vvvx'
 alias pvx='pytest -vvvx'
 
+alias backlight_min='sudo bash -c "echo 1 > /sys/class/backlight/intel_backlight/brightness"'
+
 
 #################
 #    EXPORTS    #
