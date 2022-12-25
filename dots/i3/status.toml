@@ -30,7 +30,7 @@ critical_swap = 95
 
 [[block]]
 block = "net"
-device = "wlp3s0"
+device = "wlp0s20f3"
 format = "{ssid} {signal_strength} {ip} {speed_up} {speed_down}"
 interval = 5
 
