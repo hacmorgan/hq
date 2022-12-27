@@ -1,104 +1,3 @@
-
-Host bruno_abyss
-    User hamish
-    HostName 10.137.6.183
-
-Host thinkpad
-    User hamish
-    HostName 10.0.0.80 
-
-Host pelicomp
-    User hamish
-    HostName 10.0.0.91
-
-Host pelicomp_eth
-    User hamish
-    HostName 10.0.0.90
-
-Host oxie_tower_pi
-    User pi
-    HostName 192.168.0.172
-    
-Host processor
-	User processor
-	HostName 10.0.0.86
-
-Host cse
-    User z5115698
-    Hostname cse.unsw.edu.au
-
-Host freebsd
-    User hamish
-    Hostname 10.0.0.83
-
-Host enzo
-    User hamish
-    Hostname 192.168.0.95
-
-Host george
-    User hamish
-    Hostname 192.168.0.50
-
-Host george_remote
-    User hamish
-    Hostname thinkingaboudis.zapto.org
-
-Host collab
-    User collab
-    Hostname 10.0.0.39
-
-Host hippo
-	HostName 10.137.4.1
-	User hmo
-
-Host rhino
-	HostName 10.137.4.2
-	User hmo
-
-Host dingo
-	HostName 10.137.4.3
-	User hmo
-
-Host gecko
-	HostName 10.137.4.4
-	User hmo
-
-Host buffalo
-	HostName 10.137.4.5
-	User hmo
-
-Host dodo
-	HostName 10.137.4.6
-	User hmo
-
-Host bronco
-	HostName 10.137.4.8
-	User hmo
-
-Host burrito
-	HostName 10.137.4.9
-	User hmo
-
-Host taco
-	HostName 10.137.4.10
-	User hmo
-
-Host quickboy
-    HostName 10.137.4.253
-    User hmo
-
-Host mammoth
-    HostName 10.137.4.252
-    User hmo
-
-Host bastion
-    HostName 10.137.9.1
-    User hmo
-
-Host hihi
-	HostName 10.10.5.4
-	User hamish
-
 Host bisous
     HostName 192.168.0.61
     User hamish
@@ -118,3 +17,80 @@ Host eddie
 Host skoopi
     HostName 192.168.0.90
     User hamish
+
+Host diego
+    User hamish
+    HostName 192.168.0.37
+
+Host enzo
+    User hamish
+    Hostname 192.168.0.95
+
+Host george
+    User hamish
+    Hostname 192.168.0.50
+
+Host george_remote
+    User hamish
+    Hostname thinkingaboudis.zapto.org
+
+Host collab
+    User collab
+    Hostname 192.168.0.50
+
+Host hippo
+    HostName 10.137.4.1
+    User hmo
+
+Host rhino
+    HostName 10.137.4.2
+    User hmo
+
+Host dingo
+    HostName 10.137.4.3
+    User hmo
+
+Host gecko
+    HostName 10.137.4.4
+    User hmo
+
+Host buffalo
+    HostName 10.137.4.5
+    User hmo
+
+Host dodo
+    HostName 10.137.4.6
+    User hmo
+
+Host bronco
+    HostName 10.137.4.8
+    User hmo
+
+Host burrito
+    HostName 10.137.4.9
+    User hmo
+
+Host taco
+    HostName 10.137.4.10
+    User hmo
+
+Host quickboy
+    HostName 10.137.4.253
+    User hmo
+
+Host mammoth
+    HostName 10.137.4.252
+    User hmo
+
+Host bastion
+    HostName 10.137.9.1
+    User hmo
+
+Host hihi
+    HostName 10.10.5.4
+    User hamish
+
+Host bruno_abyss
+    User hamish
+    HostName 10.137.6.183
+
