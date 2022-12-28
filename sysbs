@@ -9,7 +9,7 @@ source "$hq/scripts/bash-std"
 
 function install_scripts
 {
-    for script in $hq/bin/*; do
+    for script in $hq/scripts/*; do
         if (( options_dry_run )); then
             say "$script -> $options_install_prefix/bin/"
         elif [[ -w $options_install_prefix  ]]; then
