@@ -47,7 +47,7 @@ xset r rate 250 50 &!
 emacs --daemon &!
 
 # start barrier client to enzo
-barrierc 10.0.0.72 --enable-crypto &!
+barrierc 192.168.0.95 --enable-crypto &!
 
 # mount Abyss drives
 mount-shared-drives --abyss &!
