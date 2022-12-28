@@ -64,3 +64,6 @@ xinput set-prop 12 371 1
 # this is the last thing we do!
 # exec startxfce4
 exec i3
+
+# start barrier client to enzo
+barrierc 192.168.0.95 --enable-crypto &!
