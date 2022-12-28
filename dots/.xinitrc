@@ -58,7 +58,7 @@ xsetwacom --set $( xsetwacom list devices | grep stylus | sed 's#.*id: \([0-9]*\
 
 # start barrier server
 barriers --config $HOME/.config/barrier/diego-enzo-george.conf \
-         --disable-client-cert-checking &!
+         --disable-crypto &!
 
 # this is the last thing we do!
 exec i3
