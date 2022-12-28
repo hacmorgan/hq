@@ -74,6 +74,10 @@ Host taco
     HostName 10.137.4.10
     User hmo
 
+Host laeeb
+    HostName 10.137.4.12
+    User hmo
+
 Host quickboy
     HostName 10.137.4.253
     User hmo
