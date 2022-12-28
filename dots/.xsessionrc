@@ -63,4 +63,4 @@ emacs --daemon &!
 exec i3
 
 # start barrier client to enzo
-barrierc 192.168.0.95 --enable-crypto &!
+barrierc --display :1 --disable-crypto 192.168.0.95 &!
