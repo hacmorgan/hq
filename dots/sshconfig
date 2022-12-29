@@ -20,6 +20,10 @@ Host skoopi
 
 Host diego
     User hmo
+    HostName 192.168.0.140
+
+Host diego_wifi
+    User hmo
     HostName 192.168.0.37
 
 Host enzo
