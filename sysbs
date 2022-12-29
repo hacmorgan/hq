@@ -132,8 +132,8 @@ function configure_emacs
 function create_shared_mountpoints
 {
     for mount_point in $( cat $hq/etc/mountpoints | cut -d':' -f1 ); do
-        sudo mkdir $_verbose $mount_point
-        sudo chown $_verbose hamish:hamish $mount_point
+        sudo mkdir --parents $_verbose $mount_point
+        sudo chown $_verbose $(whoami):$(whoami) $mount_point
     done
 }
 
