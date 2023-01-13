@@ -1,25 +1,21 @@
 #!/usr/bin/env bash
 
 
+set -o errexit
+set -o pipefail
+
+
 myself="$0"
 hq="$(dirname "$myself")"
 
-source "$hq/scripts/bash-std"
+
+source "$hq/python/applications/bash-std"
 
 
-function install_scripts
+function install_python_module
 {
-    for script in $hq/scripts/*; do
-        if (( options_dry_run )); then
-            say "$script -> $options_install_prefix/bin/"
-        elif [[ -w $options_install_prefix  ]]; then
-            cp $_verbose $script $options_install_prefix/bin/
-        elif (( options_no_sudo )); then
-            say "--no-sudo given but install prefix ($options_install_prefix) is not writable"
-        else
-            sudo cp $_verbose $script $options_install_prefix/bin/
-        fi
-    done
+    python3 -m pip install --upgrade "$hq/python/" ||
+        die "python3-pip is required to install HQ Python module"
 }
 
 
@@ -291,14 +287,9 @@ function install_packages
 }
 
 
-function install_pip_packages
-{
-    xargs python3 -m pip install < "$hq/etc/pip-packagelist"
-}
-
-
 function install_cpp_manpages
 {
+    # Install manpages for C++ std lib
     if (( options_no_sudo )); then
         die "Installing manpages requires sudo"
     fi
@@ -465,9 +456,8 @@ function options
 --install-fonts; Unpack fantasque (noLoopK) and FiraCode (ligatures) to /usr/share/fonts/fantasque
 --install-oh-my-zsh; Self explanatory
 --install-packages; Install all packages in etc/packagelist that aren't commented out
---install-pip-packages; Install all pip packages in etc/pip-packagelist
 --install-prefix,-p=<path>; default=$HOME/.local; Install prefix for scripts
---install-scripts,-i; Copy everything in 'scripts' to --install-prefix
+--install-python-module; Install HQ Python module, including scripts and pip installs
 --move-existing; If <file> exists, move it to <file>.old
 --no-sudo; Don't do anything that requires sudo
 --standard; Do the standard bootstrap operations: ${STANDARD_OPERATIONS[@]}
@@ -486,8 +476,7 @@ STANDARD_OPERATIONS=(
     --configure-tmux
     --configure-zsh
     --install-oh-my-zsh
-    --install-pip-packages
-    --install-scripts
+    --install-python-module
     --move-existing
     --no-sudo
     --symlink-dots
@@ -495,10 +484,13 @@ STANDARD_OPERATIONS=(
 )
 
 
-bash-std-application-init "$@" < <( options ) || die "failed"
+# Parse args and set verbose variables
+bash-std-application-init "$@" < <( options ) ||
+    die "Failed to parse command line args"
 bash-std-set-verbose
 
 
+# For standard install, set variables that would be set by command line args
 if (( options_standard )); then
     for operation in "${STANDARD_OPERATIONS[@]}"; do
         eval "$(arg_name_to_var_name "$operation")=1"
@@ -506,6 +498,8 @@ if (( options_standard )); then
     done
 fi
 
+
+# Run desired setup routines
 (( options_install_oh_my_zsh ))           && install_oh_my_zsh
 (( options_configure_cctv ))              && configure_cctv
 (( options_configure_emacs ))             && configure_emacs
@@ -519,11 +513,11 @@ fi
 (( options_symlink_systemd_services ||
        options_enable_systemd_services )) && symlink_systemd_services
 (( options_symlink_vi ))                  && symlink_vi
-(( options_install_scripts ))             && install_scripts
+(( options_install_python_module ))       && install_python_module
 (( options_autostart_abyss_wireguard ))   && autostart_abyss_wireguard
 (( options_update_package_list ))         && update_package_list
 (( options_install_packages ))            && install_packages
-(( options_install_pip_packages ))        && install_pip_packages
 (( options_install_cpp_manpages ))        && install_cpp_manpages
+
 
 exit 0
