@@ -50,7 +50,7 @@ xset r rate 250 50 &!
 # $HOME/.local/bin/configure-xinput
 
 # Enable tap to click
-xinput set-prop 12 371 1
+xinput set-prop 12 372 1
 
 # map caps-lock to super - only required for IBM Model M. Don't want this for Displaywriter
 # setxkbmap -option caps:super &!
