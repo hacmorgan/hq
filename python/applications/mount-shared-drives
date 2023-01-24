@@ -155,14 +155,18 @@ function monitor_mountpoints
 if (( options_abyss )); then
     mount_abyss_drives
 else
-    if (( options_local )); then
-        _mount "george"
-        saymore "mounting george"
-    elif (( options_remote )); then
-        _mount "george_remote"
-    else
-        _mount "$( where-is-george )"
-    fi
+    # For now everything goes via diego
+    _mount diego
+
+    # Once george is revived we can revisit this
+    # if (( options_local )); then
+    #     _mount "george"
+    #     saymore "mounting george"
+    # elif (( options_remote )); then
+    #     _mount "george_remote"
+    # else
+    #     _mount "$( where-is-george )"
+    # fi
 fi
 
 ## this just seems to hang
