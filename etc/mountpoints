@@ -2,7 +2,8 @@
 /mnt/projects:/home/hamish/projects
 /mnt/pond:/mnt/pond
 /mnt/rapid:/mnt/rapid
-/mnt/vault:/mnt/vault
 /mnt/scratch:/home/hamish/scratch
+/mnt/vault:/mnt/vault
 /mnt/storage:/mnt/storage
 /mnt/tank:/mnt/tank
+/mnt/worktmp:/home/hmo/tmp
