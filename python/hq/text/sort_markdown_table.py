@@ -20,7 +20,7 @@ where
     <input-path> is the path of the file created in step 1
     <output-path> is the path where this script will write the sorted table
 
-Author:  Hamish Morgan
+Authors: Hamish Morgan, Alex Fraser
 Date:    24/02/2023
 License: BSD
 """
