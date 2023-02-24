@@ -118,7 +118,7 @@ alias backlight_min='sudo bash -c "echo 0 > /sys/class/backlight/amdgpu_bl0/brig
 alias enzovnc='ssh enzo systemctl --user restart x0vncserver && remmina -c $HOME/.local/share/remmina/group_vnc_enzo-himself_10-0-0-72-2.remmina'
 alias gca='git commit -a -v'
 alias gcp='git cherry-pick'
-alias gpu='gp || gp --set-upstream origin "$(git branch --show-current)"'
+alias gpu='gp --set-upstream origin "$(git branch --show-current)"'
 
 
 #################
