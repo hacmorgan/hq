@@ -88,6 +88,11 @@ source $ZSH/oh-my-zsh.sh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 
+# Source ROS if installed
+ROS_SETUP=/opt/ros/noetic/setup.zsh
+[[ ! -e $ROS_SETUP ]] || source $ROS_SETUP
+
+
 #################
 #    ALIASES    #
 #################
