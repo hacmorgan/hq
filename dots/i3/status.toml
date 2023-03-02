@@ -36,15 +36,15 @@ format = " $barchart $utilization $frequency"
 [[block]]
 block = "pacman"
 interval = 600
-format = "{pacman} updates available"
-format_singular = "{pacman} update available"
-format_up_to_date = "system up to date"
+format = " $pacman updates available"
+format_singular = " $pacman update available"
+format_up_to_date = " system up to date"
 critical_updates_regex = "(linux |linux-lts|linux-zen)"
 
 [[block]]
 block = "net"
 device = "wlp3s0"
-format = "{ssid} {signal_strength} {ip} {speed_up} {speed_down}"
+format = " $icon $ssid / $signal_strength / $ip / $speed_up ^icon_net_up $speed_down ^icon_net_down"
 interval = 5
 
 [[block]]
@@ -59,7 +59,7 @@ invert_icons = true
 [[block]]
 block = "battery"
 interval = 10
-format = "{percentage} {time}"
+format = " $icon $percentage $time"
 
 [[block]]
 block = "time"
