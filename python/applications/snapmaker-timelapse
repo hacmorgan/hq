@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+
+##  snapmaker-timelapse - save images as a timelapse
+
+
+source "$(type -p bash-std)"
+
+
+CAPTURE_DIR=$HOME/tmp/.snapmaker_timelapse
+DEVICE=2
+TIMELAPSE_PERIOD=30
+NUM_IMAGES=$(( 33 * 60 * 60 / TIMELAPSE_PERIOD ))  # 33 hr print
+
+
+function prepare_dirs
+{
+    mkdir -pv $CAPTURE_DIR
+}
+
+
+function timestamp
+{
+    date --iso-8601=seconds | sed -e 's#+.*##' -e 's#[-:]##g'
+}
+
+
+function capture_images
+{
+    function capture_image
+    {
+        fswebcam --device v4l2:/dev/video${DEVICE} \
+                 --jpeg 95 \
+                 --set resolution=640x320 \
+                 "$CAPTURE_DIR/$(timestamp).jpg"
+    }
+
+    for _ in $(seq $NUM_IMAGES); do
+        capture_image
+        sleep $TIMELAPSE_PERIOD
+    done
+}
+
+
+function main-run
+{
+    prepare_dirs &&
+        capture_images
+}
+
+
+main-run
