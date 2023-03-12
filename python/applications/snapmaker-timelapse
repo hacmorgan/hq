@@ -9,7 +9,7 @@ source "$(type -p bash-std)"
 
 function prepare_dirs
 {
-    mkdir -pv $CAPTURE_DIR
+    mkdir -pv $options_capture_dir
 }
 
 
@@ -26,7 +26,7 @@ function capture_images
         fswebcam --device v4l2:/dev/video${options_v4l2_device} \
                  --jpeg 95 \
                  --set resolution=640x320 \
-                 "$CAPTURE_DIR/$(timestamp).jpg"
+                 "$options_capture_dir/$(timestamp).jpg"
     }
 
     # Compute numbver of images to capture
