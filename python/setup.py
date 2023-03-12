@@ -7,6 +7,7 @@ Install HQ Python module
 
 
 from distutils.core import setup
+from pathlib import Path
 
 
 setup(
@@ -19,24 +20,7 @@ setup(
     packages=[
         "hq.calculators",
     ],
-    scripts=[
-        "applications/backup-system",
-        "applications/bash-std",
-        "applications/branchify-ticket",
-        "applications/clean-tmp",
-        "applications/comma-help",
-        "applications/dmenu-custom",
-        "applications/em",
-        "applications/gegl-cat",
-        "applications/mount-shared-drives",
-        "applications/oom-kill-first",
-        "applications/rotate-speakers",
-        "applications/sdc",
-        "applications/snapmaker-status",
-        "applications/update-git-repos",
-        "applications/where-is-george",
-        "applications/ytctl",
-    ],
+    scripts=list(map(str, Path("applications").iterdir())),
     install_requires=[
         "jedi-language-server",
         "pylint",
