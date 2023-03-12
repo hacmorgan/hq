@@ -7,12 +7,6 @@
 source "$(type -p bash-std)"
 
 
-CAPTURE_DIR=$HOME/tmp/.snapmaker_timelapse
-DEVICE=2
-TIMELAPSE_PERIOD=30
-NUM_IMAGES=$(( 33 * 60 * 60 / TIMELAPSE_PERIOD ))  # 33 hr print
-
-
 function prepare_dirs
 {
     mkdir -pv $CAPTURE_DIR
@@ -29,16 +23,31 @@ function capture_images
 {
     function capture_image
     {
-        fswebcam --device v4l2:/dev/video${DEVICE} \
+        fswebcam --device v4l2:/dev/video${options_v4l2_device} \
                  --jpeg 95 \
                  --set resolution=640x320 \
                  "$CAPTURE_DIR/$(timestamp).jpg"
     }
 
-    for _ in $(seq $NUM_IMAGES); do
+    # Compute numbver of images to capture
+    num_images=$(( options_print_time * 60 * 60 / options_timelapse_period ))
+
+    # Capture images
+    for _ in $(seq $num_images); do
         capture_image
-        sleep $TIMELAPSE_PERIOD
+        sleep $options_timelapse_period
     done
+}
+
+
+function options
+{
+    cat <<EOF
+--capture-dir=<path>; default=$HOME/tmp/snapmaker-timelapse; Directory to save images to
+--v4l2-device=<id>; default=2; Which camera device to use (typically: integrated webcam = 0, USB webcam = 2)
+--timelapse-period=<seconds>; default=30; Time between timelapse image captures
+--print-time,-p=<hours>; Time required for print to complete
+EOF
 }
 
 
@@ -48,5 +57,9 @@ function main-run
         capture_images
 }
 
+
+# Parse args and set verbose variables
+bash-std-application-init "$@" < <( options ) ||
+    die "Failed to parse command line args"
 
 main-run
