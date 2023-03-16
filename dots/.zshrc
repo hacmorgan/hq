@@ -88,6 +88,9 @@ source $ZSH/oh-my-zsh.sh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+# Source ROS if installed
+ROS_SETUP=/opt/ros/noetic/setup.zsh
+[[ ! -e $ROS_SETUP ]] || source $ROS_SETUP
 
 # Allow use of the `nvm` command (from the AUR)
 source /usr/share/nvm/init-nvm.sh
