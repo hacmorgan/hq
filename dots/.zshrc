@@ -131,6 +131,7 @@ alias gpu='gp --set-upstream origin "$(git branch --show-current)"'
 path=( "$HOME/devtools/bin" "$HOME/.cargo/bin" "$HOME/.local/bin" "/usr/local/cuda/bin" $path )
 export PATH
 
+typeset -T LD_LIBRARY_PATH ld_library_path :
 ld_library_path=( "$HOME/.local/lib" "/usr/local/cuda/lib64" $ld_library_path )
 export LD_LIBRARY_PATH
 
