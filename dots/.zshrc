@@ -154,7 +154,9 @@ alias backlight_min='sudo bash -c "echo 1 > /sys/class/backlight/intel_backlight
 path=( "$HOME/devtools/bin" "$HOME/.cargo/bin" "$HOME/.local/bin" "/usr/local/cuda/bin" $path )
 export PATH
 
+# Tie $ld_library_path and $LD_LIBRARY_PATH together, like $path and $PATH
 typeset -T LD_LIBRARY_PATH ld_library_path :
+
 ld_library_path=( "$HOME/.local/lib" "/usr/local/cuda/lib64" $ld_library_path )
 export LD_LIBRARY_PATH
 
