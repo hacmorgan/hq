@@ -128,11 +128,11 @@ alias gpu='gp --set-upstream origin "$(git branch --show-current)"'
 #################
 #    EXPORTS    #
 #################
-path=( "$HOME/devtools/bin" "$HOME/.local/bin" $path )
+path=( "$HOME/devtools/bin" "$HOME/.cargo/bin" "$HOME/.local/bin" "/usr/local/cuda/bin" $path )
 export PATH
 
-# ld_library_path=( "$HOME/.local/lib" $ld_library_path )
-export LD_LIBRARY_PATH="$HOME/.local/lib"
+ld_library_path=( "$HOME/.local/lib" "/usr/local/cuda/lib64" $ld_library_path )
+export LD_LIBRARY_PATH
 
 export EDITOR="/usr/bin/nvim"
 
