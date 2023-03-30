@@ -31,7 +31,6 @@ critical_swap = 95
 [[block]]
 block = "net"
 device = "wlp0s20f3"
-format = "{ssid} {signal_strength} {ip} {speed_up} {speed_down}"
 interval = 5
 
 [[block]]
@@ -51,7 +50,6 @@ invert_icons = true
 [[block]]
 block = "battery"
 interval = 10
-format = "{percentage} {time}"
 
 [[block]]
 block = "time"
