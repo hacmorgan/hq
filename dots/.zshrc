@@ -145,8 +145,8 @@ export ALTERNATE_EDITOR=""
 
 export TERM="xterm-256color"
 
-# Set python's debugger as ipython
-export PYTHONBREAKPOINT='IPython.core.debugger.set_trace'
+# # Set python's debugger as ipython
+# export PYTHONBREAKPOINT='IPython.core.debugger.set_trace'
 
 # AWS Credentials
 export ABYSS_AWS_ENVFILE="$HOME/.aws/credentials.env"
