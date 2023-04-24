@@ -49,13 +49,6 @@ xset r rate 250 50 &!
 # map caps-lock to super - only required for IBM Model M. Don't want this for Displaywriter
 # setxkbmap -option caps:super &!
 
-# start the emacs server. disown so that exiting x session doesn't kill emacs
-emacs --daemon &!
-
-# constrain wacom pad to rightmost screen
-xsetwacom --set $( xsetwacom list devices | grep stylus | sed 's#.*id: \([0-9]*\).*#\1#' ) \
-          maptooutput 1920x1080+1920+0
-
 # start barrier server
 barriers --config $HOME/.config/barrier/diego-enzo-george.conf \
          --disable-crypto &!
