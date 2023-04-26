@@ -3,4 +3,5 @@
 .xsessionrc
 .zprofile
 .zshrc
+.vimrc
 .flake8

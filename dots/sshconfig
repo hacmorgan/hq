@@ -1,43 +1,38 @@
-
-Host bruno_abyss
+Host bisous
+    HostName 192.168.0.61
     User hamish
-    HostName 10.137.6.194
 
-Host thinkpad
+Host bisous_wifi_em
+    HostName 192.168.0.131
     User hamish
-    HostName 10.0.0.80 
 
-Host pelicomp
+Host leroy
+    HostName 192.168.0.247
     User hamish
-    HostName 10.0.0.91
 
-Host pelicomp_eth
+Host eddie
+    HostName 10.0.0.152
     User hamish
-    HostName 10.0.0.90
 
-Host oxie_tower_pi
-    User pi
-    HostName 192.168.0.172
-    
-Host processor
-	User processor
-	HostName 10.0.0.86
-
-Host cse
-    User z5115698
-    Hostname cse.unsw.edu.au
-
-Host freebsd
+Host skoopi
+    HostName 192.168.0.90
     User hamish
-    Hostname 10.0.0.83
+
+Host diego
+    User hmo
+    HostName 192.168.0.140
+
+Host diego_wifi
+    User hmo
+    HostName 192.168.0.37
 
 Host enzo
     User hamish
-    Hostname 10.0.0.72
+    Hostname 192.168.0.95
 
 Host george
     User hamish
-    Hostname 10.0.0.39
+    Hostname 192.168.0.50
 
 Host george_remote
     User hamish
@@ -45,43 +40,51 @@ Host george_remote
 
 Host collab
     User collab
-    Hostname 10.0.0.39
+    Hostname 192.168.0.50
 
 Host hippo
-	HostName 10.137.4.1
-	User hmo
+    HostName 10.137.4.1
+    User hmo
 
 Host rhino
-	HostName 10.137.4.2
-	User hmo
+    HostName 10.137.4.2
+    User hmo
 
 Host dingo
-	HostName 10.137.4.3
-	User hmo
+    HostName 10.137.4.3
+    User hmo
 
 Host gecko
-	HostName 10.137.4.4
-	User hmo
+    HostName 10.137.4.4
+    User hmo
 
 Host buffalo
-	HostName 10.137.4.5
-	User hmo
+    HostName 10.137.4.5
+    User hmo
 
 Host dodo
-	HostName 10.137.4.6
-	User hmo
+    HostName 10.137.4.6
+    User hmo
 
 Host bronco
-	HostName 10.137.4.8
-	User hmo
+    HostName 10.137.4.8
+    User hmo
 
 Host burrito
-	HostName 10.137.4.9
-	User hmo
+    HostName 10.137.4.9
+    User hmo
 
 Host taco
-	HostName 10.137.4.10
-	User hmo
+    HostName 10.137.4.10
+    User hmo
+
+Host haggis
+    HostName 10.137.4.11
+    User hmo
+
+Host laeeb
+    HostName 10.137.4.12
+    User hmo
 
 Host quickboy
     HostName 10.137.4.253
@@ -96,25 +99,10 @@ Host bastion
     User hmo
 
 Host hihi
-	HostName 10.10.5.4
-	User hamish
-
-Host bisous
-    HostName 10.0.0.124
+    HostName 10.10.5.4
     User hamish
 
-Host bisous_wifi_em
-    HostName 192.168.0.131
+Host bruno_abyss
     User hamish
+    HostName 10.137.6.183
 
-Host bisous_eth
-    HostName 10.0.0.120
-    User hamish
-
-Host leroy
-    HostName 10.0.0.127
-    User hamish
-
-Host eddie
-    HostName 10.0.0.152
-    User hamish

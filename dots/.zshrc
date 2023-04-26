@@ -88,6 +88,9 @@ source $ZSH/oh-my-zsh.sh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 
+# Source ROS if installed
+ROS_SETUP=/opt/ros/noetic/setup.zsh
+[[ ! -e $ROS_SETUP ]] || source $ROS_SETUP
 
 
 #################
@@ -100,6 +103,7 @@ alias p3='python3'
 alias p3m='python3 -m'
 alias p3mp='python3 -m pip'
 alias p3iu='python3 -m pip install --upgrade'
+alias p3ir='python3 -m pip install --requirement'
 alias p3iue='python3 -m pip install --upgrade --editable'
 alias p2='python2'
 alias pm='pulsemixer'
@@ -120,15 +124,17 @@ alias display_off='xset -display :0.0 dpms force off'
 alias display_on='xset -display :0.0 dpms force on'
 alias gca='git commit -a -v'
 alias gcp='git cherry-pick'
+alias gpu='gp --set-upstream origin "$(git branch --show-current)"'
 
 
 #################
 #    EXPORTS    #
 #################
-path=( "$HOME/devtools/bin" "$HOME/.local/bin" $path )
+path=( "$HOME/devtools/bin" "$HOME/.cargo/bin" "$HOME/.local/bin" "/usr/local/cuda/bin" $path )
 export PATH
 
-ld_library_path=( "$HOME/.local/lib" $ld_library_path )
+typeset -T LD_LIBRARY_PATH ld_library_path :
+ld_library_path=( "$HOME/.local/lib" "/usr/local/cuda/lib64" $ld_library_path )
 export LD_LIBRARY_PATH
 
 export EDITOR="/usr/bin/nvim"
@@ -141,11 +147,11 @@ export ALTERNATE_EDITOR=""
 
 export TERM="xterm-256color"
 
-# Set python's debugger as ipython
-export PYTHONBREAKPOINT='IPython.core.debugger.set_trace'
+# # Set python's debugger as ipython
+# export PYTHONBREAKPOINT='IPython.core.debugger.set_trace'
 
 # AWS Credentials
 export ABYSS_AWS_ENVFILE="$HOME/.aws/credentials.env"
 
 # mlflow
-export MLFLOW_URI="http://10.137.4.4:5000"
+export MLFLOW_URI="http://10.137.8.100:5000"

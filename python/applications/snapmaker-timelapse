@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+
+
+##  snapmaker-timelapse - save images as a timelapse
+
+
+source "$(type -p bash-std)"
+
+
+PTS_CONSTANT=8
+
+
+function prepare_dirs
+{
+    mkdir -pv "$options_capture_dir"
+}
+
+
+function timestamp
+{
+    date --iso-8601=seconds | sed -e 's#+.*##' -e 's#[-:]##g'
+}
+
+
+function capture_images
+{
+    function capture_image
+    {
+        fswebcam --device "v4l2:/dev/video${options_v4l2_device}" \
+                 --jpeg 95 \
+                 --set resolution=640x320 \
+                 "$options_capture_dir/$(timestamp).jpg"
+    }
+
+    # Compute numbver of images to capture
+    num_images=$(( options_print_time * 60 * 60 / options_timelapse_period ))
+
+    # Capture images
+    for _ in $(seq $num_images); do
+        capture_image
+        sleep $options_timelapse_period
+    done
+}
+
+
+function generate_timelapse
+{
+    # Use ffmpeg to generate a timelapse
+
+    function pts_multiplier
+    {
+        python3 -c "print($PTS_CONSTANT / $options_print_time)"
+    }
+    
+    rm -v "$options_output_path"
+    find "$options_capture_dir" -name "*.jpg" |
+        sort |
+        xargs cat |
+        ffmpeg -i - \
+               -framerate 144 \
+               -filter:v "eq=brightness=0.2:saturation=2.5, transpose=2, setpts=$(pts_multiplier)*PTS" \
+               "$options_output_path"
+}
+
+
+function options
+{
+    cat <<EOF
+--capture-dir=<path>; default=$HOME/tmp/snapmaker-timelapse; Directory to save images to
+--generate-existing,-g; Generate timelapse video from previously captured images (don't capture images first)
+--output-path,-o=<path>; default=$HOME/tmp/timelapse.mp4; Path to write timelapse to
+--print-time,-p=<hours>; Time required for print to complete (required unless -g given)
+--timelapse-period=<seconds>; default=30; Time between timelapse image captures
+--v4l2-device=<id>; default=2; Which camera device to use (typically: integrated webcam = 0, USB webcam = 2)
+EOF
+}
+
+
+function main-run
+{
+    if (( ! options_generate_existing )); then
+        prepare_dirs &&
+            capture_images
+    fi
+    generate_timelapse
+}
+
+
+# Parse args and set verbose variables
+bash-std-application-init "$@" < <( options ) ||
+    die "Failed to parse command line args"
+
+main-run
