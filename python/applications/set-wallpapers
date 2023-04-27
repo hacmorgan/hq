@@ -1,0 +1,5 @@
+#!/bin/sh
+
+feh --bg-fill /home/hamish/src/hq/etc/wallpapers/koth.jpg \
+    --bg-center /home/hamish/src/hq/etc/wallpapers/5YR.jpg \
+    --bg-center /home/hamish/src/hq/etc/wallpapers/eboy_tok.png
