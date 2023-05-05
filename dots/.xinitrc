@@ -46,6 +46,9 @@ feh --bg-center ~/src/hq/etc/wallpapers/eboy_tok.png &!
 # set keyboard params
 xset r rate 250 50 &!
 
+# # Configure xinput
+# $HOME/.local/bin/configure-xinput
+
 # map caps-lock to super - only required for IBM Model M. Don't want this for Displaywriter
 # setxkbmap -option caps:super &!
 
