@@ -4,6 +4,15 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  filecolor=magenta,      
+  urlcolor=cyan,
+  pdftitle={Hamish Morgan - Resume},
+  pdfpagemode=FullScreen,
+}
 \setcounter{secnumdepth}{4}
 
 %% \renewcommand{\familydefault}{\sfdefault}  % set font to this nice smooth one
@@ -15,52 +24,55 @@
 \begin{center}
   \Large
   \vspace{0.8cm}
-  \textbf{Hamish Morgan - Resume}\\
+  \textbf{Hamish Morgan}\\
+  \vspace{0.8cm}
+  \large
+  \href{https://github.com/hacmorgan}{GitHub} - ham430@gmail.com - 0407245066
+  
 \end{center}
 
 
 \begin{FlushLeft}
   
-  \section*{Experience}
+  \section{Experience}
   
-  \subsection*{Abyss Solutions (Sep 2018 - Present)}
+  \subsection{Abyss Solutions (Sep 2018 - Present)}
   
-  \subsubsection*{Machine Learning Software Engineer (Oct 2021 - Present)}
-  Designing and implementing advanced perception algorithms, e.g.
+  \subsubsection{Machine Learning Software Engineer (Oct 2021 - Present)}
+  Designed and implemented advanced perception algorithms, and maintained the ML teams' tools and repository. \\
+
   \begin{itemize}
-  \item Advanced usage of Tensorflow ML Python library
-  \item Design and maintenance of high level ML tools for ML team
-  \item Design of performant high-level (e.g. instancewise) ML metrics
-  \item Design and implementation of MLOPS \& continuous learning systems
-  \item Implementation of CI/CD pipelines, unit tests, etc. for ML team repository
+  \item \textbf{Advanced usage of Tensorflow ML Python library and strong knowledge of CUDA}. Used custom training loops to allow for complex model architectures, and custom logging for better insights into model performance during training. Also maintained tools for compiling custom Tensorflow layers over multiple versions of Tensorflow and CUDA. \\
+  \item \textbf{Design and maintenance of performant high level tools for ML team}. Created easy to use visualisation tools for engineers and automated pipelines, developed high level (e.g. instancewise) metrics for ML systems, as well as various performant IO and data wrangling tools. \\
+  \item \textbf{Design and implementation of MLOPS \& continuous learning systems}. Co-designed and developed a continuous learning system to pull new data and retrain an anomaly detection model, with human input only required to verify the model's performance and to approve moving it to production, assuming it improved.
+  \item \textbf{Implementation of CI/CD pipelines, unit tests, etc. for ML team repository}. Maintined CI pipelines (using SemaphoreCI) running linters and unit tests to enforce code standards, and CD pipelines (also using SemaphoreCI) building docker images with code ready to run, in ML team and common software team repositories.
   \end{itemize}
   
-  \subsubsection*{Robotics Software Engineer (Jun 2019 - Oct 2021)}
-  Designing, maintaining, and running bulk post-processing pipelines, e.g.
+  \subsubsection{Robotics Software Engineer (Jun 2019 - Oct 2021)}
+  Designed, maintained, and executed bulk post-processing pipelines for data collected by robotics team.
   \begin{itemize}
-  \item Advanced use of photogrammetry tool Python API for complex, dimensionally accurate reconstructions
-  \item Design and maintenance of high level tools for robotics engineers to run photogrammetry pipelines
-  \item Design of data validation tools and other robotics team enablers
-  \item Usage of general software development best practices
+  \item \textbf{Advanced use of photogrammetry tool Python API for complex, dimensionally accurate reconstructions}, allowing a highly complex workflow to scale with increasingly large and varied projects.
+  \item \textbf{Design and maintenance of high level tools for photogrammetry pipelines}, allowing common workflows (e.g. camera calibration) to be done by robotics engineers alone.
+  \item \textbf{Design of other data processing, visualisation and validation tools, and other robotics team enablers}, including sonar and lidar reconstruction tools, video annotation tools, in-field validation tools, etc. Additionally, maintained a system-wide installation of processing tools on robotics team compute server.
   \end{itemize}
   
-  \subsubsection*{Robotics Engineer (Sep 2018 - Jun 2019)}
-  Working on hardware design and fabrication, e.g.
+  \subsubsection{Robotics Engineer (Sep 2018 - Jun 2019)}
+  Working on hardware design and fabrication.
   \begin{itemize}
-  \item Component design, fabrication, and testing for robotic platforms (CAD, 3D printing, aluminium extrusion, etc)
-  \item Electrical and control system prototyping and fabrication (populating circuitboards, driving thrusters, general arduino use)
-  \item Some field experience (attended an inspection at Adelaide Dam)
+  \item \textbf{Component design, fabrication, and testing for robotic platforms}, e.g. designed components with CAD software (OnShape) and 3D printed them or fabricated with aluminium extrusion and other commonly available materials. Also designed and fabricated testing rigs for camera and lighting systems for data collection, then carried out tests, compiling and reporting results to robotics team.
+  \item \textbf{Electrical and control system prototyping and fabrication}, e.g. populating circuitboards, driving thrusters, general arduino use. Designed and fabricated an autofocus system for a stereo machine vision camera system using an arduino and 3D printed parts.
+  \item \textbf{Some field experience} - attended an inspection at Adelaide Dam.
   \end{itemize}
 
-  \subsection*{Beacon Lighting (Jan 2016 - Apr 2019)}
+  \subsection{Beacon Lighting (Jan 2016 - Apr 2019)}
   Retail sales associate position
 
-  \subsection*{Dickson's Music (Nov 2013 - Aug 2014)}
+  \subsection{Dickson's Music (Nov 2013 - Aug 2014)}
   Retail sales associate position
   
-  \section*{Education}
+  \section{Education}
   \begin{itemize}
-  \item Bachelor of Engineering (Hons) in Mechatronic Engineering - UNSW
+  \item Bachelor of Engineering (Hons) in Mechatronic Engineering - UNSW. Honours thesis project attempted to detect vegetation in need of water/nutrients from a moving platform.
   \item Certificate 2 in Video Game Programming - AIE
   \item Higher School Certificate - Shore School 
   \end{itemize}

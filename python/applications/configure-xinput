@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+
+# Configure xinput (natural scrolling, tap to click, etc)
+
+
+set -o errexit
+
+
+SETTINGS=(
+    "Tapping Enabled"
+    "Natural Scrolling Enabled"
+)
+
+
+function device_id
+{
+    # Get device ID by device name
+    local device_name_regex="$1"
+    xinput list |
+        grep --ignore-case "$device_name_regex" |
+        sed 's#.*id=\([0-9]*\).*#\1#'
+}
+
+
+function setting_id
+{
+    # Get setting ID by device ID and setting name
+    local device_id="$1"
+    local setting_name_regex="$2"
+    xinput list-props "$device_id" |
+        grep --ignore-case "$setting_name_regex" |
+        head -n1 |
+        sed 's#.*(\([0-9]*\)).*#\1#'
+}
+
+
+function set_setting
+{
+    # Enable given setting
+    local device_id="$1"
+    local setting_id="$2"
+    xinput set-prop "$device_id" "$setting_id" 1
+}
+
+
+touchpad_id="$(device_id "Touchpad")"
+for setting_name_regex in ${SETTINGS[@]}; do
+    set_setting "$touchpad_id" "$(setting_id "$touchpad_id" "$setting_name_regex")"
+done

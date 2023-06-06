@@ -42,6 +42,14 @@ Host collab
     User collab
     Hostname 192.168.0.50
 
+Host kopi
+    User pi
+    Hostname 192.168.0.153
+
+Host kopi_eth
+    User pi
+    Hostname 192.168.0.171
+
 Host hippo
     HostName 10.137.4.1
     User hmo
