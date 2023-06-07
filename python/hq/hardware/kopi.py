@@ -53,6 +53,7 @@ CLEAR = b"\x1a"
 
 BYTESIZE = 7
 BAUDRATE = 9600
+BAUDRATE = 19200
 STOPBITS = 2
 WORKING_DIR = "/home/pi"
 DB_PATH = "/home/pi/src/hq/etc/kopi.json"
@@ -90,8 +91,7 @@ SPLASH_SCREEN = """
                           @@@@@@@@@@@@@@            @@@@     ,@@@@@@@
                               @@@@@@@@@  r: recipes  @@@@      @@@@@
                                  ,@@@@@@            @@@@@@@     ,*
-                                       @@@@@@@@@@@@@@@@@@@@@
-"""
+                                       @@@@@@@@@@@@@@@@@@@@@"""
 
 
 class Kopi:
@@ -138,7 +138,7 @@ class Kopi:
         Save database to json file
         """
         with open(DB_PATH, mode="w", encoding="utf-8") as db_fd:
-            json.dump(self.database, db_fd)
+            json.dump(self.database, db_fd, indent=4)
 
     def main(self) -> None:
         """
@@ -206,9 +206,12 @@ class Kopi:
             # Add current key
             elif char == CTRL_A:
                 db[highlighted_option] = self.read_field(
-                    prompt=f"{location}.{highlighted_option}: ",
+                    prompt=f"{location}.{highlighted_option}: \n\n",
                     multiline=True,
-                    prior=db[highlighted_option] if highlighted_option in db else None,
+                    prior=[db[highlighted_option]]
+                    if highlighted_option in db
+                    else None,
+                    prior_idx=-1,
                 )
                 self.save_db()
                 self.query_db(db=db, location=location)
@@ -233,9 +236,33 @@ class Kopi:
                     insert_idx -= 1
                 else:
                     insert_idx = -1
+
             elif char == RIGHT_KEY:
                 if insert_idx is not None and insert_idx < -1:
                     insert_idx += 1
+                else:
+                    insert_idx = None
+
+            elif char == LEFT_CURSOR:  # ctrl-h - jump back word
+                if insert_idx is not None:
+                    insert_idx = -1
+                if abs(insert_idx) >= len(chars):
+                    continue
+                chars_before = b"".join(chars[:insert_idx])
+                space_idx = chars_before.rfind(b" ")
+                if space_idx > -1:
+                    distance_to_word = len(chars_before) - space_idx
+                    insert_idx -= distance_to_word
+                else:
+                    insert_idx = -len(chars)
+
+            elif char == RIGHT_CURSOR:  # ctrl-l - jump forward word
+                if insert_idx is None or insert_idx >= -1:
+                    continue
+                chars_after = b"".join(chars[insert_idx:])
+                distance_to_word = chars_after.find(b" ")
+                if space_idx > -1:
+                    insert_idx += distance_to_word
                 else:
                     insert_idx = None
 
@@ -294,18 +321,22 @@ class Kopi:
         )
 
     def read_field(
-        self, prompt: str, multiline: bool = False, prior: Optional[str] = None
+        self,
+        prompt: str,
+        multiline: bool = False,
+        prior: Optional[List[str]] = None,
+        prior_idx: Optional[int] = None,
     ) -> str:
         """
         Read a bunch of data for a particular field
         """
-        header = b"\n\n" + prompt.encode() + b"\n"
+        header = b"\n\n" + prompt.encode()
         if multiline:
             header = b"\n\n" + b"ctrl-w to save" + header
         self.ser.write(insert_cr(header))
         chars = []
-        if prior is not None:
-            chars = [char.encode() for char in prior]
+        if None not in (prior, prior_idx) and len(prior) > 0:
+            chars = [char.encode() for char in prior[prior_idx]]
             self.ser.write(insert_cr(b"".join(chars)))
         insert_idx = None
         redraw = False
@@ -315,7 +346,9 @@ class Kopi:
             char = self.ser.read()
 
             if char == CTRL_C:
-                return self.read_field(prompt=prompt)
+                return self.read_field(
+                    prompt=prompt, multiline=multiline, prior=prior, prior_idx=prior_idx
+                )
 
             elif char == CTRL_Q:
                 self.main()
@@ -333,8 +366,9 @@ class Kopi:
             elif multiline and char == b"\r":
                 chars.append(b"\n")
                 self.ser.write(b"\r\n")
+                redraw=True
 
-            elif char in (LEFT_KEY, LEFT_CURSOR):
+            elif char == LEFT_KEY:
                 if insert_idx is not None:
                     if abs(insert_idx) >= len(chars):
                         continue
@@ -342,12 +376,58 @@ class Kopi:
                 else:
                     insert_idx = -1
                 redraw = True
-            elif char in (RIGHT_KEY, RIGHT_CURSOR):
+            elif char == RIGHT_KEY:
                 if insert_idx is not None and insert_idx < -1:
                     insert_idx += 1
                 else:
                     insert_idx = None
                 redraw = True
+
+            elif char == LEFT_CURSOR:  # ctrl-h - jump back word
+                if insert_idx is None:
+                    insert_idx = -1
+                if abs(insert_idx) >= len(chars):
+                    continue
+                chars_before = b"".join(chars[:insert_idx])
+                space_idx = chars_before.rfind(b" ")
+                if space_idx > -1:
+                    distance_to_word = len(chars_before) - space_idx
+                    insert_idx -= distance_to_word
+                else:
+                    insert_idx = -len(chars)
+                redraw = True
+
+            elif char == RIGHT_CURSOR:  # ctrl-l - jump forward word
+                if insert_idx is None or insert_idx >= -1:
+                    continue
+                chars_after = b"".join(chars[insert_idx:])
+                distance_to_word = chars_after.find(b" ", 1)
+                if distance_to_word > 0:
+                    insert_idx += distance_to_word
+                else:
+                    insert_idx = None
+                redraw = True
+
+            # Up / Down - use a different prior
+            elif (
+                char == UP_KEY and prior
+            ):
+                if prior_idx is not None and abs(prior_idx - 1) > len(prior):  # already at oldest prior
+                    continue
+                    
+                return self.read_field(
+                    prompt=prompt,
+                    multiline=multiline,
+                    prior=prior,
+                    prior_idx=prior_idx - 1 if prior_idx is not None else -1,
+                )
+            elif char == DOWN_KEY and None not in (prior, prior_idx):
+                return self.read_field(
+                    prompt=prompt,
+                    multiline=multiline,
+                    prior=prior,
+                    prior_idx=prior_idx + 1 if prior_idx < -1 else None,
+                )
 
             else:
                 if not char.isalnum() and char not in PERMISSIBLE_CHARS:
@@ -361,6 +441,14 @@ class Kopi:
                     chars.insert(insert_idx, char)
                     redraw = True
 
+                if multiline:
+                    text = b"".join(chars)
+                    last_line_start = text.rfind(b"\n")
+                    if len(text[last_line_start:]) > NCOLS:
+                        chars.insert(last_line_start + NCOLS, b"\n")
+                        if insert_idx is not None and len(chars) + insert_idx < last_line_start:
+                            insert_idx -= 1
+
             if redraw:
                 redraw = False
                 self.clear()
@@ -372,11 +460,16 @@ class Kopi:
                         after_point = b"".join(chars[insert_idx:])
                         lines_before_point = before_point.strip().split(b"\n")
                         lines_after_point = after_point.strip().split(b"\n")
+                        if before_point.endswith(b"\n"):
+                            lines_before_point.append(b"")
+                        if after_point.startswith(b"\n"):
+                            lines_after_point.append(b"")
                         self.ser.write(
                             b"\r"
-                            + UP_CURSOR * len(lines_after_point)
+                            + UP_CURSOR * (len(lines_after_point) - 1)
                             + RIGHT_CURSOR * len(lines_before_point[-1])
                         )
+                        # breakpoint()
                     else:
                         self.ser.write(
                             LEFT_CURSOR
@@ -388,16 +481,20 @@ class Kopi:
         Run very basic shell commands
         """
         self.clear()
+        commands = []
         while True:
-            self.run_command(command=self.read_field(prompt=self.shell_prompt()))
+            commands.append(self.read_field(prompt=self.shell_prompt(), prior=commands))
+            self.run_command(command=commands[-1])
 
     def python(self) -> None:
         """
         Run basic python commands
         """
         self.clear()
+        commands = []
         while True:
-            self.ser.write(b"\r\n" + str(eval(self.read_field(prompt=">>> "))).encode())
+            commands.append(self.read_field(prompt=">>> ", prior=commands))
+            self.ser.write(insert_cr(b"\n" + str(eval(commands[-1])).encode()))
 
     def run_command(self, command: str) -> None:
         """
