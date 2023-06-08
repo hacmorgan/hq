@@ -124,7 +124,6 @@ alias gca='git commit -a -v'
 alias gcp='git cherry-pick'
 alias gpu='gp --set-upstream origin "$(git branch --show-current)"'
 
-
 #################
 #    EXPORTS    #
 #################
