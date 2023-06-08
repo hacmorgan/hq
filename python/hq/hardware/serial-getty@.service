@@ -32,7 +32,8 @@ Before=rescue.service
 # option to preserve environment (-p), followed by '--' for safety, and then
 # the entered username.
 #ExecStart=-/sbin/agetty -o '-p -- \\u' --keep-baud 115200,38400,9600 %I $TERM
-ExecStart=-/sbin/agetty -o '-p -- \\u' 9600 %I vt52
+#ExecStart=-/sbin/agetty -o '-p -- \\u' --local-line 9600 %I vt51
+ExecStart=-/sbin/agetty -o '-p -- \\u' --local-line 19200 %I vt52
 Type=idle
 Restart=always
 UtmpIdentifier=%I
