@@ -1,0 +1,36 @@
+{
+    "grind settings": {
+        "espresso": {
+            "dukes": {
+                "guatemala": {
+                    "el naranjo": "cold: 4.0\nhot: 2.8"
+                }
+            }
+        },
+        "filter": {
+            "gabriel": {
+                "burundi": {
+                    "nemba": "(natural)\n- 55 is okay but a bit too coarse\n- at 45, took 1:45, but fairly strong flavour"
+                }
+            }
+        }
+    },
+    "recipes": {
+        "pourover": {
+            "v60": "24g coffee ground coarsely\n20g sugar\n400g water at 96C\n- 48g bloom\n- 288g fast\n- 400g slow"
+        },
+        "espresso": {},
+        "milk based": {
+            "mega coffee": "- 6 * 40g double shot espressos\n- 1800g milk (6 * 300g)\n- 120g nesquik (6 * 20g)"
+        },
+        "alcoholic": {
+            "espresso martini": "- 60g vodka\n- 50g kahlua\n- 10g maple syrup\n- 36g double espresso\n",
+            "genshu (plum liquer) cocktail": "- 60g genshu\n- 30g whisky (Suntory Toki is best)\n- 20g lemon lime bitters cordial (red elk)\n- 60g yuzu kochi (alcoholic soda, Nippon Chuhi brand)\non lots crushed ice"
+        },
+        "tea": {
+            "black": {
+                "english breakfast (Larry's)": "- 1.3g tea leaves / 100g water (85C)\n- 4.5min\n\nPour initial boiling water over tea leaves to bloom, then pour\nremaining water in teapot, then steep wet leaves"
+            }
+        }
+    }
+}

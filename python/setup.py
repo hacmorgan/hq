@@ -13,7 +13,7 @@ from pathlib import Path
 setup(
     name="hq",
     version="1.0",
-    description="Genric personal python library",
+    description="Generic personal python library",
     author="Hamish Morgan",
     author_email="ham430@gmail.com",
     url="http://github.com/hacmorgan/hq",
