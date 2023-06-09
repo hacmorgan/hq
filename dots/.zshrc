@@ -123,6 +123,7 @@ alias display_on='xset -display :0.0 dpms force on'
 alias gca='git commit -a -v'
 alias gcp='git cherry-pick'
 alias gpu='gp --set-upstream origin "$(git branch --show-current)"'
+alias kopi='pushd ~/src/hq/etc/kopi'
 
 #################
 #    EXPORTS    #

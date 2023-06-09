@@ -4,9 +4,6 @@
 
 """
 Coffee reference and calculation tool
-
-This command almost completely fixes agetty (at least CR-LF), but needs to be run before every command :(
-sudo stty -F /dev/ttyUSB0 cs7
 """
 
 
@@ -100,7 +97,7 @@ class Kopi:
     """
 
     def __init__(
-        self, serial_connection: serial.Serial, working_dir: str = WORKING_DIR
+        self,
     ) -> None:
         """
         Create the interface
@@ -109,22 +106,7 @@ class Kopi:
             serial_connection: Open serial connection to video terminal
             working_dir: Initial working dir for shell sessions
         """
-        self.ser = serial_connection
-        self.working_dir = working_dir
-        self.chars: List[str] = []
         self.database = self.load_db()
-
-    @staticmethod
-    def open_serial_connection() -> serial.Serial:
-        """
-        Open a serial connection to the video terminal
-
-        Returns:
-            Open serial connection
-        """
-        return serial.Serial(
-            port=PORT, baudrate=BAUDRATE, bytesize=BYTESIZE, stopbits=STOPBITS
-        )
 
     def load_db(self) -> Dict[str, Any]:
         """
@@ -148,7 +130,7 @@ class Kopi:
         self.draw_splash_screen()
 
         while True:
-            mode_char = self.ser.read()
+            mode_char = sys.stdin.read()
 
             if mode_char == CTRL_Q:
                 self.main()
@@ -170,8 +152,8 @@ class Kopi:
         Draw a splash screen with instructions
         """
         self.clear()
-        self.ser.write(insert_cr(SPLASH_SCREEN.encode()))
-        # self.ser.write(BEEP)
+        sys.stdout.write(insert_cr(SPLASH_SCREEN.encode()))
+        # sys.stdout.write(BEEP)
 
     def query_db(self, db: Dict[str, Any], location: str = "") -> None:
         """
@@ -184,10 +166,10 @@ class Kopi:
         insert_idx = None
         while True:
             self.print_options(options=options, location=location)
-            self.ser.write(b"key: " + partial_selection.encode())
+            sys.stdout.write(b"key: " + partial_selection.encode())
             if insert_idx is not None:
-                self.ser.write(LEFT_KEY * abs(insert_idx))
-            char = self.ser.read()
+                sys.stdout.write(LEFT_KEY * abs(insert_idx))
+            char = sys.stdin.read()
 
             # Enter: pull up info on this entry or enter subdict
             if char == b"\r":
@@ -198,9 +180,9 @@ class Kopi:
                     self.clear()
                     self.query_db(db=field, location=f"{location}.{highlighted_option}")
                 else:
-                    self.ser.write(b"\r\n\n" + insert_cr(field.encode()))
-                    self.ser.write(PRESS_ANY_KEY.encode())
-                    self.ser.read()
+                    sys.stdout.write(b"\r\n\n" + insert_cr(field.encode()))
+                    sys.stdout.write(PRESS_ANY_KEY.encode())
+                    sys.stdin.read()
                     self.query_db(db=db, location=location)
 
             # Add current key
@@ -314,9 +296,9 @@ class Kopi:
         Print options in current dict of db
         """
         self.clear()
-        self.ser.write(f"Location: {location}\r\n\n".encode())
-        self.ser.write((DB_CTRLS + "\r\n\n").encode())
-        self.ser.write(
+        sys.stdout.write(f"Location: {location}\r\n\n".encode())
+        sys.stdout.write((DB_CTRLS + "\r\n\n").encode())
+        sys.stdout.write(
             b"Options: \r\n\n> " + "\r\n- ".join(options).encode() + b"\r\n\n"
         )
 
@@ -333,17 +315,17 @@ class Kopi:
         header = b"\n\n" + prompt.encode()
         if multiline:
             header = b"\n\n" + b"ctrl-w to save" + header
-        self.ser.write(insert_cr(header))
+        sys.stdout.write(insert_cr(header))
         chars = []
         if None not in (prior, prior_idx) and len(prior) > 0:
             chars = [char.encode() for char in prior[prior_idx]]
-            self.ser.write(insert_cr(b"".join(chars)))
+            sys.stdout.write(insert_cr(b"".join(chars)))
         insert_idx = None
         redraw = False
 
         while True:
 
-            char = self.ser.read()
+            char = sys.stdin.read()
 
             if char == CTRL_C:
                 return self.read_field(
@@ -365,7 +347,7 @@ class Kopi:
 
             elif multiline and char == b"\r":
                 chars.append(b"\n")
-                self.ser.write(b"\r\n")
+                sys.stdout.write(b"\r\n")
                 redraw=True
 
             elif char == LEFT_KEY:
@@ -436,7 +418,7 @@ class Kopi:
 
                 if insert_idx is None:
                     chars.append(char)
-                    self.ser.write(char)
+                    sys.stdout.write(char)
                 else:
                     chars.insert(insert_idx, char)
                     redraw = True
@@ -452,8 +434,8 @@ class Kopi:
             if redraw:
                 redraw = False
                 self.clear()
-                self.ser.write(insert_cr(header))
-                self.ser.write(insert_cr(b"".join(chars)))
+                sys.stdout.write(insert_cr(header))
+                sys.stdout.write(insert_cr(b"".join(chars)))
                 if insert_idx is not None:
                     if multiline:
                         before_point = b"".join(chars[:insert_idx])
@@ -464,14 +446,14 @@ class Kopi:
                             lines_before_point.append(b"")
                         if after_point.startswith(b"\n"):
                             lines_after_point.append(b"")
-                        self.ser.write(
+                        sys.stdout.write(
                             b"\r"
                             + UP_CURSOR * (len(lines_after_point) - 1)
                             + RIGHT_CURSOR * len(lines_before_point[-1])
                         )
                         # breakpoint()
                     else:
-                        self.ser.write(
+                        sys.stdout.write(
                             LEFT_CURSOR
                             * (abs(insert_idx) if insert_idx is not None else 0)
                         )
@@ -494,7 +476,7 @@ class Kopi:
         commands = []
         while True:
             commands.append(self.read_field(prompt=">>> ", prior=commands))
-            self.ser.write(insert_cr(b"\n" + str(eval(commands[-1])).encode()))
+            sys.stdout.write(insert_cr(b"\n" + str(eval(commands[-1])).encode()))
 
     def run_command(self, command: str) -> None:
         """
@@ -509,28 +491,9 @@ class Kopi:
         stdout_lines = result.stdout.decode().strip().split("\n")
         self.working_dir = stdout_lines[-1]
         print(f"result: {result}")
-        self.ser.write(b"\r\n")
-        self.ser.writelines(line.encode() + b"\r\n" for line in stdout_lines[:-1])
-        self.ser.write(result.stderr)
-
-    def shell_prompt(self) -> str:
-        """
-        Generate shell prompt
-        """
-        return f"\r\n{self.working_dir} :::: "
-
-    def clear(self) -> None:
-        """
-        Clear screen
-        """
-        self.ser.write(CLEAR)
-
-
-def insert_cr(bstr: bytes) -> bytes:
-    """
-    Insert carriage return character before each newline character
-    """
-    return bstr.replace(b"\n", b"\r\n")
+        sys.stdout.write(b"\r\n")
+        sys.stdout.writelines(line.encode() + b"\r\n" for line in stdout_lines[:-1])
+        sys.stdout.write(result.stderr)
 
 
 def main() -> int:
@@ -540,8 +503,7 @@ def main() -> int:
     Returns:
         Exit status
     """
-    with Kopi.open_serial_connection() as ser:
-        Kopi(serial_connection=ser).main()
+    Kopi().main()
 
     return 0
 
