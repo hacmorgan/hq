@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+
+## Lazy way of calling dc
+#
+# n.b. precision and other prior commands are set in ~/.dcrc
+
+
+expr="$@"
+dc -e "$expr p"
