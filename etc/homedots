@@ -1,7 +1,10 @@
 .p10k.zsh
+.bash_aliases
 .tmux.conf
 .xinitrc
 .zprofile
 .zshrc
 .vimrc
 .flake8
+.dcrc
+.bashrc
