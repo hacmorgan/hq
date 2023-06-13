@@ -9,11 +9,11 @@ Coffee reference and calculation tool
 
 import subprocess
 import sys
-from os.path import commonprefix, basename, isdir, expanduser, dirname
-from os import listdir, makedirs
-from pathlib import Path
 from functools import partial
-from typing import List
+from os import listdir, makedirs
+from os.path import basename, commonprefix, dirname, expanduser, isdir
+from pathlib import Path
+from typing import List, Optional
 
 from hq.io import getchar
 
@@ -23,11 +23,13 @@ CLEAR = b"\x0c"
 
 KOPI_DB_DIR = "~/src/hq/etc/kopi/"
 
+PROMPT_LENGTH = 60
+
 
 sh_run = partial(subprocess.run, shell=True)
 
 
-def kopi(input_path: str = KOPI_DB_DIR) -> None:
+def kopi(input_path: str = KOPI_DB_DIR, fuzzy: bool = False) -> None:
     """
     Database
     """
@@ -35,22 +37,24 @@ def kopi(input_path: str = KOPI_DB_DIR) -> None:
     suggestions = []
     while True:
         input_dir = dirname(input_path)
-        makedirs(input_dir, exist_ok=True) 
-        # suggestions = sorted(fuzzy_find(input_chars=input_chars, input_dir=input_dir))
-        suggestions = [
-            entry
-            for entry in listdir(input_dir)
-            if entry.startswith(basename(input_path))
-        ]
-        if len(suggestions) == 1:
-            path = f"{input_dir}/{suggestions[0]}/"
-            if isdir(path):
-                makedirs(path, exist_ok=True)
-                input_path = path
-                continue
+        makedirs(input_dir, exist_ok=True)
+        if fuzzy:
+            input_chars = removeprefix(input_path, prefix=input_dir)
+            suggestions = sorted(
+                fuzzy_find(input_chars=input_chars, input_dir=input_dir)
+            )
+        else:
+            suggestions = [
+                entry
+                for entry in listdir(input_dir)
+                if entry.startswith(basename(input_path))
+            ]
 
         sh_run("clear")
-        print(f"> {input_path[-60:]}")
+        prompt = "> "
+        if len(input_path) > PROMPT_LENGTH:
+            prompt += "..."
+        print(f"{prompt}{input_path[-PROMPT_LENGTH:]}")
         print("\n".join(map(str, suggestions)))
 
         char = getchar()
@@ -73,24 +77,47 @@ def kopi(input_path: str = KOPI_DB_DIR) -> None:
             prefix = commonprefix(suggestions)
             input_path = (
                 f"{input_dir}/{prefix}"
-                if len(prefix) > len(str(input_path))
+                if len(prefix) > len(basename(input_path))
                 else input_path
             )
+            if len(suggestions) == 1:
+                path = f"{input_dir}/{suggestions[0]}/"
+                if isdir(path):
+                    makedirs(path, exist_ok=True)
+                    input_path = path
 
         elif char.isascii():
             input_path = input_path + char.decode()
 
 
-def fuzzy_find(input_chars: bytes, input_dir: str) -> List[bytes]:
+def removeprefix(path: str, prefix: str) -> Optional[str]:
+    """
+    Remove prefix from string
+
+    Args:
+        path: Path to remove prefix from
+        prefix: Prefix to remove from string
+
+    Returns:
+        Path with prefix removed, or None if prefix is not a valid prefix
+    """
+    prefix_size = len(prefix)
+    if path[:prefix_size] != prefix:
+        return None
+    return path[prefix_size:]
+
+
+def fuzzy_find(input_chars: str, input_dir: str) -> List[str]:
     """
     Find matching paths with fzf
     """
     return (
         sh_run(
-            f"cd {input_dir} && fzf -f {input_chars.decode()}",
+            f"cd {input_dir} && fzf -f {input_chars}",
             capture_output=True,
         )
-        .stdout.strip()
+        .stdout.decode()
+        .strip()
         .split()
     )
 
@@ -103,5 +130,5 @@ if __name__ == "__main__":
     #         input_dir = f"{KOPI_DB_DIR}/grind-settings"
     #     elif "recipes".startswith(operation):
     #         input_dir = f"{KOPI_DB_DIR}/recipes"
-    kopi()
+    kopi(fuzzy="-f" in sys.argv)
     sys.exit(0)

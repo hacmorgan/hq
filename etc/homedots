@@ -6,3 +6,5 @@
 .zshrc
 .vimrc
 .flake8
+.dcrc
+.bashrc
