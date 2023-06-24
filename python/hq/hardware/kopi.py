@@ -15,7 +15,7 @@ from os.path import basename, commonprefix, dirname, expanduser, isdir
 from pathlib import Path
 from typing import List, Optional
 
-from hq.io import getchar
+from hq.io_tools import getchar
 
 CTRL_C = b"\x03"
 BACKSPACE = b"\x7f"

@@ -8,7 +8,7 @@ import tty
 import termios
 
 
-def getchar():
+def getchar() -> bytes:
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
     tty.setraw(sys.stdin.fileno())

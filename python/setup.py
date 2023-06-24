@@ -25,5 +25,6 @@ setup(
     install_requires=[
         "pylint",
         "flake8",
+        "numpy>1.20",
     ],
 )
