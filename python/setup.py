@@ -20,6 +20,7 @@ setup(
     packages=[
         "hq",
         "hq.calculators",
+        "hq.hardware",
     ],
     scripts=list(map(str, Path("applications").iterdir())),
     install_requires=[

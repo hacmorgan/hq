@@ -13,6 +13,7 @@ from math import atan2, degrees
 from subprocess import run
 from time import sleep, time
 from typing import Optional
+from pathlib import Path
 
 import cv2
 import numpy as np
@@ -99,24 +100,41 @@ class FlairPressure:
         """
         # Convert image to grayscale
         gray = cv2.cvtColor(src=img, code=cv2.COLOR_BGR2GRAY)
-        # cv2.imwrite(filename="/tmp/gray.png", img=gray)
+        cv2.imwrite(filename="/tmp/gray.png", img=gray)
 
         # Blur image to optimise thresholding performance
         blur = cv2.GaussianBlur(src=gray, ksize=(5, 5), sigmaX=0)
 
+        # Increase contrast
+        alpha = 1.2
+        beta = -20
+        blur = np.clip(blur * alpha + beta, 0, 255).astype(np.uint8)
+        cv2.imwrite(filename="/tmp/contrast_blur.png", img=blur)
+
         # Binarise by thresholding
-        _, binary = cv2.threshold(src=blur, thresh=0, maxval=255, type=cv2.THRESH_OTSU)
-        # cv2.imwrite(filename="/tmp/binary.png", img=binary)
+        # _, binary = cv2.threshold(src=blur, thresh=0, maxval=255, type=cv2.THRESH_OTSU)
+        # _, binary = cv2.threshold(src=blur, thresh=100, maxval=255, type=cv2.THRESH_BINARY)
+        binary = cv2.adaptiveThreshold(
+            # blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 7
+            blur, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 25, 9
+        )
+        cv2.imwrite(filename="/tmp/binary.png", img=binary)
 
         # Mask out everything but the dial
         binary[self.dial_mask == 0] = 255
-        # cv2.imwrite(filename="/tmp/masked.png", img=binary)
+        cv2.imwrite(filename="/tmp/masked.png", img=binary)
 
         # Dilate to remove other end of needle
-        dilated = cv2.dilate(binary, kernel=(5, 5))
+        dilated = cv2.dilate(binary, kernel=(17, 17))
+        cv2.imwrite(filename="/tmp/dilated.png", img=dilated)
 
         # Find centre of needle tail
-        centroid = np.mean(np.argwhere(dilated), axis=0)
+        centroid = np.mean(np.argwhere(255 - dilated), axis=0).astype(int)
+        centroid = tuple(reversed(centroid))  # Switch to X, Y instead of Y, X
+        cv2.imwrite(
+            filename="/tmp/centroid.png",
+            img=cv2.line(dilated, centroid, centroid, (255, 0, 0), 2),
+        )
 
         # Get angle of needle from centre spindle
         direction_vector = centroid - self.needle_cetre
@@ -178,12 +196,17 @@ class FlairPressure:
 if __name__ == "__main__":
     pressure_monitor = FlairPressure()
 
-    # pressure_monitor.collect_data(output_directory="/tmp", interval=0.01)
+    pressure_monitor.collect_data(output_directory="/tmp/flair_pressure_logs_2", interval=0.01)
 
     # pressure_monitor.detect_needle_position(
     #     img=pressure_monitor.capture_frame(),
     # )
 
-    pressure_monitor.cli_main()
+    # pressure_monitor.cli_main()
+
+    # for path in sorted(Path("/tmp/flair_pressure_logs/").iterdir()):
+    #     img = cv2.imread(str(path))
+    #     pressure_monitor.detect_needle_position(img=img)
+    #     input()
 
     sys.exit(0)
