@@ -125,6 +125,7 @@ alias enzovnc='ssh enzo systemctl --user restart x0vncserver && remmina -c $HOME
 alias gca='git commit -a -v'
 alias gcp='git cherry-pick'
 alias gpu='gp --set-upstream origin "$(git branch --show-current)"'
+alias vb='vim.basic'
 
 
 #################

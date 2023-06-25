@@ -1,5 +1,10 @@
-(natural)
-- 55 is okay but a bit too coarse
+Natural
+
+GND
+- 20 (18g:300g, brew at 93C)
+    - Best so far, lower temp finer grind works well
+
+Previous experiments
+- 55 is okay but a bit underextracted (24g:400g)
 - at 45, took 1:45, but fairly strong flavour
-- at 25 for 18g/300g, still too small
-- try 25 for 24/400g
+- at 25 for 18g/300g, still too coarse

@@ -1,6 +1,10 @@
-(Wine yeast natural)
+Wine yeast natural
 
-gnd
-- 55 (24:400)
-- try 35 at 90C (18:300)
+GND
+- 55 (24:400 @ 96C)
+    - try smaller at lower temp
+- 35 (18:300 @ 93C)
+    - Quite good, best so far
+
+Temp
   - underextracted, try 93C

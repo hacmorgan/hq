@@ -113,3 +113,5 @@ if ! shopt -oq posix; then
   fi
 fi
 export EDITOR=/usr/bin/vim.basic
+. <(grep "^alias" ~/.zshrc)
+. <(grep "^alias" ~/.oh-my-zsh/plugins/git/git.plugin.zsh)
