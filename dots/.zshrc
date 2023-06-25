@@ -127,6 +127,7 @@ alias startvnc='systemctl --user restart x0vncserver'
 alias gca='git commit -a -v'
 alias gcp='git cherry-pick'
 alias gpu='gp --set-upstream origin "$(git branch --show-current)"'
+alias vb='vim.basic'
 
 
 #################

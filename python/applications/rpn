@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+
+## Lazy way of calling dc
+#
+# n.b. precision and other prior commands are set in ~/.dcrc, but the version of dc
+# installed by pacman does not have this feature compiled in, so we manually extract it
+# in case
+
+
+# Extract args into a variable (mandatory even without the sed), and transform m into *,
+# to save having to quote asterisks to avoid bash expanding them
+expr="$(sed 's#m#*#g' <<< "$@")"
+
+# Run prologue commands in .dcrc, run expression, and print
+dc -e "$(cat ~/.dcrc) $expr p"

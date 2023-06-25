@@ -18,12 +18,14 @@ setup(
     author_email="ham430@gmail.com",
     url="http://github.com/hacmorgan/hq",
     packages=[
+        "hq",
         "hq.calculators",
+        "hq.hardware",
     ],
     scripts=list(map(str, Path("applications").iterdir())),
     install_requires=[
-        "jedi-language-server",
         "pylint",
         "flake8",
+        "numpy>1.20",
     ],
 )

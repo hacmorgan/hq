@@ -1,4 +1,5 @@
 .p10k.zsh
+.bash_aliases
 .tmux.conf
 .xinitrc
 .Xresources
@@ -6,3 +7,5 @@
 .zshrc
 .vimrc
 .flake8
+.dcrc
+.bashrc
