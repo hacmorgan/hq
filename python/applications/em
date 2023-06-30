@@ -21,12 +21,12 @@ EOF
 function options
 {
     cat <<EOF
---buffalo,-b; look for file (if any given) on buffalo
---enzo,-e; look for file (if any given) on enzo
---george,-g; look for file (if any given) on george
+--buffalo,-b; Look for file (if any given) on buffalo
+--enzo,-e; Look for file (if any given) on enzo
+--george,-g; Look for file (if any given) on george
 --sudo,-s; Open file using sudo
---terminal,-t; open file in the terminal, don't detach process from parent shell 
---via-george,-v; for remotes other than george, use george as a jump host
+--gui,-x; Open file in GUI instead of terminal 
+--via-george,-v; For remotes other than george, use george as a jump host
 EOF
 }
 
@@ -103,7 +103,7 @@ sanitize_inputs $@
 
 file="$( get_filename $@ )"
 command="emacsclient -a '' -c $file"
-if (( options_terminal )); then
+if (( ! options_gui )); then
     command+=" -nw"
 else
     command+=" &!"
