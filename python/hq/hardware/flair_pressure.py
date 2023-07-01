@@ -59,7 +59,7 @@ class FlairPressure:
     """
     Flair 58 pressure gauge reader and TUI
     """
-    
+
     def __init__(self) -> None:
         """
         Construct the Flair pressure reader
@@ -244,20 +244,24 @@ class FlairPressure:
         last_redraw_time = -1.0
         updates_per_refresh = 50
         num_updates = 0
+        graph_update_period = 0.5
+        graph_redraw_period = 1.5
 
         while True:
-
             # Capture image
             img = self.capture_frame(vid_in=vid)
             capture_time = time() - start
 
-            # Compute pressure from angle of needle
-            pressure = self.detect_needle_position(img=img)
+            # Compute pressure from angle of needle, apply exponential weighted moving average
+            pressure = (
+                exp_weight * self.detect_needle_position(img=img)
+                + (1 - exp_weight) * pressure
+            )
             if pressure is not None:
                 pressures.append(pressure)
 
             # Redraw graph periodically
-            if capture_time > last_capture_time + 0.5:
+            if capture_time > last_capture_time + graph_update_period:
                 avg_pressure = np.mean(pressures) if pressures else 0
                 if num_updates >= updates_per_refresh:
                     num_updates = 0
@@ -270,7 +274,7 @@ class FlairPressure:
                 )
                 pressures = []
                 last_capture_time = capture_time
-                if capture_time > last_redraw_time + 1.5:
+                if capture_time > last_redraw_time + graph_redraw_period:
                     clear()
                     sys.stdout.write(pressure_graph + "\n" * 2)
                     last_redraw_time = capture_time
@@ -293,9 +297,7 @@ class FlairPressure:
         """
         Load segmentation mask of relevant portion of flair dial
         """
-        mask_path = os.path.expanduser(
-            "~/src/hq/etc/flair_pressure/dial_mask.png"
-        )
+        mask_path = os.path.expanduser("~/src/hq/etc/flair_pressure/dial_mask.png")
         mask = cv2.imread(mask_path)[DIAL_Y_MIN:DIAL_Y_MAX, DIAL_X_MIN:DIAL_X_MAX, ...]
         if mask is None:
             raise ValueError(f"Could not load mask at {mask_path}")
