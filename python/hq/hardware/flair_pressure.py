@@ -10,7 +10,7 @@ Read pressure from flair and provide a timer
 import os
 import signal
 import sys
-from math import atan2, degrees
+from math import acos, atan2, cos, degrees, radians, sqrt
 from pathlib import Path
 from random import shuffle
 from subprocess import run
@@ -164,14 +164,16 @@ class FlairPressure:
         centroid = np.mean(np.argwhere(255 - dilated), axis=0).astype(int)
         centroid = tuple(reversed(centroid))  # Switch to X, Y instead of Y, X
 
-        # Get angle of needle relative to centre spindle
+        # Get angle of needle relative to centre spindle in camera plane
         direction_vector = centroid - self.needle_cetre
         angle = degrees(atan2(*direction_vector))
         if angle < 0:
             angle = 360 + angle
 
+        # Transform camera-plane angle to dial-plane
+        angle = self.convert_angle(alpha=angle)
+
         # Apply a transformation function to produce a pressure value
-        # TODO: nonlinear function
         pressure = max(0, (ZERO_ANGLE - angle) / NINE_BAR_ANGLE * DEGREES_PER_BAR)
 
         if self.debug_mode:
@@ -204,7 +206,7 @@ class FlairPressure:
 
         # Write latest timestep
         self.pressure_graph[:GRAPH_ROWS, 2] = " "
-        self.pressure_graph[GRAPH_ROWS - 1 - int(new_pressure * 2), 2] = "*"
+        self.pressure_graph[GRAPH_ROWS - 1 - int(new_pressure), 2] = "*"
 
         # Shift old timestamps
         self.pressure_graph[-1, 3:] = self.pressure_graph[-1, 2:-1]
@@ -246,6 +248,8 @@ class FlairPressure:
         num_updates = 0
         graph_update_period = 0.5
         graph_redraw_period = 1.5
+        exp_weight = 0.2
+        pressure = 0
 
         while True:
             # Capture image
@@ -304,6 +308,27 @@ class FlairPressure:
 
         # Mask is saved as RGB, just take first channel
         self.dial_mask = mask[..., 0]
+
+    @staticmethod
+    def convert_angle(alpha: float) -> float:
+        """
+        Convert a needle angle inferred from the camera to the true needle angle as
+        viewed normal to the dial plane
+
+        n.b. this assumes the camera is at a 30 degree angle to the dial plane
+
+        Calculations at: https://photos.app.goo.gl/eC6Km3izzb3DakwEA
+
+        Args:
+            alpha: Angle of needle (degrees) as viewed from camera plane
+
+        Returns:
+            Angle of needle as viewed normal to the dial plane
+        """
+        ca = cos(radians(alpha))
+        c2a = ca**2
+        angle = degrees(acos(sqrt(c2a / (4 - 3 * c2a))))
+        return angle if ca > 0 else -angle
 
 
 if __name__ == "__main__":
