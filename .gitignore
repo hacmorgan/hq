@@ -4,3 +4,5 @@ dots/nvim/.netrwhist
 jira-api-token
 ytmusic_headers_auth.json
 .mypy_cache
+*.swp
+__pycache__
