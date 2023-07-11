@@ -21,6 +21,7 @@ setup(
         "hq",
         "hq.calculators",
         "hq.hardware",
+        "hq.ml",
     ],
     scripts=list(map(str, Path("applications").iterdir())),
     install_requires=[
@@ -28,5 +29,9 @@ setup(
         "flake8",
         "numpy>1.20",
         "virtualenv",
-    ],
+        "pillow",
+    ]
+    + ["torch"]
+    if "HQML" in os.environ
+    else [],
 )
