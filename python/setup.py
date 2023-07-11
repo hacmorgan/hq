@@ -27,5 +27,6 @@ setup(
         "pylint",
         "flake8",
         "numpy>1.20",
+        "virtualenv",
     ],
 )
