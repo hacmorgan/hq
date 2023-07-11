@@ -6,14 +6,13 @@ Train regression model
 """
 
 
-#!/usr/bin/env python3
-
-
 import sys
 import os
 from typing import Tuple
 
+from random import shuffle
 import numpy as np
+import PIL.Image
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -28,8 +27,8 @@ DEVICE = torch.device("cuda") if torch.cuda.is_available() else torch.device("cp
 NORMALISATION_MEAN = 0.1307
 NORMALISATION_STD = 0.3081
 
-NUM_EPOCHS = 15
-LOG_INTERVAL = 1
+NUM_EPOCHS = 5
+LOG_INTERVAL = 10
 
 
 class FullyConnectedNet(nn.Module):
@@ -58,27 +57,56 @@ class RegressionNet(nn.Module):
 
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(1, 32, 3, 1)
-        self.conv2 = nn.Conv2d(32, 64, 3, 1)
+
+        self.conv_depth = 16
+
+        # Input shape: (480, 640, 3)
+
+        # -> (240, 320, 32)
+        self.conv1 = nn.Conv2d(3, self.conv_depth, 3, 2)
         self.dropout1 = nn.Dropout(0.2)
+
+        # -> (120, 160, 32)
+        self.conv2 = nn.Conv2d(self.conv_depth, self.conv_depth, 3, 2)
         self.dropout2 = nn.Dropout(0.2)
-        self.fc1 = nn.Linear(9216, 128)
-        self.fc2 = nn.Linear(128, 10)
+
+        # -> (60, 80, 32)
+        self.conv3 = nn.Conv2d(self.conv_depth, self.conv_depth, 3, 2)
+        self.dropout3 = nn.Dropout(0.2)
+
+        # -> (30, 40, 32)
+        self.conv4 = nn.Conv2d(self.conv_depth, self.conv_depth, 3, 2)
+        self.dropout4 = nn.Dropout(0.2)
+
+        self.fc1 = nn.Linear(90480, 10)
+        self.dropout5 = nn.Dropout(0.2)
+
+        self.fc2 = nn.Linear(10, 1)
 
     def forward(self, x):
         x = self.conv1(x)
-        x = F.relu(x)
-        x = self.conv2(x)
-        x = F.relu(x)
-        x = F.max_pool2d(x, 2)
         x = self.dropout1(x)
-        x = torch.flatten(x, 1)
-        x = self.fc1(x)
         x = F.relu(x)
+
+        x = self.conv2(x)
         x = self.dropout2(x)
-        x = self.fc2(x)
-        output = F.log_softmax(x, dim=1)
-        return output
+        x = F.relu(x)
+
+        x = self.conv3(x)
+        x = self.dropout3(x)
+        x = F.relu(x)
+
+        x = self.conv4(x)
+        x = self.dropout4(x)
+        x = F.relu(x)
+
+        x = torch.flatten(x)
+
+        x = self.fc1(x)
+        x = self.dropout5(x)
+        x = F.relu(x)
+
+        return self.fc2(x)
 
 
 def load_mnist(use_cuda: bool) -> Tuple[DataLoader, DataLoader]:
@@ -104,7 +132,7 @@ def load_mnist(use_cuda: bool) -> Tuple[DataLoader, DataLoader]:
     return train_loader, test_loader
 
 
-class MyIterableDataset(torch.utils.data.IterableDataset):
+class WalkingDataset(torch.utils.data.IterableDataset):
     def __init__(self, root_dir: str):
         super().__init__()
         self.root_dir = root_dir
@@ -121,6 +149,36 @@ class MyIterableDataset(torch.utils.data.IterableDataset):
             self.have_seen_entire_datset = True
         else:
             yield from self.paths
+
+
+class CsvDataset(torch.utils.data.IterableDataset):
+    def __init__(self, csv_path: str):
+        super().__init__()
+        self.csv_path = csv_path
+        self.examples = []
+        self.have_seen_entire_datset = False
+
+    def __iter__(self):
+        if not self.have_seen_entire_datset:
+            with open(self.csv_path, mode="r", encoding="utf-8") as csv_fp:
+                for line in csv_fp.readlines():
+                    path, label = line.strip().split(",")
+                    img = (
+                        torch.tensor(
+                            np.array(PIL.Image.open(path)).transpose(2, 1, 0),
+                            dtype=torch.float,
+                        )
+                        / 255.0
+                    )
+                    label = torch.tensor(float(label)) / 10
+                    example = (img, label)
+                    self.examples.append(example)
+            self.have_seen_entire_dataset = True
+        shuffle(self.examples)
+        yield from self.examples
+
+    def __len__(self):
+        return len(self.examples)
 
 
 def train(
@@ -149,7 +207,7 @@ def train(
         output = model(data)
 
         # Compute loss
-        loss = F.L1Loss()(output, target)
+        loss = F.l1_loss(output, target)
 
         # Backpropagate loss through network and update weights
         loss.backward()
@@ -187,11 +245,7 @@ def test(
         for data, target in test_loader:
             data, target = data.to(device), target.to(device)
             output = model(data)
-            test_loss += F.L1Loss()(output, target).item()  # sum up batch loss
-            pred = output.argmax(
-                dim=1, keepdim=True
-            )  # get the index of the max log-probability
-            correct += pred.eq(target.view_as(pred)).sum().item()
+            test_loss += F.l1_loss(output, target).item()  # sum up batch loss
 
     test_loss /= len(test_loader.dataset)
 
@@ -220,23 +274,37 @@ def main() -> int:
         device = torch.device("cpu")
 
     # Load dataset
-    train_loader, test_loader = load_datasets(use_cuda=use_cuda)
+    # train_loader, test_loader = load_datasets(use_cuda=use_cuda)
+    train_loader = DataLoader(
+        # CsvDataset(csv_path="/home/hamish/src/hq/python/hq/ml/labels.train.csv"),
+        CsvDataset(csv_path="/home/hamish/src/hq/python/hq/ml/labels.csv"),
+        batch_size=5,
+    )
+    test_loader = DataLoader(
+        CsvDataset(csv_path="/home/hamish/src/hq/python/hq/ml/labels.val.csv"),
+        batch_size=5,
+    )
 
     torch.manual_seed(7777)
 
     # Construct the model
     # model = FullyConnectedNet().to(device)
-    model = ConvotionalNet().to(device)
+    # model = ConvotionalNet().to(device)
+    model = RegressionNet().to(device)
 
     # optimizer = optim.Adadelta(model.parameters(), lr=args.lr)
-    optimizer = optim.Adam(model.parameters(), lr=1e-5)
+    optimizer = optim.Adam(model.parameters(), lr=1e-6)
     scheduler = StepLR(optimizer, step_size=1, gamma=0.7)
 
     for epoch in range(1, NUM_EPOCHS + 1):
         train(model, device, train_loader, optimizer, epoch)
-        test(model, device, test_loader)
+        # test(model, device, test_loader)
         scheduler.step()
 
-    torch.save(model.state_dict(), "mnist_cnn.pt")
+        torch.save(model.state_dict(), "mnist_cnn.pt")
 
     return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
