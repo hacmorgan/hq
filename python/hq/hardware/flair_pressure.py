@@ -32,12 +32,12 @@ DIAL_Y_MAX = 300
 DIAL_X_MIN = 212
 DIAL_X_MAX = 404
 
-ZERO_ANGLE = 189
+ZERO_ANGLE = 213.69
 NINE_BAR_ANGLE = 40
-DEGREES_PER_BAR = 8
+DEGREES_PER_BAR = 16 / 1.5
 
 GRAPH_ROWS = 12
-GRAPH_COLS = 60
+GRAPH_COLS = 70
 
 
 def signal_handler(sig, frame):
@@ -174,7 +174,7 @@ class FlairPressure:
         angle = self.convert_angle(alpha=angle)
 
         # Apply a transformation function to produce a pressure value
-        pressure = max(0, (ZERO_ANGLE - angle) / NINE_BAR_ANGLE * DEGREES_PER_BAR)
+        pressure = max(0, (ZERO_ANGLE - angle) / DEGREES_PER_BAR)
 
         if self.debug_mode:
             cv2.imwrite(filename="/tmp/gray.png", img=gray)
@@ -206,7 +206,7 @@ class FlairPressure:
 
         # Write latest timestep
         self.pressure_graph[:GRAPH_ROWS, 2] = " "
-        self.pressure_graph[GRAPH_ROWS - 1 - int(new_pressure), 2] = "*"
+        self.pressure_graph[GRAPH_ROWS - 1 - round(new_pressure), 2] = "*"
 
         # Shift old timestamps
         self.pressure_graph[-1, 3:] = self.pressure_graph[-1, 2:-1]
@@ -328,7 +328,14 @@ class FlairPressure:
         ca = cos(radians(alpha))
         c2a = ca**2
         angle = degrees(acos(sqrt(c2a / (4 - 3 * c2a))))
-        return angle if ca > 0 else -angle
+        quadrant = int(alpha / 90)
+        if quadrant == 0:
+            return angle
+        if quadrant == 1:
+            return 180-angle
+        if quadrant == 2:
+            return 180 + angle
+        return 360 - angle
 
 
 if __name__ == "__main__":
