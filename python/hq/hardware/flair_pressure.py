@@ -8,12 +8,14 @@ Read pressure from flair and provide a timer
 
 
 import os
+import signal
 import sys
-from math import atan2, degrees
+from math import acos, atan2, cos, degrees, radians, sqrt
+from pathlib import Path
+from random import shuffle
 from subprocess import run
 from time import sleep, time
 from typing import Optional
-from pathlib import Path
 
 import cv2
 import numpy as np
@@ -22,27 +24,64 @@ from hq.io_tools import getchar
 CTRL_C = b"\x03"
 BACKSPACE = b"\x7f"
 CLEAR = b"\x0c"
+CURSOR_HOME = "\033"
 SPACE = b" "
+
+DIAL_Y_MIN = 208
+DIAL_Y_MAX = 300
+DIAL_X_MIN = 212
+DIAL_X_MAX = 404
+
+ZERO_ANGLE = 213.69
+NINE_BAR_ANGLE = 40
+DEGREES_PER_BAR = 16 / 1.5
+
+GRAPH_ROWS = 12
+GRAPH_COLS = 70
+
+
+def signal_handler(sig, frame):
+    sys.stdout.write("\n" * 2)
+    sys.exit(0)
+
+
+signal.signal(signal.SIGINT, signal_handler)
 
 
 def clear() -> None:
+    """
+    Clear screen
+    """
     run("clear", shell=True)
 
 
 class FlairPressure:
+    """
+    Flair 58 pressure gauge reader and TUI
+    """
+
     def __init__(self) -> None:
         """
         Construct the Flair pressure reader
         """
         self.load_dial_mask()
-        self.needle_cetre = np.array((267, 312))
+        self.needle_cetre = np.array((254 - DIAL_Y_MIN, 316 - DIAL_X_MIN))
+        self.log_to_stderr = "LOG_STDERR" in os.environ
+        self.debug_mode = "FP_DEBUG" in os.environ
+        self.pressure_graph = np.full((GRAPH_ROWS + 2, GRAPH_COLS + 2), fill_value="\0")
+        self.pressure_graph[:, 0] = " "
+        self.pressure_graph[1:GRAPH_ROWS, 0] = np.arange(GRAPH_ROWS - 2, -1, -1)
+        self.pressure_graph[1, 0] = "X"
+        self.pressure_graph[:, 1] = "|"
+        self.pressure_graph[GRAPH_ROWS, :] = "-"
 
     def capture_frame(self, vid_in: Optional[cv2.VideoCapture] = None) -> np.ndarray:
         """
         Capture an image from the webcam
 
         Args:
-            vid_in: Existing video capture object. New one crated if not given
+            vid_in: Existing video capture object. New one created if not given
+
         Returns:
             Image from webcam as (H, W, 3) array
         """
@@ -51,9 +90,6 @@ class FlairPressure:
             vid = cv2.VideoCapture(0)
         else:
             vid = vid_in
-
-        # # Set capture parameters
-        # cap.set(cv2.cv.CV_CAP_PROP_EXPOSURE, 0.1)
 
         # Capture the frame
         _, frame = vid.read()
@@ -91,59 +127,97 @@ class FlairPressure:
                 sleep(interval)
         vid.release()
 
-    def detect_needle_position(self, img: np.ndarray) -> float:
+    def detect_needle_position(self, img: np.ndarray) -> Optional[float]:
         """
         Compute pressure from images of gauge
 
         Returns:
             Current pressure (bar)
         """
+        if img is None:
+            return None
+
         # Convert image to grayscale
-        gray = cv2.cvtColor(src=img, code=cv2.COLOR_BGR2GRAY)
-        cv2.imwrite(filename="/tmp/gray.png", img=gray)
+        gray = img[..., 2]  # red channel should minimise red writing visibility
+
+        # Crop image down to just the dial
+        cropped = gray[DIAL_Y_MIN:DIAL_Y_MAX, DIAL_X_MIN:DIAL_X_MAX, ...]
+
+        # Do histogram equalisation to make needle darkness consistent
+        equ = cv2.equalizeHist(cropped)
 
         # Blur image to optimise thresholding performance
-        blur = cv2.GaussianBlur(src=gray, ksize=(5, 5), sigmaX=0)
-
-        # Increase contrast
-        alpha = 1.2
-        beta = -20
-        blur = np.clip(blur * alpha + beta, 0, 255).astype(np.uint8)
-        cv2.imwrite(filename="/tmp/contrast_blur.png", img=blur)
+        blur = cv2.GaussianBlur(src=equ, ksize=(5, 5), sigmaX=0)
 
         # Binarise by thresholding
-        # _, binary = cv2.threshold(src=blur, thresh=0, maxval=255, type=cv2.THRESH_OTSU)
-        # _, binary = cv2.threshold(src=blur, thresh=100, maxval=255, type=cv2.THRESH_BINARY)
-        binary = cv2.adaptiveThreshold(
-            # blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 7
-            blur, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 25, 9
+        _, binary = cv2.threshold(
+            src=blur, thresh=80, maxval=255, type=cv2.THRESH_BINARY
         )
-        cv2.imwrite(filename="/tmp/binary.png", img=binary)
 
         # Mask out everything but the dial
         binary[self.dial_mask == 0] = 255
-        cv2.imwrite(filename="/tmp/masked.png", img=binary)
 
-        # Dilate to remove other end of needle
-        dilated = cv2.dilate(binary, kernel=(17, 17))
-        cv2.imwrite(filename="/tmp/dilated.png", img=dilated)
+        # Dilate to remove noise
+        dilated = cv2.dilate(binary, kernel=np.ones((5, 5)), iterations=1)
 
         # Find centre of needle tail
         centroid = np.mean(np.argwhere(255 - dilated), axis=0).astype(int)
         centroid = tuple(reversed(centroid))  # Switch to X, Y instead of Y, X
-        cv2.imwrite(
-            filename="/tmp/centroid.png",
-            img=cv2.line(dilated, centroid, centroid, (255, 0, 0), 2),
-        )
 
-        # Get angle of needle from centre spindle
+        # Get angle of needle relative to centre spindle in camera plane
         direction_vector = centroid - self.needle_cetre
-        angle = 180 + degrees(atan2(*direction_vector))
+        angle = degrees(atan2(*direction_vector))
+        if angle < 0:
+            angle = 360 + angle
 
-        # TODO Apply some calibration function to produce a pressure value
-        pressure = angle
+        # Transform camera-plane angle to dial-plane
+        angle = self.convert_angle(alpha=angle)
+
+        # Apply a transformation function to produce a pressure value
+        pressure = max(0, (ZERO_ANGLE - angle) / DEGREES_PER_BAR)
+
+        if self.debug_mode:
+            cv2.imwrite(filename="/tmp/gray.png", img=gray)
+            cv2.imwrite(filename="/tmp/contrast.png", img=gray)
+            cv2.imwrite(filename="/tmp/blur.png", img=blur)
+            cv2.imwrite(filename="/tmp/equ.png", img=equ)
+            cv2.imwrite(
+                filename="/tmp/centroid.png",
+                img=cv2.line(dilated, centroid, centroid, (255, 0, 0), 2),
+            )
+            cv2.imwrite(filename="/tmp/binary_masked.png", img=binary)
+            cv2.imwrite(filename="/tmp/dilated.png", img=dilated)
+            cv2.imwrite(
+                filename="/tmp/centroid.png",
+                img=cv2.line(dilated, centroid, centroid, (255, 0, 0), 2),
+            )
+            breakpoint()
 
         return pressure
+
+    def update_pressures(
+        self, new_pressure: float, new_time: Optional[float] = None
+    ) -> str:
+        """
+        Update and return the ascii plot of pressures
+        """
+        # Shift existing graph
+        self.pressure_graph[:GRAPH_ROWS, 3:] = self.pressure_graph[:GRAPH_ROWS, 2:-1]
+
+        # Write latest timestep
+        self.pressure_graph[:GRAPH_ROWS, 2] = " "
+        self.pressure_graph[GRAPH_ROWS - 1 - round(new_pressure), 2] = "*"
+
+        # Shift old timestamps
+        self.pressure_graph[-1, 3:] = self.pressure_graph[-1, 2:-1]
+        self.pressure_graph[-1, 3] = " "
+        if new_time is not None:
+            self.pressure_graph[-1, 3:6] = list(f"{new_time:3.0f}")
+
+        # Construct string representation
+        return "\n".join(
+            "  " + "".join(line[line != "\0"]) for line in self.pressure_graph
+        )
 
     def detect_needle_position_learned(self) -> float:
         """
@@ -158,55 +232,132 @@ class FlairPressure:
         """
         Main CLI tool routine
         """
+        # Open video capture object
         vid = cv2.VideoCapture(0)
-        log_directory = "/tmp/flair_pressure_logs"
-        os.makedirs(log_directory, exist_ok=True)
 
+        # Clear screen
         clear()
+
+        # Initialise loop variables
         start = time()
+        i = 0
+        pressures = []
+        last_capture_time = -1.0
+        last_redraw_time = -1.0
+        updates_per_refresh = 50
+        num_updates = 0
+        graph_update_period = 0.5
+        graph_redraw_period = 1.5
+        exp_weight = 0.2
+        pressure = 0
 
-        with open(
-            os.path.join(log_directory, "pressures.log"), mode="w", encoding="utf-8"
-        ) as log_fp:
-            i = 0
-            while True:
-                i = i + 1
+        while True:
+            # Capture image
+            img = self.capture_frame(vid_in=vid)
+            capture_time = time() - start
 
-                output_path = os.path.join(log_directory, f"{i}.jpg")
+            # Compute pressure from angle of needle, apply exponential weighted moving average
+            pressure = (
+                exp_weight * self.detect_needle_position(img=img)
+                + (1 - exp_weight) * pressure
+            )
+            if pressure is not None:
+                pressures.append(pressure)
 
-                # Capture and save image
-                img = self.capture_frame(vid_in=vid)
-                cv2.imwrite(filename=output_path, img=img)
+            # Redraw graph periodically
+            if capture_time > last_capture_time + graph_update_period:
+                avg_pressure = np.mean(pressures) if pressures else 0
+                if num_updates >= updates_per_refresh:
+                    num_updates = 0
+                    graph_time = capture_time
+                else:
+                    graph_time = None
+                pressure_graph = self.update_pressures(
+                    new_pressure=avg_pressure,
+                    new_time=graph_time,
+                )
+                pressures = []
+                last_capture_time = capture_time
+                if capture_time > last_redraw_time + graph_redraw_period:
+                    clear()
+                    sys.stdout.write(pressure_graph + "\n" * 2)
+                    last_redraw_time = capture_time
 
-                # Compute angle of needle
-                angle = self.detect_needle_position(img=img)
-                sys.stdout.write(f"\rTime: {time() - start:.2f}, angle {angle:.2f}")
-                log_fp.write(f"{angle}\n")
+            # Print fast-refresh pressure and time status line
+            pressure_str = f"{pressure:.2f}" if pressure is not None else "N/A"
+            sys.stdout.write(
+                f"\r\tTime: {capture_time:.2f}\tPressure: {pressure_str} bar"
+            )
+            if self.log_to_stderr:
+                sys.stderr.write(f"{pressure}\n")
+
+            # Update loop variables
+            i += 1
+            num_updates += 1
 
         vid.release()
 
     def load_dial_mask(self) -> None:
+        """
+        Load segmentation mask of relevant portion of flair dial
+        """
         mask_path = os.path.expanduser("~/src/hq/etc/flair_pressure/dial_mask.png")
-        mask = cv2.imread(mask_path)
+        mask = cv2.imread(mask_path)[DIAL_Y_MIN:DIAL_Y_MAX, DIAL_X_MIN:DIAL_X_MAX, ...]
         if mask is None:
             raise ValueError(f"Could not load mask at {mask_path}")
+
+        # Mask is saved as RGB, just take first channel
         self.dial_mask = mask[..., 0]
+
+    @staticmethod
+    def convert_angle(alpha: float) -> float:
+        """
+        Convert a needle angle inferred from the camera to the true needle angle as
+        viewed normal to the dial plane
+
+        n.b. this assumes the camera is at a 30 degree angle to the dial plane
+
+        Calculations at: https://photos.app.goo.gl/eC6Km3izzb3DakwEA
+
+        Args:
+            alpha: Angle of needle (degrees) as viewed from camera plane
+
+        Returns:
+            Angle of needle as viewed normal to the dial plane
+        """
+        ca = cos(radians(alpha))
+        c2a = ca**2
+        angle = degrees(acos(sqrt(c2a / (4 - 3 * c2a))))
+        quadrant = int(alpha / 90)
+        if quadrant == 0:
+            return angle
+        if quadrant == 1:
+            return 180-angle
+        if quadrant == 2:
+            return 180 + angle
+        return 360 - angle
 
 
 if __name__ == "__main__":
     pressure_monitor = FlairPressure()
 
-    pressure_monitor.collect_data(output_directory="/tmp/flair_pressure_logs_2", interval=0.01)
+    # pressure_monitor.collect_data(output_directory="/tmp/flair_pressure_logs_2", interval=0.01)
 
     # pressure_monitor.detect_needle_position(
     #     img=pressure_monitor.capture_frame(),
     # )
 
-    # pressure_monitor.cli_main()
+    pressure_monitor.cli_main()
 
-    # for path in sorted(Path("/tmp/flair_pressure_logs/").iterdir()):
-    #     img = cv2.imread(str(path))
-    #     pressure_monitor.detect_needle_position(img=img)
+    # paths = list(Path("/home/pi/src/hq/etc/flair_pressure/datasets/regression").iterdir())
+    # # shuffle(paths)
+    # # for path in paths:
+    # for i in range(106, 400):
+    #     # print(path)
+    #     print(i)
+    #     # img = cv2.imread(str(path))
+    #     img = cv2.imread(f"/home/pi/src/hq/etc/flair_pressure/datasets/regression/{i}.jpg")
+    #     print(pressure_monitor.detect_needle_position(img=img))
     #     input()
 
     sys.exit(0)
