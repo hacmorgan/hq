@@ -189,3 +189,7 @@ export ABYSS_AWS_ENVFILE="$HOME/.aws/credentials.env"
 
 # mlflow
 export MLFLOW_URI="http://10.137.8.100:5000"
+
+# Tensorflow logging
+export TF_CPP_MIN_LOG_LEVEL=3
+
