@@ -7,6 +7,7 @@ Install HQ Python module
 
 
 from distutils.core import setup
+import os
 from pathlib import Path
 
 
@@ -22,16 +23,15 @@ setup(
         "hq.calculators",
         "hq.hardware",
         "hq.ml",
+        "hq.ml.wwd",
     ],
     scripts=list(map(str, Path("applications").iterdir())),
     install_requires=[
         "pylint",
         "flake8",
-        "numpy>1.20",
+        "numpy",
         "virtualenv",
         "pillow",
     ]
-    + ["torch"]
-    if "HQML" in os.environ
-    else [],
+    + (["torch", "torchvision"] if "HQML" in os.environ else []),
 )
