@@ -16,12 +16,6 @@ function prepare_dirs
 }
 
 
-function timestamp
-{
-    date --iso-8601=seconds | sed -e 's#+.*##' -e 's#[-:]##g'
-}
-
-
 function capture_images
 {
     function capture_image
@@ -29,11 +23,15 @@ function capture_images
         fswebcam --device "v4l2:/dev/video${options_v4l2_device}" \
                  --jpeg 95 \
                  --set resolution=640x320 \
-                 "$options_capture_dir/$(timestamp).jpg"
+                 "$capture_dir/$(timestamp).jpg"
     }
 
     # Compute numbver of images to capture
     num_images=$(( options_print_time * 60 * 60 / options_timelapse_period ))
+
+    # Create capture dir
+    capture_dir="$options_capture_dir/$(timestamp)"
+    mkdir --parents --verbose "$capture_dir"
 
     # Capture images
     for _ in $(seq $num_images); do
