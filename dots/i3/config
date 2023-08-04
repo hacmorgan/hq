@@ -176,7 +176,7 @@ bindsym $mod+Ctrl+Up resize grow height 5px
 
 # bar
 bar {
-    font pango:Fantasque Sans Mono, FontAwesome 10
+    font pango:Fantasque Sans Mono, FontAwesome 9
     position top
     status_command i3status-rs ~/.config/i3/status.toml
     colors {
