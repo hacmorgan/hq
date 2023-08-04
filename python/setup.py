@@ -29,9 +29,9 @@ setup(
     install_requires=[
         "black",
         "flake8",
-        "jedi_language_server",
+        # "jedi_language_server",
         "numpy",
-        "opencv-python-headless",
+        # "opencv-python-headless",
         "pillow",
         "pylint",
         "virtualenv",
