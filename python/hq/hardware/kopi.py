@@ -64,13 +64,13 @@ def kopi(input_path: str = KOPI_DB_DIR, fuzzy: bool = False) -> None:
         if char == CTRL_C:
             return
 
-        elif char in (b"\r", b"\n"):
+        if char in (b"\r", b"\n"):
             path = f"{input_dir}/{suggestions[0]}" if suggestions else input_path
             makedirs(dirname(path), exist_ok=True)
             sh_run(f"vim.basic {path}")
             return
 
-        elif char == BACKSPACE:
+        if char == BACKSPACE:
             input_path = input_path[:-1]
 
         elif char == b"\t":
