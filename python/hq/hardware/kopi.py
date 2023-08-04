@@ -10,7 +10,7 @@ Coffee reference and calculation tool
 import subprocess
 import sys
 from functools import partial
-from os import listdir, makedirs
+from os import listdir, makedirs, environ
 from os.path import basename, commonprefix, dirname, expanduser, isdir
 from pathlib import Path
 from typing import List, Optional
@@ -67,7 +67,7 @@ def kopi(input_path: str = KOPI_DB_DIR, fuzzy: bool = False) -> None:
         if char in (b"\r", b"\n"):
             path = f"{input_dir}/{suggestions[0]}" if suggestions else input_path
             makedirs(dirname(path), exist_ok=True)
-            sh_run(f"vim.basic {path}")
+            sh_run(f"{environ['EDITOR']} {path}")
             return
 
         if char == BACKSPACE:

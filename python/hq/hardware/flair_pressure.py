@@ -36,8 +36,14 @@ ZERO_ANGLE = 213.69
 NINE_BAR_ANGLE = 40
 DEGREES_PER_BAR = 16 / 1.5
 
+EXP_WEIGHT = 0.2
 GRAPH_ROWS = 12
-GRAPH_COLS = 70
+# GRAPH_COLS = 70  # kopi (terminal)
+GRAPH_COLS = 120  # skoopi
+# GRAPH_REDRAW_PERIOD = 1.5  # kopi (terminal)
+GRAPH_REDRAW_PERIOD = 0.5  # kopi (terminal)
+GRAPH_UPDATE_PERIOD = 0.5
+UPDATES_PER_REFRESH = 50
 
 
 def signal_handler(sig, frame):
@@ -244,11 +250,7 @@ class FlairPressure:
         pressures = []
         last_capture_time = -1.0
         last_redraw_time = -1.0
-        updates_per_refresh = 50
         num_updates = 0
-        graph_update_period = 0.5
-        graph_redraw_period = 1.5
-        exp_weight = 0.2
         pressure = 0
 
         while True:
@@ -258,16 +260,16 @@ class FlairPressure:
 
             # Compute pressure from angle of needle, apply exponential weighted moving average
             pressure = (
-                exp_weight * self.detect_needle_position(img=img)
-                + (1 - exp_weight) * pressure
+                EXP_WEIGHT * self.detect_needle_position(img=img)
+                + (1 - EXP_WEIGHT) * pressure
             )
             if pressure is not None:
                 pressures.append(pressure)
 
             # Redraw graph periodically
-            if capture_time > last_capture_time + graph_update_period:
+            if capture_time > last_capture_time + GRAPH_UPDATE_PERIOD:
                 avg_pressure = np.mean(pressures) if pressures else 0
-                if num_updates >= updates_per_refresh:
+                if num_updates >= UPDATES_PER_REFRESH:
                     num_updates = 0
                     graph_time = capture_time
                 else:
@@ -278,7 +280,7 @@ class FlairPressure:
                 )
                 pressures = []
                 last_capture_time = capture_time
-                if capture_time > last_redraw_time + graph_redraw_period:
+                if capture_time > last_redraw_time + GRAPH_REDRAW_PERIOD:
                     clear()
                     sys.stdout.write(pressure_graph + "\n" * 2)
                     last_redraw_time = capture_time
@@ -332,7 +334,7 @@ class FlairPressure:
         if quadrant == 0:
             return angle
         if quadrant == 1:
-            return 180-angle
+            return 180 - angle
         if quadrant == 2:
             return 180 + angle
         return 360 - angle
