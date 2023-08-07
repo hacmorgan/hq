@@ -57,4 +57,5 @@ barriers --config $HOME/.config/barrier/diego-enzo-george.conf \
          --disable-crypto &!
 
 # this is the last thing we do!
+# exec startxfce4
 exec i3

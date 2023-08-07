@@ -27,11 +27,17 @@ setup(
     ],
     scripts=list(map(str, Path("applications").iterdir())),
     install_requires=[
-        "pylint",
+        "black",
+        "distro",
         "flake8",
+        "ipython",
+        "jedi_language_server",
         "numpy",
-        "virtualenv",
+        "opencv-python-headless",
         "pillow",
+        "pylint",
+        "typer",
+        "virtualenv",
     ]
     + (["torch", "torchvision"] if "HQML" in os.environ else []),
 )

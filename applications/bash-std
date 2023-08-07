@@ -29,6 +29,11 @@ function die
     exit 1
 }
 
+function timestamp
+{
+    date --iso-8601=seconds | sed -e 's#+.*##' -e 's#[-:]##g'
+}
+
 function bash-std-set-verbose
 {
     if (( options_verbose )); then
