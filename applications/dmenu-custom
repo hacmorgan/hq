@@ -1,20 +1,23 @@
 #!/usr/bin/env bash
 
 
-##  dmenu-custom - collection of convenient shell commands and routines
+# Run common shell commands and routines through a dmenu interface
 #
-# Intended to be bound to a key combination in a wondow manager
-#
-# Author:  Hamish Morgan
-# Date:    02/05/2021
-# License: BSD
+# Intended to be bound to a key combination in a window manager
 
 
 source $(type -p bash-std)
 
 
-function get_choice()
+function get_choice
 {
+    # Get user input (using dmenu) from supplied options
+    #
+    # Args:
+    #     options: Comma-separated list of options
+    #
+    # Stdout:
+    #     Chosen option
     options="$1"
     echo $options                       |
         tr ',' '\n'                     |
@@ -24,10 +27,13 @@ function get_choice()
 }
 
 
-function main-run ()
+function main
 {
-    function power-run()
+    # Main application routine
+    
+    function power-run
     {
+        # Shut down/reboot system
         local options="shut down,reboot"
         local selected_option="$(get_choice "$options")"
         case "$selected_option" in
@@ -37,44 +43,18 @@ function main-run ()
                 sudo reboot ;;
         esac
     }
-    
-    function edit-configs-run ()
-    {
-        local configs="zsh,i3,i3status,emacs,picom,kitty,xinit,dmenu-custom"
-        local selected_config="$(get_choice "$configs")"
-        case "$selected_config" in
-            "zsh")
-                em ~/.zshrc ;;
-            "i3")
-                em ~/.config/i3/config ;;
-            "i3status")
-                em ~/.config/i3/status.toml ;;
-            "dwm")
-                em ~/src/foss/dwm/config.h ;;
-            "emacs")
-                em ~/.emacs.d/config.org ;;
-            "picom")
-                em ~/.config/picom.conf ;;
-            "kitty")
-                em ~/.config/kitty/kitty.conf ;;
-            "sakura")
-                em ~/.config/sakura/sakura.conf ;;
-            "termite")
-                em ~/.config/termite/config ;;
-            "st")
-                em ~/src/foss/st/config.h ;;
-            "xinit")
-                em ~/.xinitrc ;;
-            "dmenu-custom")
-                em ~/src/hq/scripts/dmenu-custom ;;
-        esac
-    }
 
-    function screenshot-run()
+    function screenshot-run
     {
+        # Take a screenshot using `scrot`
+        
         function select-delay
         {
-            local delays="3"
+            # Prompt user for delay before screenshot
+            #
+            # Stdout:
+            #     Delay period (seconds)
+            local delays="3,5"
             get_choice "$delays"
         }
         
@@ -96,65 +76,9 @@ function main-run ()
         esac
     }
 
-    # TODO - determine appropriate values
-    function keyboard-multiplier-run()
+    function picom-run
     {
-        function select-delay()
-        {
-            local delays="150ms,250ms,500ms"
-            local selected_delay="$(get_choice "$delays" | sed 's/ms//g')"
-            local current_rate=$(xset -q | grep delay | cut -d: -f3 | cut -d ' ' -f3)
-            xset r rate $selected_delay $current_rate
-        }
-        function select-rate()
-        {
-            local rates="25,50,100,200"
-            local selected_rate="$(get_choice "$rates")"
-            local current_delay=$(xset -q | grep delay | cut -d: -f2 | cut -d ' ' -f3)
-            xset r rate $current_delay $selected_rate
-        }
-        
-        local configurable_params="delay,rate"
-        local selected_param="$(get_choice "$configurable_params")"
-        case "$selected_param" in
-            "delay")
-                select-delay ;;
-            "rate")
-                select-rate ;;
-        esac
-    }
-
-    function mouse-speed-run()
-    {
-        function select-acceleration()
-        {
-            local delays="150ms,250ms,500ms"
-            local selected_delay="$(get_choice "$delays" | sed 's/ms//g')"
-            local current_rate=$(xset -q | grep delay | cut -d: -f3 | cut -d ' ' -f3)
-            xset r rate $selected_delay $current_rate
-        }
-        function select-threshold()
-        {
-            local rates="25,50,100,200"
-            local selected_rate="$(get_choice "$rates")"
-            local current_delay=$(xset -q | grep delay | cut -d: -f2 | cut -d ' ' -f3)
-            xset r rate $current_delay $selected_rate
-        }
-        
-        local configurable_params="acceleration,threshold,restore defaults"
-        local selected_param="$(get_choice "$configurable_params")"
-        case "$selected_param" in
-            "acceleration")
-                select-acceleration ;;
-            "threshold")
-                select-threshold ;;
-            "restore defaults")
-                xset m default
-        esac
-    }
-
-    function picom-run()
-    {
+        # Turn compositor (`picom`) on or off
         local picom_options="turn on,turn off"
         local selected_option="$(get_choice "$picom_options")"
         case "$selected_option" in
@@ -171,44 +95,11 @@ function main-run ()
         esac
     }
 
-    function emacs-run
-    {
-        function is_remote
-        {
-            local options="local,remote"
-            local selected_option="$(get_choice "$options")"
-            case "$selected_option" in
-                "local")
-                    echo 0 ;;
-                "remote")
-                    echo 1 ;;
-            esac
-        }
-        
-        local emacs_options="local,george,enzo,buffalo"
-        local selected_option="$(get_choice "$emacs_options")"
-        case "$selected_option" in
-            "local")
-                em ;;
-            "george")
-                em --george ;;
-            "buffalo")
-                if (( $(is_remote) )); then
-                    em --buffalo --via-george
-                else
-                    em --buffalo
-                fi ;;
-            "enzo")
-                if (( $(is_remote) )); then
-                    em --enzo --via-george
-                else
-                    em --enzo
-                fi ;;
-        esac
-    }
-
     function display-run
     {
+        # Choose displays to output to
+        #
+        # TODO: dynamically populate options from script (e.g. `permute-displays`)
         local display_options="turn off"
         local selected_option="$(get_choice "$display_options")"
         case "$selected_option" in
@@ -217,87 +108,36 @@ function main-run ()
         esac
     }
 
-    function sdc-run
+    function configure-xinput-run
     {
-        local options="all,bedside light,whiteboard light,sound system"
-        local selected_option="$(get_choice "$options")"
-        local states="on,off"
-        local selected_state="$(get_choice "$states")"
-        case "$selected_state" in
-            "on")
-                sdc --notify --on "$selected_option" ;;
-            "off")
-                sdc --notify --off "$selected_option" ;;
-        esac
+        # Configure xinput as desired (natural scrolling, tap-to-click, etc)
+        configure-xinput
     }
 
-    function bedtime-run
+    function mount-shared-drives-run
     {
-        george-display-off-run
-        ssh -J "$(where-is-george)" enzo sudo shutdown now
-        sdc --off "all"
+        # Configure xinput as desired (natural scrolling, tap-to-click, etc)
+        mount-shared-drives
     }
 
-    function george-display-off-run
+    function get-subsettings
     {
-        ssh "$(where-is-george)" xset -display :0.0 dpms force off
+        # Find all defined subcommands by function name (*-run)
+        #
+        # Stdout:
+        #     Names of defined subcommand functions without -run suffix
+        declare -F |
+            grep -e '-run$' |
+            sed 's#declare -f \(.*\)-run#\1#' |
+            tr '\n' ','
     }
 
-    function rotate-speakers-run
-    {
-        function speaker_angle
-        {
-            local desired="$1"  # "both", "left", or "right" (from dmenu)
-            local actual="$2"   # "left" or "right"
-            local angle="$3"
-            if [[ "$desired" == "both" || "$desired" == "$actual" ]]; then
-                echo "$angle"
-            else
-                echo 0
-            fi
-        }
-        
-        local speakers="both,left,right"
-        local angles=""  # user inputs number, no defaults
-        speaker="$(get_choice "$speakers")"
-        angle="$(get_choice "$angles")"
-        left="$(speaker_angle "$speaker" left "$angle")"
-        right="$(speaker_angle "$speaker" right "$angle")"
-        echo "rotating speaker $speaker by angle $angle (degrees $left,$right)" 1>&2
-        rotate-speakers --degrees="$left,$right"
-    }
-
-    
-    subsetting_options="power,screenshot,emacs,display,sdc,mount shared drives,rotate speakers,edit configs,keyboard multiplier,picom,bedtime,george display off"
+    subsetting_options="$(get-subsettings)"
     subsetting="$(get_choice "$subsetting_options")"
     echo $subsetting
-    case "$subsetting" in
-        "power")
-            power-run ;;
-        "edit configs")
-            edit-configs-run ;;
-        "keyboard multiplier")
-            keyboard-multiplier-run ;;
-        "screenshot")
-            screenshot-run ;;
-        "picom")
-            picom-run ;;
-        "emacs")
-            emacs-run ;;
-        "display")
-            display-run ;;
-        "mount shared drives")
-            mount-shared-drives --notify ;;
-        "sdc")
-            sdc-run ;;
-        "bedtime")
-            bedtime-run ;;
-        "george display off")
-            george-display-off-run ;;
-        "rotate speakers")
-            rotate-speakers-run ;;
-    esac
+    eval "${subsetting}-run" ||
+        notify-send --urgency=critical "$subsetting failed with exit status $?"
 }
 
 
-main-run
+main

@@ -5,6 +5,7 @@ feh
 i3-wm
 i3status-rust
 kitty
+libnotify
 neovim
 noto-fonts-emoji
 otf-font-awesome
