@@ -8,7 +8,7 @@ myself="$0"
 hq="$(dirname "$myself")"
 
 
-source "$hq/python/applications/bash-std"
+source "$hq/applications/bash-std"
 
 
 function install_python_module
@@ -459,8 +459,8 @@ function options
 --install-python-module; Install HQ Python module, including scripts and pip installs
 --move-existing; If <file> exists, move it to <file>.old
 --no-sudo; Don't do anything that requires sudo
---standard; Do the standard bootstrap operations: ${STANDARD_OPERATIONS[@]}
---symlink-dots,-s; Symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
+--standard,-s; Do the standard bootstrap operations: ${STANDARD_OPERATIONS[@]}
+--symlink-dots; Symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
 --symlink-systemd-services; Symlink service files in etc/systemd to /etc/systemd/system/
 --symlink-vi; Symlink /usr/bin/nvim to /usr/bin/vi
 --update-package-list; Find installed packages that aren't already in etc/packagelist
