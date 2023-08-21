@@ -21,6 +21,7 @@ setup(
     packages=[
         "hq",
         "hq.calculators",
+        "hq.gui",
         "hq.hardware",
         "hq.ml",
         "hq.ml.wwd",
