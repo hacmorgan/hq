@@ -42,7 +42,7 @@ def kopi(input_path: str = KOPI_DB_DIR, fuzzy: bool = False) -> None:
         if input_dir != last_input_dir:
             makedirs(input_dir, exist_ok=True)
             last_input_dir = input_dir
-            last_listdir = listdir(last_input_dir)
+            last_listdir = sorted(listdir(last_input_dir))
         if fuzzy:
             input_chars = removeprefix(input_path, prefix=input_dir)
             suggestions = sorted(

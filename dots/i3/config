@@ -255,4 +255,4 @@ bindsym $mod+Shift+o exec --no-startup-id "emacsclient -a '' -c"
 bindsym $mod+Shift+g exec --no-startup-id gimp
 
 # dmenu-custom
-bindsym --release $mod+Shift+s exec --no-startup-id dmenu-custom
+bindsym --release $mod+Shift+s exec --no-startup-id "$HOME/venvs/hq/bin/dmenu-custom"
