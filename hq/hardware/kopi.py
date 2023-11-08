@@ -35,9 +35,14 @@ def kopi(input_path: str = KOPI_DB_DIR, fuzzy: bool = False) -> None:
     """
     input_path = expanduser(input_path)
     suggestions = []
+    last_input_dir = None
+    last_listdir = []
     while True:
         input_dir = dirname(input_path)
-        makedirs(input_dir, exist_ok=True)
+        if input_dir != last_input_dir:
+            makedirs(input_dir, exist_ok=True)
+            last_input_dir = input_dir
+            last_listdir = sorted(listdir(last_input_dir))
         if fuzzy:
             input_chars = removeprefix(input_path, prefix=input_dir)
             suggestions = sorted(
@@ -46,7 +51,7 @@ def kopi(input_path: str = KOPI_DB_DIR, fuzzy: bool = False) -> None:
         else:
             suggestions = [
                 entry
-                for entry in listdir(input_dir)
+                for entry in last_listdir
                 if entry.startswith(basename(input_path))
             ]
 
@@ -123,12 +128,5 @@ def fuzzy_find(input_chars: str, input_dir: str) -> List[str]:
 
 
 if __name__ == "__main__":
-    # input_dir = KOPI_DB_DIR
-    # if len(sys.argv) > 1:
-    #     operation = sys.argv[1]
-    #     if "grind-settings".startswith(operation):
-    #         input_dir = f"{KOPI_DB_DIR}/grind-settings"
-    #     elif "recipes".startswith(operation):
-    #         input_dir = f"{KOPI_DB_DIR}/recipes"
     kopi(fuzzy="-f" in sys.argv)
     sys.exit(0)

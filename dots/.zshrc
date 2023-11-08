@@ -131,8 +131,12 @@ alias display_on='xset -display :0.0 dpms force on'
 alias startvnc='systemctl --user restart x0vncserver'
 alias gca='git commit -a -v'
 alias gcp='git cherry-pick'
+alias glg='git log --graph'
 alias gpu='gp --set-upstream origin "$(git branch --show-current)"'
 alias vb='vim.basic'
+alias vpn_connect='openvpn3 session-start --config /etc/openvpn3/abyss'
+alias vpn_status='openvpn3 sessions-list'
+alias vpn_disconnect='openvpn3 session-manage --disconnect --config /etc/openvpn3/abyss'
 
 
 #################

@@ -52,7 +52,7 @@ Host kopi_eth
 
 Host hippo
     HostName 10.137.4.1
-    User hmo
+    User hamish
 
 Host rhino
     HostName 10.137.4.2
@@ -60,19 +60,19 @@ Host rhino
 
 Host dingo
     HostName 10.137.4.3
-    User hmo
+    User hamish
 
 Host gecko
     HostName 10.137.4.4
     User hmo
 
-Host buffalo
-    HostName 10.137.4.5
-    User hmo
+# Host buffalo
+#     HostName 10.137.4.5
+#     User hmo
 
-Host dodo
-    HostName 10.137.4.6
-    User hmo
+# Host dodo
+#     HostName 10.137.4.6
+#     User hmo
 
 Host bronco
     HostName 10.137.4.8
@@ -94,6 +94,10 @@ Host laeeb
     HostName 10.137.4.12
     User hmo
 
+Host dumbo
+    HostName 10.137.4.15
+    User hamish
+
 Host quickboy
     HostName 10.137.4.253
     User hmo
@@ -109,8 +113,4 @@ Host bastion
 Host hihi
     HostName 10.10.5.4
     User hamish
-
-Host bruno_abyss
-    User hamish
-    HostName 10.137.6.183
 

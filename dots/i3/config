@@ -235,11 +235,11 @@ set $TERMINAL kitty
 
 # terminals
 bindsym $mod+Return       exec "$TERMINAL"
+bindsym $mod+Ctrl+Return  exec "$TERMINAL --class=floating_term"
 bindsym $mod+Shift+Return exec "$TERMINAL --class=floating_term ipython3"
 bindsym $mod+Shift+p      exec "$TERMINAL --class=floating_term pulsemixer" 
 bindsym $mod+Shift+n      exec "$TERMINAL --class=floating_term nmtui"      
 bindsym $mod+Shift+t      exec "$TERMINAL --class=floating_term htop"      
-bindsym $mod+Ctrl+Return  exec "$TERMINAL ssh $( where-is-george )"
 bindsym $mod+Ctrl+e       exec "$TERMINAL ssh enzo"
 bindsym $mod+Ctrl+b       exec "$TERMINAL ssh buffalo"
 bindsym $mod+Ctrl+r       exec "$TERMINAL ssh bruno_abyss"
@@ -256,7 +256,7 @@ bindsym $mod+Shift+o exec --no-startup-id "emacsclient -a '' -c"
 bindsym $mod+Shift+g exec --no-startup-id gimp
 
 # dmenu-custom
-bindsym --release $mod+Shift+s exec --no-startup-id dmenu-custom
+bindsym --release $mod+Shift+s exec --no-startup-id "$HOME/venvs/hq/bin/dmenu-custom"
 
 
 ######################
