@@ -60,7 +60,7 @@ $HOME/.local/bin/configure-xinput
 
 # this is the last thing we do!
 # exec startxfce4
-exec i3
+# exec i3
 
 # start barrier client to enzo
 barrierc --display :1 --disable-crypto 192.168.0.95 &!
