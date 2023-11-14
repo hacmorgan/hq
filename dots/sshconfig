@@ -114,3 +114,6 @@ Host hihi
     HostName 10.10.5.4
     User hamish
 
+Host saudi-nomachine
+    HostName 158.101.252.67
+    User hamish

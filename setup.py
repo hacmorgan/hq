@@ -29,6 +29,7 @@ setup(
     scripts=list(map(str, Path("applications").iterdir())),
     install_requires=[
         "black",
+        "cattrs",
         "distro",
         "flake8",
         "ipython",
@@ -36,6 +37,7 @@ setup(
         "numpy",
         "opencv-python-headless",
         "pillow",
+        "pygls",
         "pylint",
         "typer",
         "virtualenv",

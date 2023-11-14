@@ -93,9 +93,9 @@ ROS_SETUP=/opt/ros/noetic/setup.zsh
 [[ ! -e $ROS_SETUP ]] || source $ROS_SETUP
 
 
-# Source hq python venv
-HQ_VENV=$HOME/venvs/hq
-[[ ! -e $HQ_VENV ]] || source $HQ_VENV/bin/activate
+# # Source hq python venv
+# HQ_VENV=$HOME/venvs/hq
+# [[ ! -e $HQ_VENV ]] || source $HQ_VENV/bin/activate
 
 
 #################
@@ -166,4 +166,10 @@ export MLFLOW_URI="http://10.137.8.100:5000"
 
 # Tensorflow logging
 export TF_CPP_MIN_LOG_LEVEL=3
+
+
+# autoload -Uz compinit
+# zstyle ':completion:*' menu select
+# fpath+=~/.zfunc
+
 
