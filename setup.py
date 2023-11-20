@@ -37,10 +37,16 @@ setup(
         "numpy",
         "opencv-python-headless",
         "pillow",
-        "pygls",
+        "pygls>1.1.1",  # Avoids (1) from version 1.1.1
         "pylint",
         "typer",
         "virtualenv",
     ]
     + (["torch", "torchvision"] if "HQML" in os.environ else []),
 )
+
+
+# Errors
+# (1) - TypeError when initialising jedi-language-server in emacs
+#         TypeError: Options of method "textDocument/completion" should be instance of
+#         type <class 'lsprotocol.types.CompletionOptions'>
