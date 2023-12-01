@@ -146,6 +146,7 @@ alias gdnup='gdup --name-only'
 alias cdscr='cd /mnt/vault/scratch/dataforce/hamish'
 
 alias backlight_min='sudo bash -c "echo 1 > /sys/class/backlight/intel_backlight/brightness"'
+alias rs='rsync -avhP'
 
 
 #################
