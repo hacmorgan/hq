@@ -143,6 +143,7 @@ alias gdn='gd --name-only'
 alias gdnu='gd --diff-filter=U --name-only'
 
 alias backlight_min='sudo bash -c "echo 1 > /sys/class/backlight/intel_backlight/brightness"'
+alias rs='rsync -avhP'
 
 
 #################
