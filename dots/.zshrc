@@ -140,6 +140,7 @@ alias nomachine='/usr/NX/bin/nxplayer'
 alias rmundotree='find . -name "*~undo-tree~*" -delete'
 
 alias backlight_min='sudo bash -c "echo 1 > /sys/class/backlight/intel_backlight/brightness"'
+alias rs='rsync -avhP'
 
 
 #################
