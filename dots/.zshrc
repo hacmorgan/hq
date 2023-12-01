@@ -133,6 +133,7 @@ alias vb='vim.basic'
 alias vpn_connect='openvpn3 session-start --config /etc/openvpn3/abyss'
 alias vpn_status='openvpn3 sessions-list'
 alias vpn_disconnect='openvpn3 session-manage --disconnect --config /etc/openvpn3/abyss'
+alias rs='rsync -avhP'
 
 
 #################
