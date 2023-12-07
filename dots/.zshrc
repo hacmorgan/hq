@@ -154,6 +154,7 @@ alias erb='git status --porcelain=v1 | grep "^UU" | cut -d" " -f2 | while read f
 
 alias backlight_min='sudo bash -c "echo 1 > /sys/class/backlight/intel_backlight/brightness"'
 alias rs='rsync -avhP'
+alias nomachine='/usr/NX/bin/nxplayer'
 
 
 #################
