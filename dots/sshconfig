@@ -1,3 +1,6 @@
+Host *
+  ForwardAgent yes
+
 Host bisous
     HostName 192.168.0.61
     User hamish
