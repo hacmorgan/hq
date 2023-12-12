@@ -96,9 +96,9 @@ ROS_SETUP=/opt/ros/noetic/setup.zsh
 source /usr/share/nvm/init-nvm.sh
 
 
-# Source hq python venv
-HQ_VENV=$HOME/venvs/hq
-[[ ! -e $HQ_VENV ]] || source $HQ_VENV/bin/activate
+# # Source hq python venv
+# HQ_VENV=$HOME/venvs/hq
+# [[ ! -e $HQ_VENV ]] || source $HQ_VENV/bin/activate
 
 
 #################
@@ -137,6 +137,8 @@ alias vb='vim.basic'
 alias vpn_connect='openvpn3 session-start --config /etc/openvpn3/abyss'
 alias vpn_status='openvpn3 sessions-list'
 alias vpn_disconnect='openvpn3 session-manage --disconnect --config /etc/openvpn3/abyss'
+alias rs='rsync -avhP'
+alias nomachine='/usr/NX/bin/nxplayer'
 
 
 #################
@@ -170,4 +172,10 @@ export MLFLOW_URI="http://10.137.8.100:5000"
 
 # Tensorflow logging
 export TF_CPP_MIN_LOG_LEVEL=3
+
+
+# autoload -Uz compinit
+# zstyle ':completion:*' menu select
+# fpath+=~/.zfunc
+
 
