@@ -22,6 +22,8 @@ BACKSPACE = b"\x7f"
 CLEAR = b"\x0c"
 
 KOPI_DB_DIR = "~/src/hq/etc/kopi/"
+if not Path(KOPI_DB_DIR).expanduser().exists():
+    KOPI_DB_DIR = "~/hq/etc/kopi"
 
 PROMPT_LENGTH = 60
 
