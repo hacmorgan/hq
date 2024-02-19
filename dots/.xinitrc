@@ -41,7 +41,7 @@ picom &!
 numlockx &!
 
 # set backgrounds as a backup
-feh --bg-center ~/src/hq/etc/wallpapers/eboy_tok.png &!
+feh --bg-center ~/hq/etc/wallpapers/eboy_tok.png &!
 
 # set keyboard params
 xset r rate 250 50 &!
