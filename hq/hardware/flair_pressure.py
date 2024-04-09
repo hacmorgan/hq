@@ -45,6 +45,8 @@ GRAPH_UPDATE_PERIOD = 0.3
 GRAPH_REDRAW_PERIOD = GRAPH_UPDATE_PERIOD  # skoopi
 UPDATES_PER_REFRESH = 50
 
+CAPTURE_DEVICE = 0
+
 
 def signal_handler(sig, frame):
     sys.stdout.write("\n" * 2)
@@ -93,7 +95,7 @@ class FlairPressure:
         """
         # Create video capture device if required
         if vid_in is None:
-            vid = cv2.VideoCapture(0)
+            vid = cv2.VideoCapture(CAPTURE_DEVICE)
         else:
             vid = vid_in
 
@@ -116,7 +118,7 @@ class FlairPressure:
             output_directory: Directory to write images under
             interval: How often to capture images
         """
-        vid = cv2.VideoCapture(0)
+        vid = cv2.VideoCapture(CAPTURE_DEVICE)
         i = 0
         while True:
             i = i + 1
@@ -239,7 +241,7 @@ class FlairPressure:
         Main CLI tool routine
         """
         # Open video capture object
-        vid = cv2.VideoCapture(0)
+        vid = cv2.VideoCapture(CAPTURE_DEVICE)
 
         # Clear screen
         clear()
@@ -303,7 +305,7 @@ class FlairPressure:
         """
         Load segmentation mask of relevant portion of flair dial
         """
-        mask_path = os.path.expanduser("~/src/hq/etc/flair_pressure/dial_mask.png")
+        mask_path = os.path.expanduser("~/hq/etc/flair_pressure/dial_mask.png")
         mask = cv2.imread(mask_path)[DIAL_Y_MIN:DIAL_Y_MAX, DIAL_X_MIN:DIAL_X_MAX, ...]
         if mask is None:
             raise ValueError(f"Could not load mask at {mask_path}")
