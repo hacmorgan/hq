@@ -138,6 +138,7 @@ alias vpn_disconnect='openvpn3 session-manage --disconnect --config /etc/openvpn
 alias rs='rsync -avhP'
 alias nomachine='/usr/NX/bin/nxplayer'
 alias rmundotree='find . -name "*~undo-tree~*" -delete'
+alias rgn='rg --files-with-matches'
 
 
 #################
