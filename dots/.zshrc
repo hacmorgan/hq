@@ -129,6 +129,7 @@ alias display_on='xset -display :0.0 dpms force on'
 alias gca='git commit -a -v'
 alias gcp='git cherry-pick'
 alias glg='git log --graph'
+alias gdu='git push origin --delete'
 alias gpu='gp --set-upstream origin "$(git branch --show-current)"'
 alias vb='vim.basic'
 alias vpn_connect='openvpn3 session-start --config /etc/openvpn3/abyss'
@@ -137,6 +138,7 @@ alias vpn_disconnect='openvpn3 session-manage --disconnect --config /etc/openvpn
 alias rs='rsync -avhP'
 alias nomachine='/usr/NX/bin/nxplayer'
 alias rmundotree='find . -name "*~undo-tree~*" -delete'
+alias rgn='rg --files-with-matches'
 
 
 #################

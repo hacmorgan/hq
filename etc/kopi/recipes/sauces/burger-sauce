@@ -1,5 +1,8 @@
-3:2:1 - mayo:tomato:mustard
-3:2:1:0.5 - mayo:tomato:mustard:bbq
+30:20:10 - mayo:tomato:mustard
+30:20:10:5:1 - mayo:tomato:mustard:bbq:tabasco-buffalo
+30:20:10:20:3 - mayo:tomato:mustard:bbq:tabasco-buffalo (v2)
 
-typically numbers above can be multiplied by 10 for grams
+typically numbers above are in grams (for 2 people)
+
+mayo can be 50:50 kewpie:hellmann's
 
