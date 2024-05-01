@@ -1324,4 +1324,7 @@ c.InteractiveShellApp.exec_lines = [
     "import numpy as np",
     "import numpy.lib.recfunctions as rf",
     "import pandas as pd",
+    "from pathlib import Path",
+    "from abyss.bedrock.io.convenience import easy_load, easy_save, easy_load_dict, easy_save_dict",
+    "from abyss.bedrock.utils.array_utils import generic_hstack, generic_vstack",
 ]

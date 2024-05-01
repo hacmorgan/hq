@@ -224,6 +224,7 @@ for_window [class="gnuplot_qt"]    floating enable
 for_window [class="csv-plot"]      floating enable
 for_window [class="0"]             floating enable
 for_window [class="floating_term"] floating enable
+for_window [class="Alert"]         floating enable
 
 
 ###############

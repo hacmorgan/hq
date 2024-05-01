@@ -28,7 +28,7 @@ function options
 --abyss; Mount pond and tank
 --interval=<seconds>; default=30; time between mount point checks
 --local; Force using local address (for george)
---mountpoints-file=<file>; default=~/src/hq/etc/mountpoints; File storing local:remote pars of filepaths
+--mountpoints-file=<file>; default=~/hq/etc/mountpoints; File storing local:remote pars of filepaths
 --remote; Force using remote address (for george)
 --notify; Produce notify-send notifications for each mount
 --verbose; Output messages on each mount

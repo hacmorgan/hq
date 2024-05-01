@@ -33,7 +33,7 @@ def mount_remote(host: str, path: str, local_path: Optional[str] = None) -> None
     # Construct path to mount to on local machine if required
     if local_path is None:
         local_path = f"{expanduser('~')}/mnt/{host}/{remote_path}"
-    makedirs(local_path, exist_ok=True)
+    makedirs(expanduser(local_path), exist_ok=True)
 
     # Execute sshfs command
     sh_run(f"sshfs {host}:{remote_path} {local_path}")
