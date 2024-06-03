@@ -265,5 +265,5 @@ bindsym --release $mod+Shift+s exec --no-startup-id "$HOME/venvs/hq/bin/dmenu-cu
 ######################
 exec --no-startup-id "sleep 1; use-all-monitors"
 
-exec --no-startup-id "sleep 4; feh --bg-fill /home/hamish/src/hq/etc/wallpapers/koth.jpg --bg-center /home/hamish/src/hq/etc/wallpapers/5YR.jpg --bg-center /home/hamish/src/hq/etc/wallpapers/eboy_tok.png
+exec --no-startup-id "sleep 4; feh --bg-fill /home/hamish/hq/etc/wallpapers/koth.jpg --bg-center /home/hamish/hq/etc/wallpapers/5YR.jpg --bg-center /home/hamish/hq/etc/wallpapers/eboy_tok.png
 "
