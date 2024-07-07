@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+
+# Start a new tmux session with regular dev dependencies
+
+
+set -o errexit
+
+
+# Get tmux session name as positional arg
+session_name="$1"
+[[ -n "$session_name" ]] || { echo "tmux session name required as argument" >&2; exit 1; }
+
+# We will source the Abyss venv in every window, so we store this command
+SOURCE_VENV="source $HOME/venvs/abyss/bin/activate"
+
+# Create a new tmux session, with our first window, "edit", used for emacs
+tmux new-session -ds "$session_name" -n edit "$SOURCE_VENV && em"
+
+# Make a "repl" window with an ipython interpreter
+tmux new-window -a -t "$session_name:edit" -n repl "$SOURCE_VENV && ipython"
+
+# Make a new window for each of the holy trinity repos
+tmux new-window -a -t "$session_name:repl"    -n bedrock -c "$HOME/src/abyss/abyss-bedrock"
+tmux new-window -a -t "$session_name:bedrock" -n deepl   -c "$HOME/src/abyss/deep-learning"
+tmux new-window -a -t "$session_name:deepl"   -n fabric  -c "$HOME/src/abyss/abyss-fabric" 
+
+# Attach to the session
+tmux attach -t "$session_name"
