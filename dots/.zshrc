@@ -151,8 +151,6 @@ alias pvv='pytest -vvvx'
 alias pvx='pytest -vvvx'
 
 alias backlight_min='sudo bash -c "echo 1 > /sys/class/backlight/intel_backlight/brightness"'
-alias rs='rsync -avhP'
-alias nomachine='/usr/NX/bin/nxplayer'
 
 
 #################
