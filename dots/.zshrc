@@ -138,6 +138,9 @@ alias vpn_disconnect='openvpn3 session-manage --disconnect --config /etc/openvpn
 alias rs='rsync -avhP'
 alias nomachine='/usr/NX/bin/nxplayer'
 alias rmundotree='find . -name "*~undo-tree~*" -delete'
+alias rgn='rg --files-with-matches'
+alias gdn='gd --name-only'
+alias gdnu='gd --diff-filter=U --name-only'
 
 
 #################
@@ -176,5 +179,3 @@ export TF_CPP_MIN_LOG_LEVEL=3
 # autoload -Uz compinit
 # zstyle ':completion:*' menu select
 # fpath+=~/.zfunc
-
-
