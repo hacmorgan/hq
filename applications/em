@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # A simple script to open a given file in emacs,
-# and detatch the process from the parent terminal 
+# and detatch the process from the parent terminal
 
 
 source $( type -p bash-std )
@@ -10,7 +10,7 @@ BASH_STD_IGNORE_UNKNOWN_ARGS=1  # until positional args implemented
 
 function prologue
 {
-    cat <<EOF 
+    cat <<EOF
 
 ${fmt_red}em - emacsclient wrapper${fmt_reset}
 
@@ -21,12 +21,9 @@ EOF
 function options
 {
     cat <<EOF
---buffalo,-b; Look for file (if any given) on buffalo
---enzo,-e; Look for file (if any given) on enzo
---george,-g; Look for file (if any given) on george
+--detach,-d; Open file in emacs server but don't launch an emacs window
 --sudo,-s; Open file using sudo
---gui,-x; Open file in GUI instead of terminal 
---via-george,-v; For remotes other than george, use george as a jump host
+--gui,-x; Open file in GUI instead of terminal
 EOF
 }
 
@@ -45,67 +42,59 @@ function get_final_arg
 
 function sanitize_inputs
 {
-    if (( options_george + options_buffalo + options_enzo > 1 )); then
-        die "--george, --enzo and --buffalo are mutually exclusive"
+    if (( options_detach + options_gui > 1 )); then
+        die "--detach and --gui are mutually exclusive"
     fi
 }
 
 
 function get_filename
 {
-    function is_local
-    {
-        echo $(( options_george + options_buffalo + options_enzo == 0 ))
-    }
-    
     local final_arg=$( get_final_arg $@ )
     local file=""
     local emacs_file_path=""
+
+    # Catch when the last arg is a CLI option instead of a file path
     if [[ -z "$( grep '^-' <<< $final_arg )" ]]; then file="$final_arg"; fi
-    if (( options_george )); then
-        emacs_file_path="/ssh:$(where-is-george)"
-    elif (( options_buffalo )); then
-        emacs_file_path="/ssh"
-        if (( options_via_george )); then
-            emacs_file_path+=":$(where-is-george)\|ssh"
-        fi
-        emacs_file_path+=":buffalo"
-    elif (( options_enzo )); then
-        emacs_file_path="/ssh"
-        if (( options_via_george )); then
-            emacs_file_path+=":$(where-is-george)\|ssh"
-        fi
-        emacs_file_path+=":enzo"
-    fi
     if (( options_sudo )); then
-        if (( $(is_local) )); then
-            emacs_file_path+="/"
-        else
-            emacs_file_path+="|"
-        fi
-        emacs_file_path+="sudo::"
-    elif (( ! $(is_local) )); then
-        emacs_file_path+=":"
+        emacs_file_path+="/sudo::"
     fi
+
+    # Resolve to absolute path for sudo
     if (( options_sudo )); then
         emacs_file_path+="$( realpath $file )"
     else
         emacs_file_path+="$file"
     fi
+
     echo $emacs_file_path
 }
 
 
 
 
-# todo: see if this still breaks when given 2 files with "$@" instead of $@
-sanitize_inputs $@  
+# Check args are legit
+sanitize_inputs $@
 
-file="$( get_filename $@ )"
-command="emacsclient -a '' -c $file"
-if (( ! options_gui )); then
-    command+=" -nw"
+# Construct the common start of the command
+command="emacsclient -a ''"
+
+# Add appropriate prefix depending if we're opening here or somewehre else
+if (( options_detach )); then
+    command+=" -n"
 else
-    command+=" &!"
+    command+=" -c"
 fi
+
+# Add the filepath itself
+command+=" $(get_filename $@)"
+
+# Set args for GUI/TUI
+if (( options_gui )); then
+    command+=" &!"
+else
+    command+=" -nw"
+fi
+
+# Run emacs
 eval "$command"

@@ -120,3 +120,7 @@ Host hihi
 Host saudi-nomachine
     HostName 158.101.252.67
     User hamish
+
+Host chakor
+    HostName 10.137.4.14
+    User hamish
