@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+
+# Start a new tmux session with prefect server and worker
+
+
+set -o errexit
+
+
+# Get tmux session name as optional positional arg
+session_name="$1"
+[[ -n "$session_name" ]] || session_name="prefect"
+
+# We will source the Abyss venv in every window, so we store this command
+SOURCE_VENV="source $HOME/venvs/abyss/bin/activate"
+
+# Create a new tmux session with our prefect server in the first window, called "server"
+tmux new-session -ds "$session_name" -n server "$SOURCE_VENV && prefect server start"
+
+# Make a "worker" window with a prefect worker
+tmux new-window -a -t "$session_name:server" -n worker "$SOURCE_VENV && prefect worker start --pool default-work-pool"
+
+# Attach to the session
+tmux attach -t "$session_name"

@@ -7,6 +7,7 @@
 # Wrap at 72 chars. ################################## which is here: #
 
 
+# Co-authored-by: Max Smith <msmith-abyss@users.noreply.github.com>
 # At the end: Include Co-authored-by for all contributors. 
 # Include at least one empty line before it. Format: 
 # Co-authored-by: name <user@users.noreply.github.com>
