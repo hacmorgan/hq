@@ -30,10 +30,12 @@ setup(
     install_requires=[
         "black",
         "cattrs",
+        "cloudpickle",
         "distro",
         "flake8",
         "ipython",
         "jedi_language_server",
+        "keyboard",
         "numpy",
         "opencv-python-headless",
         "pillow",
