@@ -21,6 +21,7 @@ setup(
     packages=[
         "hq",
         "hq.calculators",
+        "hq.cli",
         "hq.gui",
         "hq.hardware",
         "hq.ml",
@@ -31,6 +32,7 @@ setup(
         "black",
         "cattrs",
         "distro",
+        "escpos",
         "flake8",
         "ipython",
         "jedi_language_server",
