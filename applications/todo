@@ -6,10 +6,15 @@ Lightweight application for writing and aggregating TODOs
 """
 
 
+from os import environ
+from sys import argv
 from hq.cli.todo import todo
 
 from hq.cli import run_typer_app
 
+from hq.shell import sh_run
+
 
 if __name__ == "__main__":
+
     run_typer_app(todo)

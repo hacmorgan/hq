@@ -10,15 +10,15 @@ from pathlib import Path
 from datetime import datetime
 from shutil import copyfile
 from os import environ
+from usb import USBError
 
 from hq.cli import getchar, run_typer_app
 from hq.shell import sh_run
-from hq.hardware.thermal_printer import print_thermally
-
+from hq.hardware.thermal_printer import print_thermally, print_thermally_unpriveliged
 
 # Parent directory under which TODOs are saved
 _user = environ.get("SUDO_USER", environ["USER"])
-ROOT_TODO_DIR = Path(f"/home/{_user}/hq/etc/todo").expanduser()
+ROOT_TODO_DIR = Path(f"/home/{_user}/.hq-secret/etc/todo").expanduser()
 
 # File format of TODO files
 TODO_SUFFIX = ".org"
@@ -77,6 +77,7 @@ def todo(name: str | None = None) -> None:
             )
         )
 
+        # Wait for the next keypress and get the value
         match (char := getchar()):
 
             # (n): New TODO
@@ -130,7 +131,8 @@ def find_previous() -> Path | None:
             (
                 path
                 for path in ROOT_TODO_DIR.rglob("**/*")
-                if not path.is_dir() and not path.stem.startswith(".")
+                if not path.is_dir()
+                and not any(path.stem.startswith(char) for char in ".#")
             )
         )[0]
     except IndexError:
@@ -144,11 +146,24 @@ def print_todo(todo_path: Path) -> None:
     Args:
         todo_path: Path to load TODO from for printing
     """
-    # Convert org mode format to printable text
-    todo_text = todo_path.read_text().replace("*", "\t").replace("TODO", "[]")
+
+    # Convert org mode format to printable text and escape escape sequences for
+    # unpriveliged print function
+    todo_text = (
+        todo_path.read_text()
+        .replace("\n", r"\n\n")
+        .replace("*", "  ")
+        .replace("TODO", "[]")
+        .replace("DONE", "[x]")
+    )
 
     # Send formatted text to thermal printer
-    print_thermally(todo_text)
+    try:
+        print_thermally_unpriveliged(todo_text)
+    except USBError as exc:
+        raise NotImplementedError(
+            "Unable to print to thermal printer without sudo"
+        ) from exc
 
 
 if __name__ == "__main__":

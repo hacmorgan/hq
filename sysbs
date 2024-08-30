@@ -377,6 +377,12 @@ function configure_tmux
 }
 
 
+function install_hq_secret
+{
+    git clone git@github.com:hacmorgan/hq-secret.git ~/.hq-secret
+}
+
+
 function configure_cctv
 {
     # Set up CCTV system on this host with Shinobi and MariaDB
@@ -456,6 +462,7 @@ function options
 --install-cpp-manpages; Install C++ stdlib manpages using https://github.com/jeaye/stdman
 --install-fonts; Unpack fantasque (noLoopK) and FiraCode (ligatures) to /usr/share/fonts/fantasque
 --install-oh-my-zsh; Self explanatory
+--install-hq-secret; 
 --install-packages; Install all packages in etc/packagelist that aren't commented out
 --install-prefix,-p=<path>; default=$HOME/.local; Install prefix for scripts
 --install-python-module; Install HQ Python module, including scripts and pip installs
@@ -478,6 +485,7 @@ STANDARD_OPERATIONS=(
     --configure-zsh
     --install-oh-my-zsh
     --install-python-module
+    --install-hq-secret
     --move-existing
     --no-sudo
     --symlink-dots
@@ -519,6 +527,7 @@ fi
 (( options_update_package_list ))         && update_package_list
 (( options_install_packages ))            && install_packages
 (( options_install_cpp_manpages ))        && install_cpp_manpages
+(( options_install_hq_secret ))           && install_hq_secret
 
 
 exit 0
