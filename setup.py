@@ -27,7 +27,11 @@ setup(
         "hq.ml",
         "hq.ml.wwd",
     ],
-    scripts=list(map(str, Path("applications").iterdir())),
+    scripts=[
+        str(path)
+        for path in Path("applications").iterdir()
+        if not path.stem.startswith(".")
+    ],
     install_requires=[
         "black",
         "cattrs",

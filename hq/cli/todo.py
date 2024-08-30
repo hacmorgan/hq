@@ -3,30 +3,13 @@
 
 """
 Lightweight application for writing and aggregating TODOs
-
-- Maybe just use org mode's TODO capabilities
-    - Make org -> printable format converter
-
-    - Example raw org
-        * TODO get char
-        ** TODO put char back
-        * TODO sfsaaslidfhasdf somthing reall longkasjfd skhfkjs
-        ** TODO     
-
-    - logic: replace * with \t, replace TODO with a circle   
-
-    - Use emacs by default, fall back on $EDITOR
-
-- just need main menu
-    - (n) new todo
-    - (c) copy from previous
-    - (p) print
 """
 
 
 from pathlib import Path
 from datetime import datetime
 from shutil import copyfile
+from os import environ
 
 from hq.cli import getchar, run_typer_app
 from hq.shell import sh_run
@@ -34,7 +17,8 @@ from hq.hardware.thermal_printer import print_thermally
 
 
 # Parent directory under which TODOs are saved
-ROOT_TODO_DIR = Path("~/hq/etc/todo").expanduser()
+_user = environ.get("SUDO_USER", environ["USER"])
+ROOT_TODO_DIR = Path(f"/home/{_user}/hq/etc/todo").expanduser()
 
 # File format of TODO files
 TODO_SUFFIX = ".org"
@@ -45,11 +29,13 @@ TODO_EDITOR = "emacs -nw"
 # Main menu text
 TODO_MENU = """
 
-    todo
+    todo - {todo_name} (previous: {previous_todo_name})
 
-    (n) new todo
+    (n) new todo / edit existing todo
     (c) copy from previous
+    (d) dump to stdout
     (p) print
+    (q) quit
 
 """
 
@@ -65,7 +51,7 @@ def todo(name: str | None = None) -> None:
             ~/hq/etc/todo
     """
     # Construct path to which we will (maybe) save this TODO later
-    if "/" in name:
+    if name is not None and "/" in name:
         todo_dir = ROOT_TODO_DIR
         todo_path = (ROOT_TODO_DIR / name).with_suffix(TODO_SUFFIX)
     else:
@@ -75,32 +61,46 @@ def todo(name: str | None = None) -> None:
             todo_dir / (name if name is not None else str(now.day))
         ).with_suffix(TODO_SUFFIX)
 
+    # Find the previous TODO (if it exists)
+    previous = find_previous()
+
     # We need to be able to return to the menu after editing, so we read keys from stdin
     # on repeat
     while True:
 
         # Clear the terminal and print the menu
         sh_run("clear")
-        print(TODO_MENU)
+        print(
+            TODO_MENU.format(
+                todo_name=todo_path.relative_to(ROOT_TODO_DIR),
+                previous_todo_name=previous.relative_to(ROOT_TODO_DIR),
+            )
+        )
 
         match (char := getchar()):
 
             # (n): New TODO
-            case "n":
+            case b"n":
+                todo_path.parent.mkdir(exist_ok=True, parents=True)
                 edit_todo(todo_path=todo_path)
 
             # (c): Copy from previous TODO
-            case "c":
-                if (previous := find_previous()) is not None:
+            case b"c":
+                todo_path.parent.mkdir(exist_ok=True, parents=True)
+                if previous is not None:
                     copyfile(src=previous, dst=todo_path)
                 edit_todo(todo_path=todo_path)
 
             # (p): Print TODO (to thermal printer)
-            case "p":
+            case b"p":
                 print_todo(todo_path=todo_path)
 
+            # (d): Dump TODO (to stdout)
+            case b"d":
+                print(todo_path.read_text())
+
             # (q): Quit
-            case "q":
+            case b"q":
                 break
 
             # Anything else is undefined
@@ -126,8 +126,14 @@ def find_previous() -> Path | None:
         Path of the most recent TODO if there is one, None otherwise
     """
     try:
-        return next(sorted(ROOT_TODO_DIR.rglob("**/*")))
-    except StopIteration:
+        return sorted(
+            (
+                path
+                for path in ROOT_TODO_DIR.rglob("**/*")
+                if not path.is_dir() and not path.stem.startswith(".")
+            )
+        )[0]
+    except IndexError:
         return None
 
 
@@ -139,7 +145,7 @@ def print_todo(todo_path: Path) -> None:
         todo_path: Path to load TODO from for printing
     """
     # Convert org mode format to printable text
-    todo_text = todo_path.read_text().replace("*", "\t").replace("TODO", "○")
+    todo_text = todo_path.read_text().replace("*", "\t").replace("TODO", "[]")
 
     # Send formatted text to thermal printer
     print_thermally(todo_text)

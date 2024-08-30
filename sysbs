@@ -138,21 +138,23 @@ function install_fonts
     function fantasque
     {
         sudo mkdir -p /usr/share/fonts/fantasque
-        pushd /usr/share/fonts/fantasque
-        curl -L "https://github.com/belluzj/fantasque-sans/releases/download/v1.8.0/FantasqueSansMono-NoLoopK.tar.gz" \
-            | sudo tar -zxf$verbose -
-        popd
+        (
+            cd /usr/share/fonts/fantasque || return
+            curl -L "https://github.com/belluzj/fantasque-sans/releases/download/v1.8.0/FantasqueSansMono-NoLoopK.tar.gz" \
+                | sudo tar -zxf$verbose -
+        )
     }
     
     function firacode
     {
         sudo mkdir -p /usr/share/fonts/firacode
-        pushd /usr/share/fonts/firacode
-        curl -L "https://github.com/tonsky/FiraCode/releases/download/5.2/Fira_Code_v5.2.zip" \
-             > /tmp/firacode.zip
-        sudo unzip /tmp/firacode.zip
-        rm /tmp/firacode.zip
-        popd
+        (
+            cd usr/share/fonts/firacode || return
+            curl -L "https://github.com/tonsky/FiraCode/releases/download/5.2/Fira_Code_v5.2.zip" \
+                > /tmp/firacode.zip
+            sudo unzip /tmp/firacode.zip
+            rm /tmp/firacode.zip
+        )
     }
 
     fantasque
