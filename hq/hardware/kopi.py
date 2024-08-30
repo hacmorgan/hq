@@ -15,7 +15,7 @@ from os.path import basename, commonprefix, dirname, expanduser, isdir
 from pathlib import Path
 from typing import List, Optional
 
-from hq.io_tools import getchar
+from hq.cli.utils import legacy_getchar
 
 CTRL_C = b"\x03"
 BACKSPACE = b"\x7f"
@@ -64,7 +64,7 @@ def kopi(input_path: str = KOPI_DB_DIR, fuzzy: bool = False) -> None:
         print(f"{prompt}{input_path[-PROMPT_LENGTH:]}")
         print("\n".join(map(str, suggestions)))
 
-        char = getchar()
+        char = legacy_getchar()
         # print(char)
         # break
 

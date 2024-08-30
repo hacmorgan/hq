@@ -87,7 +87,7 @@ Host burrito
 
 Host taco
     HostName 10.137.4.10
-    User hmo
+    User hamish
 
 Host haggis
     HostName 10.137.4.11
