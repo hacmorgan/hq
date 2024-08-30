@@ -21,17 +21,23 @@ setup(
     packages=[
         "hq",
         "hq.calculators",
+        "hq.cli",
         "hq.gui",
         "hq.hardware",
         "hq.ml",
         "hq.ml.wwd",
     ],
-    scripts=list(map(str, Path("applications").iterdir())),
+    scripts=[
+        str(path)
+        for path in Path("applications").iterdir()
+        if not path.stem.startswith(".")
+    ],
     install_requires=[
         "black",
         "cattrs",
         "cloudpickle",
         "distro",
+        "escpos",
         "flake8",
         "ipython",
         "jedi_language_server",
