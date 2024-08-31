@@ -9,6 +9,8 @@ from escpos.printer import Usb
 from hq.shell import sh_run
 
 
+MAX_LINE_WIDTH = 41
+
 ThermalPrintMethod = Literal["text", "barcode", "qr", "image"]
 
 
@@ -17,8 +19,10 @@ def print_thermally(content: str, method: ThermalPrintMethod = "text") -> None:
     Print stuff on a thermal printer
 
     Args:
-        content: Text to print
-        method: Method of encoding data
+        content: Text to print, optionally encoded as a barcode or QR code, or path to
+            image to load and print
+        method: Method of encoding data; one of "text", "barcode", "qr", "image"; where
+            "image" is expected to be a path to an image on disk
     """
     # Initialise printer
     printer = Usb(idVendor=0x04B8, idProduct=0x0E02, profile="TM-T88V")
@@ -26,7 +30,7 @@ def print_thermally(content: str, method: ThermalPrintMethod = "text") -> None:
     match method:
 
         case "text":
-            printer.set(smooth=True)
+            printer.set(smooth=False, font="a")
             printer.text(content)
 
         case "qr":
@@ -34,6 +38,9 @@ def print_thermally(content: str, method: ThermalPrintMethod = "text") -> None:
 
         case "barcode":
             printer.barcode(code=content, bc="UPC-A")
+
+        case "image":
+            printer.image(content)
 
         case _:
             raise NotImplementedError(f"Unsupported content type: {method}")
