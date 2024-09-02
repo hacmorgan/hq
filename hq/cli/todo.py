@@ -171,7 +171,7 @@ def print_todo(todo_path: Path) -> None:
 
             # Simply add another section index (i.e. "0.0" -> "0.0.0") for indents
             if this_level > level:
-                entry_idx += ".0"
+                entry_idx += ".1"
                 level += 1
 
             # Drop the innermost index and increment the second innermost (i.e. "0.0.0"
