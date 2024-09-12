@@ -143,6 +143,7 @@ alias gdn='gd --name-only'
 alias gdnu='gd --diff-filter=U --name-only'
 alias gdup='gd $(git merge-base HEAD origin/master)'
 alias gdnup='gdup --name-only'
+alias cdscr='cd /mnt/vault/scratch/dataforce/hamish'
 
 
 #################
