@@ -9,7 +9,7 @@ from escpos.printer import Usb
 from hq.shell import sh_run
 
 
-MAX_LINE_WIDTH = 41
+MAX_LINE_WIDTH = 39
 
 ThermalPrintMethod = Literal["text", "barcode", "qr", "image"]
 
