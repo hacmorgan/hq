@@ -19,7 +19,7 @@ from typing import Optional
 
 import cv2
 import numpy as np
-from hq.io_tools import getchar
+from hq.cli.utils import getchar
 
 CTRL_C = b"\x03"
 BACKSPACE = b"\x7f"
