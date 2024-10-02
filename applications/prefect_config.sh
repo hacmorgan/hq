@@ -4,7 +4,7 @@
 # Configure this server as a prefect server
 
 
-SERVER_IP="$(cut -d' ' -f3 <<< "$SSH_CONNECTION")"
+[[ -n "$SERVER_IP" ]] || SERVER_IP="$(cut -d' ' -f3 <<< "$SSH_CONNECTION")"
 [[ -n "$SERVER_IP" ]] || {
     echo "Could not get server IP from SSH_CONNECTION env variable" >&2
     exit 1
@@ -22,7 +22,7 @@ prefect config set \
     PREFECT_LOGGING_EXTRA_LOGGERS=abyss
 
 
-docker run -d \
+sudo docker run -d \
 --name prefect-postgres-hamish \
 -v DB_VOLUME_NAME:/var/lib/postgresql/data \
 -p 42070:5432 \
