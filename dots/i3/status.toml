@@ -2,10 +2,10 @@
 icons_format = " {icon} "
 
 [icons]
-icons = "awesome6"
+icons = "/home/hamish/src/foss/i3status-rust/files/icons/awesome6"
 
 [theme]
-theme = "slick"
+theme = "/home/hamish/src/foss/i3status-rust/files/themes/slick.toml"
 [theme.overrides]
 info_bg = "#ad29c4"
 separator = " " # seeing as the powerline glyph didn't work properly
