@@ -166,7 +166,7 @@ export ALTERNATE_EDITOR=""
 
 export HQ_VENV="$HOME/venvs/py3.11"
 
-export TERM="xterm-256color"
+# export TERM="xterm-256color"
 
 # # Set python's debugger as ipython
 # export PYTHONBREAKPOINT='IPython.core.debugger.set_trace'
@@ -179,6 +179,9 @@ export MLFLOW_URI="http://10.137.8.100:5000"
 
 # Tensorflow logging
 export TF_CPP_MIN_LOG_LEVEL=3
+
+
+source "$HQ_VENV/bin/activate"
 
 
 # autoload -Uz compinit
