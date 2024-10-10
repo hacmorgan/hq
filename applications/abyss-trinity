@@ -5,14 +5,25 @@
 
 
 set -o errexit
+set -o xtrace
 
 
 # Get tmux session name as positional arg
 session_name="$1"
 [[ -n "$session_name" ]] || { echo "tmux session name required as argument" >&2; exit 1; }
 
-# We will source the Abyss venv in every window, so we store this command
-SOURCE_VENV="source $HOME/venvs/abyss/bin/activate"
+# We will source the relevant venv in every window, so we must determine which is the
+# relevant venv, starting with the active venv (if there is one), falling back on the HQ
+# default. We construct a command string to source the venv for later convenience
+venv_path="$VIRTUAL_ENV"
+[[ -n "$venv_path" ]] || venv_path="$HQ_VENV"
+[[ -n "$venv_path" ]] || { echo "Could not determine virtual env path from active venv or " >&2; exit 1; }
+SOURCE_VENV="source \"$venv_path/bin/activate\""
+
+# Before we go launching emacs, display a warning if there is already an emacs server
+# running (in an unknown environment)
+ps aux | grep -v "grep" | grep "emacs --daemon" >/dev/null &&
+    echo "WARNING: emacs server is already running, so may not be in venv: $venv_path">&2
 
 # Create a new tmux session, with our first window, "edit", used for emacs
 tmux new-session -ds "$session_name" -n edit "$SOURCE_VENV && em"

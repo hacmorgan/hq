@@ -168,7 +168,9 @@ export MPD_PORT="6600"
 # this should start emacs if the daemon is not already running
 export ALTERNATE_EDITOR=""
 
-export TERM="xterm-256color"
+export HQ_VENV="$HOME/venvs/py3.11"
+
+# export TERM="xterm-256color"
 
 # # Set python's debugger as ipython
 # export PYTHONBREAKPOINT='IPython.core.debugger.set_trace'
@@ -181,6 +183,9 @@ export MLFLOW_URI="http://10.137.8.100:5000"
 
 # Tensorflow logging
 export TF_CPP_MIN_LOG_LEVEL=3
+
+
+source "$HQ_VENV/bin/activate"
 
 
 # autoload -Uz compinit
