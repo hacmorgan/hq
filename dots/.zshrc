@@ -153,41 +153,54 @@ alias cdscr='cd /mnt/vault/scratch/dataforce/hamish'
 #################
 #    EXPORTS    #
 #################
-path=( "$HOME/devtools/bin" "$HOME/.cargo/bin" "$HOME/.local/bin" "/usr/local/cuda/bin" $path )
+
+# Add new directories to $PATH
+path=(
+    "$HOME/devtools/bin"   # Abyss dev scripts
+    "$HOME/.cargo/bin"     # Local Rust installs
+    "$HOME/.local/bin"     # Mostly comma, snark, and old stages
+    "/usr/local/cuda/bin"  # For manual CUDA installs from runfile
+    $path
+)
 export PATH
 
+# Set $LD_LIBRARY_PATH as a special zsh environment variable and add new library paths
 typeset -T LD_LIBRARY_PATH ld_library_path :
-ld_library_path=( "$HOME/.local/lib" "/usr/local/cuda/lib64" $ld_library_path )
+ld_library_path=(
+    "$HOME/.local/lib"       # Comma, snark and Abyss C++ libraries
+    "/usr/local/cuda/lib64"  # For manual CUDA installs from runfile
+    $ld_library_path
+)
 export LD_LIBRARY_PATH
 
+# Default editor (for git commits etc)
 export EDITOR="/usr/bin/nvim"
 
+# Music Player Daemon
 export MPD_HOST="localhost"
 export MPD_PORT="6600"
 
-# this should start emacs if the daemon is not already running
+# This should start emacs if the daemon is not already running
 export ALTERNATE_EDITOR=""
 
-export HQ_VENV="$HOME/venvs/py3.11"
-
+# # In the past there were reasons to manually set TERM
 # export TERM="xterm-256color"
 
-# # Set python's debugger as ipython
+# # Set python's debugger as ipython (still doesn't bring tab-complete)
 # export PYTHONBREAKPOINT='IPython.core.debugger.set_trace'
 
 # AWS Credentials
 export ABYSS_AWS_ENVFILE="$HOME/.aws/credentials.env"
 
-# mlflow
+# MLflow server address
 export MLFLOW_URI="http://10.137.8.100:5000"
 
 # Tensorflow logging
 export TF_CPP_MIN_LOG_LEVEL=3
 
 
+##############
+#    VENV    #
+##############
+export HQ_VENV="$HOME/venvs/py3.11"
 source "$HQ_VENV/bin/activate"
-
-
-# autoload -Uz compinit
-# zstyle ':completion:*' menu select
-# fpath+=~/.zfunc
