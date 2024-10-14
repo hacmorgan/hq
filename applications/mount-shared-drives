@@ -42,6 +42,8 @@ bash-std-application-init "$@" < <( options )
 SSHFS_OPTS=(
     -o ServerAliveInterval=15
     -o reconnect
+    # -o reconnect_interval=5
+    # -o mount_timeout=5
     # -o allow_other
 )
 SSHFS_OPTS_ABYSS=(
