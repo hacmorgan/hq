@@ -98,6 +98,7 @@ source /usr/share/nvm/init-nvm.sh
 # # Source hq python venv
 # HQ_VENV=$HOME/venvs/hq
 # [[ ! -e $HQ_VENV ]] || source $HQ_VENV/bin/activate
+export HQ_VENV="$HOME/venvs/py3.11"
 
 
 #################
@@ -147,6 +148,8 @@ alias gdnu='gd --diff-filter=U --name-only'
 alias gdup='gd $(git merge-base HEAD origin/master)'
 alias gdnup='gdup --name-only'
 alias cdscr='cd /mnt/vault/scratch/dataforce/hamish'
+alias cloudcompare="deactivate; flatpak run org.cloudcompare.CloudCompare; source $HQ_VENV"
+alias grsh='git reset --hard "$(git branch --show-current)"'
 
 
 #################
@@ -198,8 +201,12 @@ export MLFLOW_URI="http://10.137.8.100:5000"
 export TF_CPP_MIN_LOG_LEVEL=3
 
 
+# Source secrets if present
+[[ ! -e "$HOME/.config/secret-sauce" ]] || source "$HOME/.config/secret-sauce"
+
+
 ##############
 #    VENV    #
 ##############
-export HQ_VENV="$HOME/venvs/py3.11"
+# We source this last to enzsure the venv is highest priority
 source "$HQ_VENV/bin/activate"
