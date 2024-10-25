@@ -121,6 +121,7 @@ function configure_emacs
         fi
     fi
     git clone git@github.com:hacmorgan/emacs.git ~/.emacs.d
+    git clone git@github.com:copilot-emacs/copilot.el.git ~/.emacs.d/external-packages/copilot.el
 }
 
 
