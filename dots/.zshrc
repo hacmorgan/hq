@@ -260,6 +260,10 @@ export NVM_DIR="$HOME/.nvm"
 }
 
 
+# Source secrets if present
+[[ ! -e "$HOME/.config/secret-sauce" ]] || source "$HOME/.config/secret-sauce"
+
+
 ##############
 #    VENV    #
 ##############
