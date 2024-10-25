@@ -260,6 +260,10 @@ export CHROME_EXECUTABLE=/usr/bin/chromium
 
 
 
+# Source secrets if present
+[[ ! -e "$HOME/.config/secret-sauce" ]] || source "$HOME/.config/secret-sauce"
+
+
 ##############
 #    VENV    #
 ##############
