@@ -25,6 +25,9 @@ SOURCE_VENV="source \"$venv_path/bin/activate\""
 ps aux | grep -v "grep" | grep "emacs --daemon" >/dev/null &&
     echo "WARNING: emacs server is already running, so may not be in venv: $venv_path">&2
 
+# Start tmux server
+tmux start
+
 # Create a new tmux session, with our first window, "edit", used for emacs
 tmux new-session -ds "$session_name" -n edit "$SOURCE_VENV && em"
 
