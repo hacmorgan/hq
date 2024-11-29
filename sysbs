@@ -13,7 +13,7 @@ source "$hq/applications/bash-std"
 
 function install_python_module
 {
-    python3 -m pip install --upgrade "$hq/" ||
+    python3 -m pip install --upgrade --use-pep517 "$hq/" ||
         die "python3-pip is required to install HQ Python module"
 }
 
