@@ -204,6 +204,9 @@ export TF_CPP_MIN_LOG_LEVEL=3
 # Dockerfile to build a dev env on top of the devtools image
 export DDE_DOCKERFILE="$HOME/hq/etc/dde-env.dockerfile"
 
+# Tell flutter (et. al.) where to find chromium, because they look for chrome
+export CHROME_EXECUTABLE=/usr/bin/chromium
+
 
 # Source secrets if present
 [[ ! -e "$HOME/.config/secret-sauce" ]] || source "$HOME/.config/secret-sauce"
