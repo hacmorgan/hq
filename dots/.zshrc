@@ -161,6 +161,7 @@ path=(
     "$HOME/devtools/bin"   # Abyss dev scripts
     "$HOME/.cargo/bin"     # Local Rust installs
     "$HOME/.local/bin"     # Mostly comma, snark, and old stages
+    "$HOME/flutter/bin"    # flutter UI framework tools
     "/usr/local/cuda/bin"  # For manual CUDA installs from runfile
     $path
 )
