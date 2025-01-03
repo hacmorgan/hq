@@ -52,8 +52,11 @@ xset r rate 250 50 &!
 # map caps-lock to super - only required for IBM Model M. Don't want this for Displaywriter
 # setxkbmap -option caps:super &!
 
-# start the emacs server. disown so that exiting x session doesn't kill emacs
-emacs --daemon &!
+# # start the emacs server. disown so that exiting x session doesn't kill emacs
+# emacs --daemon &!
+
+# Start the ssh agent
+(eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_rsa) &!
 
 # this is the last thing we do!
 # exec startxfce4

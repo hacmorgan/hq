@@ -4,7 +4,7 @@
 """
 Automatically fill out harvest logs
 
-Recording keystrokes:
+Recording keystrokes (until hitting `esc`):
 
     sudo examples/autoharvest.py record > etc/auto-harvest/default.cloudpickle
 
@@ -21,7 +21,7 @@ import sys
 
 
 if len(sys.argv) > 1 and sys.argv[1] in "record":
-    recorded = keyboard.record(until="esc")
+    recorded = keyboard.record(until="space")
     cloudpickle.dump(recorded, sys.stdout.buffer)
 else:
     recorded = cloudpickle.load(sys.stdin.buffer)

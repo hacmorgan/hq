@@ -133,9 +133,9 @@ alias glg='git log --graph'
 alias gdu='git push origin --delete'
 alias gpu='gp --set-upstream origin "$(git branch --show-current)"'
 alias vb='vim.basic'
-alias vpn_connect='openvpn3 session-start --config abyss'
 alias vpn_status='openvpn3 sessions-list'
 alias vpn_disconnect='openvpn3 session-manage --disconnect --config abyss'
+alias vpn_connect='vpn_disconnect; openvpn3 session-start --config abyss'
 alias rs='rsync -avhP'
 alias nomachine='/usr/NX/bin/nxplayer'
 alias rmundotree='find . -name "*~undo-tree~*" -delete'
@@ -147,6 +147,8 @@ alias gdnup='gdup --name-only'
 alias cdscr='cd /mnt/vault/scratch/dataforce/hamish'
 alias cloudcompare="deactivate; flatpak run org.cloudcompare.CloudCompare; source $HQ_VENV"
 alias grsh='git reset --hard "$(git branch --show-current)"'
+alias pvv='pytest -vvvx'
+alias pvx='pytest -vvvx'
 
 
 #################
@@ -193,7 +195,7 @@ export ALTERNATE_EDITOR=""
 export ABYSS_AWS_ENVFILE="$HOME/.aws/credentials.env"
 
 # MLflow server address
-export MLFLOW_URI="http://10.137.8.100:5000"
+export MLFLOW_URI="http://mlflow.abyss.internal:5000"
 
 # Tensorflow logging
 export TF_CPP_MIN_LOG_LEVEL=3
