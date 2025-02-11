@@ -145,6 +145,7 @@ alias gdnu='gd --diff-filter=U --name-only'
 alias gdup='gd $(git merge-base HEAD origin/master)'
 alias gdnup='gdup --name-only'
 alias cdscr='cd /mnt/vault/scratch/dataforce/hamish'
+alias cdrscr='cd /mnt/rapid/scratch/dataforce/hamish'
 alias cloudcompare="deactivate; flatpak run org.cloudcompare.CloudCompare; source $HQ_VENV"
 alias grsh='git reset --hard "$(git branch --show-current)"'
 alias pvv='pytest -vvvx'
