@@ -31,6 +31,7 @@ function options
 --mountpoints-file=<file>; default=~/hq/etc/mountpoints; File storing local:remote pars of filepaths
 --remote; Force using remote address (for george)
 --notify; Produce notify-send notifications for each mount
+--jump,-j=<host>; default=diego; Host to mount via
 --verbose; Output messages on each mount
 EOF
 }
@@ -158,7 +159,7 @@ if (( options_abyss )); then
     mount_abyss_drives
 else
     # For now everything goes via diego
-    _mount diego
+    _mount "$options_jump"
 
     # Once george is revived we can revisit this
     # if (( options_local )); then

@@ -148,6 +148,7 @@ alias gdnu='gd --diff-filter=U --name-only'
 alias gdup='gd $(git merge-base HEAD origin/master)'
 alias gdnup='gdup --name-only'
 alias cdscr='cd /mnt/vault/scratch/dataforce/hamish'
+alias cdrscr='cd /mnt/rapid/scratch/dataforce/hamish'
 alias cloudcompare="deactivate; flatpak run org.cloudcompare.CloudCompare; source $HQ_VENV"
 alias grsh='git reset --hard "$(git branch --show-current)"'
 alias pvv='pytest -vvvx'
@@ -213,6 +214,13 @@ export CHROME_EXECUTABLE=/usr/bin/chromium
 
 # Source secrets if present
 [[ ! -e "$HOME/.config/secret-sauce" ]] || source "$HOME/.config/secret-sauce"
+
+# Source nvm if present
+export NVM_DIR="$HOME/.nvm"
+[[ ! -e "$NVM_DIR/nvm.sh" ]] || {
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+}
 
 
 ##############

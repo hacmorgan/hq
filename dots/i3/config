@@ -245,6 +245,7 @@ bindsym $mod+Ctrl+e       exec "$TERMINAL ssh enzo"
 bindsym $mod+Ctrl+b       exec "$TERMINAL ssh buffalo"
 bindsym $mod+Ctrl+r       exec "$TERMINAL ssh bruno_abyss"
 bindsym $mod+Ctrl+d       exec "$TERMINAL ssh diego"
+bindsym $mod+Ctrl+Shift+d exec "$TERMINAL ssh diego_wifi"
 bindsym $mod+Ctrl+k       exec "$TERMINAL ssh kopi"
 
 # Browsers
