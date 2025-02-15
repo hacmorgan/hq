@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+
+# Move a directory to .bak, make a new directory, and delete the .bak
+#
+# This amounts to a fast delete when you need to a large directory to be empty quickly
+
+
+input_dir_path="$1"
+
+if [[ -z "$input_dir_path" ]]; then
+    echo "Usage: $0 <directory>"
+    exit 1
+fi
+
+# Repeatedly append .bak until we find a path that doesn't exist
+backup_path="${input_dir_path}.bak"
+while [[ -e "$backup_path" ]]; do
+    backup_path="${backup_path}.bak"
+done
+
+# Move the directory to the backup path
+mv -v "$input_dir_path" "$backup_path"
+
+# Create a new directory in its place
+mkdir -v "$input_dir_path"
+
+# Delete the backup directory and background the process
+rm -rf "$backup_path" &!
