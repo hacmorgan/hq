@@ -23,6 +23,7 @@ setup(
         "hq.calculators",
         "hq.cli",
         "hq.gui",
+        "hq.gui.dashboard",
         "hq.hardware",
         "hq.integrations",
         "hq.io",
@@ -40,6 +41,7 @@ setup(
         "cloudpickle",
         "distro",
         "escpos",
+        "fastapi",
         "flake8",
         "ipython",
         "jedi_language_server",
@@ -50,6 +52,7 @@ setup(
         "pygls>1.1.1",  # Avoids (1) from version 1.1.1
         "pylint",
         "typer",
+        "uvicorn",
         "virtualenv",
         "ytmusicapi",
     ]
