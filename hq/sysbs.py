@@ -2,7 +2,6 @@
 sysbs (system bootstrap) routines - set up environment(s)
 """
 
-
 from pathlib import Path
 
 import distro
@@ -43,4 +42,4 @@ def find_hq() -> Path:
     Returns:
         Path to root of HQ repo in filesystem
     """
-    return Path("~/src/hq").expanduser()
+    return Path.home() / "hq"
