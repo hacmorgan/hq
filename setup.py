@@ -24,6 +24,8 @@ setup(
         "hq.cli",
         "hq.gui",
         "hq.hardware",
+        "hq.integrations",
+        "hq.io",
         "hq.ml",
         "hq.ml.wwd",
     ],
@@ -49,6 +51,7 @@ setup(
         "pylint",
         "typer",
         "virtualenv",
+        "ytmusicapi",
     ]
     + (["torch", "torchvision"] if "HQML" in os.environ else []),
 )
