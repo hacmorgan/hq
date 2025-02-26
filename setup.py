@@ -22,6 +22,7 @@ setup(
         "hq",
         "hq.calculators",
         "hq.cli",
+        "hq.emily",
         "hq.gui",
         "hq.gui.dashboard",
         "hq.hardware",
