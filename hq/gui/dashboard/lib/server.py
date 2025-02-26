@@ -1,16 +1,46 @@
+#!/usr/bin/env python3
+
+
 """
 Backend API for dashboard
 """
 
+
+import json
 from fastapi import FastAPI
 import uvicorn
 from fastapi.responses import FileResponse
+
+from fastapi.middleware.cors import CORSMiddleware
 from typing import TypeAlias
 from pathlib import Path
 from hq.sysbs import find_hq
+from hq.emily import relationship_time
 
 
 app = FastAPI()
+
+
+origins = [
+    # Flutter app
+    r"http://localhost:\d+",
+    r"http://127.0.0.1:\d+",
+    # "http://localhost:39213",  # Your Flutter app's origin
+    "http://localhost",  # if you are running the server on localhost
+    "http://127.0.0.1",  # if you are running the server on 127.0.0.1
+    "http://127.0.0.1:8000",  # if you are running the server on 127.0.0.1:8000
+    # "http://127.0.0.1:8000/recipes",  # if you are running the server on 127.0.0.1:8000
+    # Add other origins as needed
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    # allow_origins=origins,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 
 Response: TypeAlias = dict[str, str]
@@ -21,7 +51,7 @@ HQ_RECIPES = HQ / "etc/kopi/recipes"
 
 
 @app.get("/")
-def read_root():
+def read_root() -> Response:
     """
     Get root of API
     """
@@ -32,23 +62,51 @@ def read_root():
 def get_recipe(filename: str) -> Response:
     """
     Get a specific recipe by path/name
+
+    Args:
+        filename: The name of the recipe file, which is the path of the recipe relative
+            to hq's recipes directory, with path separators replaced by ".."s (e.g.
+            "pourover..clever")
+
+    Returns:
+        A dictionary with the recipe name and contents, or an error message if the
+        recipe file is not found
     """
-    # file_path = os.path.join("recipes", filename)
-    # if os.path.exists(file_path):
-    #     return FileResponse(file_path)
-    # return {"error": "File not found"}
-    return (
-        FileResponse(file_path)
-        if (file_path := HQ_RECIPES / filename).exists()
-        else {"error": "File not found"}
-    )
+    # Reconstruct the path to the recipe file from the request
+    filename = filename.replace("..", "/")
+    file_path = HQ_RECIPES / filename
+
+    # Return the recipe's name and contents if the file exists
+    if file_path.exists():
+        return {"name": filename, "recipe": file_path.read_text()}
+
+    # Return an error message if the file does not exist
+    return {"error": f"Recipe not found: {file_path}"}
 
 
 @app.get("/recipes")
 def list_recipes() -> list[Path]:
+    """
+    Get all recipes in alphabetical order
 
-    return list(HQ_RECIPES.rglob("*"))
+    Returns:
+        Names of all recipes in hq's recipe directory, sorted alphabetically
+    """
+    return sorted(
+        "/".join(path.relative_to(HQ_RECIPES).parts)
+        for path in HQ_RECIPES.rglob("*")
+        if not path.is_dir()
+    )
+
+
+@app.get("/relationship_time")
+def get_relationship_time() -> Response:
+    """
+    Compute how long Emily and Hamish have been dating
+    """
+    relationship_time_string = relationship_time(return_timedelta=False)
+    return {"time": relationship_time_string}
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, port=8000)

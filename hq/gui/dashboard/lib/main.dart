@@ -193,7 +193,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> fetchRecipes() async {
-    final response = await http.get(Uri.parse('http://127.0.0.1:8000/recipes'));
+    final response = await http.get(Uri.parse('http://0.0.0.0:8000/recipes'), headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      });
     if (response.statusCode == 200) {
       setState(() {
         recipes = List<String>.from(json.decode(response.body));
@@ -202,6 +205,68 @@ class _MyHomePageState extends State<MyHomePage> {
       throw Exception('Failed to load recipes');
     }
   }
+
+  // Function to fetch and display recipe details
+  Future<void> _fetchRecipeDetails(String recipeId) async {
+    try {
+      String denestedRecipeId = recipeId.replaceAll("/", "..");
+      final response =
+          await http.get(Uri.parse('http://127.0.0.1:8000/recipes/$denestedRecipeId'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        // Display the recipe details, for example, in a dialog or a new screen
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text(data["name"]),
+                content: Text(data["recipe"]), // Or whatever info is returned
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("close"))
+                ],
+              );
+            });
+      } else {
+        throw Exception('Failed to load recipe details');
+      }
+    } catch (e) {
+      print('Error fetching recipe details: $e');
+    }
+  }
+
+  Future<void> fetchRelationshipTime() async {
+    // Query the API for relationship time
+    try {
+      final response = await http.get(Uri.parse('http://127.0.0.1:8000/relationship_time'));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        // Display the relationship time, for example, in a dialog or a new screen
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Relationship time"),
+                content: Text(data["time"]), // Or whatever info is returned
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("close"))
+                ],
+              );
+            });
+      } else {
+        throw Exception('Failed to load relationship time');
+      }
+    } catch (e) {
+      print('Error fetching relationship time: $e');
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -219,14 +284,14 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         ),
       ),
-      body: ListView.builder(
-        itemCount: recipes.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(recipes[index]),
-          );
-        },
-      ),
+      // body: ListView.builder(
+      //   itemCount: recipes.length,
+      //   itemBuilder: (context, index) {
+      //     return ListTile(
+      //       title: Text(recipes[index]),
+      //     );
+      //   },
+      // ),
 
       // Drawer - three lines menu on left hand side
       drawer: Drawer(
@@ -259,9 +324,35 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 // Update the state of the app
                 _onItemTapped(1);
+
+                // // Query the API for recipes (doesn't work)
+                // fetchRecipes();
                 
                 // Then close the drawer
                 Navigator.pop(context);
+
+                // Draw the recipes
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(
+                        title: Text('Recipes'),
+                      ),
+                      body: ListView.builder(
+                        itemCount: recipes.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(recipes[index]),
+                            onTap: () {
+                              _fetchRecipeDetails(recipes[index]);
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -272,6 +363,23 @@ class _MyHomePageState extends State<MyHomePage> {
                 _onItemTapped(2);
                 // Then close the drawer
                 Navigator.pop(context);
+                // Now query the relationship time
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(
+                        title: Text('Relationship time'),
+                      ),
+                      body: Center(
+                        child: ElevatedButton(
+                          onPressed: fetchRelationshipTime,
+                          child: const Text('Get relationship time'),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -300,4 +408,5 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
 }
