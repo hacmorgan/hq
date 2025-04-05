@@ -15,27 +15,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import TypeAlias
 from pathlib import Path
 from hq.sysbs import find_hq
-from hq.emily import relationship_time
+from hq.emily import relationship_time, why_is_emily_great
 
 
 app = FastAPI()
 
-
-origins = [
-    # Flutter app
-    r"http://localhost:\d+",
-    r"http://127.0.0.1:\d+",
-    # "http://localhost:39213",  # Your Flutter app's origin
-    "http://localhost",  # if you are running the server on localhost
-    "http://127.0.0.1",  # if you are running the server on 127.0.0.1
-    "http://127.0.0.1:8000",  # if you are running the server on 127.0.0.1:8000
-    # "http://127.0.0.1:8000/recipes",  # if you are running the server on 127.0.0.1:8000
-    # Add other origins as needed
-]
-
 app.add_middleware(
     CORSMiddleware,
-    # allow_origins=origins,
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods
@@ -106,6 +92,14 @@ def get_relationship_time() -> Response:
     """
     relationship_time_string = relationship_time(return_timedelta=False)
     return {"time": relationship_time_string}
+
+
+@app.get("/why_emily_is_great")
+def get_why_emily_is_great() -> Response:
+    """
+    Get a list of reasons why Emily is great
+    """
+    return {"reason": why_is_emily_great()}
 
 
 if __name__ == "__main__":
