@@ -136,10 +136,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-
-  
   static const appTitle = 'Emily';
-  
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -167,15 +165,23 @@ class _MyHomePageState extends State<MyHomePage> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     Text(
-      'Index 0: Home',
+      'Dashboard',
       style: optionStyle,
     ),
     Text(
-      'Index 1: Business',
+      'Recipes',
       style: optionStyle,
     ),
     Text(
-      'Index 2: School',
+      'Relationship counter',
+      style: optionStyle,
+    ),
+    Text(
+      'Why is Emily so great?',
+      style: optionStyle,
+    ),
+    Text(
+      'Reviews',
       style: optionStyle,
     ),
   ];
@@ -266,7 +272,85 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Future<void> fetchWhyEmilyIsGreat() async {
+    // Query the API for why Emily is great
+    try {
+      final response = await http.get(Uri.parse('http://127.0.0.1:8000/why_emily_is_great'));
 
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        // Display why Emily is great, for example, in a dialog or a new screen
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("One reason is:"),
+                content: Text(data["reason"]), // Or whatever info is returned
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("close"))
+                ],
+              );
+            });
+      } else {
+        throw Exception('Failed to load why Emily is great');
+      }
+    } catch (e) {
+      print('Error fetching why Emily is great: $e');
+    }
+  }
+
+  void _showBirthdayDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Happy Birthday Mama! 🎉',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  'birthday-bom-2025.jpg',
+                  height: 500,
+                  errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.cake, size: 100, color: Colors.pink),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Happy birthday mi amor ❤️',
+                  style: TextStyle(fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'You\'ve achieved so much this year, I\'m so proud of you',
+                  style: TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Love you ∞ + 1',
+                  style: TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('kthxbai'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -284,16 +368,41 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         ),
       ),
-      // body: ListView.builder(
-      //   itemCount: recipes.length,
-      //   itemBuilder: (context, index) {
-      //     return ListTile(
-      //       title: Text(recipes[index]),
-      //     );
-      //   },
-      // ),
-
-      // Drawer - three lines menu on left hand side
+      body: Stack(
+        children: [
+          Center(
+            child: _widgetOptions.elementAt(_selectedIndex),
+          ),
+          Positioned(
+            right: 16,
+            bottom: 16,
+            child: GestureDetector(
+              onTap: _showBirthdayDialog,
+              child: Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: Colors.pink[100],
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.cake,
+                  color: Colors.pink,
+                  size: 30,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
         // through the options in the drawer if there isn't enough vertical
@@ -327,7 +436,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                 // // Query the API for recipes (doesn't work)
                 // fetchRecipes();
-                
+
                 // Then close the drawer
                 Navigator.pop(context);
 
@@ -388,9 +497,27 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 // Update the state of the app
                 _onItemTapped(3);
-                // 
+                //
                 // Then close the drawer
                 Navigator.pop(context);
+
+                // Now query why Emily is great
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Scaffold(
+                      appBar: AppBar(
+                        title: Text('Why is Emily so great?'),
+                      ),
+                      body: Center(
+                        child: ElevatedButton(
+                          onPressed: fetchWhyEmilyIsGreat,
+                          child: const Text('Go on then, tell me'),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -399,6 +526,12 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 // Update the state of the app
                 _onItemTapped(4);
+                // Show an "in progress" message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Reviews still under development...'),
+                  ),
+                );
                 // Then close the drawer
                 Navigator.pop(context);
               },
@@ -408,5 +541,4 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-
 }

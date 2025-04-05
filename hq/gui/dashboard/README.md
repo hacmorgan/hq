@@ -1,6 +1,20 @@
-# emily_dashboard
+# Dashboard
 
-A new Flutter project.
+A general dashboard for life
+
+# Running
+
+## Running the server
+The server is executable, simply run the file:
+```bash
+hq/gui/dashboard/lib/server.py
+```
+
+## Running the client
+The client is run using flutter from the project root
+```bash
+(cd hq/gui/dashboard && flutter run -d chrome)
+
 
 ## Getting Started
 
