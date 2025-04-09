@@ -54,7 +54,6 @@ setup(
         "pylint",
         "typer",
         "uvicorn",
-        "virtualenv",
         "ytmusicapi",
     ]
     + (["torch", "torchvision"] if "HQML" in os.environ else []),
