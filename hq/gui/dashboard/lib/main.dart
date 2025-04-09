@@ -163,26 +163,49 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Dashboard',
-      style: optionStyle,
+
+  List<Widget> _widgetOptions() => <Widget>[
+    // Recipes page
+    Scaffold(
+      appBar: AppBar(title: const Text('Recipes')),
+      body: ListView.builder(
+        itemCount: recipes.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(recipes[index]),
+            onTap: () {
+              _fetchRecipeDetails(recipes[index]);
+            },
+          );
+        },
+      ),
     ),
-    Text(
-      'Recipes',
-      style: optionStyle,
+    // Relationship counter page
+    Scaffold(
+      appBar: AppBar(title: const Text('Relationship time')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: fetchRelationshipTime,
+          child: const Text('Get relationship time'),
+        ),
+      ),
     ),
-    Text(
-      'Relationship counter',
-      style: optionStyle,
+    // Why is Emily so great page
+    Scaffold(
+      appBar: AppBar(title: const Text('Why is Emily so great?')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: fetchWhyEmilyIsGreat,
+          child: const Text('Go on then, tell me'),
+        ),
+      ),
     ),
-    Text(
-      'Why is Emily so great?',
-      style: optionStyle,
-    ),
-    Text(
-      'Reviews',
-      style: optionStyle,
+    // Reviews page
+    Scaffold(
+      appBar: AppBar(title: const Text('Reviews')),
+      body: const Center(
+        child: Text('Reviews still under development...', style: optionStyle),
+      ),
     ),
   ];
 
@@ -326,13 +349,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'You\'ve achieved so much this year, I\'m so proud of you! You have surpassed most commercial food establishments, despite the oven; grown the family considerably (particularly in the sighthound direction); and started on the path of being a veterinary mogul of Wagga; just to name a few!'
+                  'You\'ve achieved so much this year, I\'m so proud of you! You have surpassed most commercial food establishments, despite the oven; grown the family considerably (particularly in the sighthound direction); and started on the path of being a veterinary mogul of Wagga; just to name a few!',
                  style: TextStyle(fontSize: 14),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'I love our life together, so planning for and building our future is the most exciting and rewarding project I have ever been a part of. I am perpetually honoured you chose me, because you are the most amazing person I have ever met. You have your shit more together than most people I know, regardless of age, and you always think for yourself; which alone make you a force to be reckoned with. I am not surprised one bit that they see you as a suitable succession plan for the clinic!',
+                  'I love our life together, and planning for and building our future is the most exciting and rewarding project I have ever been a part of. I am perpetually honoured you chose me, because you are the most amazing person I have ever met. You have your shit more together than most people I know, regardless of age, and you always think for yourself; which alone make you a force to be reckoned with. I am not surprised one bit that they see you as a suitable succession plan for the clinic!',
                   style: TextStyle(fontSize: 14),
                   textAlign: TextAlign.center,
                 ),
@@ -382,9 +405,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Stack(
         children: [
-          Center(
-            child: _widgetOptions.elementAt(_selectedIndex),
-          ),
+          _widgetOptions()[_selectedIndex],
           Positioned(
             right: 16,
             bottom: 16,
@@ -430,120 +451,42 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text('Drawer Header'),
             ),
             ListTile(
-              title: const Text('Dashboard'),
+              title: const Text('Recipes'),
               selected: _selectedIndex == 0,
               onTap: () {
                 // Update the state of the app
                 _onItemTapped(0);
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text('Recipes'),
-              selected: _selectedIndex == 1,
-              onTap: () {
-                // Update the state of the app
-                _onItemTapped(1);
-
-                // // Query the API for recipes (doesn't work)
-                // fetchRecipes();
 
                 // Then close the drawer
                 Navigator.pop(context);
-
-                // Draw the recipes
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Scaffold(
-                      appBar: AppBar(
-                        title: Text('Recipes'),
-                      ),
-                      body: ListView.builder(
-                        itemCount: recipes.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(recipes[index]),
-                            onTap: () {
-                              _fetchRecipeDetails(recipes[index]);
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                );
               },
             ),
             ListTile(
               title: const Text('Relationship counter'),
+              selected: _selectedIndex == 1,
+              onTap: () {
+                // Update the state of the app
+                _onItemTapped(1);
+                // Then close the drawer
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Why is Emily so great?'),
               selected: _selectedIndex == 2,
               onTap: () {
                 // Update the state of the app
                 _onItemTapped(2);
                 // Then close the drawer
                 Navigator.pop(context);
-                // Now query the relationship time
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Scaffold(
-                      appBar: AppBar(
-                        title: Text('Relationship time'),
-                      ),
-                      body: Center(
-                        child: ElevatedButton(
-                          onPressed: fetchRelationshipTime,
-                          child: const Text('Get relationship time'),
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text('Why is Emily so great?'),
-              selected: _selectedIndex == 3,
-              onTap: () {
-                // Update the state of the app
-                _onItemTapped(3);
-                //
-                // Then close the drawer
-                Navigator.pop(context);
-
-                // Now query why Emily is great
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Scaffold(
-                      appBar: AppBar(
-                        title: Text('Why is Emily so great?'),
-                      ),
-                      body: Center(
-                        child: ElevatedButton(
-                          onPressed: fetchWhyEmilyIsGreat,
-                          child: const Text('Go on then, tell me'),
-                        ),
-                      ),
-                    ),
-                  ),
-                );
               },
             ),
             ListTile(
               title: const Text('Reviews'),
-              selected: _selectedIndex == 4,
+              selected: _selectedIndex == 3,
               onTap: () {
                 // Update the state of the app
-                _onItemTapped(4);
-                // Show an "in progress" message
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Reviews still under development...'),
-                  ),
-                );
+                _onItemTapped(3);
                 // Then close the drawer
                 Navigator.pop(context);
               },

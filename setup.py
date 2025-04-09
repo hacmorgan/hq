@@ -25,6 +25,7 @@ setup(
         "hq.emily",
         "hq.gui",
         "hq.gui.dashboard",
+        "hq.gui.dashboard.lib",
         "hq.hardware",
         "hq.integrations",
         "hq.io",
