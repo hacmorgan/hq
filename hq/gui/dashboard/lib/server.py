@@ -103,4 +103,4 @@ def get_why_emily_is_great() -> Response:
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, port=8000)
+    uvicorn.run(app, host="192.168.0.247", port=10498)
