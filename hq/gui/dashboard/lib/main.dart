@@ -199,7 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> fetchRecipes() async {
-    final response = await http.get(Uri.parse('http://0.0.0.0:8000/recipes'), headers: {
+    final response = await http.get(Uri.parse('http://192.168.0.247:8000/recipes'), headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       });
@@ -326,13 +326,25 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'You\'ve achieved so much this year, I\'m so proud of you',
+                  'You\'ve achieved so much this year, I\'m so proud of you! You have surpassed most commercial food establishments, despite the oven; grown the family considerably (particularly in the sighthound direction); and started on the path of being a veterinary mogul of Wagga; just to name a few!'
+                 style: TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'I love our life together, so planning for and building our future is the most exciting and rewarding project I have ever been a part of. I am perpetually honoured you chose me, because you are the most amazing person I have ever met. You have your shit more together than most people I know, regardless of age, and you always think for yourself; which alone make you a force to be reckoned with. I am not surprised one bit that they see you as a suitable succession plan for the clinic!',
                   style: TextStyle(fontSize: 14),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'Love you ∞ + 1',
+                  'Then there\'s all the other stuff. You\'re beautiful, smart and friendly; you have such a strong natural aptitude for animal handling and psychology; you bring us little sickly new members of the family and nurse them back to health (then harvest their broken parts as museum artefacts); you keep our house running smoothly and so well stocked and organised; the list will go on as long as I keep sitting here...',
+                  style: TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'I love you ∞ + 1',
                   style: TextStyle(fontSize: 14),
                   textAlign: TextAlign.center,
                 ),
