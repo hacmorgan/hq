@@ -199,7 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> fetchRecipes() async {
-    final response = await http.get(Uri.parse('http://192.168.0.247:8000/recipes'), headers: {
+    final response = await http.get(Uri.parse('http://192.168.0.247:10498/recipes'), headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       });
@@ -217,7 +217,7 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       String denestedRecipeId = recipeId.replaceAll("/", "..");
       final response =
-          await http.get(Uri.parse('http://127.0.0.1:8000/recipes/$denestedRecipeId'));
+          await http.get(Uri.parse('http://192.168.0.247:10498/recipes/$denestedRecipeId'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
@@ -246,7 +246,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> fetchRelationshipTime() async {
     // Query the API for relationship time
     try {
-      final response = await http.get(Uri.parse('http://127.0.0.1:8000/relationship_time'));
+      final response = await http.get(Uri.parse('http://192.168.0.247:10498/relationship_time'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
@@ -275,7 +275,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> fetchWhyEmilyIsGreat() async {
     // Query the API for why Emily is great
     try {
-      final response = await http.get(Uri.parse('http://127.0.0.1:8000/why_emily_is_great'));
+      final response = await http.get(Uri.parse('http://192.168.0.247:10498/why_emily_is_great'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
