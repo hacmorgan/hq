@@ -79,7 +79,7 @@ Host gecko
 
 Host bronco
     HostName 10.137.4.8
-    User hmo
+    User hamish
 
 Host burrito
     HostName 10.137.4.9

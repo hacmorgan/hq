@@ -1328,4 +1328,5 @@ c.InteractiveShellApp.exec_lines = [
     "from pathlib import Path",
     "from abyss.bedrock.io.convenience import easy_load, easy_save, easy_load_dict, easy_save_dict",
     "from abyss.bedrock.utils.array_utils import generic_hstack, generic_vstack",
+    "from abyss.bedrock.testing.data_factory import construct_generic_pcd",
 ]
