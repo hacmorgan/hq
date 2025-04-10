@@ -155,6 +155,12 @@ alias ws='windsurf'
 alias deln='tr -d "\n" <<<'
 
 
+#################
+# Local aliases #
+#################
+alias backlight_min='sudo bash -c "echo 1 > /sys/class/backlight/intel_backlight/brightness"'
+
+
 ################################
 # Keyboard shortcuts & vi mode #
 ################################
@@ -190,7 +196,6 @@ bindkey ^E end-of-line
 # }
 # precmd_functions+=(_fix_cursor)
 
-alias backlight_min='sudo bash -c "echo 1 > /sys/class/backlight/intel_backlight/brightness"'
 
 
 #################
