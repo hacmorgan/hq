@@ -164,6 +164,12 @@ alias ss='gcloud compute ssh --tunnel-through-iap $1'
 alias spkg="echo $HQ_VENV/lib/python*/site-packages"
 
 
+#################
+# Local aliases #
+#################
+alias backlight_min='sudo bash -c "echo 1 > /sys/class/backlight/intel_backlight/brightness"'
+
+
 ################################
 # Keyboard shortcuts & vi mode #
 ################################
@@ -199,7 +205,6 @@ bindkey ^E end-of-line
 # }
 # precmd_functions+=(_fix_cursor)
 
-alias backlight_min='sudo bash -c "echo 1 > /sys/class/backlight/intel_backlight/brightness"'
 
 
 #################
