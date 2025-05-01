@@ -268,4 +268,4 @@ bindsym --release $mod+Shift+s exec --no-startup-id "$HOME/venvs/py3.11/bin/dmen
 ######################
 exec --no-startup-id "sleep 1; $HOME/venvs/py3.11/bin/use-all-monitors"
 
-exec --no-startup-id "sleep 4; feh --bg-fill /home/hamish/hq/etc/wallpapers/koth.jpg --bg-center /home/hamish/hq/etc/wallpapers/eboy_tok.png --bg-center /home/hamish/hq/etc/wallpapers/5YR.jpg"
+exec --no-startup-id "sleep 4; feh --bg-fill /home/hamish/hq/etc/wallpapers/eboy_tok.png --bg-center /home/hamish/hq/etc/wallpapers/koth.jpg --bg-center /home/hamish/hq/etc/wallpapers/5YR.jpg"
