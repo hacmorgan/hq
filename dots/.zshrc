@@ -154,6 +154,7 @@ alias grsh='git reset --hard "$(git branch --show-current)"'
 alias pvv='pytest -vvvx'
 alias pvx='pytest -vvvx'
 alias erb='git status --porcelain=v1 | grep "^UU" | cut -d" " -f2 | while read filepath; do em "$filepath"; done'
+alias ws='windsurf'
 
 
 #################
@@ -228,3 +229,7 @@ export NVM_DIR="$HOME/.nvm"
 ##############
 # We source this last to enzsure the venv is highest priority
 source "$HQ_VENV/bin/activate"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
