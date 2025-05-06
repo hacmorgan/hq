@@ -6,4 +6,8 @@ cd ~/hq/hq/gui/dashboard
 lib/server.py &
 
 # Run the client
-flutter run -d web-server --web-hostname=192.168.0.247 --web-port=10499
+/home/hamish/flutter/bin/flutter \
+    run \
+    --device-id web-server \
+    --web-hostname 192.168.0.247 \
+    --web-port 10499

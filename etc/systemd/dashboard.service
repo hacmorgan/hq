@@ -1,0 +1,12 @@
+[Unit]
+Description=Dashboard UI and API servers
+
+[Service]
+Environment=PATH=/home/hamish/venvs/current/bin:/home/hamish/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/home/hamish/hq/hq/gui/dashboard/run_dashboard.sh
+WorkingDirectory=/home/hamish/hq/hq/gui/dashboard
+User=hamish
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
