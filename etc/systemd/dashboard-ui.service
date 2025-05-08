@@ -1,0 +1,16 @@
+[Unit]
+Description=Dashboard UI
+
+[Service]
+# Environment=PATH=/home/hamish/venvs/current/bin:/home/hamish/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/home/hamish/flutter/bin/flutter run \
+    --release \
+    --device-id web-server \
+    --web-hostname 192.168.0.247 \
+    --web-port 10499
+WorkingDirectory=/home/hamish/hq/hq/gui/dashboard
+User=hamish
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

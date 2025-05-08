@@ -1,10 +1,10 @@
 [Unit]
-Description=Dashboard UI and API servers
+Description=Dashboard API
 
 [Service]
 Environment=PATH=/home/hamish/venvs/current/bin:/home/hamish/.local/bin:/usr/local/bin:/usr/bin:/bin
-ExecStart=/home/hamish/hq/hq/gui/dashboard/run_dashboard.sh
-WorkingDirectory=/home/hamish/hq/hq/gui/dashboard
+ExecStart=/home/hamish/hq/hq/gui/dashboard/lib/server.py
+# WorkingDirectory=/home/hamish/hq/hq/gui/dashboard
 User=hamish
 Restart=always
 
