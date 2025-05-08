@@ -2,7 +2,6 @@
 Description=Dashboard UI
 
 [Service]
-# Environment=PATH=/home/hamish/venvs/current/bin:/home/hamish/.local/bin:/usr/local/bin:/usr/bin:/bin
 ExecStart=/home/hamish/flutter/bin/flutter run \
     --release \
     --device-id web-server \
