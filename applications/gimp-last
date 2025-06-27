@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+
+gimp "$(ls /tmp/*scrot* | tail -n1)"
