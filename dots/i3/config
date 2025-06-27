@@ -247,6 +247,7 @@ bindsym $mod+Ctrl+d       exec "$TERMINAL ssh diego"
 bindsym $mod+Ctrl+Shift+d exec "$TERMINAL ssh diego_wifi"
 bindsym $mod+Ctrl+k       exec "$TERMINAL ssh kopi"
 bindsym $mod+Ctrl+s       exec "chromium 'https://meet.google.com/euj-gwdj-pwi'"
+bindsym $mod+Ctrl+g       exec "$HOME/venvs/py3.11/bin/gimp-last"
 
 # Browsers
 bindsym $mod+Shift+f exec --no-startup-id firefox

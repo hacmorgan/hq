@@ -2,15 +2,15 @@
 
 
 """
-Automatically fill out harvest logs
+Record or execute keyboard macros
 
 Recording keystrokes (until hitting `esc`):
 
-    sudo examples/autoharvest.py record > etc/auto-harvest/default.cloudpickle
+    sudo examples/autokbd.py record > etc/keyboard-automation/harvest.cloudpickle
 
 Replaying keystrokes:
 
-    sudo examples/autoharvest.py < etc/auto-harvest/default.cloudpickle
+    sudo examples/autokbd.py < etc/keyboard-automation/harvest.cloudpickle
 """
 
 
