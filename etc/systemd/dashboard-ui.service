@@ -1,0 +1,15 @@
+[Unit]
+Description=Dashboard UI
+
+[Service]
+ExecStart=/home/hamish/flutter/bin/flutter run \
+    --release \
+    --device-id web-server \
+    --web-hostname 192.168.0.247 \
+    --web-port 10499
+WorkingDirectory=/home/hamish/hq/hq/gui/dashboard
+User=hamish
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

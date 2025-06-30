@@ -2,29 +2,33 @@
 
 A general dashboard for life
 
-# Running
+# Hooking into systemd
+The UI and API both have systemd services ready to run them under `hq/etc/systemd`
 
-## Running the server
-The server is executable, simply run the file:
+n.b. The web server will need to be recompiled when changes are made outside debug mode
+
+# Compiling the client
+To compile the client, run:
+```bash
+(cd hq/gui/dashboard && flutter build web)
+```
+
+# Running manually for debugging
+
+## Running the API/server
+The API is executable, simply run the file:
 ```bash
 hq/gui/dashboard/lib/server.py
 ```
 
-## Running the client
-The client is run using flutter from the project root
+## Running the UI/client
+To run the client locally
 ```bash
-(cd hq/gui/dashboard && flutter run -d chrome)
+(cd hq/gui/dashboard && flutter run -d chrome --debug)
+```
 
+To run as a web server (e.g. to dev remotely)
+```bash
+(cd hq/gui/dashboard && flutter run -d web-server --debug --web-hostname 192.168.0.247 --web-port 10499)
+```
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

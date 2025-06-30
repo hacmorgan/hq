@@ -1,0 +1,11 @@
+[Unit]
+Description=Dashboard API
+
+[Service]
+Environment=PATH=/home/hamish/venvs/current/bin:/home/hamish/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/home/hamish/hq/hq/gui/dashboard/lib/server.py
+User=hamish
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
