@@ -3,13 +3,10 @@
 # A simple script to open a given file in emacs,
 # and detatch the process from the parent terminal
 
+source $(type -p bash-std)
+export BASH_STD_IGNORE_UNKNOWN_ARGS=1 # until positional args implemented
 
-source $( type -p bash-std )
-BASH_STD_IGNORE_UNKNOWN_ARGS=1  # until positional args implemented
-
-
-function prologue
-{
+function prologue {
     cat <<EOF
 
 ${fmt_red}em - emacsclient wrapper${fmt_reset}
@@ -18,8 +15,7 @@ ${fmt_dim}Note: the filename must be the final argument. bash-std doesn't suppor
 EOF
 }
 
-function options
-{
+function options {
     cat <<EOF
 --detach,-d; Open file in emacs server but don't launch an emacs window
 --sudo,-s; Open file using sudo
@@ -27,51 +23,40 @@ function options
 EOF
 }
 
-bash-std-application-init "$@" < <( options ) || die "failed"
+bash-std-application-init "$@" < <(options) || die "failed"
 
-
-
-
-function get_final_arg
-{
-    local args=( $@ )
+function get_final_arg {
+    local args=($@)
     local num_args=${#args[@]}
-    echo ${args[$(( num_args - 1 ))]}
+    echo ${args[$((num_args - 1))]}
 }
 
-
-function sanitize_inputs
-{
-    if (( options_detach + options_gui > 1 )); then
+function sanitize_inputs {
+    if ((options_detach + options_gui > 1)); then
         die "--detach and --gui are mutually exclusive"
     fi
 }
 
-
-function get_filename
-{
-    local final_arg=$( get_final_arg $@ )
+function get_filename {
+    local final_arg=$(get_final_arg $@)
     local file=""
     local emacs_file_path=""
 
     # Catch when the last arg is a CLI option instead of a file path
-    if [[ -z "$( grep '^-' <<< $final_arg )" ]]; then file="$final_arg"; fi
-    if (( options_sudo )); then
+    if [[ -z "$(grep '^-' <<<$final_arg)" ]]; then file="$final_arg"; fi
+    if ((options_sudo)); then
         emacs_file_path+="/sudo::"
     fi
 
     # Resolve to absolute path for sudo
-    if (( options_sudo )); then
-        emacs_file_path+="$( realpath $file )"
+    if ((options_sudo)); then
+        emacs_file_path+="$(realpath $file)"
     else
         emacs_file_path+="$file"
     fi
 
     echo $emacs_file_path
 }
-
-
-
 
 # Check args are legit
 sanitize_inputs $@
@@ -80,7 +65,7 @@ sanitize_inputs $@
 command="emacsclient -a ''"
 
 # Add appropriate prefix depending if we're opening here or somewehre else
-if (( options_detach )); then
+if ((options_detach)); then
     command+=" -n"
 else
     command+=" -c"
@@ -90,7 +75,7 @@ fi
 command+=" $(get_filename $@)"
 
 # Set args for GUI/TUI
-if (( options_gui )); then
+if ((options_gui)); then
     command+=" &!"
 else
     command+=" -nw"
