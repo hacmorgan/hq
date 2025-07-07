@@ -166,8 +166,8 @@ bindkey -r ^B
 bindkey ^B beginning-of-line
 bindkey ^E end-of-line
 
-# Remove mode switching delay.
-KEYTIMEOUT=5
+# # Remove mode switching delay.
+# KEYTIMEOUT=5
 
 # # Change cursor shape for different vi modes.
 # function zle-keymap-select {
