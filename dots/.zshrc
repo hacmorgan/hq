@@ -159,7 +159,7 @@ alias deln='tr -d "\n" <<<'
 # Keyboard shortcuts & vi mode #
 ################################
 # Enale vi keymap
-bindkey -v
+# bindkey -v
 
 # Revind C-b to beginning of line (C-a stolen by tmux) and C-e to end-of-line
 bindkey -r ^B 
@@ -169,26 +169,26 @@ bindkey ^E end-of-line
 # Remove mode switching delay.
 KEYTIMEOUT=5
 
-# Change cursor shape for different vi modes.
-function zle-keymap-select {
-    if [[ ${KEYMAP} == vicmd ]] ||
-        [[ $1 = 'block' ]]; then
-    echo -ne '\e[1 q'
-
-    elif [[ ${KEYMAP} == main ]] ||
-        [[ ${KEYMAP} == viins ]] ||
-        [[ ${KEYMAP} = '' ]] ||
-        [[ $1 = 'beam' ]]; then
-    echo -ne '\e[5 q'
-    fi
-}
-zle -N zle-keymap-select
-
-# Start with a beam cursor in new prompts (because we start in insert mode)
-_fix_cursor() {
-   echo -ne '\e[5 q'
-}
-precmd_functions+=(_fix_cursor)
+# # Change cursor shape for different vi modes.
+# function zle-keymap-select {
+#     if [[ ${KEYMAP} == vicmd ]] ||
+#         [[ $1 = 'block' ]]; then
+#     echo -ne '\e[1 q'
+# 
+#     elif [[ ${KEYMAP} == main ]] ||
+#         [[ ${KEYMAP} == viins ]] ||
+#         [[ ${KEYMAP} = '' ]] ||
+#         [[ $1 = 'beam' ]]; then
+#     echo -ne '\e[5 q'
+#     fi
+# }
+# zle -N zle-keymap-select
+# 
+# # Start with a beam cursor in new prompts (because we start in insert mode)
+# _fix_cursor() {
+#    echo -ne '\e[5 q'
+# }
+# precmd_functions+=(_fix_cursor)
 
 
 #################
@@ -267,3 +267,9 @@ source "$HQ_VENV/bin/activate"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/hamish/google-cloud-sdk/path.zsh.inc' ]; then . '/home/hamish/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/hamish/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/hamish/google-cloud-sdk/completion.zsh.inc'; fi
