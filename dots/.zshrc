@@ -145,7 +145,7 @@ alias gdnu='gd --diff-filter=U --name-only'
 alias gdup='gd $(git merge-base HEAD origin/master)'
 alias gdnup='gdup --name-only'
 alias grsh='git reset --hard "$(git branch --show-current)"'
-alias git_clean='git branch -d $(git branch --merged=master | grep -v master) && git fetch --prune'
+alias gcln='git branch -d $(git branch --merged=master | grep -v master) && git fetch --prune'
 # Edit all unresolved conflicts sequentially
 alias erb='git status --porcelain=v1 | grep "^UU" | cut -d" " -f2 | while read filepath; do em "$filepath"; done'
 alias cdscr='cd /mnt/vault/scratch/dataforce/hamish'
