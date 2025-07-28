@@ -144,13 +144,15 @@ alias gdn='gd --name-only'
 alias gdnu='gd --diff-filter=U --name-only'
 alias gdup='gd $(git merge-base HEAD origin/master)'
 alias gdnup='gdup --name-only'
+alias grsh='git reset --hard "$(git branch --show-current)"'
+alias git_clean='git branch -d $(git branch --merged=master | grep -v master) && git fetch --prune'
+# Edit all unresolved conflicts sequentially
+alias erb='git status --porcelain=v1 | grep "^UU" | cut -d" " -f2 | while read filepath; do em "$filepath"; done'
 alias cdscr='cd /mnt/vault/scratch/dataforce/hamish'
 alias cdrscr='cd /mnt/rapid/scratch/dataforce/hamish'
 alias cloudcompare="deactivate; flatpak run org.cloudcompare.CloudCompare; source $HQ_VENV"
-alias grsh='git reset --hard "$(git branch --show-current)"'
 alias pvv='pytest -vvvx'
 alias pvx='pytest -vvvx'
-alias erb='git status --porcelain=v1 | grep "^UU" | cut -d" " -f2 | while read filepath; do em "$filepath"; done'
 alias ws='windsurf'
 alias deln='tr -d "\n" <<<'
 
