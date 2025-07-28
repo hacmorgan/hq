@@ -155,6 +155,7 @@ alias pvv='pytest -vvvx'
 alias pvx='pytest -vvvx'
 alias ws='windsurf'
 alias deln='tr -d "\n" <<<'
+alias kcat='kitten icat'
 
 
 ################################
