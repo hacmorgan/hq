@@ -156,6 +156,8 @@ alias pvx='pytest -vvvx'
 alias ws='windsurf'
 alias deln='tr -d "\n" <<<'
 alias kcat='kitten icat'
+alias ssl='gcloud compute instances list'
+alias ss='gcloud compute ssh --tunnel-through-iap $1'
 
 
 ################################
@@ -276,3 +278,7 @@ if [ -f '/home/hamish/google-cloud-sdk/path.zsh.inc' ]; then . '/home/hamish/goo
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/hamish/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/hamish/google-cloud-sdk/completion.zsh.inc'; fi
+
+fpath+=~/.zfunc; autoload -Uz compinit; compinit
+
+zstyle ':completion:*' menu select
