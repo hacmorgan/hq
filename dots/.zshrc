@@ -147,15 +147,56 @@ alias gdn='gd --name-only'
 alias gdnu='gd --diff-filter=U --name-only'
 alias gdup='gd $(git merge-base HEAD origin/master)'
 alias gdnup='gdup --name-only'
+alias grsh='git reset --hard "$(git branch --show-current)"'
+alias gcln='git branch -d $(git branch --merged=master | grep -v master) && git fetch --prune'
+# Edit all unresolved conflicts sequentially
+alias erb='git status --porcelain=v1 | grep "^UU" | cut -d" " -f2 | while read filepath; do em "$filepath"; done'
 alias cdscr='cd /mnt/vault/scratch/dataforce/hamish'
 alias cdrscr='cd /mnt/rapid/scratch/dataforce/hamish'
 alias cloudcompare="deactivate; flatpak run org.cloudcompare.CloudCompare; source $HQ_VENV"
-alias grsh='git reset --hard "$(git branch --show-current)"'
 alias pvv='pytest -vvvx'
 alias pvx='pytest -vvvx'
-alias erb='git status --porcelain=v1 | grep "^UU" | cut -d" " -f2 | while read filepath; do em "$filepath"; done'
 alias ws='windsurf'
 alias deln='tr -d "\n" <<<'
+alias kcat='kitten icat'
+alias ssl='gcloud compute instances list'
+alias ss='gcloud compute ssh --tunnel-through-iap $1'
+
+
+################################
+# Keyboard shortcuts & vi mode #
+################################
+# Enale vi keymap
+# bindkey -v
+
+# Revind C-b to beginning of line (C-a stolen by tmux) and C-e to end-of-line
+bindkey -r ^B 
+bindkey ^B beginning-of-line
+bindkey ^E end-of-line
+
+# # Remove mode switching delay.
+# KEYTIMEOUT=5
+
+# # Change cursor shape for different vi modes.
+# function zle-keymap-select {
+#     if [[ ${KEYMAP} == vicmd ]] ||
+#         [[ $1 = 'block' ]]; then
+#     echo -ne '\e[1 q'
+# 
+#     elif [[ ${KEYMAP} == main ]] ||
+#         [[ ${KEYMAP} == viins ]] ||
+#         [[ ${KEYMAP} = '' ]] ||
+#         [[ $1 = 'beam' ]]; then
+#     echo -ne '\e[5 q'
+#     fi
+# }
+# zle -N zle-keymap-select
+# 
+# # Start with a beam cursor in new prompts (because we start in insert mode)
+# _fix_cursor() {
+#    echo -ne '\e[5 q'
+# }
+# precmd_functions+=(_fix_cursor)
 
 
 #################
@@ -226,3 +267,13 @@ source "$HQ_VENV/bin/activate"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/hamish/google-cloud-sdk/path.zsh.inc' ]; then . '/home/hamish/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/hamish/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/hamish/google-cloud-sdk/completion.zsh.inc'; fi
+
+fpath+=~/.zfunc; autoload -Uz compinit; compinit
+
+zstyle ':completion:*' menu select
