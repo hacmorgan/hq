@@ -252,15 +252,6 @@ export DDE_DOCKERFILE="$HOME/hq/etc/dde-env.dockerfile"
 export CHROME_EXECUTABLE=/usr/bin/chromium
 
 
-# Source secrets if present
-[[ ! -e "$HOME/.config/secret-sauce" ]] || source "$HOME/.config/secret-sauce"
-
-# Source nvm if present
-export NVM_DIR="$HOME/.nvm"
-[[ ! -e "$NVM_DIR/nvm.sh" ]] || {
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-}
 
 
 ##############
@@ -269,6 +260,7 @@ export NVM_DIR="$HOME/.nvm"
 # We source this last to enzsure the venv is highest priority
 source "$HQ_VENV/bin/activate"
 
+# Source nvm if present
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
