@@ -77,7 +77,9 @@ def todo(name: str | None = None) -> None:
         print(
             TODO_MENU.format(
                 todo_name=todo_path.relative_to(ROOT_TODO_DIR),
-                previous_todo_name=previous.relative_to(ROOT_TODO_DIR),
+                previous_todo_name=previous.relative_to(ROOT_TODO_DIR)
+                if previous
+                else "None",
             )
         )
 
