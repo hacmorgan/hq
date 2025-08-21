@@ -475,7 +475,7 @@ class _MyHomePageState extends State<MyHomePage> {
             right: 16,
             bottom: 16,
             child: GestureDetector(
-              onTap: _show3kMilleniversaryDialog,
+              onTap: _show3kMillenniversaryDialog,
               child: Container(
                 width: 56,
                 height: 56,
