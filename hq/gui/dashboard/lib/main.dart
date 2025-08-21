@@ -7,7 +7,9 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  static const appTitle = 'Emily';
+
+  // Set the name of the webpage
+  static const appTitle = 'Dashboard';
 
   @override
   Widget build(BuildContext context) {
@@ -331,6 +333,68 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
   }
+  
+  void _show3kMillenniversaryDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Happy 3000 days'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  '3k-millenniversary.jpg',
+                  height: 500,
+                  errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.cake, size: 100, color: Colors.pink),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Happy 3000 days mi amor ❤️',
+                  style: TextStyle(fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  "I love you so much. Regardless of how busy, stressful, or chaotic life has been, I have never doubted that you are the one I want to spend my life with. You are the most incredible person I have ever met, and I am still in awe of how good you are at everything you do.",
+                  style: TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  "What we've built together is the envy of many, and I am regularly reminded of how lucky I am to have found someone who supports my dreams and silly ideas so strongly. As cliched as it is, I really think we can do just about anything we set our minds to, and we're only just getting started.",
+                  style: TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  "For all the times I have not properly shown my love and appreciation for you, I am sorry. I tend to shut down a bit when I get stressed, and I hate that you are usually the one who suffers the consequences. This is the biggest thing I want to improve about myself at the moment, because you, the love we have, and the life we live, deserve to be cherished, always.",
+                  style: TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Love you ∞ + 1, silly beautiful clever perfect girl',
+                  style: TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("By closing this dialog I acknowledge that papa loves mama the most"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -353,7 +417,7 @@ class _MyHomePageState extends State<MyHomePage> {
           _widgetOptions()[_selectedIndex],
           Positioned(
             right: 16,
-            bottom: 88,
+            bottom: 160,
             child: GestureDetector(
               onTap: _show2025BirthdayDialog,
               child: Container(
@@ -381,7 +445,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Positioned(
             right: 16,
-            bottom: 16,
+            bottom: 88,
             child: GestureDetector(
               onTap: _show2025AnniversaryDialog,
               child: Container(
@@ -401,6 +465,34 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 child: const Icon(
                   Icons.favorite,
+                  color: Colors.pink,
+                  size: 30,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 16,
+            bottom: 16,
+            child: GestureDetector(
+              onTap: _show3kMilleniversaryDialog,
+              child: Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: Colors.deepPurple[400],
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.all_inclusive,
                   color: Colors.pink,
                   size: 30,
                 ),
