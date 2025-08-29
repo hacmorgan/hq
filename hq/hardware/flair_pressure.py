@@ -13,9 +13,11 @@ import sys
 from math import acos, atan2, cos, degrees, radians, sqrt
 from pathlib import Path
 from random import shuffle
+from serial import Serial
 from subprocess import run
 from time import sleep, time
 from typing import Optional
+from threading import Thread
 
 import cv2
 import numpy as np
@@ -26,6 +28,10 @@ BACKSPACE = b"\x7f"
 CLEAR = b"\x0c"
 CURSOR_HOME = "\033"
 SPACE = b" "
+
+# Terminal escape codes
+TERMINAL_CLEAR = b"\x1bH\x1bJ"
+
 
 DIAL_Y_MIN = 208
 DIAL_Y_MAX = 300
@@ -38,11 +44,11 @@ DEGREES_PER_BAR = 16 / 1.5
 
 EXP_WEIGHT = 0.2
 GRAPH_ROWS = 12
-# GRAPH_COLS = 70  # kopi (terminal)
-GRAPH_COLS = 150  # skoopi
+GRAPH_COLS = 76  # kopi (terminal)
+# GRAPH_COLS = 150  # skoopi
 GRAPH_UPDATE_PERIOD = 0.3
-# GRAPH_REDRAW_PERIOD = 1.5  # kopi (terminal)
 GRAPH_REDRAW_PERIOD = GRAPH_UPDATE_PERIOD  # skoopi
+GRAPH_REDRAW_PERIOD_TERMINAL = 1.0  # terminal
 UPDATES_PER_REFRESH = 50
 
 CAPTURE_DEVICE = 0
@@ -236,7 +242,7 @@ class FlairPressure:
         """
         raise NotImplementedError("Learned gauge reading has not been implemented yet")
 
-    def cli_main(self) -> None:
+    def cli_main(self, terminal_connection: Serial) -> None:
         """
         Main CLI tool routine
         """
@@ -245,6 +251,7 @@ class FlairPressure:
 
         # Clear screen
         clear()
+        terminal_connection.write(TERMINAL_CLEAR)
 
         # Initialise loop variables
         start = time()
@@ -252,10 +259,13 @@ class FlairPressure:
         pressures = []
         last_capture_time = -1.0
         last_redraw_time = -1.0
+        last_terminal_redraw_time = -1.0
         num_updates = 0
         pressure = 0
 
+        # Main application loop
         while True:
+
             # Capture image
             img = self.capture_frame(vid_in=vid)
             capture_time = time() - start
@@ -268,7 +278,7 @@ class FlairPressure:
             if pressure is not None:
                 pressures.append(pressure)
 
-            # Redraw graph periodically
+            # Update graph periodically
             if capture_time > last_capture_time + GRAPH_UPDATE_PERIOD:
                 avg_pressure = np.mean(pressures) if pressures else 0
                 if num_updates >= UPDATES_PER_REFRESH:
@@ -282,10 +292,27 @@ class FlairPressure:
                 )
                 pressures = []
                 last_capture_time = capture_time
+
+                # Print to stdout again if enough time has elapsed
                 if capture_time > last_redraw_time + GRAPH_REDRAW_PERIOD:
-                    clear()
-                    sys.stdout.write(pressure_graph + "\n" * 2)
+                    Thread(
+                        target=draw_graph, kwargs={"pressure_graph": pressure_graph}
+                    ).start()
                     last_redraw_time = capture_time
+
+                # Print to the terminal again if enough time has elapsed
+                if (
+                    capture_time
+                    > last_terminal_redraw_time + GRAPH_REDRAW_PERIOD_TERMINAL
+                ):
+                    Thread(
+                        target=draw_graph,
+                        kwargs={
+                            "pressure_graph": pressure_graph,
+                            "connection": terminal_connection,
+                        },
+                    ).start()
+                    last_terminal_redraw_time = capture_time
 
             # Print fast-refresh pressure and time status line
             pressure_str = f"{pressure:.2f}" if pressure is not None else "N/A"
@@ -342,6 +369,25 @@ class FlairPressure:
         return 360 - angle
 
 
+def draw_graph(pressure_graph: str, connection: Serial | None = None) -> None:
+    """
+    Draw graph to screen or terminal
+    """
+    # Print to terminal if given
+    if connection:
+        connection.write(TERMINAL_CLEAR)
+        connection.write(
+            b"\r\n" * 4
+            + bytes(pressure_graph, encoding="utf-8").replace(b"\n", b"\n\r")
+            + b"\r\n" * 2
+        )
+        return
+
+    # Otherwise print to screen
+    clear()
+    sys.stdout.write("\n" * 2 + pressure_graph + "\n" * 2)
+
+
 if __name__ == "__main__":
     pressure_monitor = FlairPressure()
 
@@ -351,7 +397,8 @@ if __name__ == "__main__":
     #     img=pressure_monitor.capture_frame(),
     # )
 
-    pressure_monitor.cli_main()
+    with Serial("/dev/ttyUSB0", baudrate=19200) as conn:
+        pressure_monitor.cli_main(terminal_connection=conn)
 
     # paths = list(Path("/home/pi/src/hq/etc/flair_pressure/datasets/regression").iterdir())
     # # shuffle(paths)
