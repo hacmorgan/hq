@@ -278,6 +278,13 @@ class FlairPressure:
             if pressure is not None:
                 pressures.append(pressure)
 
+            # Construct string for printing to terminal and stdout
+            pressure_str = (
+                f"\r\tTime: {capture_time:.2f}\tPressure: {pressure:.2f} bar"
+                if pressure is not None
+                else "N/A"
+            )
+
             # Update graph periodically
             if capture_time > last_capture_time + GRAPH_UPDATE_PERIOD:
                 avg_pressure = np.mean(pressures) if pressures else 0
@@ -310,15 +317,13 @@ class FlairPressure:
                         kwargs={
                             "pressure_graph": pressure_graph,
                             "connection": terminal_connection,
+                            "pressure_str": pressure_str,
                         },
                     ).start()
                     last_terminal_redraw_time = capture_time
 
             # Print fast-refresh pressure and time status line
-            pressure_str = f"{pressure:.2f}" if pressure is not None else "N/A"
-            sys.stdout.write(
-                f"\r\tTime: {capture_time:.2f}\tPressure: {pressure_str} bar"
-            )
+            sys.stdout.write(pressure_str)
             if self.log_to_stderr:
                 sys.stderr.write(f"{pressure}\n")
 
@@ -369,7 +374,11 @@ class FlairPressure:
         return 360 - angle
 
 
-def draw_graph(pressure_graph: str, connection: Serial | None = None) -> None:
+def draw_graph(
+    pressure_graph: str,
+    connection: Serial | None = None,
+    pressure_str: str | None = None,
+) -> None:
     """
     Draw graph to screen or terminal
     """
@@ -381,6 +390,7 @@ def draw_graph(pressure_graph: str, connection: Serial | None = None) -> None:
             + bytes(pressure_graph, encoding="utf-8").replace(b"\n", b"\n\r")
             + b"\r\n" * 2
         )
+        connection.write(bytes(pressure_str, encoding="utf-8"))
         return
 
     # Otherwise print to screen
