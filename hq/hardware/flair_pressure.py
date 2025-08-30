@@ -46,16 +46,44 @@ EXP_WEIGHT = 0.2
 GRAPH_ROWS = 12
 GRAPH_COLS = 76  # kopi (terminal)
 # GRAPH_COLS = 150  # skoopi
-GRAPH_UPDATE_PERIOD = 0.3
+GRAPH_UPDATE_PERIOD = 0.4
 GRAPH_REDRAW_PERIOD = GRAPH_UPDATE_PERIOD  # skoopi
 GRAPH_REDRAW_PERIOD_TERMINAL = 1.0  # terminal
 UPDATES_PER_REFRESH = 50
 
 CAPTURE_DEVICE = 0
 
+# Global variable for the pressure graph (lets us print it one last time)
+global pressure_graph
+global pressure_str
+global terminal_conection
+pressure_graph = ""
+pressure_str = ""
+terminal_connection = None
+
 
 def signal_handler(sig, frame):
-    sys.stdout.write("\n" * 2)
+    """
+    Final routine run upon ctrl-c
+
+    We print the graph nicely one last time, then exit gracefully
+    """
+
+    # Draw the graph one last time to stdout
+    draw_graph(
+        pressure_graph=pressure_graph,
+        pressure_str=pressure_str + "\n",
+    )
+
+    # Also draw to terminal and close the serial connection, if we have one
+    if terminal_connection is not None:
+        draw_graph(
+            pressure_graph=pressure_graph,
+            pressure_str=pressure_str,
+            connection=terminal_connection,
+        )
+        terminal_connection.close()
+
     sys.exit(0)
 
 
@@ -263,6 +291,10 @@ class FlairPressure:
         num_updates = 0
         pressure = 0
 
+        #
+        global pressure_graph
+        global pressure_str
+
         # Main application loop
         while True:
 
@@ -390,12 +422,14 @@ def draw_graph(
             + bytes(pressure_graph, encoding="utf-8").replace(b"\n", b"\n\r")
             + b"\r\n" * 2
         )
-        connection.write(bytes(pressure_str, encoding="utf-8"))
+        connection.write(bytes(pressure_str, encoding="utf-8") + b"\n\r\n\n")
         return
 
     # Otherwise print to screen
     clear()
     sys.stdout.write("\n" * 2 + pressure_graph + "\n" * 2)
+    if pressure_str is not None:
+        sys.stdout.write(pressure_str)
 
 
 if __name__ == "__main__":
@@ -407,7 +441,11 @@ if __name__ == "__main__":
     #     img=pressure_monitor.capture_frame(),
     # )
 
+    global terminal_conection
     with Serial("/dev/ttyUSB0", baudrate=19200) as conn:
+        terminal_connection = conn
+
+        # Run the pressure graph main application loop
         pressure_monitor.cli_main(terminal_connection=conn)
 
     # paths = list(Path("/home/pi/src/hq/etc/flair_pressure/datasets/regression").iterdir())
