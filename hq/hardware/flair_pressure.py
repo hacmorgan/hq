@@ -47,11 +47,20 @@ GRAPH_ROWS = 12
 GRAPH_COLS = 76  # kopi (terminal)
 # GRAPH_COLS = 150  # skoopi
 GRAPH_UPDATE_PERIOD = 0.5
-GRAPH_REDRAW_PERIOD = GRAPH_UPDATE_PERIOD  # skoopi
 GRAPH_REDRAW_PERIOD_TERMINAL = 1.0  # terminal
+GRAPH_REDRAW_PERIOD = GRAPH_REDRAW_PERIOD_TERMINAL  # skoopi
 UPDATES_PER_REFRESH = 70
 
+# How long we have to stay past a threshold value before we trust it
+COOLDOWN_TIME = 1.0
+
+# Webcam device we capture images from
 CAPTURE_DEVICE = 0
+
+# Thresholds for shot timing (Bar)
+PRE_INFUSE_PRESSURE_THRESHOLD = 0.5
+SHOT_PRESSURE_THRESHOLD = 5
+
 
 # Global variable for the pressure graph (lets us print it one last time)
 global pressure_graph
@@ -286,14 +295,26 @@ class FlairPressure:
         i = 0
         pressures = []
         last_capture_time = -1.0
+        last_update_time = -1.0
         last_redraw_time = -1.0
         last_terminal_redraw_time = -1.0
         num_updates = 0
         pressure = 0
 
-        #
+        # We want to update the global pressure graph and string in this function, such
+        # that the signal handler routine (run upon ctrl-c) can redraw the graph
         global pressure_graph
         global pressure_str
+
+        # We keep track of the times when pre-infusion and extraction begin for
+        # displaying shot times and impulses
+        pre_infuse_start = None
+        shot_start = None
+        shot_duration = 0.0
+        pre_infuse_duration = 0.0
+        shot_impulse = 0.0
+        impulse = 0.0
+        shot_complete = False
 
         # Main application loop
         while True:
@@ -301,24 +322,50 @@ class FlairPressure:
             # Capture image
             img = self.capture_frame(vid_in=vid)
             capture_time = time() - start
+            dt = capture_time - last_capture_time
 
             # Compute pressure from angle of needle, apply exponential weighted moving average
             pressure = (
                 EXP_WEIGHT * self.detect_needle_position(img=img)
                 + (1 - EXP_WEIGHT) * pressure
             )
-            if pressure is not None:
-                pressures.append(pressure)
+            if pressure is None:
+                continue
+
+            # If we did validly get a pressure value, add it to the list of values
+            pressures.append(pressure)
+
+            # Update our trackers for the start of the pre-infuse and shot
+            if pre_infuse_start is None and pressure > PRE_INFUSE_PRESSURE_THRESHOLD:
+                pre_infuse_start = capture_time
+            if shot_start is None and pressure > SHOT_PRESSURE_THRESHOLD:
+                shot_start = capture_time
+                pre_infuse_duration = shot_start - pre_infuse_start
+
+            # Update our running pre-infuse & shot timers
+            if shot_start:
+                if pressure > SHOT_PRESSURE_THRESHOLD:
+                    shot_duration = capture_time - shot_start
+            elif pre_infuse_start and pressure > PRE_INFUSE_PRESSURE_THRESHOLD:
+                pre_infuse_duration = capture_time - pre_infuse_start
+
+            # If either of our timers are running, compute impulse and print a message
+            if extracting := (pre_infuse_start or shot_start):
+                impulse += pressure * dt
+                duration_str = f"Shot time: {shot_duration:.2f} seconds ({pre_infuse_duration:.2f} second pre-infuse)"
+                impulse_str = f"Impulse: {impulse:.2f} bar seconds"
 
             # Construct string for printing to terminal and stdout
-            pressure_str = (
-                f"\r\tTime: {capture_time:.2f}\tPressure: {pressure:.2f} bar"
-                if pressure is not None
-                else "N/A"
+            pressure_str = "\r\t" + "\t".join(
+                [
+                    f"Time: {capture_time:.2f} seconds",
+                    f"Pressure: {pressure:.2f} bar",
+                ]
+                + ([duration_str, impulse_str] if extracting else [])
             )
 
             # Update graph periodically
-            if capture_time > last_capture_time + GRAPH_UPDATE_PERIOD:
+            if capture_time > last_update_time + GRAPH_UPDATE_PERIOD:
                 avg_pressure = np.mean(pressures) if pressures else 0
                 if num_updates >= UPDATES_PER_REFRESH:
                     num_updates = 0
@@ -330,7 +377,7 @@ class FlairPressure:
                     new_time=graph_time,
                 )
                 pressures = []
-                last_capture_time = capture_time
+                last_update_time = capture_time
 
                 # Print to stdout again if enough time has elapsed
                 if capture_time > last_redraw_time + GRAPH_REDRAW_PERIOD:
@@ -362,6 +409,7 @@ class FlairPressure:
             # Update loop variables
             i += 1
             num_updates += 1
+            last_capture_time = capture_time
 
         vid.release()
 
@@ -416,13 +464,17 @@ def draw_graph(
     """
     # Print to terminal if given
     if connection:
+        # do twice for safety
+        connection.write(TERMINAL_CLEAR)
         connection.write(TERMINAL_CLEAR)
         connection.write(
             b"\r\n" * 4
             + bytes(pressure_graph, encoding="utf-8").replace(b"\n", b"\n\r")
-            + b"\r\n" * 2
+            + b"\r\n"
         )
-        connection.write(bytes(pressure_str, encoding="utf-8") + b"\n\r\n\n")
+        connection.write(
+            bytes(pressure_str, encoding="utf-8").replace(b"\t", b"\r\n") + b"\n\r"
+        )
         return
 
     # Otherwise print to screen
