@@ -144,16 +144,21 @@ alias gdn='gd --name-only'
 alias gdnu='gd --diff-filter=U --name-only'
 alias gdup='gd $(git merge-base HEAD origin/master)'
 alias gdnup='gdup --name-only'
+alias grsh='git reset --hard "$(git branch --show-current)"'
+alias gcln='git branch -d $(git branch --merged=master | grep -v master) && git fetch --prune'
+# Edit all unresolved conflicts sequentially
+alias erb='git status --porcelain=v1 | grep "^UU" | cut -d" " -f2 | while read filepath; do em "$filepath"; done'
 alias cdscr='cd /mnt/vault/scratch/dataforce/hamish'
 alias cdrscr='cd /mnt/rapid/scratch/dataforce/hamish'
 alias cloudcompare="deactivate; flatpak run org.cloudcompare.CloudCompare; source $HQ_VENV"
-alias grsh='git reset --hard "$(git branch --show-current)"'
 alias pvv='pytest -vvvx'
 alias pvx='pytest -vvvx'
-alias erb='git status --porcelain=v1 | grep "^UU" | cut -d" " -f2 | while read filepath; do em "$filepath"; done'
 alias ws='windsurf'
 alias deln='tr -d "\n" <<<'
 alias jqclr='jq --color-output | less --RAW-CONTROL-CHARS'
+alias kcat='kitten icat'
+alias ssl='gcloud compute instances list'
+alias ss='gcloud compute ssh --tunnel-through-iap $1'
 
 
 ################################
@@ -248,15 +253,6 @@ export DDE_DOCKERFILE="$HOME/hq/etc/dde-env.dockerfile"
 export CHROME_EXECUTABLE=/usr/bin/chromium
 
 
-# Source secrets if present
-[[ ! -e "$HOME/.config/secret-sauce" ]] || source "$HOME/.config/secret-sauce"
-
-# Source nvm if present
-export NVM_DIR="$HOME/.nvm"
-[[ ! -e "$NVM_DIR/nvm.sh" ]] || {
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-}
 
 
 ##############
@@ -265,6 +261,7 @@ export NVM_DIR="$HOME/.nvm"
 # We source this last to enzsure the venv is highest priority
 source "$HQ_VENV/bin/activate"
 
+# Source nvm if present
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

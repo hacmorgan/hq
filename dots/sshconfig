@@ -18,7 +18,7 @@ Host eddie
     User hamish
 
 Host skoopi
-    HostName 192.168.0.90
+    HostName 192.168.0.247
     User hamish
 
 Host diego
