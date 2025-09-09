@@ -53,6 +53,7 @@ setup(
         "pillow",
         "pygls>1.1.1",  # Avoids (1) from version 1.1.1
         "pylint",
+        "pyserial",
         "typer",
         "uvicorn",
         "ytmusicapi",

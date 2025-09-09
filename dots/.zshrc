@@ -158,6 +158,7 @@ alias pvv='pytest -vvvx'
 alias pvx='pytest -vvvx'
 alias ws='windsurf'
 alias deln='tr -d "\n" <<<'
+alias jqclr='jq --color-output | less --RAW-CONTROL-CHARS'
 alias kcat='kitten icat'
 alias ssl='gcloud compute instances list'
 alias ss='gcloud compute ssh --tunnel-through-iap $1'
@@ -269,10 +270,10 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/hamish/google-cloud-sdk/path.zsh.inc' ]; then . '/home/hamish/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f '/tmp/google-cloud-sdk/path.zsh.inc' ]; then . '/tmp/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/home/hamish/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/hamish/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f '/tmp/google-cloud-sdk/completion.zsh.inc' ]; then . '/tmp/google-cloud-sdk/completion.zsh.inc'; fi
 
 fpath+=~/.zfunc; autoload -Uz compinit; compinit
 

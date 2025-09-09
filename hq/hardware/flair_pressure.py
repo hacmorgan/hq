@@ -13,9 +13,11 @@ import sys
 from math import acos, atan2, cos, degrees, radians, sqrt
 from pathlib import Path
 from random import shuffle
+from serial import Serial
 from subprocess import run
 from time import sleep, time
 from typing import Optional
+from threading import Thread
 
 import cv2
 import numpy as np
@@ -26,6 +28,10 @@ BACKSPACE = b"\x7f"
 CLEAR = b"\x0c"
 CURSOR_HOME = "\033"
 SPACE = b" "
+
+# Terminal escape codes
+TERMINAL_CLEAR = b"\x1bH\x1bJ"
+
 
 DIAL_Y_MIN = 208
 DIAL_Y_MAX = 300
@@ -38,18 +44,55 @@ DEGREES_PER_BAR = 16 / 1.5
 
 EXP_WEIGHT = 0.2
 GRAPH_ROWS = 12
-# GRAPH_COLS = 70  # kopi (terminal)
-GRAPH_COLS = 150  # skoopi
-GRAPH_UPDATE_PERIOD = 0.3
-# GRAPH_REDRAW_PERIOD = 1.5  # kopi (terminal)
-GRAPH_REDRAW_PERIOD = GRAPH_UPDATE_PERIOD  # skoopi
-UPDATES_PER_REFRESH = 50
+GRAPH_COLS = 76  # kopi (terminal)
+# GRAPH_COLS = 150  # skoopi
+GRAPH_UPDATE_PERIOD = 0.5
+GRAPH_REDRAW_PERIOD_TERMINAL = 1.0  # terminal
+GRAPH_REDRAW_PERIOD = GRAPH_REDRAW_PERIOD_TERMINAL  # skoopi
+UPDATES_PER_REFRESH = 70
 
+# How long we have to stay past a threshold value before we trust it
+COOLDOWN_TIME = 1.0
+
+# Webcam device we capture images from
 CAPTURE_DEVICE = 0
+
+# Thresholds for shot timing (Bar)
+PRE_INFUSE_PRESSURE_THRESHOLD = 0.5
+SHOT_PRESSURE_THRESHOLD = 5
+
+
+# Global variable for the pressure graph (lets us print it one last time)
+global pressure_graph
+global pressure_str
+global terminal_conection
+pressure_graph = ""
+pressure_str = ""
+terminal_connection = None
 
 
 def signal_handler(sig, frame):
-    sys.stdout.write("\n" * 2)
+    """
+    Final routine run upon ctrl-c
+
+    We print the graph nicely one last time, then exit gracefully
+    """
+
+    # Draw the graph one last time to stdout
+    draw_graph(
+        pressure_graph=pressure_graph,
+        pressure_str=pressure_str + "\n",
+    )
+
+    # Also draw to terminal and close the serial connection, if we have one
+    if terminal_connection is not None:
+        draw_graph(
+            pressure_graph=pressure_graph,
+            pressure_str=pressure_str,
+            connection=terminal_connection,
+        )
+        terminal_connection.close()
+
     sys.exit(0)
 
 
@@ -236,7 +279,7 @@ class FlairPressure:
         """
         raise NotImplementedError("Learned gauge reading has not been implemented yet")
 
-    def cli_main(self) -> None:
+    def cli_main(self, terminal_connection: Serial) -> None:
         """
         Main CLI tool routine
         """
@@ -245,31 +288,84 @@ class FlairPressure:
 
         # Clear screen
         clear()
+        terminal_connection.write(TERMINAL_CLEAR)
 
         # Initialise loop variables
         start = time()
         i = 0
         pressures = []
         last_capture_time = -1.0
+        last_update_time = -1.0
         last_redraw_time = -1.0
+        last_terminal_redraw_time = -1.0
         num_updates = 0
         pressure = 0
 
+        # We want to update the global pressure graph and string in this function, such
+        # that the signal handler routine (run upon ctrl-c) can redraw the graph
+        global pressure_graph
+        global pressure_str
+
+        # We keep track of the times when pre-infusion and extraction begin for
+        # displaying shot times and impulses
+        pre_infuse_start = None
+        shot_start = None
+        shot_duration = 0.0
+        pre_infuse_duration = 0.0
+        shot_impulse = 0.0
+        impulse = 0.0
+        shot_complete = False
+
+        # Main application loop
         while True:
+
             # Capture image
             img = self.capture_frame(vid_in=vid)
             capture_time = time() - start
+            dt = capture_time - last_capture_time
 
             # Compute pressure from angle of needle, apply exponential weighted moving average
             pressure = (
                 EXP_WEIGHT * self.detect_needle_position(img=img)
                 + (1 - EXP_WEIGHT) * pressure
             )
-            if pressure is not None:
-                pressures.append(pressure)
+            if pressure is None:
+                continue
 
-            # Redraw graph periodically
-            if capture_time > last_capture_time + GRAPH_UPDATE_PERIOD:
+            # If we did validly get a pressure value, add it to the list of values
+            pressures.append(pressure)
+
+            # Update our trackers for the start of the pre-infuse and shot
+            if pre_infuse_start is None and pressure > PRE_INFUSE_PRESSURE_THRESHOLD:
+                pre_infuse_start = capture_time
+            if shot_start is None and pressure > SHOT_PRESSURE_THRESHOLD:
+                shot_start = capture_time
+                pre_infuse_duration = shot_start - pre_infuse_start
+
+            # Update our running pre-infuse & shot timers
+            if shot_start:
+                if pressure > SHOT_PRESSURE_THRESHOLD:
+                    shot_duration = capture_time - shot_start
+            elif pre_infuse_start and pressure > PRE_INFUSE_PRESSURE_THRESHOLD:
+                pre_infuse_duration = capture_time - pre_infuse_start
+
+            # If either of our timers are running, compute impulse and print a message
+            if extracting := (pre_infuse_start or shot_start):
+                impulse += pressure * dt
+                duration_str = f"Shot time: {shot_duration:.2f} seconds ({pre_infuse_duration:.2f} second pre-infuse)"
+                impulse_str = f"Impulse: {impulse:.2f} bar seconds"
+
+            # Construct string for printing to terminal and stdout
+            pressure_str = "\r\t" + "\t".join(
+                [
+                    f"Time: {capture_time:.2f} seconds",
+                    f"Pressure: {pressure:.2f} bar",
+                ]
+                + ([duration_str, impulse_str] if extracting else [])
+            )
+
+            # Update graph periodically
+            if capture_time > last_update_time + GRAPH_UPDATE_PERIOD:
                 avg_pressure = np.mean(pressures) if pressures else 0
                 if num_updates >= UPDATES_PER_REFRESH:
                     num_updates = 0
@@ -281,23 +377,39 @@ class FlairPressure:
                     new_time=graph_time,
                 )
                 pressures = []
-                last_capture_time = capture_time
+                last_update_time = capture_time
+
+                # Print to stdout again if enough time has elapsed
                 if capture_time > last_redraw_time + GRAPH_REDRAW_PERIOD:
-                    clear()
-                    sys.stdout.write(pressure_graph + "\n" * 2)
+                    Thread(
+                        target=draw_graph, kwargs={"pressure_graph": pressure_graph}
+                    ).start()
                     last_redraw_time = capture_time
 
+                # Print to the terminal again if enough time has elapsed
+                if (
+                    capture_time
+                    > last_terminal_redraw_time + GRAPH_REDRAW_PERIOD_TERMINAL
+                ):
+                    Thread(
+                        target=draw_graph,
+                        kwargs={
+                            "pressure_graph": pressure_graph,
+                            "connection": terminal_connection,
+                            "pressure_str": pressure_str,
+                        },
+                    ).start()
+                    last_terminal_redraw_time = capture_time
+
             # Print fast-refresh pressure and time status line
-            pressure_str = f"{pressure:.2f}" if pressure is not None else "N/A"
-            sys.stdout.write(
-                f"\r\tTime: {capture_time:.2f}\tPressure: {pressure_str} bar"
-            )
+            sys.stdout.write(pressure_str)
             if self.log_to_stderr:
                 sys.stderr.write(f"{pressure}\n")
 
             # Update loop variables
             i += 1
             num_updates += 1
+            last_capture_time = capture_time
 
         vid.release()
 
@@ -342,6 +454,36 @@ class FlairPressure:
         return 360 - angle
 
 
+def draw_graph(
+    pressure_graph: str,
+    connection: Serial | None = None,
+    pressure_str: str | None = None,
+) -> None:
+    """
+    Draw graph to screen or terminal
+    """
+    # Print to terminal if given
+    if connection:
+        # do twice for safety
+        connection.write(TERMINAL_CLEAR)
+        connection.write(TERMINAL_CLEAR)
+        connection.write(
+            b"\r\n" * 4
+            + bytes(pressure_graph, encoding="utf-8").replace(b"\n", b"\n\r")
+            + b"\r\n"
+        )
+        connection.write(
+            bytes(pressure_str, encoding="utf-8").replace(b"\t", b"\r\n") + b"\n\r"
+        )
+        return
+
+    # Otherwise print to screen
+    clear()
+    sys.stdout.write("\n" * 2 + pressure_graph + "\n" * 2)
+    if pressure_str is not None:
+        sys.stdout.write(pressure_str)
+
+
 if __name__ == "__main__":
     pressure_monitor = FlairPressure()
 
@@ -351,7 +493,12 @@ if __name__ == "__main__":
     #     img=pressure_monitor.capture_frame(),
     # )
 
-    pressure_monitor.cli_main()
+    global terminal_conection
+    with Serial("/dev/ttyUSB0", baudrate=19200) as conn:
+        terminal_connection = conn
+
+        # Run the pressure graph main application loop
+        pressure_monitor.cli_main(terminal_connection=conn)
 
     # paths = list(Path("/home/pi/src/hq/etc/flair_pressure/datasets/regression").iterdir())
     # # shuffle(paths)
