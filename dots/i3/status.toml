@@ -42,13 +42,13 @@ block = "net"
 device = "enp4s0"
 interval = 5
 
-[[block]]
-block = "pacman"
-interval = 600
-format = " {pacman} updates available"
-format_singular = " {pacman} update available"
-format_up_to_date = " system up to date"
-critical_updates_regex = "(linux |linux-lts|linux-zen)"
+# [[block]]
+# block = "pacman"
+# interval = 600
+# format = " {pacman} updates available"
+# format_singular = " {pacman} update available"
+# format_up_to_date = " system up to date"
+# critical_updates_regex = "(linux |linux-lts|linux-zen)"
 
 [[block]]
 block = "sound"
