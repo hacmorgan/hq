@@ -151,8 +151,10 @@ alias grsh='git reset --hard "$(git branch --show-current)"'
 alias gcln='git branch -d $(git branch --merged=master | grep -v master) && git fetch --prune'
 # Edit all unresolved conflicts sequentially
 alias erb='git status --porcelain=v1 | grep "^UU" | cut -d" " -f2 | while read filepath; do em "$filepath"; done'
-alias cdscr='cd /mnt/vault/scratch/dataforce/hamish'
-alias cdrscr='cd /mnt/rapid/scratch/dataforce/hamish'
+alias scr='echo /mnt/vault/scratch/dataforce/hamish'
+alias rscr='echo /mnt/rapid/scratch/dataforce/hamish'
+alias cdscr='cd $(scr)'
+alias cdrscr='cd $(rscr)'
 alias cloudcompare="deactivate; flatpak run org.cloudcompare.CloudCompare; source $HQ_VENV"
 alias pvv='pytest -vvvx'
 alias pvx='pytest -vvvx'
