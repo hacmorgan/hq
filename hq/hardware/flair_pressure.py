@@ -77,6 +77,8 @@ def signal_handler(sig, frame):
 
     We print the graph nicely one last time, then exit gracefully
     """
+    # Sleep for a moment to let threads finish
+    sleep(1.0)
 
     # Draw the graph one last time to stdout
     draw_graph(
@@ -346,7 +348,7 @@ class FlairPressure:
             if shot_start:
                 if pressure > SHOT_PRESSURE_THRESHOLD:
                     shot_duration = capture_time - shot_start
-            elif pre_infuse_start and pressure > PRE_INFUSE_PRESSURE_THRESHOLD:
+            elif pre_infuse_start:
                 pre_infuse_duration = capture_time - pre_infuse_start
 
             # If either of our timers are running, compute impulse and print a message
