@@ -161,6 +161,7 @@ alias jqclr='jq --color-output | less --RAW-CONTROL-CHARS'
 alias kcat='kitten icat'
 alias ssl='gcloud compute instances list'
 alias ss='gcloud compute ssh --tunnel-through-iap $1'
+alias spkg="echo $HQ_VENV/lib/python*/site-packages"
 
 
 ################################
