@@ -262,6 +262,10 @@ export DDE_DOCKERFILE="$HOME/hq/etc/dde-env.dockerfile"
 # Tell flutter (et. al.) where to find chromium, because they look for chrome
 export CHROME_EXECUTABLE=/usr/bin/chromium
 
+# Prefect stuff
+export PREFECT_SERVER_PORT=42069
+export PREFECT_SERVER_IP=192.168.0.140
+
 
 
 
