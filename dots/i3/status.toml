@@ -30,7 +30,7 @@ critical_swap = 95
 
 [[block]]
 block = "net"
-device = "wlp0s20f3"
+device = "enx00e04c680b84"
 interval = 5
 
 [[block]]
