@@ -6,20 +6,14 @@ Lightweight application for writing and aggregating TODOs
 """
 
 
-from pathlib import Path
 from datetime import datetime
-from shutil import copyfile
 from os import environ
-import sys
-from usb import USBError
+from pathlib import Path
+from shutil import copyfile
 
 from hq.cli import getchar, run_typer_app
+from hq.hardware.thermal_printer import MAX_LINE_WIDTH, print_thermally_unpriveliged
 from hq.shell import sh_run
-from hq.hardware.thermal_printer import (
-    print_thermally,
-    print_thermally_unpriveliged,
-    MAX_LINE_WIDTH,
-)
 
 # Parent directory under which TODOs are saved
 _user = environ.get("SUDO_USER", environ["USER"])
@@ -61,9 +55,9 @@ def todo(name: str | None = None) -> None:
         todo_path = (ROOT_TODO_DIR / name).with_suffix(TODO_SUFFIX)
     else:
         now = datetime.now()
-        todo_dir = ROOT_TODO_DIR / f"{now.year}/{now.month}"
+        todo_dir = ROOT_TODO_DIR / f"{now.year}/{now.month:02d}"
         todo_path = (
-            todo_dir / (name if name is not None else str(now.day))
+            todo_dir / (name if name is not None else f"{now.day:02d}")
         ).with_suffix(TODO_SUFFIX)
 
     # Find the previous TODO (if it exists)
@@ -132,17 +126,19 @@ def find_previous() -> Path | None:
     Returns:
         Path of the most recent TODO if there is one, None otherwise
     """
-    try:
-        return sorted(
-            (
-                path
-                for path in ROOT_TODO_DIR.rglob("**/*")
-                if not path.is_dir()
-                and not any(path.stem.startswith(char) for char in ".#")
+    return next(
+        reversed(
+            sorted(
+                (
+                    path
+                    for path in ROOT_TODO_DIR.rglob("**/*")
+                    if not path.is_dir()
+                    and not any(path.stem.startswith(char) for char in ".#")
+                )
             )
-        )[0]
-    except IndexError:
-        return None
+        ),
+        None,
+    )
 
 
 def print_todo(todo_path: Path) -> None:
