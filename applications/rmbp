@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+
+# rmbp - remove breakpoints in source code
+#
+# n.b. this tool assumes source code is version controlled, and as such makes no backups
+#
+# Usage:
+#     rmbp [-s] <input_path> [<input_path> ...]
+#
+# Options:
+#     --show,-s: Show files that would be modified, but do not modify them
+#
+# Positional args:
+#     input_path: Filepath(s) to search within or root directory(/ies) to recursively
+#         search for breakpoints to remove.
+
+
+BACKUP_SUFFIX=".bak"
+
+
+input_paths=("$@")
+show_only_args="$(grep -- '--show\|^-s' <<<"${input_paths[*]}")"
+help_args="$(grep -- '--help\|^-h' <<<"${input_paths[*]}")"
+
+if [[ -n "$help_args" || ${#input_paths[@]} -eq 0 ]]; then
+    tail -n+2 "$0" | grep '^#' | sed 's/^#//'
+    exit 0
+fi
+
+
+
+if [[ -n "$show_only_args" ]]; then
+    ripgrep_args=()
+else
+    ripgrep_args=("--files-with-matches")
+fi
+
+
+rg --color=always "${ripgrep_args[@]}" 'breakpoint()' "${input_paths[@]}" | {
+    if [[ -n "$show_only_args" ]]; then
+        cat
+    else
+        xargs sed -i '#breakpoint()#d'
+    fi
+}
+
