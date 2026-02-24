@@ -4,19 +4,17 @@
 # and detatch the process from the parent terminal
 
 source $(type -p bash-std)
-export BASH_STD_IGNORE_UNKNOWN_ARGS=1 # until positional args implemented
 
 function prologue {
     cat <<EOF
 
 ${fmt_red}em - emacsclient wrapper${fmt_reset}
-
-${fmt_dim}Note: the filename must be the final argument. bash-std doesn't support positional arguments yet${fmt_reset}
 EOF
 }
 
 function options {
     cat <<EOF
+file; default=; File to open
 --detach,-d; Open file in emacs server but don't launch an emacs window
 --sudo,-s; Open file using sudo
 --gui,-x; Open file in GUI instead of terminal
@@ -25,46 +23,28 @@ EOF
 
 bash-std-application-init "$@" < <(options) || die "failed"
 
-function get_final_arg {
-    local args=($@)
-    local num_args=${#args[@]}
-    echo ${args[$((num_args - 1))]}
-}
-
 function sanitize_inputs {
     if ((options_detach + options_gui > 1)); then
         die "--detach and --gui are mutually exclusive"
     fi
 }
 
-function get_filename {
-    local final_arg=$(get_final_arg $@)
-    local file=""
-    local emacs_file_path=""
-
-    # Catch when the last arg is a CLI option instead of a file path
-    if [[ -z "$(grep '^-' <<<$final_arg)" ]]; then file="$final_arg"; fi
-    if ((options_sudo)); then
-        emacs_file_path+="/sudo::"
-    fi
-
-    # Resolve to absolute path for sudo
-    if ((options_sudo)); then
-        emacs_file_path+="$(realpath $file)"
-    else
-        emacs_file_path+="$file"
-    fi
-
-    echo $emacs_file_path
-}
-
 # Check args are legit
-sanitize_inputs $@
+sanitize_inputs
+
+# Resolve file path (adding sudo prefix if needed)
+emacs_file_path=""
+if ((options_sudo)); then
+    emacs_file_path+="/sudo::"
+    [[ -n "$options_file" ]] && emacs_file_path+="$(realpath "$options_file")"
+else
+    emacs_file_path+="$options_file"
+fi
 
 # Construct the common start of the command
 command="emacsclient -a ''"
 
-# Add appropriate prefix depending if we're opening here or somewehre else
+# Add appropriate prefix depending if we're opening here or somewhere else
 if ((options_detach)); then
     command+=" -n"
 else
@@ -72,7 +52,7 @@ else
 fi
 
 # Add the filepath itself
-command+=" $(get_filename $@)"
+command+=" $emacs_file_path"
 
 # Set args for GUI/TUI
 if ((options_gui)); then
