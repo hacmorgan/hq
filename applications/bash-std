@@ -118,6 +118,8 @@ function argument_type
         fi
     elif [[ -z "$definition" ]]; then
         echo "not_an_option"
+    elif [[ "$definition" != -* ]]; then
+        echo "positional"
     else
         echo "flag"
     fi
@@ -166,9 +168,10 @@ function check_all_mandatory_options
     while read definition; do
         local arg_name=$( full_arg_name           <<< $definition )
         local arg_type=$( argument_type $arg_name <<< $definition )
-        if [[ -n "$( grep "value" <<< $arg_type )" && -z "$( grep "\[<.*>\]" <<< $definition )" ]]; then
+        if [[ -n "$( grep "value" <<< $arg_type )" && -z "$( grep "\[<.*>\]" <<< $definition )" ]] ||
+           [[ $arg_type == "positional" && -z "$( grep 'default=' <<< $definition )" ]]; then
             variable_name="$( arg_to_option_name "$arg_name" <<< $definition )"
-            [[ -n $( eval "echo \$$variable_name" ) ]] || die "$arg_name is required and was not given" 
+            [[ -n $( eval "echo \$$variable_name" ) ]] || die "$arg_name is required and was not given"
         fi
     done
 }
@@ -212,6 +215,14 @@ function bash-std-application-init
     check_for_help ${args[@]} <<< $options
     set_defaults              <<< $options
 
+    # Collect positional argument names in definition order (lines without a leading -)
+    local positional_defs
+    mapfile -t positional_defs < <(
+        grep --invert-match --regexp '^-' --regexp '^[[:space:]]*$' <<< "$options" |
+        sed -e 's/;.*//' -e 's/=.*//' -e 's/,.*//' -e 's/[[:space:]]//g'
+    )
+    local positional_index=0
+
     next_is_value=0
     this_is_value=0
     for i in $( seq 0 $nargs ); do  # for some reason {0..${#args[@]}} didn't work
@@ -240,7 +251,12 @@ function bash-std-application-init
                     this_is_value=0
                     continue
                 fi
-                if (( ! BASH_STD_IGNORE_UNKNOWN_ARGS )); then
+                if (( positional_index < ${#positional_defs[@]} )); then
+                    set_value "${positional_defs[$positional_index]}" \
+                              "${args[$i]}" \
+                              <<< $options
+                    (( positional_index++ ))
+                elif (( ! BASH_STD_IGNORE_UNKNOWN_ARGS )); then
                     die "unrecognised argument: ${args[$i]}"
                 fi ;;
         esac

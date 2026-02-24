@@ -12,10 +12,14 @@ then checks the resulting shell variable values and exit code.
 import os
 import shlex
 from dataclasses import dataclass
+from pathlib import Path
 
 import pytest
 
 from hq.shell import sh_run
+
+# Always source the local bash-std so tests reflect uncommitted changes
+_BASH_STD = Path(__file__).parent.parent / "bash-std"
 
 
 # ---------------------------------------------------------------------------
@@ -61,7 +65,7 @@ def _build_script(options: str, args: list[str], echo_vars: list[str]) -> str:
     args_str = " ".join(shlex.quote(a) for a in args)
     echo_cmds = "\n".join(f'echo "{v}=${{{v}}}"' for v in echo_vars)
     return f"""\
-source $(type -p bash-std) 2>/dev/null
+source {_BASH_STD}
 OPTIONS=$(cat <<'BASH_STD_OPTIONS'
 {options}
 BASH_STD_OPTIONS
@@ -305,3 +309,71 @@ def test_help_short_form_exits_zero() -> None:
     """
     result = parse(SIMPLE_OPTIONS, args=["-h"])
     assert result.succeeded
+
+
+# ---------------------------------------------------------------------------
+# Positional argument tests
+# ---------------------------------------------------------------------------
+
+POSITIONAL_OPTIONS = """\
+source-file; Source file to process
+destination; Destination path
+--verbose,-v; More output
+"""
+
+
+def test_positional_assigned_in_order() -> None:
+    """
+    Positional values are captured into variables in definition order.
+    """
+    result = parse(
+        POSITIONAL_OPTIONS,
+        args=["/tmp/input.txt", "/tmp/output.txt"],
+        echo_vars=["options_source_file", "options_destination"],
+    )
+    assert result.succeeded
+    assert "options_source_file=/tmp/input.txt" in result.stdout
+    assert "options_destination=/tmp/output.txt" in result.stdout
+
+
+def test_positional_interleaved_with_flags() -> None:
+    """
+    Positionals and flags can appear in any order; both are captured correctly.
+    """
+    result = parse(
+        POSITIONAL_OPTIONS,
+        args=["--verbose", "/tmp/input.txt", "/tmp/output.txt"],
+        echo_vars=["options_source_file", "options_destination", "options_verbose"],
+    )
+    assert result.succeeded
+    assert "options_source_file=/tmp/input.txt" in result.stdout
+    assert "options_destination=/tmp/output.txt" in result.stdout
+    assert "options_verbose=1" in result.stdout
+
+
+def test_positional_hyphen_becomes_underscore() -> None:
+    """
+    Hyphens in positional names are converted to underscores in the variable name.
+    """
+    options = "input-file; Input file\n"
+    result = parse(options, args=["/tmp/in.txt"], echo_vars=["options_input_file"])
+    assert result.succeeded
+    assert "options_input_file=/tmp/in.txt" in result.stdout
+
+
+def test_missing_required_positional_causes_failure() -> None:
+    """
+    Omitting a required positional (no default) must exit non-zero.
+    """
+    result = parse(POSITIONAL_OPTIONS, args=["/tmp/input.txt"])  # destination missing
+    assert not result.succeeded
+
+
+def test_positional_with_default_not_required() -> None:
+    """
+    A positional with a default does not fail when omitted.
+    """
+    options = "output; default=/dev/stdout; Output path\n"
+    result = parse(options, args=[], echo_vars=["options_output"])
+    assert result.succeeded
+    assert "options_output=/dev/stdout" in result.stdout
