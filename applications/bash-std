@@ -89,19 +89,20 @@ export BASH_STD_NOTIFY_SEND_INSTALLED
 function get_definition
 {
     arg="$1"
-    grep --regexp "^$arg;" \
-         --regexp "^$arg," \
-         --regexp "^$arg=" \
-         --regexp ",$arg;" \
-         --regexp ",$arg," \
-         --regexp ",$arg=" 
+    grep --regexp "^$arg\*\?;" \
+         --regexp "^$arg\*\?," \
+         --regexp "^$arg\*\?=" \
+         --regexp ",$arg\*\?;" \
+         --regexp ",$arg\*\?," \
+         --regexp ",$arg\*\?="
 }
 
 function full_arg_name
 {
     sed --expression 's#;.*##' \
         --expression 's#=.*##' \
-        --expression 's#,.*##'
+        --expression 's#,.*##' \
+        --expression 's#\*##g'
 }
 
 function argument_type
@@ -152,6 +153,9 @@ function set_defaults
         local arg_type=$( argument_type $arg_name <<< $definition )
         if [[ $arg_type == "flag" ]]; then
             set_value $arg_name 0 <<< $definition
+        elif [[ $arg_type == "positional" && "$definition" == *'*'* ]]; then
+            local varname=$( arg_to_option_name "$arg_name" <<< $definition )
+            eval "${varname}=()"
         else
             local value=""
             if [[ -n "$( grep 'default=' <<< $definition )" ]]; then
@@ -169,7 +173,7 @@ function check_all_mandatory_options
         local arg_name=$( full_arg_name           <<< $definition )
         local arg_type=$( argument_type $arg_name <<< $definition )
         if [[ -n "$( grep "value" <<< $arg_type )" && -z "$( grep "\[<.*>\]" <<< $definition )" ]] ||
-           [[ $arg_type == "positional" && -z "$( grep 'default=' <<< $definition )" ]]; then
+           [[ $arg_type == "positional" && "$definition" != *'*'* && -z "$( grep 'default=' <<< $definition )" ]]; then
             variable_name="$( arg_to_option_name "$arg_name" <<< $definition )"
             [[ -n $( eval "echo \$$variable_name" ) ]] || die "$arg_name is required and was not given"
         fi
@@ -216,11 +220,19 @@ function bash-std-application-init
     set_defaults              <<< $options
 
     # Collect positional argument names in definition order (lines without a leading -)
-    local positional_defs
-    mapfile -t positional_defs < <(
-        grep --invert-match --regexp '^-' --regexp '^[[:space:]]*$' <<< "$options" |
-        sed -e 's/;.*//' -e 's/=.*//' -e 's/,.*//' -e 's/[[:space:]]//g'
-    )
+    # Names ending in * are variadic: they collect all remaining positional args into an array
+    local positional_defs=()
+    local positional_is_variadic=()
+    while IFS= read -r _def; do
+        local _name
+        _name=$(sed -e 's/;.*//' -e 's/=.*//' -e 's/,.*//' -e 's/\*//' -e 's/[[:space:]]//g' <<< "$_def")
+        positional_defs+=("$_name")
+        if [[ "$_def" == *'*'* ]]; then
+            positional_is_variadic+=(1)
+        else
+            positional_is_variadic+=(0)
+        fi
+    done < <(grep --invert-match --regexp '^-' --regexp '^[[:space:]]*$' <<< "$options")
     local positional_index=0
 
     next_is_value=0
@@ -252,10 +264,16 @@ function bash-std-application-init
                     continue
                 fi
                 if (( positional_index < ${#positional_defs[@]} )); then
-                    set_value "${positional_defs[$positional_index]}" \
-                              "${args[$i]}" \
-                              <<< $options
-                    (( positional_index++ ))
+                    if (( positional_is_variadic[positional_index] )); then
+                        local _varname
+                        _varname=$( arg_to_option_name "${positional_defs[$positional_index]}" <<< $options )
+                        eval "${_varname}+=( $(printf '%q' "${args[$i]}") )"
+                    else
+                        set_value "${positional_defs[$positional_index]}" \
+                                  "${args[$i]}" \
+                                  <<< $options
+                        (( positional_index++ ))
+                    fi
                 elif (( ! BASH_STD_IGNORE_UNKNOWN_ARGS )); then
                     die "unrecognised argument: ${args[$i]}"
                 fi ;;

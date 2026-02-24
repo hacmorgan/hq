@@ -14,7 +14,7 @@ EOF
 
 function options {
     cat <<EOF
-file; default=; File to open
+files*; Input files to open in emacs
 --detach,-d; Open file in emacs server but don't launch an emacs window
 --sudo,-s; Open file using sudo
 --gui,-x; Open file in GUI instead of terminal
@@ -32,15 +32,6 @@ function sanitize_inputs {
 # Check args are legit
 sanitize_inputs
 
-# Resolve file path (adding sudo prefix if needed)
-emacs_file_path=""
-if ((options_sudo)); then
-    emacs_file_path+="/sudo::"
-    [[ -n "$options_file" ]] && emacs_file_path+="$(realpath "$options_file")"
-else
-    emacs_file_path+="$options_file"
-fi
-
 # Construct the common start of the command
 command="emacsclient -a ''"
 
@@ -51,8 +42,14 @@ else
     command+=" -c"
 fi
 
-# Add the filepath itself
-command+=" $emacs_file_path"
+# Add the filepath(s)
+for _file in "${options_files[@]}"; do
+    if ((options_sudo)); then
+        command+=" /sudo::$(realpath "$_file")"
+    else
+        command+=" $_file"
+    fi
+done
 
 # Set args for GUI/TUI
 if ((options_gui)); then

@@ -35,7 +35,7 @@ setup(
     scripts=[
         str(path)
         for path in Path("applications").iterdir()
-        if not path.stem.startswith(".")
+        if not path.stem.startswith(".") and not path.is_dir()
     ],
     install_requires=[
         "black",

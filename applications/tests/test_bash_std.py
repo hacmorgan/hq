@@ -50,20 +50,33 @@ class ParseResult:
         return self.returncode == 0
 
 
-def _build_script(options: str, args: list[str], echo_vars: list[str]) -> str:
+def _build_script(
+    options: str,
+    args: list[str],
+    echo_vars: list[str],
+    echo_array_vars: list[str],
+) -> str:
     """
     Build an inline bash script that sources bash-std, parses args, and echoes variables.
 
     Args:
         options: Newline-separated bash-std option definitions.
         args: Command-line arguments to pass to bash-std-application-init.
-        echo_vars: Shell variable names to echo to stdout after parsing.
+        echo_vars: Scalar shell variable names to echo to stdout after parsing.
+        echo_array_vars: Array shell variable names to echo (count + one line per element).
 
     Returns:
         A bash script string ready to be passed to ``bash -c``.
     """
     args_str = " ".join(shlex.quote(a) for a in args)
     echo_cmds = "\n".join(f'echo "{v}=${{{v}}}"' for v in echo_vars)
+    array_echo_parts = []
+    for v in echo_array_vars:
+        array_echo_parts.append('echo "%s_count=${#%s[@]}"' % (v, v))
+        array_echo_parts.append(
+            'for _item in "${%s[@]}"; do echo "%s_item=$_item"; done' % (v, v)
+        )
+    array_echo_cmds = "\n".join(array_echo_parts)
     return f"""\
 source {_BASH_STD}
 OPTIONS=$(cat <<'BASH_STD_OPTIONS'
@@ -72,6 +85,7 @@ BASH_STD_OPTIONS
 )
 bash-std-application-init {args_str} <<< "$OPTIONS"
 {echo_cmds}
+{array_echo_cmds}
 """
 
 
@@ -79,6 +93,7 @@ def parse(
     options: str,
     args: list[str] = (),
     echo_vars: list[str] = (),
+    echo_array_vars: list[str] = (),
     env: dict[str, str] | None = None,
 ) -> ParseResult:
     """
@@ -87,13 +102,14 @@ def parse(
     Args:
         options: Newline-separated bash-std option definitions.
         args: Command-line arguments to pass to bash-std-application-init.
-        echo_vars: Shell variable names to echo to stdout after parsing.
+        echo_vars: Scalar shell variable names to echo to stdout after parsing.
+        echo_array_vars: Array variable names to echo (count + one line per element).
         env: Extra environment variables to set (merged with os.environ).
 
     Returns:
         ParseResult containing the exit code and captured stdout/stderr.
     """
-    script = _build_script(options, args, echo_vars)
+    script = _build_script(options, args, echo_vars, echo_array_vars)
     full_env = None
     if env is not None:
         full_env = os.environ.copy()
@@ -377,3 +393,55 @@ def test_positional_with_default_not_required() -> None:
     result = parse(options, args=[], echo_vars=["options_output"])
     assert result.succeeded
     assert "options_output=/dev/stdout" in result.stdout
+
+
+# ---------------------------------------------------------------------------
+# Variadic positional argument tests
+# ---------------------------------------------------------------------------
+
+VARIADIC_OPTIONS = """\
+files*; Input files to process
+--verbose,-v; More output
+"""
+
+
+def test_variadic_positional_captures_multiple_args() -> None:
+    """
+    A variadic positional collects all supplied values into a bash array.
+    """
+    result = parse(
+        VARIADIC_OPTIONS,
+        args=["a.txt", "b.txt", "c.txt"],
+        echo_array_vars=["options_files"],
+    )
+    assert result.succeeded
+    assert "options_files_count=3" in result.stdout
+    assert "options_files_item=a.txt" in result.stdout
+    assert "options_files_item=b.txt" in result.stdout
+    assert "options_files_item=c.txt" in result.stdout
+
+
+def test_variadic_positional_empty_when_omitted() -> None:
+    """
+    A variadic positional yields an empty array when no values are supplied.
+    """
+    result = parse(VARIADIC_OPTIONS, args=[], echo_array_vars=["options_files"])
+    assert result.succeeded
+    assert "options_files_count=0" in result.stdout
+
+
+def test_variadic_positional_interleaved_with_flags() -> None:
+    """
+    Values accumulate in the array even when flags appear between them.
+    """
+    result = parse(
+        VARIADIC_OPTIONS,
+        args=["a.txt", "--verbose", "b.txt"],
+        echo_vars=["options_verbose"],
+        echo_array_vars=["options_files"],
+    )
+    assert result.succeeded
+    assert "options_files_count=2" in result.stdout
+    assert "options_files_item=a.txt" in result.stdout
+    assert "options_files_item=b.txt" in result.stdout
+    assert "options_verbose=1" in result.stdout
