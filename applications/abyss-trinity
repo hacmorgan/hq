@@ -29,15 +29,38 @@ ps aux | grep -v "grep" | grep "emacs --daemon" >/dev/null &&
 tmux start
 
 # Create a new tmux session, with our first window, "edit", used for emacs
-tmux new-session -ds "$session_name" -n edit "$SOURCE_VENV && em"
+tmux new-session \
+     -ds "$session_name" \
+     -n edit \
+     -c "$HOME/src/abyss" \
+     "$SOURCE_VENV && em"
+
+# Make a new window for claude
+tmux new-window -a \
+     -t "$session_name:edit" \
+     -n claude \
+     -c "$HOME/src/abyss" \
+     "$SOURCE_VENV && sleep 2 && claude --ide"
 
 # Make a "repl" window with an ipython interpreter
-tmux new-window -a -t "$session_name:edit" -n repl "$SOURCE_VENV && ipython"
+tmux new-window -a \
+     -t "$session_name:claude" \
+     -n repl \
+     "$SOURCE_VENV && ipython"
 
 # Make a new window for each of the holy trinity repos
-tmux new-window -a -t "$session_name:repl"    -n bedrock -c "$HOME/src/abyss/abyss-bedrock"
-tmux new-window -a -t "$session_name:bedrock" -n deepl   -c "$HOME/src/abyss/deep-learning"
-tmux new-window -a -t "$session_name:deepl"   -n fabric  -c "$HOME/src/abyss/abyss-fabric" 
+tmux new-window -a \
+     -t "$session_name:claude" \
+     -n bedrock \
+     -c "$HOME/src/abyss/abyss-bedrock"
+tmux new-window -a \
+     -t "$session_name:bedrock" \
+     -n deepl \
+     -c "$HOME/src/abyss/deep-learning"
+tmux new-window -a \
+     -t "$session_name:deepl" \
+     -n fabric \
+     -c "$HOME/src/abyss/abyss-fabric"
 
 # Attach to the session
 tmux attach -t "$session_name"

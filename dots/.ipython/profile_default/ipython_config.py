@@ -1320,9 +1320,9 @@ ultratb.VerboseTB.tb_highlight = "bg:ansired"
 
 # Auto import a bunch of stuff
 c.InteractiveShellApp.exec_lines = [
-    "%load_ext autoreload",
-    "%autoreload 2",
-#    "%load_ext copilot_completer",
+    # "%load_ext autoreload",
+    # "%autoreload 2",
+    #    "%load_ext copilot_completer",
     "import math",
     "import sys",
     "import os",
