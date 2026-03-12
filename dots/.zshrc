@@ -170,10 +170,16 @@ alias spkg="echo $HQ_VENV/lib/python*/site-packages"
 # Enale vi keymap
 # bindkey -v
 
-# Revind C-b to beginning of line (C-a stolen by tmux) and C-e to end-of-line
-bindkey -r ^B 
+# Rebind C-b to beginning of line (C-a stolen by tmux) and C-e to end-of-line
+bindkey -r ^B
 bindkey ^B beginning-of-line
 bindkey ^E end-of-line
+
+# Fix Home and End keys at the zsh prompt (sequences vary by terminal/tmux)
+bindkey '\033[H'  beginning-of-line  # xterm/kitty
+bindkey '\033[F'  end-of-line        # xterm/kitty
+bindkey '\033[1~' beginning-of-line  # tmux
+bindkey '\033[4~' end-of-line        # tmux
 
 # # Remove mode switching delay.
 # KEYTIMEOUT=5
