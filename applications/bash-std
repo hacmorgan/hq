@@ -86,6 +86,75 @@ command -v notify-send > /dev/null && BASH_STD_NOTIFY_SEND_INSTALLED=1
 export BASH_STD_NOTIFY_SEND_INSTALLED
 
 
+# @@@ BASH-STD VERSIONING @@@
+BASH_STD_VERSION="2.0.0"
+
+# Compare two version strings. Returns 0 if $1 >= $2.
+function _bash_std_version_ge {
+    [[ "$1" == "$2" ]] && return 0
+    local IFS=.
+
+    # Coerce version strings into arrays, filling missing parts with zeros
+    local i ver1=($1) ver2=($2)
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++)); do
+        ver1[i]=0
+    done
+
+    # Check each version number segment
+    for ((i=0; i<${#ver1[@]}; i++)); do
+        if [[ -z ${ver2[i]} ]]; then
+            ver2[i]=0
+        fi
+        if ((10#${ver1[i]} > 10#${ver2[i]})); then
+            return 0
+        fi
+        if ((10#${ver1[i]} < 10#${ver2[i]})); then
+            return 1
+        fi
+    done
+    return 0
+}
+
+# Automatically update bash-std if it is older than $BASH_STD_MIN_VERSION
+function _bash_std_check_version {
+    if [[ -n "$BASH_STD_MIN_VERSION" ]]; then
+        if ! _bash_std_version_ge "$BASH_STD_VERSION" "$BASH_STD_MIN_VERSION"; then
+            local bash_std_path="${BASH_SOURCE[0]:-$0}"
+
+            # If we're sourced and not writable, we can't update ourselves.
+            if [[ ! -w "$bash_std_path" ]]; then
+                die "bash-std is too old (v$BASH_STD_VERSION < v$BASH_STD_MIN_VERSION) and cannot update itself because $bash_std_path is not writable. Please update bash-std manually or modify permissions with chmod +w $bash_std_path."
+            fi
+
+            # Avoid recursive updates if something goes wrong
+            if [[ "$BASH_STD_UPDATING" == "1" ]]; then
+                return
+            fi
+            export BASH_STD_UPDATING=1
+
+            say "bash-std is too old (v$BASH_STD_VERSION < v$BASH_STD_MIN_VERSION), updating from GitHub..."
+            local temp_file=$(mktemp)
+            if curl -fsSL https://raw.githubusercontent.com/hacmorgan/hq/refs/heads/main/applications/bash-std -o "$temp_file"; then
+                # Check the version of the downloaded file
+                local new_version=$(sed -n "s/BASH_STD_VERSION=\x22\([^\x22]*\)\x22/\1/p" "$temp_file" | head -n 1)
+                if [[ -n "$new_version" ]] && _bash_std_version_ge "$new_version" "$BASH_STD_MIN_VERSION"; then
+                    mv "$temp_file" "$bash_std_path"
+                    chmod +x "$bash_std_path"
+                    unset BASH_STD_UPDATING
+                    source "$bash_std_path"
+                    return 1
+                fi
+            fi
+            rm -f "$temp_file"
+            unset BASH_STD_UPDATING
+        fi
+    fi
+}
+
+_bash_std_check_version || return 0
+# @@@ END BASH-STD VERSIONING @@@
+
+
 function get_definition
 {
     arg="$1"
