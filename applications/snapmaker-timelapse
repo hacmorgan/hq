@@ -51,7 +51,8 @@ function generate_timelapse
     }
     
     rm -v "$options_output_path"
-    find "$options_capture_dir" -name "*.jpg" |
+    this_capture_dir="$options_capture_dir/$(ls "$options_capture_dir" | tail -n1)"
+    find "$this_capture_dir" -name "*.jpg" |
         sort |
         xargs cat |
         ffmpeg -i - \
