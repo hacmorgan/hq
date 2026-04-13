@@ -53,74 +53,83 @@ Host kopi_eth
     User pi
     Hostname 192.168.0.171
 
-Host hippo
-    HostName 10.137.4.1
-    User hamish
+# # SALT
+# Host burrito hippo dingo bronco taco lambo dumbo
+# 	User hamish
 
-Host rhino
-    HostName 10.137.4.2
-    User hmo
+# OTHER
+Host rhino buffalo quickboy mammoth laeeb gecko
+	User hmo
 
-Host dingo
-    HostName 10.137.4.3
-    User hamish
 
-Host gecko
-    HostName 10.137.4.4
-    User hmo
-
-# Host buffalo
-#     HostName 10.137.4.5
+# Host hippo
+#     HostName 10.137.4.1
+#     User hamish
+# 
+# Host rhino
+#     HostName 10.137.4.2
 #     User hmo
-
-# Host dodo
-#     HostName 10.137.4.6
+# 
+# Host dingo
+#     HostName 10.137.4.3
+#     User hamish
+# 
+# Host gecko
+#     HostName 10.137.4.4
 #     User hmo
-
-Host bronco
-    HostName 10.137.4.8
-    User hamish
-
-Host burrito
-    HostName 10.137.4.9
-    User hamish
-
-Host taco
-    HostName 10.137.4.10
-    User hamish
-
-Host haggis
-    HostName 10.137.4.11
-    User hmo
-
-Host laeeb
-    HostName 10.137.4.12
-    User hmo
-
-Host dumbo
-    HostName 10.137.4.15
-    User hamish
-
-Host quickboy
-    HostName 10.137.4.253
-    User hmo
-
-Host mammoth
-    HostName 10.137.4.252
-    User hmo
-
-Host bastion
-    HostName 10.137.9.1
-    User hmo
-
-Host hihi
-    HostName 10.10.5.4
-    User hamish
-
-Host saudi-nomachine
-    HostName 158.101.252.67
-    User hamish
-
-Host chakor
-    HostName 10.137.4.14
-    User hamish
+# 
+# # Host buffalo
+# #     HostName 10.137.4.5
+# #     User hmo
+# 
+# # Host dodo
+# #     HostName 10.137.4.6
+# #     User hmo
+# 
+# Host bronco
+#     HostName 10.137.4.8
+#     User hamish
+# 
+# Host burrito
+#     HostName 10.137.4.9
+#     User hamish
+# 
+# Host taco
+#     HostName 10.137.4.10
+#     User hamish
+# 
+# Host haggis
+#     HostName 10.137.4.11
+#     User hmo
+# 
+# Host laeeb
+#     HostName 10.137.4.12
+#     User hmo
+# 
+# Host dumbo
+#     HostName 10.137.4.15
+#     User hamish
+# 
+# Host quickboy
+#     HostName 10.137.4.253
+#     User hmo
+# 
+# Host mammoth
+#     HostName 10.137.4.252
+#     User hmo
+# 
+# Host bastion
+#     HostName 10.137.9.1
+#     User hmo
+# 
+# Host hihi
+#     HostName 10.10.5.4
+#     User hamish
+# 
+# Host saudi-nomachine
+#     HostName 158.101.252.67
+#     User hamish
+# 
+# Host chakor
+#     HostName 10.137.4.14
+#     User hamish
