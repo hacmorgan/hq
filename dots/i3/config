@@ -262,3 +262,9 @@ bindsym $mod+Shift+g exec --no-startup-id gimp
 
 # dmenu-custom
 bindsym --release $mod+Shift+s exec --no-startup-id "$HOME/venvs/py3.11/bin/dmenu-custom"
+
+# Configure xinput
+exec --no-startup-id $HOME/venvs/py3.11/bin/configure-xinput > /tmp/configure-xinput.log 2>&1
+
+# Add SSH key (agent is managed by systemd user service)
+exec --no-startup-id ssh-add ~/.ssh/id_rsa

@@ -272,6 +272,9 @@ export CHROME_EXECUTABLE=/usr/bin/chromium
 export PREFECT_SERVER_PORT=42069
 export PREFECT_SERVER_IP=192.168.0.140
 
+# SSH agent socket (agent managed by systemd user service)
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
 
 
 
