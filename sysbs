@@ -588,6 +588,7 @@ function options
 {
     cat <<EOF
 --autostart-abyss-wireguard; Use systemd to effectively run 'sudo wg-quick up abyss' on boot
+--enable-ssh-agent; Enable and start the systemd user ssh-agent service
 --configure-cctv; Configure this host as a CCTV server
 --configure-emacs; Clone emacs repositiory to ~/.emacs.d
 --configure-git; Tell git who you are (so you can commit)
