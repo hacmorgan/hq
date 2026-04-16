@@ -55,9 +55,6 @@ xset r rate 250 50 &!
 # # start the emacs server. disown so that exiting x session doesn't kill emacs
 # emacs --daemon &!
 
-# Start the ssh agent
-(eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_rsa) &!
-
 # this is the last thing we do!
 # exec startxfce4
 exec i3

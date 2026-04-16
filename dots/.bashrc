@@ -113,5 +113,6 @@ if ! shopt -oq posix; then
   fi
 fi
 export EDITOR=/usr/bin/vim.basic
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 . <(grep "^alias" ~/.zshrc)
 . <(grep "^alias" ~/.oh-my-zsh/plugins/git/git.plugin.zsh)

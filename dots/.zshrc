@@ -262,6 +262,9 @@ export DDE_DOCKERFILE="$HOME/hq/etc/dde-env.dockerfile"
 export CHROME_EXECUTABLE=/usr/bin/chromium
 
 
+# SSH agent socket (agent managed by systemd user service)
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
 
 
 ##############
