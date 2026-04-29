@@ -110,9 +110,9 @@ alias ip3='ipython3'
 alias p3='python3'
 alias p3m='python3 -m'
 alias p3mp='python3 -m pip'
-alias p3iu='python3 -m pip install --use-pep517 --upgrade'
-alias p3ir='python3 -m pip install --use-pep517 --requirement'
-alias p3iue='python3 -m pip install --use-pep517 --upgrade --editable'
+alias p3iu='pip install --upgrade'
+alias p3ir='pip install --requirement'
+alias p3iue='pip install --upgrade --editable'
 alias p2='python2'
 alias pm='pulsemixer'
 alias tm='tmux attach || tmux'
@@ -164,6 +164,7 @@ alias jqclr='jq --color-output | less --RAW-CONTROL-CHARS'
 alias kcat='kitten icat'
 alias ssl='gcloud compute instances list'
 alias ss='gcloud compute ssh --tunnel-through-iap $1'
+alias spkg="echo $HQ_VENV/lib/python*/site-packages"
 
 
 ################################
@@ -172,10 +173,16 @@ alias ss='gcloud compute ssh --tunnel-through-iap $1'
 # Enale vi keymap
 # bindkey -v
 
-# Revind C-b to beginning of line (C-a stolen by tmux) and C-e to end-of-line
-bindkey -r ^B 
+# Rebind C-b to beginning of line (C-a stolen by tmux) and C-e to end-of-line
+bindkey -r ^B
 bindkey ^B beginning-of-line
 bindkey ^E end-of-line
+
+# Fix Home and End keys at the zsh prompt (sequences vary by terminal/tmux)
+bindkey '\033[H'  beginning-of-line  # xterm/kitty
+bindkey '\033[F'  end-of-line        # xterm/kitty
+bindkey '\033[1~' beginning-of-line  # tmux
+bindkey '\033[4~' end-of-line        # tmux
 
 # # Remove mode switching delay.
 # KEYTIMEOUT=5

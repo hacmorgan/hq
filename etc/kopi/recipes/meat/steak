@@ -1,10 +1,39 @@
-[ Pan only - thin steaks, < 1" ]
-- heat pan to 200C
+[ Temps ]
+- Final temp 56°C on average
+  - Try setting predictive thermo temp to 50°C, 54 seems overcooked
+
+[ Cooking styles ]
+
+Pan only: (thin steaks, < 1")
+- heat pan to 200°C
 - cook until visible from the side
 - flip, cook roughly the same again
 
-[ Reverse-sear - thicker steaks, > 1" ]
-- Preheat oven to 120C - 135C
-- Heat pan to 200C (a bit later)
-- Cook in oven until internal temp is 49C - 52C (for med-rare)
+Reverse-sear (thicker steaks, > 1"):
+- (Optional) dry brine with salt 1-5 hours ahead of time and leave in fridge
+- Preheat oven to 150°C (to reduce time to rev-sear, lower is fine if you have more time)
+- Cook in oven until surface temp reaches near final temp
+- Drop oven/grill temp to 80°C and continue cooking
+- When surface temp starts to rise, lower oven temp to 5°C above taregt temp (i.e. 60°C)
+- Rest in fridge for up to 30 mins to cool the crust region (minimises grey line)
+- Heat pan to 240°C
 - Sear steak in hot pan to get crust
+- Turn regularly, 30s per-side (grey line bad)
+- (Optional) Finish with butter, tallow, and/or lemon
+
+Regular sear:
+- Heat pan to 200°C (maybe too hot, tbd)
+- Heat oven to 125°C
+- Sear both sides, 30s per side at a time, keep turning til happy
+- Once good crust, put in oven until internal temp reaches 48°C (TODO: confirm)
+- [Optional] sear agin at the end for heat and final crust
+
+
+[ Cuts ]
+
+T-bone:
+- cook sirloin side more than fillet side
+- sear fat cap and both faces
+- oven until sirloin at 40°C, fillet at 36°C
+- rest until sirloin at 52°C, fillet at 48°C
+- Final sear again

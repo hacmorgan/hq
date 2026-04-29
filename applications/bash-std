@@ -86,22 +86,92 @@ command -v notify-send > /dev/null && BASH_STD_NOTIFY_SEND_INSTALLED=1
 export BASH_STD_NOTIFY_SEND_INSTALLED
 
 
+# @@@ BASH-STD VERSIONING @@@
+BASH_STD_VERSION="2.0.0"
+
+# Compare two version strings. Returns 0 if $1 >= $2.
+function _bash_std_version_ge {
+    [[ "$1" == "$2" ]] && return 0
+    local IFS=.
+
+    # Coerce version strings into arrays, filling missing parts with zeros
+    local i ver1=($1) ver2=($2)
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++)); do
+        ver1[i]=0
+    done
+
+    # Check each version number segment
+    for ((i=0; i<${#ver1[@]}; i++)); do
+        if [[ -z ${ver2[i]} ]]; then
+            ver2[i]=0
+        fi
+        if ((10#${ver1[i]} > 10#${ver2[i]})); then
+            return 0
+        fi
+        if ((10#${ver1[i]} < 10#${ver2[i]})); then
+            return 1
+        fi
+    done
+    return 0
+}
+
+# Automatically update bash-std if it is older than $BASH_STD_MIN_VERSION
+function _bash_std_check_version {
+    if [[ -n "$BASH_STD_MIN_VERSION" ]]; then
+        if ! _bash_std_version_ge "$BASH_STD_VERSION" "$BASH_STD_MIN_VERSION"; then
+            local bash_std_path="${BASH_SOURCE[0]:-$0}"
+
+            # If we're sourced and not writable, we can't update ourselves.
+            if [[ ! -w "$bash_std_path" ]]; then
+                die "bash-std is too old (v$BASH_STD_VERSION < v$BASH_STD_MIN_VERSION) and cannot update itself because $bash_std_path is not writable. Please update bash-std manually or modify permissions with chmod +w $bash_std_path."
+            fi
+
+            # Avoid recursive updates if something goes wrong
+            if [[ "$BASH_STD_UPDATING" == "1" ]]; then
+                return
+            fi
+            export BASH_STD_UPDATING=1
+
+            say "bash-std is too old (v$BASH_STD_VERSION < v$BASH_STD_MIN_VERSION), updating from GitHub..."
+            local temp_file=$(mktemp)
+            if curl -fsSL https://raw.githubusercontent.com/hacmorgan/hq/refs/heads/main/applications/bash-std -o "$temp_file"; then
+                # Check the version of the downloaded file
+                local new_version=$(sed -n "s/BASH_STD_VERSION=\x22\([^\x22]*\)\x22/\1/p" "$temp_file" | head -n 1)
+                if [[ -n "$new_version" ]] && _bash_std_version_ge "$new_version" "$BASH_STD_MIN_VERSION"; then
+                    mv "$temp_file" "$bash_std_path"
+                    chmod +x "$bash_std_path"
+                    unset BASH_STD_UPDATING
+                    source "$bash_std_path"
+                    return 1
+                fi
+            fi
+            rm -f "$temp_file"
+            unset BASH_STD_UPDATING
+        fi
+    fi
+}
+
+_bash_std_check_version || return 0
+# @@@ END BASH-STD VERSIONING @@@
+
+
 function get_definition
 {
     arg="$1"
-    grep --regexp "^$arg;" \
-         --regexp "^$arg," \
-         --regexp "^$arg=" \
-         --regexp ",$arg;" \
-         --regexp ",$arg," \
-         --regexp ",$arg=" 
+    grep --regexp "^$arg\*\?;" \
+         --regexp "^$arg\*\?," \
+         --regexp "^$arg\*\?=" \
+         --regexp ",$arg\*\?;" \
+         --regexp ",$arg\*\?," \
+         --regexp ",$arg\*\?="
 }
 
 function full_arg_name
 {
     sed --expression 's#;.*##' \
         --expression 's#=.*##' \
-        --expression 's#,.*##'
+        --expression 's#,.*##' \
+        --expression 's#\*##g'
 }
 
 function argument_type
@@ -118,6 +188,8 @@ function argument_type
         fi
     elif [[ -z "$definition" ]]; then
         echo "not_an_option"
+    elif [[ "$definition" != -* ]]; then
+        echo "positional"
     else
         echo "flag"
     fi
@@ -150,6 +222,9 @@ function set_defaults
         local arg_type=$( argument_type $arg_name <<< $definition )
         if [[ $arg_type == "flag" ]]; then
             set_value $arg_name 0 <<< $definition
+        elif [[ $arg_type == "positional" && "$definition" == *'*'* ]]; then
+            local varname=$( arg_to_option_name "$arg_name" <<< $definition )
+            eval "${varname}=()"
         else
             local value=""
             if [[ -n "$( grep 'default=' <<< $definition )" ]]; then
@@ -166,9 +241,10 @@ function check_all_mandatory_options
     while read definition; do
         local arg_name=$( full_arg_name           <<< $definition )
         local arg_type=$( argument_type $arg_name <<< $definition )
-        if [[ -n "$( grep "value" <<< $arg_type )" && -z "$( grep "\[<.*>\]" <<< $definition )" ]]; then
+        if [[ -n "$( grep "value" <<< $arg_type )" && -z "$( grep "\[<.*>\]" <<< $definition )" ]] ||
+           [[ $arg_type == "positional" && "$definition" != *'*'* && -z "$( grep 'default=' <<< $definition )" ]]; then
             variable_name="$( arg_to_option_name "$arg_name" <<< $definition )"
-            [[ -n $( eval "echo \$$variable_name" ) ]] || die "$arg_name is required and was not given" 
+            [[ -n $( eval "echo \$$variable_name" ) ]] || die "$arg_name is required and was not given"
         fi
     done
 }
@@ -212,6 +288,22 @@ function bash-std-application-init
     check_for_help ${args[@]} <<< $options
     set_defaults              <<< $options
 
+    # Collect positional argument names in definition order (lines without a leading -)
+    # Names ending in * are variadic: they collect all remaining positional args into an array
+    local positional_defs=()
+    local positional_is_variadic=()
+    while IFS= read -r _def; do
+        local _name
+        _name=$(sed -e 's/;.*//' -e 's/=.*//' -e 's/,.*//' -e 's/\*//' -e 's/[[:space:]]//g' <<< "$_def")
+        positional_defs+=("$_name")
+        if [[ "$_def" == *'*'* ]]; then
+            positional_is_variadic+=(1)
+        else
+            positional_is_variadic+=(0)
+        fi
+    done < <(grep --invert-match --regexp '^-' --regexp '^[[:space:]]*$' <<< "$options")
+    local positional_index=0
+
     next_is_value=0
     this_is_value=0
     for i in $( seq 0 $nargs ); do  # for some reason {0..${#args[@]}} didn't work
@@ -240,7 +332,18 @@ function bash-std-application-init
                     this_is_value=0
                     continue
                 fi
-                if (( ! BASH_STD_IGNORE_UNKNOWN_ARGS )); then
+                if (( positional_index < ${#positional_defs[@]} )); then
+                    if (( positional_is_variadic[positional_index] )); then
+                        local _varname
+                        _varname=$( arg_to_option_name "${positional_defs[$positional_index]}" <<< $options )
+                        eval "${_varname}+=( $(printf '%q' "${args[$i]}") )"
+                    else
+                        set_value "${positional_defs[$positional_index]}" \
+                                  "${args[$i]}" \
+                                  <<< $options
+                        (( positional_index++ ))
+                    fi
+                elif (( ! BASH_STD_IGNORE_UNKNOWN_ARGS )); then
                     die "unrecognised argument: ${args[$i]}"
                 fi ;;
         esac

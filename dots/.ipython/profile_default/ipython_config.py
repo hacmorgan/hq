@@ -1313,12 +1313,16 @@ c = get_config()  # noqa
 #  Default: False
 # c.StoreMagics.autorestore = False
 
+# Set highlight colour to not conflict with quoted text
+from IPython.core import ultratb
+
+ultratb.VerboseTB.tb_highlight = "bg:ansired"
 
 # Auto import a bunch of stuff
 c.InteractiveShellApp.exec_lines = [
-    "%load_ext autoreload",
-    "%autoreload 2",
-#    "%load_ext copilot_completer",
+    # "%load_ext autoreload",
+    # "%autoreload 2",
+    #    "%load_ext copilot_completer",
     "import math",
     "import sys",
     "import os",

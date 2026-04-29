@@ -35,7 +35,7 @@ setup(
     scripts=[
         str(path)
         for path in Path("applications").iterdir()
-        if not path.stem.startswith(".")
+        if not path.stem.startswith(".") and not path.is_dir()
     ],
     install_requires=[
         "black",
@@ -54,6 +54,7 @@ setup(
         "pygls>1.1.1",  # Avoids (1) from version 1.1.1
         "pylint",
         "pyserial",
+        "pytest",
         "typer",
         "uvicorn",
         "ytmusicapi",

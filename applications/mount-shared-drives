@@ -107,11 +107,13 @@ function _mount
     num_mount_points=${#local_mount_points[@]}
     for i in $( seq 0 $(( num_mount_points - 1 )) ); do
         unmount_if_mounted "${local_mount_points[$i]}"
-        sshfs "$host:${remote_mount_points[$i]}" "${local_mount_points[$i]}" ${SSHFS_OPTS[@]}
-        notify_mount "$host"                      \
-                     $?                           \
-                     "${remote_mount_points[$i]}" \
-                     "${local_mount_points[$i]}"
+        (
+            sshfs "$host:${remote_mount_points[$i]}" "${local_mount_points[$i]}" ${SSHFS_OPTS[@]} &&
+                notify_mount "$host"                      \
+                             $?                           \
+                             "${remote_mount_points[$i]}" \
+                             "${local_mount_points[$i]}"
+        ) &
     done
 }
 
@@ -120,26 +122,32 @@ function mount_abyss_drives
 {
     # Mount pond and tank from rhino
     for drive in pond tank; do
-        sshfs rhino:/mnt/$drive /mnt/$drive ${SSHFS_OPTS_ABYSS[@]}
-        notify_mount rhino       \
-                     $?          \
-                     /mnt/$drive \
-                     /mnt/$drive
+        (
+            sshfs rhino:/mnt/$drive /mnt/$drive ${SSHFS_OPTS_ABYSS[@]} &&
+                notify_mount rhino       \
+                             $?          \
+                             /mnt/$drive \
+                             /mnt/$drive
+        ) &
     done
 
     # Mount rapid from quickboy
-    sshfs quickboy:/mnt/rapid /mnt/rapid ${SSHFS_OPTS_ABYSS[@]}
-    notify_mount quickboy   \
-                 $?         \
-                 /mnt/rapid \
-                 /mnt/rapid
+    (
+        sshfs quickboy:/mnt/rapid /mnt/rapid ${SSHFS_OPTS_ABYSS[@]} &&
+            notify_mount quickboy   \
+                         $?         \
+                         /mnt/rapid \
+                         /mnt/rapid
+    ) &
 
     # Mount vault from mammoth
-    sshfs mammoth:/mnt/vault /mnt/vault ${SSHFS_OPTS_ABYSS[@]}
-    notify_mount mammoth   \
-                 $?         \
-                 /mnt/vault \
-                 /mnt/vault
+    (
+        sshfs mammoth:/mnt/vault /mnt/vault ${SSHFS_OPTS_ABYSS[@]} &&
+            notify_mount mammoth   \
+                         $?         \
+                         /mnt/vault \
+                         /mnt/vault
+    ) &
 }
 
 
