@@ -64,4 +64,5 @@ barriers --config $HOME/.config/barrier/diego-enzo-george.conf \
 
 # this is the last thing we do!
 # exec startxfce4
-exec i3
+exec i3 --shmlog-size=26214400
+
