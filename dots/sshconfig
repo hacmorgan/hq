@@ -27,7 +27,7 @@ Host diego
 
 Host diego_wifi
     User hamish
-    HostName 192.168.0.37
+    HostName 192.168.0.38
 
 Host enzo
     User hamish
