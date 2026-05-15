@@ -146,6 +146,13 @@ alias gdup='gd $(git merge-base HEAD origin/master)'
 alias gdnup='gdup --name-only'
 alias grsh='git reset --hard "$(git branch --show-current)"'
 alias gcln='git branch -d $(git branch --merged=master | grep -v master) && git fetch --prune'
+function update-main() {
+    local main_branch
+    main_branch=$(git remote show origin 2>/dev/null | grep 'HEAD branch' | awk '{print $NF}')
+    [[ -z "$main_branch" ]] && main_branch="main"
+    local commit=$(git rev-parse HEAD)
+    gco "$main_branch" && gl && gcp "$commit" && gco - && gp --all
+}
 # Edit all unresolved conflicts sequentially
 alias erb='git status --porcelain=v1 | grep "^UU" | cut -d" " -f2 | while read filepath; do em "$filepath"; done'
 alias scr='echo /mnt/vault/scratch/dataforce/hamish'

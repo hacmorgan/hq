@@ -173,6 +173,9 @@ bindsym $mod+Ctrl+Right resize grow width 5px
 bindsym $mod+Ctrl+Down resize shrink height 5px
 bindsym $mod+Ctrl+Up resize grow height 5px
 
+# shortcut to minimise window size
+bindsym $mod+Shift+m resize set 500 300
+
 
 # bar
 bar {
