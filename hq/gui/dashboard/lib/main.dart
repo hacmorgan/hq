@@ -395,6 +395,68 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
   }
+  
+  void _show2026BirthdayDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Happy Birthday mi amor!'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  '2026-bday.jpg',
+                  height: 500,
+                  errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.cake, size: 100, color: Colors.pink),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Happy birthday my love ❤️',
+                  style: TextStyle(fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  "I'm so proud of you and your achievements this past year. We really are living the dream, and that's all thanks to you and your hard work.",
+                  style: TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  "We have so much to learn about our new land and new family members, and I'm so excited to do it together and continue to build our little empire. I'm also excited to cook more delicious food together, it's always my faourite part of the day (even when it fails miserably), and it seems like increasingly much will be grown on our land in the future! Despite the fact that you really carry the team sometimes, I still feel like we make a really great team.",
+                  style: TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  "I hope this next year brings continued professional and parental growth (more money, more kids), and maybe no more Udon 🤷",
+                  style: TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'I love you ∞ + 1, always',
+                  style: TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Wow you're right, I am the best and coolest person to ever live"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -417,7 +479,7 @@ class _MyHomePageState extends State<MyHomePage> {
           _widgetOptions()[_selectedIndex],
           Positioned(
             right: 16,
-            bottom: 160,
+            bottom: 232,
             child: GestureDetector(
               onTap: _show2025BirthdayDialog,
               child: Container(
@@ -445,7 +507,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Positioned(
             right: 16,
-            bottom: 88,
+            bottom: 160,
             child: GestureDetector(
               onTap: _show2025AnniversaryDialog,
               child: Container(
@@ -473,7 +535,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Positioned(
             right: 16,
-            bottom: 16,
+            bottom: 88,
             child: GestureDetector(
               onTap: _show3kMillenniversaryDialog,
               child: Container(
@@ -493,6 +555,34 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 child: const Icon(
                   Icons.all_inclusive,
+                  color: Colors.pink,
+                  size: 30,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 16,
+            bottom: 16,
+            child: GestureDetector(
+              onTap: _show2026BirthdayDialog,
+              child: Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: Colors.pink[300],
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.cake,
                   color: Colors.pink,
                   size: 30,
                 ),
