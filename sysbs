@@ -384,6 +384,12 @@ function install_hq_secret
 }
 
 
+function install_claude
+{
+    curl -fsSL https://claude.ai/install.sh | bash
+}
+
+
 function configure_cctv
 {
     # Set up CCTV system on this host with Shinobi and MariaDB
@@ -460,6 +466,7 @@ function options
 --create-shared-mountpoints; Create all mountpoints in 'etc/mountpoints' and transfer ownership to hamish
 --dry-run; Talk the talk but don't walk the walk
 --enable-systemd-services; Enable services symlinked by --symlink-systemd-services
+--install-claude; Install Claude Code via the official install script
 --install-cpp-manpages; Install C++ stdlib manpages using https://github.com/jeaye/stdman
 --install-fonts; Unpack fantasque (noLoopK) and FiraCode (ligatures) to /usr/share/fonts/fantasque
 --install-oh-my-zsh; Self explanatory
@@ -529,6 +536,7 @@ fi
 (( options_install_packages ))            && install_packages
 (( options_install_cpp_manpages ))        && install_cpp_manpages
 (( options_install_hq_secret ))           && install_hq_secret
+(( options_install_claude ))              && install_claude
 
 
 exit 0
