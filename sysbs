@@ -396,6 +396,26 @@ function install_claude
 }
 
 
+function setup_dashboard
+{
+    local dashboard_dir="$hq/hq/gui/dashboard"
+
+    say "Building Flutter web app..."
+    "$dashboard_dir/build_dashboard.sh"
+
+    say "Symlinking dashboard service files..."
+    for service in dashboard-api.service dashboard-ui.service; do
+        sudo ln -sf$verbose "$( realpath "$hq/etc/systemd/$service" )" /etc/systemd/system/
+    done
+
+    say "Reloading systemd daemon..."
+    sudo systemctl daemon-reload
+
+    say "Enabling and starting dashboard services..."
+    sudo systemctl enable --now dashboard-api.service dashboard-ui.service
+}
+
+
 function configure_cctv
 {
     # Set up CCTV system on this host with Shinobi and MariaDB
@@ -463,26 +483,27 @@ function options
 {
     cat <<EOF
 --autostart-abyss-wireguard; Use systemd to effectively run 'sudo wg-quick up abyss' on boot
---enable-ssh-agent; Enable and start the systemd user ssh-agent service
 --configure-cctv; Configure this host as a CCTV server
 --configure-emacs; Clone emacs repositiory to ~/.emacs.d
---configure-vnc; Configure a VNC server
 --configure-git; Tell git who you are (so you can commit)
 --configure-tmux; Configure tmux with plugins
+--configure-vnc; Configure a VNC server
 --configure-zsh; Do this after installing oh-my-zsh
 --create-shared-mountpoints; Create all mountpoints in 'etc/mountpoints' and transfer ownership to hamish
 --dry-run; Talk the talk but don't walk the walk
+--enable-ssh-agent; Enable and start the systemd user ssh-agent service
 --enable-systemd-services; Enable services symlinked by --symlink-systemd-services
 --install-claude; Install Claude Code via the official install script
 --install-cpp-manpages; Install C++ stdlib manpages using https://github.com/jeaye/stdman
 --install-fonts; Unpack fantasque (noLoopK) and FiraCode (ligatures) to /usr/share/fonts/fantasque
+--install-hq-secret;
 --install-oh-my-zsh; Self explanatory
---install-hq-secret; 
 --install-packages; Install all packages in etc/packagelist that aren't commented out
 --install-prefix,-p=<path>; default=$HOME/.local; Install prefix for scripts
 --install-python-module; Install HQ Python module, including scripts and pip installs
 --move-existing; If <file> exists, move it to <file>.old
 --no-sudo; Don't do anything that requires sudo
+--setup-dashboard; Build the Flutter UI, symlink dashboard service files, reload systemd, and enable/start the services
 --standard,-s; Do the standard bootstrap operations: ${STANDARD_OPERATIONS[@]}
 --symlink-dots; Symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
 --symlink-systemd-services; Symlink service files in etc/systemd to /etc/systemd/system/
@@ -546,6 +567,7 @@ fi
 (( options_install_cpp_manpages ))        && install_cpp_manpages
 (( options_install_hq_secret ))           && install_hq_secret
 (( options_install_claude ))              && install_claude
+(( options_setup_dashboard ))             && setup_dashboard
 
 
 exit 0
