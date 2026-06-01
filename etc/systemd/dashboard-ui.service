@@ -1,7 +1,9 @@
 [Unit]
 Description=Dashboard UI
+After=network.target dashboard-api.service
 
 [Service]
+Environment=HOME=/home/hamish
 ExecStart=/home/hamish/flutter/bin/flutter run \
     --release \
     --device-id web-server \
@@ -10,6 +12,7 @@ ExecStart=/home/hamish/flutter/bin/flutter run \
 WorkingDirectory=/home/hamish/hq/hq/gui/dashboard
 User=hamish
 Restart=always
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target

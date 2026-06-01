@@ -101,14 +101,13 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     if (response.statusCode == 200) {
       setState(() {
-        recipes = List<String>.from(json.decode(response.body));
+        recipes = List<String>.from(json.decode(utf8.decode(response.bodyBytes)));
       });
     } else {
       throw Exception('Failed to load recipes');
     }
   }
 
-  // Function to fetch and display recipe details
   Future<void> _fetchRecipeDetails(String recipeId) async {
     try {
       String denestedRecipeId = recipeId.replaceAll("/", "..");
@@ -116,18 +115,30 @@ class _MyHomePageState extends State<MyHomePage> {
           await http.get(Uri.parse('http://192.168.0.247:10498/recipes/$denestedRecipeId'));
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        // Display the recipe details, for example, in a dialog or a new screen
+        final Map<String, dynamic> data = json.decode(utf8.decode(response.bodyBytes));
         showDialog(
             context: context,
             builder: (context) {
               return AlertDialog(
                 title: Text(data["name"]),
-                content: Text(data["recipe"]), // Or whatever info is returned
+                content: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.6,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Text(data["recipe"]),
+                  ),
+                ),
                 actions: [
                   TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _showRecipeEditDialog(recipeId, data["recipe"]);
+                      },
+                      child: const Text("edit")),
+                  TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text("close"))
+                      child: const Text("close")),
                 ],
               );
             });
@@ -139,20 +150,73 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void _showRecipeEditDialog(String recipeId, String currentContent) {
+    final controller = TextEditingController(text: currentContent);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Edit: $recipeId'),
+          content: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.6,
+            ),
+            child: TextField(
+              controller: controller,
+              maxLines: null,
+              expands: true,
+              keyboardType: TextInputType.multiline,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await _updateRecipe(recipeId, controller.text);
+                Navigator.pop(context);
+              },
+              child: const Text('save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _updateRecipe(String recipeId, String content) async {
+    try {
+      String denestedRecipeId = recipeId.replaceAll("/", "..");
+      final response = await http.put(
+        Uri.parse('http://192.168.0.247:10498/recipes/$denestedRecipeId'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'content': content}),
+      );
+      if (response.statusCode != 200) {
+        print('Failed to update recipe: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error updating recipe: $e');
+    }
+  }
+
   Future<void> fetchRelationshipTime() async {
-    // Query the API for relationship time
     try {
       final response = await http.get(Uri.parse('http://192.168.0.247:10498/relationship_time'));
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        // Display the relationship time, for example, in a dialog or a new screen
+        final Map<String, dynamic> data = json.decode(utf8.decode(response.bodyBytes));
         showDialog(
             context: context,
             builder: (context) {
               return AlertDialog(
                 title: const Text("Relationship time"),
-                content: Text(data["time"]), // Or whatever info is returned
+                content: Text(data["time"]),
                 actions: [
                   TextButton(
                       onPressed: () => Navigator.pop(context),
@@ -169,19 +233,17 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> fetchWhyEmilyIsGreat() async {
-    // Query the API for why Emily is great
     try {
       final response = await http.get(Uri.parse('http://192.168.0.247:10498/why_emily_is_great'));
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        // Display why Emily is great, for example, in a dialog or a new screen
+        final Map<String, dynamic> data = json.decode(utf8.decode(response.bodyBytes));
         showDialog(
             context: context,
             builder: (context) {
               return AlertDialog(
                 title: const Text("One reason is:"),
-                content: Text(data["reason"]), // Or whatever info is returned
+                content: Text(data["reason"]),
                 actions: [
                   TextButton(
                       onPressed: () => Navigator.pop(context),
@@ -204,47 +266,52 @@ class _MyHomePageState extends State<MyHomePage> {
         return AlertDialog(
           title: const Text('Happy Birthday Mama! 🎉',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Image.asset(
-                  'birthday-bom-2025.jpg',
-                  height: 500,
-                  errorBuilder: (context, error, stackTrace) =>
-                    const Icon(Icons.cake, size: 100, color: Colors.pink),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Happy birthday mi amor ❤️',
-                  style: TextStyle(fontSize: 18),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'You\'ve achieved so much this year, I\'m so proud of you! You have surpassed most commercial food establishments, despite the oven; grown the family considerably (particularly in the sighthound direction); and started on the path of being a veterinary mogul of Wagga; just to name a few!',
-                 style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'I love our life together, and planning for and building our future is the most exciting and rewarding project I have ever been a part of. I am perpetually honoured you chose me, because you are the most amazing person I have ever met. You have your shit more together than most people I know, regardless of age, and you always think for yourself; which alone make you a force to be reckoned with. I am not surprised one bit that they see you as a suitable succession plan for the clinic!',
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Then there\'s all the other stuff. You\'re beautiful, smart and friendly; you have such a strong natural aptitude for animal handling and psychology; you bring us little sickly new members of the family and nurse them back to health (then harvest their broken parts as museum artefacts); you keep our house running smoothly and so well stocked and organised; the list will go on as long as I keep sitting here...',
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'I love you ∞ + 1',
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+          content: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.7,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset(
+                    'birthday-bom-2025.jpg',
+                    height: 500,
+                    errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.cake, size: 100, color: Colors.pink),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Happy birthday mi amor ❤️',
+                    style: TextStyle(fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'You\'ve achieved so much this year, I\'m so proud of you! You have surpassed most commercial food establishments, despite the oven; grown the family considerably (particularly in the sighthound direction); and started on the path of being a veterinary mogul of Wagga; just to name a few!',
+                   style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'I love our life together, and planning for and building our future is the most exciting and rewarding project I have ever been a part of. I am perpetually honoured you chose me, because you are the most amazing person I have ever met. You have your shit more together than most people I know, regardless of age, and you always think for yourself; which alone make you a force to be reckoned with. I am not surprised one bit that they see you as a suitable succession plan for the clinic!',
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Then there\'s all the other stuff. You\'re beautiful, smart and friendly; you have such a strong natural aptitude for animal handling and psychology; you bring us little sickly new members of the family and nurse them back to health (then harvest their broken parts as museum artefacts); you keep our house running smoothly and so well stocked and organised; the list will go on as long as I keep sitting here...',
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'I love you ∞ + 1',
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
           ),
           actions: <Widget>[
@@ -266,59 +333,64 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Happy Anniversary! 💍'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Image.asset(
-                  'anniversary-2025.jpg',
-                  height: 500,
-                  errorBuilder: (context, error, stackTrace) =>
-                    const Icon(Icons.cake, size: 100, color: Colors.pink),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Happy 8 years mi amor ❤️',
-                  style: TextStyle(fontSize: 18),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  "I don't like thinking about my life without you, because I don't like being sad, but for the sake of this card I did, and the simulation was bleak and depressing 😞",
-                 style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  "You have brought so many incredible things to my life over the years, and it continues to this day. On one end of the spectrum, things as mundane as my organisational and time management skills have improved where they never really had before; while on the other, we have a legit family together and I feel like a real dad. Then there's all my newfound knowledge of medical and animal things which make people think I'm cool and relatable, there's all the culinary lessons you've given me, the support and opportunity to do my silly projects and waste time seasoning my pans, all the random experiments we do together, the free reign over the workshop, the time and space for my excessive coffee routines, the delicious brown onion steak sauce (and all other dishes too he just deserves a shoutout), and of course, Babos",
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 15),
-                const Text(
-                  "You're my best friend in the world, and my motivation for pretty much everything. Actually that puts a lot on you; really it's that I don't need to work to motivate myself to do stuff when you're around. I want to make and eat good food with you, I want to go out for walks and exercise with you, I want to cuddle up and watch movies with you, and I just want to spend all my time with you; and when you're gone it all just falls away. Honestly that song \"Ain't no sunshine (when she's gone)\" is bang on",
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  "You're my whole thing, and I can't wait to see where we end up together. Nobody could ever come close to you, I wish I could let you inside my brain and show you because everyone else is dumb bitches I tell you hwat, I can't believe you're real",
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  "Be mine forever?",
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Love you ∞ + 1',
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+          content: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.7,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset(
+                    'anniversary-2025.jpg',
+                    height: 500,
+                    errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.cake, size: 100, color: Colors.pink),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Happy 8 years mi amor ❤️',
+                    style: TextStyle(fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "I don't like thinking about my life without you, because I don't like being sad, but for the sake of this card I did, and the simulation was bleak and depressing 😞",
+                   style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "You have brought so many incredible things to my life over the years, and it continues to this day. On one end of the spectrum, things as mundane as my organisational and time management skills have improved where they never really had before; while on the other, we have a legit family together and I feel like a real dad. Then there's all my newfound knowledge of medical and animal things which make people think I'm cool and relatable, there's all the culinary lessons you've given me, the support and opportunity to do my silly projects and waste time seasoning my pans, all the random experiments we do together, the free reign over the workshop, the time and space for my excessive coffee routines, the delicious brown onion steak sauce (and all other dishes too he just deserves a shoutout), and of course, Babos",
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 15),
+                  const Text(
+                    "You're my best friend in the world, and my motivation for pretty much everything. Actually that puts a lot on you; really it's that I don't need to work to motivate myself to do stuff when you're around. I want to make and eat good food with you, I want to go out for walks and exercise with you, I want to cuddle up and watch movies with you, and I just want to spend all my time with you; and when you're gone it all just falls away. Honestly that song \"Ain't no sunshine (when she's gone)\" is bang on",
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "You're my whole thing, and I can't wait to see where we end up together. Nobody could ever come close to you, I wish I could let you inside my brain and show you because everyone else is dumb bitches I tell you hwat, I can't believe you're real",
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "Be mine forever?",
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Love you ∞ + 1',
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
           ),
           actions: <Widget>[
@@ -333,54 +405,59 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
   }
-  
+
   void _show3kMillenniversaryDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Happy 3000 days'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Image.asset(
-                  '3k-millenniversary.jpg',
-                  height: 500,
-                  errorBuilder: (context, error, stackTrace) =>
-                    const Icon(Icons.cake, size: 100, color: Colors.pink),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Happy 3000 days mi amor ❤️',
-                  style: TextStyle(fontSize: 18),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  "I love you so much. Regardless of how busy, stressful, or chaotic life has been, I have never doubted that you are the one I want to spend my life with. You are the most incredible person I have ever met, and I am still in awe of how good you are at everything you do.",
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  "What we've built together is the envy of many, and I am regularly reminded of how lucky I am to have found someone who supports my dreams and silly ideas so strongly. As cliched as it is, I really think we can do just about anything we set our minds to, and we're only just getting started.",
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  "For all the times I have not properly shown my love and appreciation for you, I am sorry. I tend to shut down a bit when I get stressed, and I hate that you are usually the one who suffers the consequences. This is the biggest thing I want to improve about myself at the moment, because you, the love we have, and the life we live, deserve to be cherished, always.",
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Love you ∞ + 1, silly beautiful clever perfect girl',
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+          content: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.7,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset(
+                    '3k-millenniversary.jpg',
+                    height: 500,
+                    errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.cake, size: 100, color: Colors.pink),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Happy 3000 days mi amor ❤️',
+                    style: TextStyle(fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "I love you so much. Regardless of how busy, stressful, or chaotic life has been, I have never doubted that you are the one I want to spend my life with. You are the most incredible person I have ever met, and I am still in awe of how good you are at everything you do.",
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "What we've built together is the envy of many, and I am regularly reminded of how lucky I am to have found someone who supports my dreams and silly ideas so strongly. As cliched as it is, I really think we can do just about anything we set our minds to, and we're only just getting started.",
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "For all the times I have not properly shown my love and appreciation for you, I am sorry. I tend to shut down a bit when I get stressed, and I hate that you are usually the one who suffers the consequences. This is the biggest thing I want to improve about myself at the moment, because you, the love we have, and the life we live, deserve to be cherished, always.",
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Love you ∞ + 1, silly beautiful clever perfect girl',
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
           ),
           actions: <Widget>[
@@ -395,59 +472,112 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
   }
-  
+
   void _show2026BirthdayDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Happy Birthday mi amor!'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Image.asset(
-                  '2026-bday.jpg',
-                  height: 500,
-                  errorBuilder: (context, error, stackTrace) =>
-                    const Icon(Icons.cake, size: 100, color: Colors.pink),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Happy birthday my love ❤️',
-                  style: TextStyle(fontSize: 18),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  "I'm so proud of you and your achievements this past year. We really are living the dream, and that's all thanks to you and your hard work.",
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  "We have so much to learn about our new land and new family members, and I'm so excited to do it together and continue to build our little empire. I'm also excited to cook more delicious food together, it's always my faourite part of the day (even when it fails miserably), and it seems like increasingly much will be grown on our land in the future! Despite the fact that you really carry the team sometimes, I still feel like we make a really great team.",
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  "I hope this next year brings continued professional and parental growth (more money, more kids), and maybe no more Udon 🤷",
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'I love you ∞ + 1, always',
-                  style: TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+          content: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.7,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset(
+                    '2026-bday.jpg',
+                    height: 500,
+                    errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.cake, size: 100, color: Colors.pink),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Happy birthday my love ❤️',
+                    style: TextStyle(fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "I'm so proud of you and your achievements this past year. We really are living the dream, and that's all thanks to you and your hard work.",
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "We have so much to learn about our new land and new family members, and I'm so excited to do it together and continue to build our little empire. I'm also excited to cook more delicious food together, it's always my faourite part of the day (even when it fails miserably), and it seems like increasingly much will be grown on our land in the future! Despite the fact that you really carry the team sometimes, I still feel like we make a really great team.",
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "I hope this next year brings continued professional and parental growth (more money, more kids), and maybe no more Udon 🤷",
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'I love you ∞ + 1, always',
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
           ),
           actions: <Widget>[
             TextButton(
               child: const Text("Wow you're right, I am the best and coolest person to ever live"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _show2026AnniversaryDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Happy Anniversary! 💍'),
+          content: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.7,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // TODO: replace with anniversary image asset
+                  const Icon(Icons.favorite, size: 100, color: Colors.pink),
+                  const SizedBox(height: 16),
+                  const Text(
+                    // TODO: fill in anniversary greeting
+                    'Happy Anniversary mi amor ❤️',
+                    style: TextStyle(fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  // TODO: fill in anniversary message paragraphs
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Love you ∞ + 1',
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('kthxbai'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -479,7 +609,7 @@ class _MyHomePageState extends State<MyHomePage> {
           _widgetOptions()[_selectedIndex],
           Positioned(
             right: 16,
-            bottom: 232,
+            bottom: 304,
             child: GestureDetector(
               onTap: _show2025BirthdayDialog,
               child: Container(
@@ -507,7 +637,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Positioned(
             right: 16,
-            bottom: 160,
+            bottom: 232,
             child: GestureDetector(
               onTap: _show2025AnniversaryDialog,
               child: Container(
@@ -535,7 +665,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Positioned(
             right: 16,
-            bottom: 88,
+            bottom: 160,
             child: GestureDetector(
               onTap: _show3kMillenniversaryDialog,
               child: Container(
@@ -554,7 +684,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
                 child: const Icon(
-                  Icons.all_inclusive,
+                  Icons.three_k,
                   color: Colors.pink,
                   size: 30,
                 ),
@@ -563,7 +693,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Positioned(
             right: 16,
-            bottom: 16,
+            bottom: 88,
             child: GestureDetector(
               onTap: _show2026BirthdayDialog,
               child: Container(
@@ -583,6 +713,34 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 child: const Icon(
                   Icons.cake,
+                  color: Colors.pink,
+                  size: 30,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 16,
+            bottom: 16,
+            child: GestureDetector(
+              onTap: _show2026AnniversaryDialog,
+              child: Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: Colors.cyan[300],
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.all_inclusive,
                   color: Colors.pink,
                   size: 30,
                 ),
