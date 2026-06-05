@@ -27,7 +27,7 @@
 
 mouse_mode true
 scroll_buffer_size 30000
-copy_on_select false
+copy_on_select true
 
 // Theme matching kitty colour palette with two changes:
 //   orange (#dc8a0e) → light purple (#b58ae2)
@@ -71,7 +71,7 @@ keybinds clear-defaults=true {
         bind "Ctrl s" { SwitchToMode "Scroll"; }
 
         // Lock zellij and pass all keys through to terminal
-        bind "Ctrl g" { SwitchToMode "Locked"; }
+        bind "Ctrl y" { SwitchToMode "Locked"; }
     }
 
     tab {
@@ -159,7 +159,7 @@ keybinds clear-defaults=true {
 
     locked {
         // Unlock: pass keys back to zellij
-        bind "Ctrl g" { SwitchToMode "Normal"; }
+        bind "Ctrl y" { SwitchToMode "Normal"; }
     }
 }
 
