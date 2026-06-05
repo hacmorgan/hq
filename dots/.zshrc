@@ -282,15 +282,6 @@ export PREFECT_SERVER_IP=192.168.0.140
 # SSH agent socket (agent managed by systemd user service)
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
-
-# SSH agent socket (agent managed by systemd user service)
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
-
-
-# Source secrets if present
-[[ ! -e "$HOME/.config/secret-sauce" ]] || source "$HOME/.config/secret-sauce"
-
-
 # Source secrets if present
 [[ ! -e "$HOME/.config/secret-sauce" ]] || source "$HOME/.config/secret-sauce"
 
