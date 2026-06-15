@@ -299,4 +299,6 @@ fpath+=~/.zfunc; autoload -Uz compinit; compinit
 zstyle ':completion:*' menu select
 
 # Added by GitButler installer
-eval "$(but completions zsh)"
+if command -v but &>/dev/null; then
+  eval "$(but completions zsh)"
+fi
