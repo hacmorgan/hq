@@ -495,6 +495,68 @@ PYEOF
 }
 
 
+function install_mattpocock_skills
+{
+    local plugin_dst="$HOME/.claude/plugins/mattpocock"
+    local marketplace="$HOME/.claude/plugins/.claude-plugin/marketplace.json"
+    local settings="$HOME/.claude/settings.json"
+
+    # Clone or update the skills repo
+    if [[ -d "$plugin_dst/.git" ]]; then
+        say "Updating mattpocock skills..."
+        git -C "$plugin_dst" pull
+    else
+        if (( options_dry_run )); then
+            say "git clone https://github.com/mattpocock/skills $plugin_dst"
+        else
+            rm -rf$verbose "$plugin_dst"
+            git clone https://github.com/mattpocock/skills "$plugin_dst"
+        fi
+    fi
+
+    # Register in marketplace.json
+    if [[ -f "$marketplace" ]]; then
+        python3 - "$marketplace" <<'PYEOF'
+import json, sys
+path = sys.argv[1]
+data = json.loads(open(path).read())
+plugins = data.setdefault("plugins", [])
+if not any(p["name"] == "mattpocock" for p in plugins):
+    plugins.append({
+        "name": "mattpocock",
+        "description": "Matt Pocock's Claude skills",
+        "category": "community",
+        "source": "./mattpocock"
+    })
+    open(path, "w").write(json.dumps(data, indent=2) + "\n")
+    print("[updated] marketplace.json (added mattpocock)")
+else:
+    print("[skipped] marketplace.json (mattpocock already present)")
+PYEOF
+    fi
+
+    # Enable in settings.json
+    if [[ -f "$settings" ]]; then
+        python3 - "$settings" <<'PYEOF'
+import json, sys
+path = sys.argv[1]
+data = json.loads(open(path).read())
+enabled = data.setdefault("enabledPlugins", {})
+changed = False
+for key in ("mattpocock", "mattpocock@local"):
+    if not enabled.get(key):
+        enabled[key] = True
+        changed = True
+if changed:
+    open(path, "w").write(json.dumps(data, indent=2) + "\n")
+    print("[updated] settings.json (enabled mattpocock plugin)")
+else:
+    print("[skipped] settings.json (mattpocock already enabled)")
+PYEOF
+    fi
+}
+
+
 function install_gitbutler
 {
     curl -fsSL https://gitbutler.com/install.sh | sh
@@ -600,6 +662,7 @@ function options
 --enable-systemd-services; Enable services symlinked by --symlink-systemd-services
 --install-claude; Install Claude Code via the official install script
 --install-hq-claude; Symlink hq Claude plugin into ~/.claude/plugins/hq and register it
+--install-mattpocock-skills; Clone mattpocock/skills into ~/.claude/plugins/mattpocock and register it
 --install-cpp-manpages; Install C++ stdlib manpages using https://github.com/jeaye/stdman
 --install-fonts; Unpack fantasque (noLoopK) and FiraCode (ligatures) to /usr/share/fonts/fantasque
 --install-gitbutler; Install GitButler via the official install script
@@ -678,6 +741,7 @@ fi
 (( options_install_hq_secret ))           && install_hq_secret
 (( options_install_claude ))              && install_claude
 (( options_install_hq_claude ))           && install_hq_claude
+(( options_install_mattpocock_skills ))   && install_mattpocock_skills
 (( options_install_gitbutler ))           && install_gitbutler
 (( options_setup_dashboard ))             && setup_dashboard
 
