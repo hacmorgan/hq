@@ -46,9 +46,6 @@ feh --bg-center ~/hq/etc/wallpapers/eboy_tok.png &!
 # set keyboard params
 xset r rate 250 50 &!
 
-# # Configure xinput
-# $HOME/.local/bin/configure-xinput
-
 # map caps-lock to super - only required for IBM Model M. Don't want this for Displaywriter
 # setxkbmap -option caps:super &!
 
@@ -58,9 +55,6 @@ barriers --config $HOME/.config/barrier/diego-enzo-george.conf \
 
 # # start the emacs server. disown so that exiting x session doesn't kill emacs
 # emacs --daemon &!
-
-# Start the ssh agent
-(eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_rsa) &!
 
 # this is the last thing we do!
 # exec startxfce4

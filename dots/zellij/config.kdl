@@ -1,0 +1,175 @@
+// Zellij config - mirrors .tmux.conf
+//
+// Prefix equivalent: Ctrl+a (enters tab mode)
+//   C-a n        new tab
+//   C-a x        close tab
+//   C-a d        detach from session
+//   C-a C-a      previous tab (backwards cycle; no "last-visited" in zellij 0.44)
+//   C-a C-Space  next tab
+//   C-a 1..9     go to tab N
+//
+// Tab navigation without prefix:
+//   C-Space      next tab
+//   C-S-Space    previous tab (Ctrl+Shift+Space; note: Super not a valid zellij modifier)
+//
+// Pane mode: Ctrl+q
+//   C-q h/j/k/l  move focus (vi-style)
+//   C-q v/s      split right/down
+//   C-q z        zoom (fullscreen) pane
+//   C-q f        show/hide all floating panes (creates first if none)
+//   C-q e        float focused tiled pane / embed focused floating pane
+//   C-q F        new floating pane from tiled context (Shift+f)
+//   C-q n        new pane, context-aware: floating when a float is focused
+//
+// Scroll: Ctrl+s, then vi keys (j/k, C-d/u, C-f/b, g/G, /)
+//
+// Lock (pass all keys to terminal): Ctrl+g
+
+mouse_mode true
+scroll_buffer_size 30000
+copy_on_select true
+
+// Theme matching kitty colour palette with two changes:
+//   orange (#dc8a0e) → light purple (#b58ae2)
+//   tab-bar gray (#bcbabe) → darker warm gray (#666369)
+themes {
+    abyss {
+        fg      "#dddddd"
+        bg      "#000000"
+        black   "#000000"
+        red     "#d8137f"
+        green   "#17ad98"
+        yellow  "#b58ae2"
+        blue    "#4d43a3"
+        magenta "#bb60ea"
+        cyan    "#149bda"
+        white   "#666369"
+        orange  "#b58ae2"
+    }
+}
+theme "abyss"
+
+keybinds clear-defaults=true {
+    normal {
+        // Pane navigation without prefix (mirrors: bind -n S-arrow select-pane)
+        bind "Shift Left"  { MoveFocus "Left"; }
+        bind "Shift Right" { MoveFocus "Right"; }
+        bind "Shift Up"    { MoveFocus "Up"; }
+        bind "Shift Down"  { MoveFocus "Down"; }
+
+        // C-Space / C-S-Space: next/prev tab without entering tab mode
+        bind "Ctrl Space"       { GoToNextTab; }
+        bind "Ctrl Shift Space" { GoToPreviousTab; }
+
+        // C-a: enter tab mode (prefix equivalent)
+        bind "Ctrl a" { SwitchToMode "Tab"; }
+
+        // Ctrl+x: enter pane mode (close to left Ctrl, avoids Alt which i3 intercepts)
+        bind "Ctrl q" { SwitchToMode "Pane"; }
+
+        // Ctrl+s: enter scroll mode
+        bind "Ctrl s" { SwitchToMode "Scroll"; }
+
+        // Lock zellij and pass all keys through to terminal
+        bind "Ctrl y" { SwitchToMode "Locked"; }
+    }
+
+    tab {
+        // C-a again: previous tab (mirrors: bind-key C-a last-window)
+        bind "Ctrl a"     { GoToPreviousTab; SwitchToMode "Normal"; }
+        bind "Ctrl Space" { GoToNextTab;     SwitchToMode "Normal"; }
+        bind "Esc"        { SwitchToMode "Normal"; }
+        bind "Enter"      { SwitchToMode "Normal"; }
+        bind "n"          { NewTab;   SwitchToMode "Normal"; }
+        bind "x"          { CloseTab; SwitchToMode "Normal"; }
+        bind "d"          { Detach; }
+        bind "r"          { SwitchToMode "RenameTab"; TabNameInput 0; }
+        bind "1"          { GoToTab 1; SwitchToMode "Normal"; }
+        bind "2"          { GoToTab 2; SwitchToMode "Normal"; }
+        bind "3"          { GoToTab 3; SwitchToMode "Normal"; }
+        bind "4"          { GoToTab 4; SwitchToMode "Normal"; }
+        bind "5"          { GoToTab 5; SwitchToMode "Normal"; }
+        bind "6"          { GoToTab 6; SwitchToMode "Normal"; }
+        bind "7"          { GoToTab 7; SwitchToMode "Normal"; }
+        bind "8"          { GoToTab 8; SwitchToMode "Normal"; }
+        bind "9"          { GoToTab 9; SwitchToMode "Normal"; }
+    }
+
+    pane {
+        bind "Esc"    { SwitchToMode "Normal"; }
+        bind "Enter"  { SwitchToMode "Normal"; }
+        bind "Ctrl q" { SwitchToMode "Normal"; }
+        // Vi-style focus movement
+        bind "h" { MoveFocus "Left";  SwitchToMode "Normal"; }
+        bind "j" { MoveFocus "Down";  SwitchToMode "Normal"; }
+        bind "k" { MoveFocus "Up";    SwitchToMode "Normal"; }
+        bind "l" { MoveFocus "Right"; SwitchToMode "Normal"; }
+        // Pane splitting
+        bind "v" { NewPane "Right"; SwitchToMode "Normal"; }
+        bind "s" { NewPane "Down";  SwitchToMode "Normal"; }
+        bind "n" { NewPane;         SwitchToMode "Normal"; }
+        // Pane management
+        bind "x" { CloseFocus;            SwitchToMode "Normal"; }
+        bind "z" { ToggleFocusFullscreen; SwitchToMode "Normal"; }
+        // Floating panes
+        bind "f" { ToggleFloatingPanes;       SwitchToMode "Normal"; }
+        bind "e" { TogglePaneEmbedOrFloating; SwitchToMode "Normal"; }
+        bind "F" { NewPane; TogglePaneEmbedOrFloating; SwitchToMode "Normal"; }
+    }
+
+    scroll {
+        bind "Ctrl c" { ScrollToBottom; SwitchToMode "Normal"; }
+        bind "Esc"    { ScrollToBottom; SwitchToMode "Normal"; }
+        bind "q"      { ScrollToBottom; SwitchToMode "Normal"; }
+        // Vi-style scrolling
+        bind "j"      { ScrollDown; }
+        bind "k"      { ScrollUp; }
+        bind "Ctrl d" { HalfPageScrollDown; }
+        bind "Ctrl u" { HalfPageScrollUp; }
+        bind "Ctrl f" { PageScrollDown; }
+        bind "Ctrl b" { PageScrollUp; }
+        bind "g"      { ScrollToTop; }
+        bind "G"      { ScrollToBottom; }
+        bind "/"      { SwitchToMode "EnterSearch"; SearchInput 0; }
+    }
+
+    entersearch {
+        bind "Enter" { SwitchToMode "Search"; }
+        bind "Esc"   { SwitchToMode "Scroll"; }
+    }
+
+    search {
+        bind "Esc" { SwitchToMode "Scroll"; }
+        bind "n"   { Search "down"; }
+        bind "N"   { Search "up"; }
+        bind "c"   { SearchToggleOption "CaseSensitivity"; }
+        bind "w"   { SearchToggleOption "Wrap"; }
+        bind "o"   { SearchToggleOption "WholeWord"; }
+    }
+
+    renametab {
+        bind "Enter" { SwitchToMode "Normal"; }
+        bind "Esc"   { UndoRenameTab; SwitchToMode "Tab"; }
+    }
+
+    renamepane {
+        bind "Enter" { SwitchToMode "Normal"; }
+        bind "Esc"   { UndoRenamePane; SwitchToMode "Pane"; }
+    }
+
+    locked {
+        // Unlock: pass keys back to zellij
+        bind "Ctrl y" { SwitchToMode "Normal"; }
+    }
+}
+
+// Show tab bar at the bottom of every tab (tab-bar plugin only; status-bar
+// omitted because its hints reflect zellij defaults, not our custom bindings)
+layout {
+    default_tab_template {
+        children
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+    }
+}

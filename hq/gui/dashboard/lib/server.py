@@ -14,6 +14,7 @@ from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from typing import TypeAlias
 from pathlib import Path
+from pydantic import BaseModel
 from hq.sysbs import find_hq
 from hq.emily import relationship_time, why_is_emily_great
 
@@ -64,9 +65,32 @@ def get_recipe(filename: str) -> Response:
 
     # Return the recipe's name and contents if the file exists
     if file_path.exists():
-        return {"name": filename, "recipe": file_path.read_text()}
+        return {"name": filename, "recipe": file_path.read_text(encoding="utf-8")}
 
     # Return an error message if the file does not exist
+    return {"error": f"Recipe not found: {file_path}"}
+
+
+class RecipeUpdate(BaseModel):
+    content: str
+
+
+@app.put("/recipes/{filename}")
+def update_recipe(filename: str, update: RecipeUpdate) -> Response:
+    """
+    Update a recipe's content
+
+    Args:
+        filename: The name of the recipe file (same encoding as GET)
+        update: New content for the recipe
+    """
+    filename = filename.replace("..", "/")
+    file_path = HQ_RECIPES / filename
+
+    if file_path.exists():
+        file_path.write_text(update.content, encoding="utf-8")
+        return {"success": f"Recipe updated: {filename}"}
+
     return {"error": f"Recipe not found: {file_path}"}
 
 

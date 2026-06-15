@@ -272,6 +272,12 @@ export DDE_DOCKERFILE="$HOME/hq/etc/dde-env.dockerfile"
 export CHROME_EXECUTABLE=/usr/bin/chromium
 
 
+# SSH agent socket (agent managed by systemd user service)
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
+
+# Source secrets if present
+[[ ! -e "$HOME/.config/secret-sauce" ]] || source "$HOME/.config/secret-sauce"
 
 
 ##############
@@ -294,3 +300,6 @@ if [ -f '/tmp/google-cloud-sdk/completion.zsh.inc' ]; then . '/tmp/google-cloud-
 fpath+=~/.zfunc; autoload -Uz compinit; compinit
 
 zstyle ':completion:*' menu select
+
+# Added by GitButler installer
+eval "$(but completions zsh)"

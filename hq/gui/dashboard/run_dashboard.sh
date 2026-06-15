@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-cd ~/hq/hq/gui/dashboard
+cd "$(dirname "$0")"
 
-# Run the server
+# Run the API server
 lib/server.py &
 
-# Run the client
-/home/hamish/flutter/bin/flutter \
-    run \
-    --device-id web-server \
-    --web-hostname 192.168.0.247 \
-    --web-port 10499
+# Serve the pre-built Flutter web app
+# Run build_dashboard.sh first if the build is stale
+lib/serve_dashboard.py

@@ -228,6 +228,7 @@ for_window [class="csv-plot"]      floating enable
 for_window [class="0"]             floating enable
 for_window [class="floating_term"] floating enable
 for_window [class="Alert"]         floating enable
+for_window [class="floating_chrome"] floating enable
 
 
 ###############
@@ -249,7 +250,7 @@ bindsym $mod+Ctrl+b       exec "$TERMINAL ssh buffalo"
 bindsym $mod+Ctrl+r       exec "$TERMINAL ssh bruno_abyss"
 bindsym $mod+Ctrl+d       exec "$TERMINAL ssh diego"
 bindsym $mod+Ctrl+Shift+d exec "$TERMINAL ssh diego_wifi"
-bindsym $mod+Ctrl+k       exec "$TERMINAL ssh kopi"
+bindsym $mod+Ctrl+k       exec "chromium --class=floating_chrome --app='http://192.168.0.247:10499/'"
 bindsym $mod+Ctrl+h       exec "chromium 'https://meet.google.com/euj-gwdj-pwi'"
 bindsym $mod+Ctrl+u       exec "chromium 'https://meet.google.com/rtx-sghm-ipz'"
 bindsym $mod+Ctrl+g       exec "$HOME/venvs/py3.11/bin/gimp-last"
@@ -274,3 +275,9 @@ bindsym --release $mod+Shift+s exec --no-startup-id "$HOME/venvs/py3.11/bin/dmen
 exec --no-startup-id "sleep 1; $HOME/venvs/py3.11/bin/use-all-monitors"
 
 exec --no-startup-id "sleep 4; feh --bg-fill /home/hamish/hq/etc/wallpapers/eboy_tok.png --bg-center /home/hamish/hq/etc/wallpapers/koth.jpg --bg-center /home/hamish/hq/etc/wallpapers/5YR.jpg"
+
+# Configure xinput
+exec --no-startup-id $HOME/venvs/py3.11/bin/configure-xinput > /tmp/configure-xinput.log 2>&1
+
+# Add SSH key (agent is managed by systemd user service)
+exec --no-startup-id ssh-add ~/.ssh/id_rsa
