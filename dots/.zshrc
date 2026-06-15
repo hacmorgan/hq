@@ -275,6 +275,17 @@ export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
 # Source secrets if present
 [[ ! -e "$HOME/.config/secret-sauce" ]] || source "$HOME/.config/secret-sauce"
+# Source host-specific settings if present
+[[ ! -e "$HOME/.config/host-particulars" ]] || source "$HOME/.config/host-particulars"
+
+# Bypass snap launcher — snap classic scope creation fails over SSH (cgroup v2 delegation)
+# Also prepend snap's bin so libgccjit can find the bundled gcc-14 driver for native compilation
+if [[ -n "$EMACS_SNAP" ]]; then
+    path=('/snap/emacs/current/usr/bin' $path)
+    export PATH
+    alias emacs='/snap/emacs/current/usr/bin/emacs'
+    alias emacsclient='/snap/emacs/current/usr/bin/emacsclient'
+fi
 
 
 ##############
