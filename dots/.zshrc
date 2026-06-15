@@ -83,6 +83,10 @@ plugins=(git zsh-syntax-highlighting zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
 
+# zsh-syntax-highlighting defaults comments to fg=black (color0), which is invisible
+# on a black background. Use color8 (bright-black, #838085) instead.
+ZSH_HIGHLIGHT_STYLES[comment]='fg=8'
+
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
