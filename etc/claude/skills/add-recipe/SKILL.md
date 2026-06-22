@@ -27,6 +27,7 @@ Conventions observed across the collection:
 - Inline optional steps as `(Optional)` rather than a separate section, unless there are many
 - Notes, tips, and recommendations as plain prose — no header, just a line or two at the end or top
 - No "enjoy", no emojis, no trailing summary
+- If the recipe came from a URL, include it as a plain line at the top: `source: <url>`
 
 ## Steps
 
