@@ -33,7 +33,13 @@ function sanitize_inputs {
 sanitize_inputs
 
 # Construct the common start of the command
-command="emacsclient -a ''"
+# Use direct snap binary if EMACS_SNAP is set (avoids cgroup v2 scope failure over SSH)
+if [[ -n "$EMACS_SNAP" ]]; then
+    _emacsclient='/snap/emacs/current/usr/bin/emacsclient'
+else
+    _emacsclient='emacsclient'
+fi
+command="$_emacsclient -a ''"
 
 # Add appropriate prefix depending if we're opening here or somewhere else
 if ((options_detach)); then

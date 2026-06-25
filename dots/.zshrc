@@ -83,6 +83,10 @@ plugins=(git zsh-syntax-highlighting zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
 
+# zsh-syntax-highlighting defaults comments to fg=black (color0), which is invisible
+# on a black background. Use color8 (bright-black, #838085) instead.
+ZSH_HIGHLIGHT_STYLES[comment]='fg=8'
+
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -284,6 +288,17 @@ export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 
 # Source secrets if present
 [[ ! -e "$HOME/.config/secret-sauce" ]] || source "$HOME/.config/secret-sauce"
+# Source host-specific settings if present
+[[ ! -e "$HOME/.config/host-particulars" ]] || source "$HOME/.config/host-particulars"
+
+# Bypass snap launcher — snap classic scope creation fails over SSH (cgroup v2 delegation)
+# Also prepend snap's bin so libgccjit can find the bundled gcc-14 driver for native compilation
+if [[ -n "$EMACS_SNAP" ]]; then
+    path=('/snap/emacs/current/usr/bin' $path)
+    export PATH
+    alias emacs='/snap/emacs/current/usr/bin/emacs'
+    alias emacsclient='/snap/emacs/current/usr/bin/emacsclient'
+fi
 
 
 ##############
@@ -308,4 +323,6 @@ fpath+=~/.zfunc; autoload -Uz compinit; compinit
 zstyle ':completion:*' menu select
 
 # Added by GitButler installer
-eval "$(but completions zsh)"
+if command -v but &>/dev/null; then
+  eval "$(but completions zsh)"
+fi
