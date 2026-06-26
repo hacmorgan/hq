@@ -1,45 +1,113 @@
+[ two styles ]
+this recipe can be steered toward two different results. each
+decision point below is tagged with the style it favours:
+
+  (A) OPEN/ARTISAN  - thick crackly crust, chewy centre,
+                      big irregular air bubbles
+  (B) EVEN/SPONGY   - thinner conventional crust, soft spongy
+                      crumb, small evenly-distributed bubbles
+                      (cafe sandwich-sourdough style)
+
+the levers that separate them are: hydration, enrichment,
+how hard you degas at shaping, and how you bake (dutch oven +
+steam vs open / loaf tin). pick one column and stay in it.
+
+
 [ starter maintenance ]
 - 30g     / 18g filtered water
 - 50g     / 30g flour
 - 20-25g  / 12g starter
 
+
 [ mixing ]
 - combine in a bowl:
   - 500g bread flour
-  - 350g water (70%) (for 80:20 white:wholemeal bread flour)
+  - water:
+    - (A) 350g (70%)  -- wetter dough lets bubbles balloon into big holes
+    - (B) 310-325g (62-65%)  -- stiffer dough holds many small uniform cells
+    - note: 70% assumes 80:20 white:wholemeal. for (B), nudging toward
+      more wholemeal or some all-purpose softens gluten -> finer crumb
   - 50g active stiff starter (10%)
   - 10g salt
+  - (B) enrichment -- the biggest lever for soft/spongy, also keeps it
+    soft past day one. optional but recommended for the cafe texture:
+    - ~20-30g oil or soft butter
+    - swap 50-100g of the water above for milk
+    - ~15g sugar or honey
+  - (B) optional pinch of yeast -- for a faster, more uniform rise and
+    reliably even bubbles (closest to typical cafe sandwich sourdough):
+    - ~2-3g instant yeast
+    - if used, fermentation will be much faster -- see timings below
 - wait 30 mins
 - do windowpane translucency test
   - if it tears, knead 2-3 mins, rest 10 mins, repeat
 
+
 [ fermentation ]
 - with wet hands, round the dough to make nice round surface
-- cover bowl and let dough rise, 6-12 hrs, but go based on criteria:
+- cover bowl and let dough rise, go based on criteria not the clock:
   - 30% - 50% volume rise (use aliquot jar)
   - surface bubbles visible
   - jiggly texture when bowl shaken
   - sweet/sour smell
+- timing:
+  - sourdough only: 6-12 hrs
+  - (B) + pinch of yeast: much faster, ~2-4 hrs -- watch the criteria,
+    it will run away from you if you go by the old timings
 - optionally stretch and fold during fermentation
+  - (A) builds strength for big open holes
+  - (B) skip or keep gentle -- you don't want a strong open structure
+
 
 [ shaping ]
+this is the other big lever between the two styles.
+
+  (A) GENTLE -- preserve the gas you built:
+      handle softly, don't press the air out.
+
+  (B) DEGAS -- knock the air out for even crumb:
+      press/flatten the dough out before folding, popping the big
+      bubbles, then roll up tight with no trapped pockets. a tight
+      gas-free roll is what gives the regular sponge.
+
 - use batard (oval) or boulard (round)
 - sprinkle some flour over dough while still in bowl
   - flip dough from bowl onto bench (i.e. topside in bowl -> bottomside on bench)
     - this is because topside in bowl is slightly drier
   - add some flour around edges of dough
+  - (B) press the dough out flat here, knocking the big bubbles out
   - fold (sticky) now-topside over a few times, knocking excess flour off
     - right to middle
     - left to middle
     - top to middle
   - roll top to middle to yield a smooth topside
-  - add some flour on top 
+    - (B) roll firm and tight, no air gaps
+  - add some flour on top
   - flip into banneton
+  - (B) alt: loaf tin instead of banneton -- a tin bake (next section)
+    is the easiest path to an even crumb + conventional sandwich crust
+
 
 [ prooving ]
 - cover and refrigerate 8-96 hours to proof, or proof at room temp for 1-3 hours
-- set oven to 230°C with dutch oven inside and preheat for 30 mins
-- score & spritz loaf, optionally add rice flour
-- bake 30 mins with dutch oven lid on
-- bake until desired crust colour / until internal temp reaches 92°C (20 more mins) with lid off
+  - (B) + pinch of yeast: room-temp proof only, ~1-1.5 hrs, until puffy
 
+baking -- this decides the crust:
+
+  (A) DUTCH OVEN + STEAM -- thick crackly artisan crust:
+    - set oven to 230°C with dutch oven inside and preheat for 30 mins
+    - score & spritz loaf, optionally add rice flour
+    - bake 30 mins with dutch oven lid on (trapped steam = thick crust)
+    - bake until desired crust colour / until internal temp reaches 92°C
+      (20 more mins) with lid off
+
+  (B) OPEN BAKE -- thinner soft conventional crust:
+    - set oven to 200-210°C (no dutch oven, no steam -- steam is what
+      makes the thick crackly crust, so skip it here)
+    - score the loaf
+    - bake on a tray (or in the loaf tin) until golden / internal 92°C,
+      ~40-45 mins total
+    - immediately out of the oven, while still hot, brush the top with
+      milk or melted butter for a soft, even, golden crust -- the
+      residual heat lets it soak in and steams the crust soft
+      (don't brush before/during the bake; that firms the crust)
