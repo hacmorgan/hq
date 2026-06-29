@@ -1379,6 +1379,7 @@ class _RecipesPageState extends State<RecipesPage> {
   _RecipeView _view = _RecipeView.list;
   String _query = '';
   bool _scalableOnly = false;
+  final Set<String> _expandedCats = {};
   final _searchController = TextEditingController();
 
   @override
@@ -1486,15 +1487,36 @@ class _RecipesPageState extends State<RecipesPage> {
             onChanged: (v) => setState(() => _query = v),
           ),
         ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: FilterChip(
-              label: const Text('⚖ scalable'),
-              selected: _scalableOnly,
-              onSelected: (v) => setState(() => _scalableOnly = v),
-            ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Row(
+            children: [
+              FilterChip(
+                label: const Text('⚖ scalable'),
+                selected: _scalableOnly,
+                onSelected: (v) => setState(() => _scalableOnly = v),
+              ),
+              const Spacer(),
+              Builder(builder: (context) {
+                final allExpanded =
+                    cats.isNotEmpty && _expandedCats.containsAll(cats);
+                return TextButton.icon(
+                  icon: Icon(
+                      allExpanded ? Icons.unfold_less : Icons.unfold_more,
+                      size: 18),
+                  label: Text(allExpanded ? 'collapse all' : 'expand all'),
+                  onPressed: cats.isEmpty
+                      ? null
+                      : () => setState(() {
+                            if (allExpanded) {
+                              _expandedCats.removeAll(cats);
+                            } else {
+                              _expandedCats.addAll(cats);
+                            }
+                          }),
+                );
+              }),
+            ],
           ),
         ),
         Expanded(
@@ -1502,30 +1524,50 @@ class _RecipesPageState extends State<RecipesPage> {
               ? const Center(child: Text('no matches'))
               : ListView(
                   children: [
-                    for (final c in cats)
-                      ExpansionTile(
-                        title: Text('$c  (${byCat[c]!.length})',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold)),
-                        initiallyExpanded: q.isNotEmpty,
-                        children: [
-                          for (final r in byCat[c]!)
-                            ListTile(
-                              dense: true,
-                              title: Text(_displayLabel(r)),
-                              trailing: r['hasBasis'] == true
-                                  ? const Text('⚖',
-                                      style: TextStyle(color: Colors.blue))
-                                  : null,
-                              onTap: () =>
-                                  widget.onOpen((r['path']).toString()),
-                            ),
-                        ],
-                      ),
+                    for (final c in cats) ...[
+                      _categoryHeader(c, byCat[c]!.length,
+                          q.isNotEmpty || _expandedCats.contains(c)),
+                      if (q.isNotEmpty || _expandedCats.contains(c))
+                        for (final r in byCat[c]!)
+                          ListTile(
+                            dense: true,
+                            contentPadding:
+                                const EdgeInsets.only(left: 32, right: 16),
+                            title: Text(_displayLabel(r)),
+                            trailing: r['hasBasis'] == true
+                                ? const Text('⚖',
+                                    style: TextStyle(color: Colors.blue))
+                                : null,
+                            onTap: () => widget.onOpen((r['path']).toString()),
+                          ),
+                    ],
                   ],
                 ),
         ),
       ],
+    );
+  }
+
+  Widget _categoryHeader(String category, int count, bool expanded) {
+    return InkWell(
+      onTap: () => setState(() {
+        if (_expandedCats.contains(category)) {
+          _expandedCats.remove(category);
+        } else {
+          _expandedCats.add(category);
+        }
+      }),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            Icon(expanded ? Icons.expand_more : Icons.chevron_right, size: 20),
+            const SizedBox(width: 8),
+            Text('$category  ($count)',
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
+      ),
     );
   }
 
@@ -1553,12 +1595,16 @@ class RecipeGraphView extends StatefulWidget {
 }
 
 class _RecipeGraphViewState extends State<RecipeGraphView> {
-  static const double _w = 2400;
-  static const double _h = 2400;
+  double _w = 1000;
+  double _h = 1000;
 
   List<_GNode> _nodes = [];
   List<_GEdge> _edges = [];
   List<String> _categories = [];
+  List<_ClusterLabel> _labels = [];
+
+  final TransformationController _tc = TransformationController();
+  bool _fitted = false;
 
   @override
   void initState() {
@@ -1569,7 +1615,16 @@ class _RecipeGraphViewState extends State<RecipeGraphView> {
   @override
   void didUpdateWidget(RecipeGraphView old) {
     super.didUpdateWidget(old);
-    if (old.index.length != widget.index.length) _layout();
+    if (old.index.length != widget.index.length) {
+      _fitted = false;
+      _layout();
+    }
+  }
+
+  @override
+  void dispose() {
+    _tc.dispose();
+    super.dispose();
   }
 
   void _layout() {
@@ -1635,123 +1690,155 @@ class _RecipeGraphViewState extends State<RecipeGraphView> {
       }
     });
 
-    // Seeded initial positions for a deterministic layout.
-    final rnd = Random(42);
+    // --- positions: pack each category into its own disk, clusters on a grid
+    final byCat = <String, List<int>>{};
+    for (var i = 0; i < n; i++) {
+      byCat
+          .putIfAbsent((entries[i]['category'] ?? '').toString(), () => [])
+          .add(i);
+    }
+
+    const baseR = 30.0; // cluster radius scales with sqrt(member count)
+    const gap = 130.0; // space between cluster bounding circles
+    final radius = <String, double>{};
+    double maxR = 1;
+    for (final c in _categories) {
+      final r = baseR * sqrt((byCat[c]?.length ?? 1).toDouble());
+      radius[c] = r;
+      maxR = max(maxR, r);
+    }
+
+    final cols = max(1, sqrt(_categories.length).ceil());
+    final rows = max(1, (_categories.length / cols).ceil());
+    final cell = 2 * maxR + gap;
+    _w = cols * cell;
+    _h = rows * cell;
+
     final nodes = List.generate(n, (i) {
       return _GNode(
         path: (entries[i]['path']).toString(),
-        label: (entries[i]['path']).toString().split('/').last.replaceAll('-', ' '),
+        label: (entries[i]['path'])
+            .toString()
+            .split('/')
+            .last
+            .replaceAll('-', ' '),
         category: (entries[i]['category'] ?? '').toString(),
-        x: rnd.nextDouble() * _w,
-        y: rnd.nextDouble() * _h,
+        x: 0,
+        y: 0,
       );
     });
 
-    // Fruchterman–Reingold force-directed layout.
-    final area = _w * _h;
-    final k = sqrt(area / (n == 0 ? 1 : n));
-    double temp = _w / 8;
-    const iters = 300;
-    final dx = List.filled(n, 0.0);
-    final dy = List.filled(n, 0.0);
-    for (var it = 0; it < iters; it++) {
-      for (var i = 0; i < n; i++) {
-        dx[i] = 0;
-        dy[i] = 0;
+    // Phyllotaxis (sunflower) packing gives an even disk of nodes per cluster.
+    final golden = pi * (3 - sqrt(5));
+    final labels = <_ClusterLabel>[];
+    for (var ci = 0; ci < _categories.length; ci++) {
+      final c = _categories[ci];
+      final members = byCat[c] ?? const [];
+      final cx = (ci % cols) * cell + cell / 2;
+      final cy = (ci ~/ cols) * cell + cell / 2;
+      final r = radius[c] ?? baseR;
+      labels.add(_ClusterLabel(
+        text: c.isEmpty ? 'other' : c,
+        x: cx,
+        y: cy - r - 22,
+        color: _categoryColor(c, _categories),
+      ));
+      for (var k = 0; k < members.length; k++) {
+        final nr =
+            members.length <= 1 ? 0.0 : r * sqrt((k + 0.5) / members.length);
+        final ang = k * golden;
+        nodes[members[k]].x = cx + nr * cos(ang);
+        nodes[members[k]].y = cy + nr * sin(ang);
       }
-      for (var i = 0; i < n; i++) {
-        for (var j = i + 1; j < n; j++) {
-          var ddx = nodes[i].x - nodes[j].x;
-          var ddy = nodes[i].y - nodes[j].y;
-          var dist = sqrt(ddx * ddx + ddy * ddy);
-          if (dist < 0.01) {
-            ddx = rnd.nextDouble() - 0.5;
-            ddy = rnd.nextDouble() - 0.5;
-            dist = 0.01;
-          }
-          final f = (k * k) / dist;
-          final fx = ddx / dist * f, fy = ddy / dist * f;
-          dx[i] += fx;
-          dy[i] += fy;
-          dx[j] -= fx;
-          dy[j] -= fy;
-        }
-      }
-      for (final e in edges) {
-        var ddx = nodes[e.a].x - nodes[e.b].x;
-        var ddy = nodes[e.a].y - nodes[e.b].y;
-        var dist = sqrt(ddx * ddx + ddy * ddy);
-        if (dist < 0.01) dist = 0.01;
-        final f = (dist * dist) / k;
-        final fx = ddx / dist * f, fy = ddy / dist * f;
-        dx[e.a] -= fx;
-        dy[e.a] -= fy;
-        dx[e.b] += fx;
-        dy[e.b] += fy;
-      }
-      for (var i = 0; i < n; i++) {
-        final d = sqrt(dx[i] * dx[i] + dy[i] * dy[i]);
-        if (d > 0) {
-          nodes[i].x += dx[i] / d * min(d, temp);
-          nodes[i].y += dy[i] / d * min(d, temp);
-        }
-        nodes[i].x = nodes[i].x.clamp(20.0, _w - 20);
-        nodes[i].y = nodes[i].y.clamp(20.0, _h - 20);
-      }
-      temp = max(temp * 0.95, 1.0);
     }
 
     _nodes = nodes;
     _edges = edges;
+    _labels = labels;
+  }
+
+  /// On first layout, fit the whole graph to the viewport.
+  void _maybeFit(BoxConstraints c) {
+    if (_fitted || _w <= 0 || !c.maxWidth.isFinite || !c.maxHeight.isFinite) {
+      return;
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _fitted) return;
+      final s = min(c.maxWidth / _w, c.maxHeight / _h) * 0.92;
+      _tc.value = Matrix4.identity()
+        ..translate((c.maxWidth - _w * s) / 2, (c.maxHeight - _h * s) / 2)
+        ..scale(s, s, 1.0);
+      _fitted = true;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        InteractiveViewer(
-          constrained: false,
-          minScale: 0.1,
-          maxScale: 4,
-          boundaryMargin: const EdgeInsets.all(400),
-          child: SizedBox(
-            width: _w,
-            height: _h,
-            child: Stack(
-              children: [
-                CustomPaint(
-                  size: const Size(_w, _h),
-                  painter: _GraphEdgePainter(_nodes, _edges),
-                ),
-                for (final node in _nodes)
-                  Positioned(
-                    left: node.x - 6,
-                    top: node.y - 6,
-                    child: GestureDetector(
-                      onTap: () => widget.onOpen(node.path),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 12,
-                            height: 12,
-                            decoration: BoxDecoration(
-                              color: _categoryColor(node.category, _categories),
-                              shape: BoxShape.circle,
-                              border:
-                                  Border.all(color: Colors.white, width: 1),
-                            ),
-                          ),
-                          Text(node.label,
-                              style: const TextStyle(fontSize: 7)),
-                        ],
+        LayoutBuilder(builder: (context, constraints) {
+          _maybeFit(constraints);
+          return InteractiveViewer(
+            transformationController: _tc,
+            constrained: false,
+            minScale: 0.05,
+            maxScale: 4,
+            boundaryMargin: const EdgeInsets.all(400),
+            child: SizedBox(
+              width: _w,
+              height: _h,
+              child: Stack(
+                children: [
+                  CustomPaint(
+                    size: Size(_w, _h),
+                    painter: _GraphEdgePainter(_nodes, _edges),
+                  ),
+                  for (final label in _labels)
+                    Positioned(
+                      left: label.x - 60,
+                      top: label.y,
+                      width: 120,
+                      child: Text(
+                        label.text,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: label.color,
+                        ),
                       ),
                     ),
-                  ),
-              ],
+                  for (final node in _nodes)
+                    Positioned(
+                      left: node.x - 6,
+                      top: node.y - 6,
+                      child: GestureDetector(
+                        onTap: () => widget.onOpen(node.path),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 12,
+                              height: 12,
+                              decoration: BoxDecoration(
+                                color:
+                                    _categoryColor(node.category, _categories),
+                                shape: BoxShape.circle,
+                                border:
+                                    Border.all(color: Colors.white, width: 1),
+                              ),
+                            ),
+                            Text(node.label,
+                                style: const TextStyle(fontSize: 7)),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        }),
         Positioned(
           left: 8,
           top: 8,
@@ -1804,6 +1891,20 @@ class _GEdge {
   final int a;
   final int b;
   final bool strong;
+}
+
+class _ClusterLabel {
+  _ClusterLabel({
+    required this.text,
+    required this.x,
+    required this.y,
+    required this.color,
+  });
+
+  final String text;
+  final double x;
+  final double y;
+  final Color color;
 }
 
 class _GraphEdgePainter extends CustomPainter {
