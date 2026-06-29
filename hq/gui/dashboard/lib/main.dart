@@ -1605,6 +1605,7 @@ class _RecipeGraphViewState extends State<RecipeGraphView> {
 
   final TransformationController _tc = TransformationController();
   bool _fitted = false;
+  bool _showSimilarity = false;
 
   @override
   void initState() {
@@ -1649,46 +1650,49 @@ class _RecipeGraphViewState extends State<RecipeGraphView> {
       if (edgeKeys.add(key)) edges.add(_GEdge(a, b, strong));
     }
 
-    // Strong edges: explicit cross-references.
+    // Strong edges: explicit `uses:` sub-recipe links (curated in the YAML).
     for (var i = 0; i < n; i++) {
-      for (final r in (entries[i]['refs'] as List? ?? const [])) {
+      for (final r in (entries[i]['uses'] as List? ?? const [])) {
         final j = idxOf[r.toString()];
         if (j != null) addEdge(i, j, true);
       }
     }
 
-    // Weak edges: pairs sharing >=2 distinctive ingredients (df in 2..12).
-    final df = <String, int>{};
-    for (final e in entries) {
-      for (final i in (e['ingredients'] as List? ?? const [])) {
-        df[i.toString()] = (df[i.toString()] ?? 0) + 1;
-      }
-    }
-    final inverted = <String, List<int>>{};
-    for (var i = 0; i < n; i++) {
-      for (final ing in (entries[i]['ingredients'] as List? ?? const [])) {
-        final c = df[ing.toString()] ?? 0;
-        if (c >= 2 && c <= 12) {
-          inverted.putIfAbsent(ing.toString(), () => []).add(i);
+    // Weak edges (optional overlay): pairs sharing >=3 distinctive ingredients
+    // (doc-frequency in 2..8). Off by default — toggled by the user.
+    if (_showSimilarity) {
+      final df = <String, int>{};
+      for (final e in entries) {
+        for (final i in (e['ingredients'] as List? ?? const [])) {
+          df[i.toString()] = (df[i.toString()] ?? 0) + 1;
         }
       }
-    }
-    final shared = <String, int>{};
-    for (final members in inverted.values) {
-      for (var x = 0; x < members.length; x++) {
-        for (var y = x + 1; y < members.length; y++) {
-          final a = members[x], b = members[y];
-          final key = a < b ? '$a-$b' : '$b-$a';
-          shared[key] = (shared[key] ?? 0) + 1;
+      final inverted = <String, List<int>>{};
+      for (var i = 0; i < n; i++) {
+        for (final ing in (entries[i]['ingredients'] as List? ?? const [])) {
+          final c = df[ing.toString()] ?? 0;
+          if (c >= 2 && c <= 8) {
+            inverted.putIfAbsent(ing.toString(), () => []).add(i);
+          }
         }
       }
-    }
-    shared.forEach((key, count) {
-      if (count >= 2) {
-        final parts = key.split('-');
-        addEdge(int.parse(parts[0]), int.parse(parts[1]), false);
+      final shared = <String, int>{};
+      for (final members in inverted.values) {
+        for (var x = 0; x < members.length; x++) {
+          for (var y = x + 1; y < members.length; y++) {
+            final a = members[x], b = members[y];
+            final key = a < b ? '$a-$b' : '$b-$a';
+            shared[key] = (shared[key] ?? 0) + 1;
+          }
+        }
       }
-    });
+      shared.forEach((key, count) {
+        if (count >= 3) {
+          final parts = key.split('-');
+          addEdge(int.parse(parts[0]), int.parse(parts[1]), false);
+        }
+      });
+    }
 
     // --- positions: pack each category into its own disk, clusters on a grid
     final byCat = <String, List<int>>{};
@@ -1863,6 +1867,20 @@ class _RecipeGraphViewState extends State<RecipeGraphView> {
                 ],
               ),
             ),
+          ),
+        ),
+        Positioned(
+          right: 8,
+          top: 8,
+          child: FilterChip(
+            backgroundColor: Colors.white.withOpacity(0.85),
+            label: const Text('ingredient links',
+                style: TextStyle(fontSize: 11)),
+            selected: _showSimilarity,
+            onSelected: (v) => setState(() {
+              _showSimilarity = v;
+              _layout();
+            }),
           ),
         ),
       ],

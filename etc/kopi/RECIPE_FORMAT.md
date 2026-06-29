@@ -15,6 +15,7 @@ names. YAML doesn't need a file extension to be valid.
 |---------------|-----------------|---------|
 | `name`        | string          | Display name. If omitted the UI uses the file path. Only set it when it reads better than the filename. |
 | `source`      | string          | URL the recipe was adapted from (the add-recipe skill sets this). |
+| `uses`        | list            | Sub-recipes this one builds on, by filename or path (e.g. `crackling`, `veg/beetroot-puree`). Drives the dashboard graph's edges. |
 | `yield`       | string          | Freeform serving/yield note, e.g. `serves 2`, `per omelette`, `for a 650g rack`. |
 | `notes`       | string (block)  | Freeform prose: background, tips, variants, the long `---` explanation blocks. Use a YAML block scalar (`\|`). |
 | `ingredients` | list            | The recipe's main / ungrouped ingredients (see **Ingredient entry**). |
@@ -69,6 +70,20 @@ Each ingredient is a block-style mapping (one field per line, **not** flow `{ }`
 ```
 
 - Keep temperatures, times, and technique in the step text, e.g. `bake at 180°C for 40 mins`.
+
+## Linking recipes (`uses`)
+
+List the sub-recipes a recipe genuinely builds on, so the dashboard graph can draw
+"uses" edges between them:
+
+```yaml
+uses:
+  - crackling           # resolved by filename (unique across the tree)
+  - veg/beetroot-puree  # or by full path
+```
+
+Add only real dependencies — these edges are meant to be intentional. "Happens to share
+an ingredient" is a separate, optional overlay in the graph UI, not a `uses` link.
 
 ## Ratios & proportions
 
