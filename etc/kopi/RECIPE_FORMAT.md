@@ -15,6 +15,7 @@ names. YAML doesn't need a file extension to be valid.
 |---------------|-----------------|---------|
 | `name`        | string          | Display name. If omitted the UI uses the file path. Only set it when it reads better than the filename. |
 | `source`      | string          | URL the recipe was adapted from (the add-recipe skill sets this). |
+| `uses`        | list            | Sub-recipes this one builds on, by filename or path (e.g. `crackling`, `veg/beetroot-puree`). Drives the dashboard graph's edges. |
 | `yield`       | string          | Freeform serving/yield note, e.g. `serves 2`, `per omelette`, `for a 650g rack`. |
 | `notes`       | string (block)  | Freeform prose: background, tips, the long `---` explanation blocks. Use a YAML block scalar (`\|`). Hard-wrap it to keep the file readable — the dashboard unwraps it to the window width (see **Notes**). |
 | `ingredients` | list            | The recipe's main / ungrouped ingredients (see **Ingredient entry**). |

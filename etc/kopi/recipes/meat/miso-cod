@@ -1,3 +1,5 @@
+uses:
+  - miso-marinade
 steps:
   - create miso marinade (see that recipe)
   - marinate fish for 2-3 days in the fridge

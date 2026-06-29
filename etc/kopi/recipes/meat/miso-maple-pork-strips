@@ -1,4 +1,6 @@
 yield: for stockinpiggle pork spare ribs (200g ish)
+uses:
+  - crackling
 ingredients:
   - item: pork spare ribs
     mass: 200

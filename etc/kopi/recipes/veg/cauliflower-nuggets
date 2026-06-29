@@ -1,3 +1,5 @@
+uses:
+  - cauliflower-yoghurt
 ingredients:
   - item: cauliflower florets
     mass: 150

@@ -1,3 +1,5 @@
+uses:
+  - lemon-glaze
 ingredients:
   - item: chicken breast fillets
     mass: 550

@@ -1,4 +1,6 @@
 yield: for 450g pork mince
+uses:
+  - green-beans
 ingredients:
   - item: pork mince
     mass: 450

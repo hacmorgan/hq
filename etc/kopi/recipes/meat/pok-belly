@@ -1,3 +1,5 @@
+uses:
+  - crackling
 components:
   - name: full belly
     ingredients:

@@ -1,3 +1,5 @@
+uses:
+  - espresso-martini
 components:
   - name: espresso frappe
     ingredients:
