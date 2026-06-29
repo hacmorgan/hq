@@ -7,6 +7,7 @@ Backend API for dashboard
 
 
 import json
+import yaml
 from fastapi import FastAPI
 import uvicorn
 from fastapi.responses import FileResponse
@@ -46,9 +47,13 @@ def read_root() -> Response:
 
 
 @app.get("/recipes/{filename}")
-def get_recipe(filename: str) -> Response:
+def get_recipe(filename: str) -> dict:
     """
     Get a specific recipe by path/name
+
+    Recipes are stored as YAML (see ``etc/kopi/RECIPE_FORMAT.md``). This parses the
+    YAML and returns it as structured JSON for the UI to render and scale, alongside
+    the raw text so the UI can offer raw editing.
 
     Args:
         filename: The name of the recipe file, which is the path of the recipe relative
@@ -56,19 +61,34 @@ def get_recipe(filename: str) -> Response:
             "pourover..clever")
 
     Returns:
-        A dictionary with the recipe name and contents, or an error message if the
-        recipe file is not found
+        A dictionary with:
+            name: the recipe's relative path
+            raw: the raw file contents (for the editor)
+            recipe: the parsed YAML mapping, or None if it could not be parsed
+            parse_error: present only when the YAML could not be parsed into a mapping
+        or an error message if the recipe file is not found.
     """
     # Reconstruct the path to the recipe file from the request
     filename = filename.replace("..", "/")
     file_path = HQ_RECIPES / filename
 
-    # Return the recipe's name and contents if the file exists
-    if file_path.exists():
-        return {"name": filename, "recipe": file_path.read_text(encoding="utf-8")}
-
     # Return an error message if the file does not exist
-    return {"error": f"Recipe not found: {file_path}"}
+    if not file_path.exists():
+        return {"error": f"Recipe not found: {file_path}"}
+
+    raw = file_path.read_text(encoding="utf-8")
+    result: dict = {"name": filename, "raw": raw, "recipe": None}
+    try:
+        parsed = yaml.safe_load(raw)
+    except yaml.YAMLError as exc:
+        result["parse_error"] = str(exc)
+        return result
+
+    if isinstance(parsed, dict):
+        result["recipe"] = parsed
+    elif parsed is not None:
+        result["parse_error"] = "Recipe YAML is not a mapping"
+    return result
 
 
 class RecipeUpdate(BaseModel):

@@ -1,3 +1,4 @@
-- set pan to 150°C
-- turn at least every few mins
-- should take 10-15 mins to render
+steps:
+  - set pan to 150°C
+  - turn at least every few mins
+  - should take 10-15 mins to render

@@ -1,7 +1,25 @@
-make rice wih sushi rice, 0.75:1 water:rice, 100g rice per roll
-
-season with:
-
-- caster sugar, 15g (1 tbsp) per 200g rice
-- salt, 2.7g (1/4 tsp) per 200g
-- rice wine vinegar, 22g (1.5 tbsp) per 200 rice
+yield: 100g rice per roll
+ingredients:
+  - item: sushi rice
+    mass: 200
+    basis: true
+  - item: water
+    mass: 150
+    note: 0.75:1 water:rice
+  - item: caster sugar
+    mass: 15
+    qty: 1
+    unit: tbsp
+  - item: salt
+    mass: 2.7
+    qty: 0.25
+    unit: tsp
+  - item: rice wine vinegar
+    mass: 22
+    qty: 1.5
+    unit: tbsp
+notes: |
+  Seasoning quantities are per 200g cooked rice. 100g rice per roll.
+steps:
+  - make rice with sushi rice, 0.75:1 water:rice
+  - season with caster sugar, salt, and rice wine vinegar

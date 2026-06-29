@@ -1,4 +1,9 @@
-- 70g frozen mango
-- 250g frozen mango nectar
-- 80g vodka
-- 20g fresh squeezed lime juice
+ingredients:
+  - item: frozen mango
+    mass: 70
+  - item: frozen mango nectar
+    mass: 250
+  - item: vodka
+    mass: 80
+  - item: fresh squeezed lime juice
+    mass: 20

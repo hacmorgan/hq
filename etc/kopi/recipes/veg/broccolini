@@ -1,12 +1,25 @@
-[ for each 100g broc ]
-- 0.5 black pep
-- 0.2g white pep
-- 0.1g cayenne pep
-- 2g paprika
-- 1 salt
-
-grind up, rub broccolini in dry rub, coat in olive oil
-
-[ cooking ]
-- fry hot and fast
-- optionally use schmulz to enhance flavour
+yield: per 100g broccolini
+components:
+  - name: dry rub
+    ingredients:
+      - item: broccolini
+        mass: 100
+        basis: true
+      - item: black pepper
+        mass: 0.5
+      - item: white pepper
+        mass: 0.2
+      - item: cayenne pepper
+        mass: 0.1
+      - item: paprika
+        mass: 2
+      - item: salt
+        mass: 1
+    steps:
+      - grind up spices
+      - rub broccolini in dry rub
+      - coat in olive oil
+  - name: cooking
+    steps:
+      - fry hot and fast
+      - optionally use schmulz to enhance flavour

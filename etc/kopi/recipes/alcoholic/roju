@@ -1,2 +1,7 @@
-1    : 2
-rose : grape soju
+ingredients:
+  - item: rose
+    qty: 1
+    unit: part
+  - item: grape soju
+    qty: 2
+    unit: part

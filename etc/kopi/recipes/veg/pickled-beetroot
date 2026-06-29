@@ -1,7 +1,20 @@
-- peel & slice beetroots & place in jar
-- boil pickling liquid. for 3 betroots:
-  - 400g vinegar
-  - 200g water
-  - 75g sugar
-- pour boiling pickling liquid over beetroots
-- once room temp, store in fridge
+yield: for 3 beetroots
+ingredients:
+  - item: beetroots
+    qty: 3
+    unit: ea
+    basis: true
+components:
+  - name: pickling liquid
+    ingredients:
+      - item: vinegar
+        mass: 400
+      - item: water
+        mass: 200
+      - item: sugar
+        mass: 75
+steps:
+  - peel & slice beetroots & place in jar
+  - boil pickling liquid
+  - pour boiling pickling liquid over beetroots
+  - once room temp, store in fridge

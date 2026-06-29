@@ -1,5 +1,12 @@
-- 1 frozen prata
-- 25g butter
-- [optional] cheese + garlic salt
-
-set pan to 160°C
+ingredients:
+  - item: frozen prata
+    qty: 1
+    unit: ea
+  - item: butter
+    mass: 25
+  - item: cheese
+    optional: true
+  - item: garlic salt
+    optional: true
+steps:
+  - set pan to 160°C

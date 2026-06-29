@@ -1,4 +1,10 @@
-- 300g water (96°C)
-- 6g cadbury baking cocoa powder
-- 15g sugar
-- 40g milk
+ingredients:
+  - item: water
+    mass: 300
+    note: 96°C
+  - item: cadbury baking cocoa powder
+    mass: 6
+  - item: sugar
+    mass: 15
+  - item: milk
+    mass: 40

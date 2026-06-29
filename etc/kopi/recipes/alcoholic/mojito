@@ -1,11 +1,19 @@
-[ base, per-serve ]
-- 45g vodka
-- 15g sugar
-- 50g lemonade
-- 10g lime juice
-- zhuzh into base mix
-- add additional lemonade to taste
-- add ice and garnish with lime
-
-[ passionfruit, per-serve ]
-- add juice of half a passionfruit to mix before zhuzhing
+yield: per-serve
+components:
+  - name: base
+    ingredients:
+      - item: vodka
+        mass: 45
+      - item: sugar
+        mass: 15
+      - item: lemonade
+        mass: 50
+      - item: lime juice
+        mass: 10
+    steps:
+      - zhuzh into base mix
+      - add additional lemonade to taste
+      - add ice and garnish with lime
+  - name: passionfruit
+    steps:
+      - add juice of half a passionfruit to mix before zhuzhing

@@ -1,4 +1,13 @@
-- 6 x 18g double shot espresso
-- 120g nesquik
-- remainder of 2L bottle of milk
-
+ingredients:
+  - item: double shot espresso
+    qty: 6
+    unit: ea
+    mass: 108
+    note: 6 x 18g shots
+  - item: nesquik
+    mass: 120
+  - item: milk
+    qty: 2
+    unit: L
+    mass: 2000
+    note: remainder of 2L bottle

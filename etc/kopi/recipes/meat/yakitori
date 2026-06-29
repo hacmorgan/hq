@@ -1,17 +1,29 @@
-- soak skewers for heat protecc
-
-[ Tare ]
-- Put all the Tare ingredients in a small saucepan and bring it to a boil 
-  - Soy sauce (120g)
-  - Mirin (40g)
-  - Sugar (20g)
-  - Sake (100g)
-  - (experiment) Shiso (2.5g)
-- Reduce the heat to simmer and cook for about 5 minutes until the quantity of tare is reduced by a third
-
-[ Skewers ]
-- chicken thigh / breast, chopped into 2.5cm cubes
-- spring onion, cut into 3cm lengths
-- baste chicken with tare, cook 3 mins
-- flip and brush with tare, cook 3 mins
-- flip again, baste again, cook 30s
+notes: soak skewers for heat protecc
+components:
+  - name: tare
+    ingredients:
+      - item: soy sauce
+        mass: 120
+      - item: mirin
+        mass: 40
+      - item: sugar
+        mass: 20
+      - item: sake
+        mass: 100
+      - item: shiso
+        mass: 2.5
+        optional: true
+        note: experiment
+    steps:
+      - put all ingredients in small saucepan and bring to boil
+      - reduce heat to simmer and cook for about 5 minutes until quantity is reduced by a third
+  - name: skewers
+    ingredients:
+      - item: chicken thigh or breast
+        note: chopped into 2.5cm cubes
+      - item: spring onion
+        note: cut into 3cm lengths
+    steps:
+      - baste chicken with tare, cook 3 mins
+      - flip and brush with tare, cook 3 mins
+      - flip again, baste again, cook 30s

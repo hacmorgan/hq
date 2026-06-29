@@ -1,3 +1,8 @@
-For adding to filter coffee (2-4 drops)
-
-1:4 (water:salt)
+yield: for adding to filter coffee (2-4 drops)
+ingredients:
+  - item: water
+    qty: 1
+    unit: part
+  - item: salt
+    qty: 4
+    unit: part

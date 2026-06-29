@@ -1,25 +1,28 @@
-- don't rinse mushrooms, wipe wih damp cloth to clean
-
-[ spice mix ]
-- salt
-- white & black pepper (1:2)
-- paprika
-# - ground fennel seed
-# - five spice
-
-[ dry batter ]
-- add flour and spice mix to a bowl
-- ratios
-    -  200g :  8g  :     3g     :   3g   
-    - flour : salt : pepper mix : paprika
-
-[ wet batter ]
-- combine dry batter and water in a 4:9 ratio
-    - i.e. dry batter weight * 9/4 = wet batter weight
-
-[ prepping ]
-- chop oysters into thin tenders
-- double coat (i.e. dry -> wet -> dry -> wet) with batter
-
-[ cooking ]
-- fry at 175°C
+ingredients:
+  - item: oyster mushrooms
+    note: do not rinse; wipe with damp cloth to clean
+components:
+  - name: dry batter
+    ingredients:
+      - item: flour
+        mass: 200
+      - item: salt
+        mass: 8
+      - item: pepper mix
+        mass: 3
+        note: 1:2 white:black pepper
+      - item: paprika
+        mass: 3
+    notes: |
+      Commented-out options:
+      - ground fennel seed
+      - five spice
+  - name: wet batter
+    notes: |
+      Combine dry batter and water in a 4:9 ratio
+      i.e. dry batter weight * 9/4 = wet batter weight
+  - name: cooking
+    steps:
+      - chop oyster mushrooms into thin tenders
+      - double coat with batter (dry -> wet -> dry -> wet)
+      - fry at 175°C

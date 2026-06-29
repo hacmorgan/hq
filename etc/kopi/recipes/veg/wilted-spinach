@@ -1,9 +1,22 @@
-- slice garlic (3 cloves)
-- cook at low temp in oil
-- add spinach
-- season with salt and pepper
-- turn over a few times to coat
-- lid on to wilt
-- turn periodically to prevent burning
-- remove lid to dry out
-- add butter to finish
+ingredients:
+  - item: garlic cloves
+    qty: 3
+    unit: ea
+    note: sliced
+  - item: oil
+    note: for cooking at low temp
+  - item: spinach
+  - item: salt
+  - item: pepper
+  - item: butter
+    note: to finish
+steps:
+  - slice garlic (3 cloves)
+  - cook at low temp in oil
+  - add spinach
+  - season with salt and pepper
+  - turn over a few times to coat
+  - lid on to wilt
+  - turn periodically to prevent burning
+  - remove lid to dry out
+  - add butter to finish
