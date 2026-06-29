@@ -1,1 +1,7 @@
-60:250
+ingredients:
+  - item: ribena
+    qty: 60
+    unit: part
+  - item: water
+    qty: 250
+    unit: part

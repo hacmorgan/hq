@@ -1,55 +1,81 @@
-[ TRADITIONAL FRIED (FALLOW) ]
-Make dredge from (per 100g chicken)
-- 62.5g flour
-- potato starch
-- 2g cornflour
-- 1g MSG
-- 1g baking soda
-- 2.5g salt
-- 0.2g black pepper
-- 0.2g white pepper
-
-Make wet dredge from:
-- dry dredge
-- whole eggs
-
-Make marinade from (per 100g chicken):
-- 5g dry dredge
-- 0.5g kombu dashi poder (/MSG)
-- 4g pun chun (orig: sriracha)
-- 2g Dijon mustard (orig: a little bit of yellow american mustard)
-- 3g rice wine vinegar
-and marinate for 12 hours
-
-Prep & cook:
-- Place marinated chicken into dry dredge
-- Toss in dry dredge 60 times
-- Jolt, turn upside down, jolt again (to dislodge useless bits) 
-- Coat in wet dredge and let drain for a sec
-- Into another dry dredge and toss another 60 times
-- Another round of jolts
-- Fry in 180°C oil for 5 mins
-
-
-[ SCHNITZ / KATSU ]
-Per 100g chicken:
-[spice mix]
-- 1.5g salt
-- 1g msg
-- 1g baking soda
-- 0.2g black pep
-- 0.2g white pep
-- 0.5g paprika
-- 0.4g italian herbs
-- 0.15g rosemary leaves (from approx 0.2g in sprig form, with stem) (try oregano)
-
-[crumb]
-- 18g panko
-
-[egg wash]
-- 0.4 eggs
-
-[flour]
-- 14g flour
-
-Then coat chicken breast bits and fry at 160°C (with probe, 200°C if measuring base heat)
+ingredients:
+  - item: chicken
+    mass: 100
+    basis: true
+components:
+  - name: traditional fried (fallow)
+    yield: per 100g chicken
+    ingredients:
+      - item: flour
+        mass: 62.5
+      - item: potato starch
+      - item: cornflour
+        mass: 2
+      - item: MSG
+        mass: 1
+      - item: baking soda
+        mass: 1
+      - item: salt
+        mass: 2.5
+      - item: black pepper
+        mass: 0.2
+      - item: white pepper
+        mass: 0.2
+      - item: whole eggs
+      - item: dry dredge
+        mass: 5
+        note: for marinade
+      - item: kombu dashi poder
+        mass: 0.5
+        note: /MSG
+      - item: pun chun
+        mass: 4
+        note: 'orig: sriracha'
+      - item: Dijon mustard
+        mass: 2
+        note: 'orig: a little bit of yellow american mustard'
+      - item: rice wine vinegar
+        mass: 3
+    notes: |
+      Marinate for 12 hours.
+    steps:
+      - make dredge from flour, potato starch, cornflour, MSG, baking soda, salt, black pepper, white pepper
+      - make wet dredge from dry dredge and whole eggs
+      - make marinade from dry dredge, kombu dashi poder, pun chun, Dijon mustard, rice wine vinegar
+      - marinate for 12 hours
+      - place marinated chicken into dry dredge
+      - toss in dry dredge 60 times
+      - jolt, turn upside down, jolt again (to dislodge useless bits)
+      - coat in wet dredge and let drain for a sec
+      - into another dry dredge and toss another 60 times
+      - another round of jolts
+      - fry in 180°C oil for 5 mins
+  - name: schnitz / katsu
+    yield: per 100g chicken
+    ingredients:
+      - item: salt
+        mass: 1.5
+      - item: MSG
+        mass: 1
+      - item: baking soda
+        mass: 1
+      - item: black pepper
+        mass: 0.2
+      - item: white pepper
+        mass: 0.2
+      - item: paprika
+        mass: 0.5
+      - item: italian herbs
+        mass: 0.4
+      - item: rosemary leaves
+        mass: 0.15
+        note: from approx 0.2g in sprig form, with stem; try oregano
+      - item: panko
+        mass: 18
+      - item: eggs
+        qty: 0.4
+        unit: ea
+      - item: flour
+        mass: 14
+    steps:
+      - coat chicken breast bits and fry at 160°C (with probe, 200°C if measuring base heat)

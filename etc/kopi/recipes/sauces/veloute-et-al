@@ -1,44 +1,54 @@
-[ veloute ]
-   1   :   1   :      15
-butter : flour : chicken stock
-- add butter to pan and melt
-- heat on low and incorporate until wet sand
-- take roux off stove
-- heat chicken stock
-- gradually incorporate stock into roux
-
-[ sauce supreme ]
-- veloute
-- double cream
-- good hit of lemon juice
-
-[ mustard ]
-- sauce supreme
-- salt
-- dijon mustard
-- wholegrain mustard
-- combine on low heat
-- add chopped tarragon and mix through
-
-[ sace ivoire ]
-- heavy cream
-- salt
-- tomato puree
-- lemon juice
-
-[ herb veloute ]
-- veloute on high heat
-- basil
-- dill
-- parsley
-- tarragon
-- a splash of cream
-- lemon juice
-- blend
-
-[ albufera ]
-- veloute
-- heavy cream
-- reduced beef stock
-- touch of sherry vinegar
-- black pepper
+components:
+  - name: veloute
+    ingredients:
+      - item: butter
+        qty: 1
+        unit: part
+      - item: flour
+        qty: 1
+        unit: part
+      - item: chicken stock
+        qty: 15
+        unit: part
+    steps:
+      - add butter to pan and melt
+      - heat on low and incorporate flour until wet sand consistency
+      - take roux off stove
+      - heat chicken stock
+      - gradually incorporate stock into roux
+  - name: sauce supreme
+    notes: |
+      Make veloute base, then add:
+      - double cream
+      - good hit of lemon juice
+  - name: mustard
+    notes: |
+      Make sauce supreme, then:
+      - salt
+      - dijon mustard
+      - wholegrain mustard
+      - combine on low heat
+      - add chopped tarragon and mix through
+  - name: sauce ivoire
+    notes: |
+      - heavy cream
+      - salt
+      - tomato puree
+      - lemon juice
+  - name: herb veloute
+    notes: |
+      Make veloute, then on high heat add:
+      - basil
+      - dill
+      - parsley
+      - tarragon
+      - a splash of cream
+      - lemon juice
+      - blend
+  - name: albufera
+    notes: |
+      Make veloute, then add:
+      - heavy cream
+      - reduced beef stock
+      - touch of sherry vinegar
+      - black pepper

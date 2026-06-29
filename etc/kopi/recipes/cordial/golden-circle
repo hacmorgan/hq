@@ -1,5 +1,10 @@
-<<<<<<< HEAD
-90:250 (1:2.77)
-=======
-90:(full round bottom big glass of water)
->>>>>>> a7d0007 (Recipe updates)
+ingredients:
+  - item: cordial
+    qty: 90
+    unit: part
+  - item: water
+    qty: 250
+    unit: part
+notes: |
+  Ratio is 90:250 (cordial:water), approximately 1:2.77.
+  Alternatively: 90g cordial to a full round-bottom big glass of water.

@@ -1,6 +1,13 @@
-- 200g frozen pineapple juice
-- 90g vodka
-- 40g sugar
-- 20g lime juice
-- 150g ice
-- blend
+ingredients:
+  - item: frozen pineapple juice
+    mass: 200
+  - item: vodka
+    mass: 90
+  - item: sugar
+    mass: 40
+  - item: lime juice
+    mass: 20
+  - item: ice
+    mass: 150
+steps:
+  - blend

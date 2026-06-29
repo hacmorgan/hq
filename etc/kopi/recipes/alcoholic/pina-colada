@@ -1,7 +1,17 @@
-- 200g (three blocks) frozen pineapple juice
-- 75g frozen pineapple
-- 75g coconut cream
-- 60g coco lada
-- 60g white run (/vodka)
-- 100g ice
-- a squeeze of lime
+ingredients:
+  - item: frozen pineapple juice
+    mass: 200
+    note: three blocks
+  - item: frozen pineapple
+    mass: 75
+  - item: coconut cream
+    mass: 75
+  - item: coco lada
+    mass: 60
+  - item: white run
+    mass: 60
+    note: /vodka
+  - item: ice
+    mass: 100
+  - item: lime
+    note: a squeeze

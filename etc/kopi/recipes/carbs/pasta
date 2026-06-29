@@ -1,1 +1,5 @@
-- 100g dry pasta per-person
+ingredients:
+  - item: dry pasta
+    qty: 100
+    unit: g
+    note: per person

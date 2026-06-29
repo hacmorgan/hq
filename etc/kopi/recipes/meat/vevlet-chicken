@@ -1,26 +1,82 @@
-- cook with lemon glaze (start that first)
-- velvet chicken (for 500-600 g chicken breast fillets)
-  - mix the following
-    - 1 lightly whisked egg white
-    - 1/2 tsp salt
-    - 1 tbsp cornflour
-    - 1 tbsp shaoxing
-    - 1 tbsp peanut or veggie oil
-- cut the chicken into strips, add to bowl and mix well
-- refrigerate for 30 minutes
-- bring 1 litre water and 1 tablespoon peanut or vegetable oil to a boil in a wok or a wide frying pan
-- tip in the chicken and stir continuously for less than 1 minute until all the pieces look white
-- tip the chicken and liquid through a colander and shake the colander
-- refrigerate if you are not cooking straight away.
-
-- prepare 500g warm (40°C) water with 2 tbsp cornflour
-  - use this to birng things under control as required
-- Make rice
-- dry toast coarsely ground (+5) black pepper at 160°C
-- add decent amount of oil
-- add lots garlic and slow caramelise
-- once moisture gone, temp up to 180 and add velvet chicken
-- keep meat moving, add rice wine vinegar to deglaze
-- add lemon syrup
-- add some starch water to desired consistency
-- add sliced & slivered (white and green) spring onions
+ingredients:
+  - item: chicken breast fillets
+    mass: 550
+    basis: true
+    note: 500-600g
+components:
+  - name: velvet marinade
+    ingredients:
+      - item: egg white
+        qty: 1
+        unit: ea
+        note: lightly whisked
+      - item: salt
+        qty: 0.5
+        unit: tsp
+      - item: cornflour
+        qty: 1
+        unit: tbsp
+      - item: shaoxing
+        qty: 1
+        unit: tbsp
+      - item: peanut or veggie oil
+        qty: 1
+        unit: tbsp
+    steps:
+      - mix all ingredients
+      - cut chicken into strips, add to bowl and mix well
+      - refrigerate for 30 minutes
+  - name: poach
+    ingredients:
+      - item: water
+        mass: 1000
+        qty: 1
+        unit: litre
+        note: to boil
+      - item: peanut or vegetable oil
+        qty: 1
+        unit: tbsp
+    steps:
+      - bring water and oil to a boil in wok or wide frying pan
+      - tip in chicken and stir continuously for less than 1 minute until all pieces look white
+      - tip chicken and liquid through colander and shake
+      - refrigerate if not cooking straight away
+  - name: starch slurry (for texture)
+    ingredients:
+      - item: warm water
+        mass: 500
+        qty: 500
+        unit: ml
+        note: 40°C
+      - item: cornflour
+        qty: 2
+        unit: tbsp
+    notes: |
+      use this to bring things under control as required
+  - name: sauce
+    ingredients:
+      - item: black pepper
+        mass: 5
+        note: coarsely ground (+5)
+      - item: oil
+        note: decent amount
+      - item: garlic
+        note: lots
+      - item: rice wine vinegar
+        note: to deglaze
+      - item: lemon syrup
+        note: from lemon glaze (start that first)
+      - item: spring onions
+        note: sliced & slivered (white and green)
+    steps:
+      - dry toast coarsely ground black pepper at 160°C
+      - add decent amount of oil
+      - add lots garlic and slow caramelise
+      - once moisture gone, temp up to 180°C and add velvet chicken
+      - keep meat moving, add rice wine vinegar to deglaze
+      - add lemon syrup
+      - add starch water to desired consistency
+      - add spring onions
+notes: |
+  Cook with lemon glaze (start that first).
+  Make rice separately.

@@ -1,5 +1,17 @@
-100g 70% dark choc
-50g butter
-50g (1/4 cup) caster sug
-1 egg lightly beaten
-10g (1 tbsp) flour
+ingredients:
+  - item: 70% dark choc
+    mass: 100
+  - item: butter
+    mass: 50
+  - item: caster sugar
+    mass: 50
+    qty: 0.25
+    unit: cup
+  - item: egg
+    qty: 1
+    unit: ea
+    note: lightly beaten
+  - item: flour
+    mass: 10
+    qty: 1
+    unit: tbsp

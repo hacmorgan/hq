@@ -1,7 +1,24 @@
-for 60g golden enoki:
-- brown in pan with veg oil
-- add finely chopped garlic and lightly brown
-- add 2:1:2 chili honey soy
-  - 20g pun chun 
-  - 10g soy
-  - 20g honey
+yield: for 60g golden enoki
+ingredients:
+  - item: golden enoki
+    mass: 60
+    basis: true
+  - item: veg oil
+    note: for browning
+  - item: garlic
+    note: finely chopped, lightly browned
+components:
+  - name: chili honey soy
+    ingredients:
+      - item: pun chun
+        mass: 20
+      - item: soy
+        mass: 10
+      - item: honey
+        mass: 20
+    notes: |
+      2:1:2 ratio: 20g pun chun, 10g soy, 20g honey
+steps:
+  - brown enoki in pan with veg oil
+  - add finely chopped garlic and lightly brown
+  - add chili honey soy

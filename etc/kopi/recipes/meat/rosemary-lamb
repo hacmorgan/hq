@@ -1,12 +1,25 @@
-For one backstrap:
-- rosemary (1/2 sprig)
-- a small garlic clove
-- lots (8g) salt  
-[test] - 0.5g pepper
-
-grind up in mortar and pestle
-
-[ internal temps ]
-final temp: 60°C - 65°C
-pull at: 55°C
-for reverse sear, pull at 59°C
+yield: for one backstrap
+ingredients:
+  - item: lamb backstrap
+    qty: 1
+    unit: ea
+    basis: true
+  - item: rosemary
+    qty: 0.5
+    unit: sprig
+  - item: garlic clove
+    qty: 1
+    unit: ea
+    note: small
+  - item: salt
+    mass: 8
+  - item: pepper
+    mass: 0.5
+    note: test
+steps:
+  - grind up in mortar and pestle
+notes: |
+  Internal temps:
+  - Final temp: 60°C - 65°C
+  - Pull at: 55°C
+  - For reverse sear, pull at 59°C
