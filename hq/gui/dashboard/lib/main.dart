@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 void main() {
   runApp(MyApp());
@@ -34,25 +35,17 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<String> recipes = [];
+  List<Map<String, dynamic>> recipeIndex = [];
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   List<Widget> _widgetOptions() => <Widget>[
-    // Recipes page
-    Scaffold(
-      appBar: AppBar(title: const Text('Recipes')),
-      body: ListView.builder(
-        itemCount: recipes.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(recipes[index]),
-            onTap: () {
-              _fetchRecipeDetails(recipes[index]);
-            },
-          );
-        },
-      ),
+    // Recipes page (grouped/searchable list <-> graph)
+    RecipesPage(
+      index: recipeIndex,
+      fallbackPaths: recipes,
+      onOpen: _fetchRecipeDetails,
     ),
     // Relationship counter page
     Scaffold(
@@ -93,6 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     fetchRecipes();
+    fetchRecipeIndex();
   }
 
   Future<void> fetchRecipes() async {
@@ -106,6 +100,26 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     } else {
       throw Exception('Failed to load recipes');
+    }
+  }
+
+  Future<void> fetchRecipeIndex() async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://192.168.0.247:10498/recipe-index'),
+        headers: {'Accept': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
+        if (!mounted) return;
+        setState(() {
+          recipeIndex = data.cast<Map<String, dynamic>>();
+        });
+      }
+    } catch (e) {
+      // Older backend without the index endpoint: the Recipes page falls back
+      // to plain paths from fetchRecipes().
+      print('Error fetching recipe index: $e');
     }
   }
 
@@ -1322,4 +1336,498 @@ class _RecipeEditDialogState extends State<RecipeEditDialog> {
       ],
     );
   }
+}
+
+// ---------------------------------------------------------------------------
+// Recipes browser: grouped/searchable list  <->  reference/ingredient graph
+// ---------------------------------------------------------------------------
+
+const List<Color> _kCategoryPalette = [
+  Color(0xFFE57373), Color(0xFF64B5F6), Color(0xFF81C784), Color(0xFFFFB74D),
+  Color(0xFFBA68C8), Color(0xFF4DB6AC), Color(0xFFA1887F), Color(0xFF90A4AE),
+  Color(0xFFF06292), Color(0xFF7986CB), Color(0xFFAED581), Color(0xFFFFD54F),
+  Color(0xFF4FC3F7), Color(0xFFFF8A65), Color(0xFF9575CD), Color(0xFF4DD0E1),
+  Color(0xFFDCE775), Color(0xFFFFB300), Color(0xFF26A69A),
+];
+
+Color _categoryColor(String category, List<String> categories) {
+  final i = categories.indexOf(category);
+  if (i < 0) return Colors.grey;
+  return _kCategoryPalette[i % _kCategoryPalette.length];
+}
+
+enum _RecipeView { list, graph }
+
+/// The Recipes page: a List ⇄ Graph toggle over the recipe index.
+class RecipesPage extends StatefulWidget {
+  const RecipesPage({
+    super.key,
+    required this.index,
+    required this.fallbackPaths,
+    required this.onOpen,
+  });
+
+  final List<Map<String, dynamic>> index;
+  final List<String> fallbackPaths;
+  final void Function(String path) onOpen;
+
+  @override
+  State<RecipesPage> createState() => _RecipesPageState();
+}
+
+class _RecipesPageState extends State<RecipesPage> {
+  _RecipeView _view = _RecipeView.list;
+  String _query = '';
+  bool _scalableOnly = false;
+  final _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  /// Rich index when available, else minimal entries built from plain paths.
+  List<Map<String, dynamic>> get _entries {
+    if (widget.index.isNotEmpty) return widget.index;
+    return widget.fallbackPaths
+        .map((p) => <String, dynamic>{
+              'path': p,
+              'category': p.contains('/') ? p.split('/').first : '',
+              'name': p.split('/').last.replaceAll('-', ' '),
+              'hasBasis': false,
+              'ingredients': const <String>[],
+              'refs': const <String>[],
+            })
+        .toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final entries = _entries;
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Recipes'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: SegmentedButton<_RecipeView>(
+              segments: const [
+                ButtonSegment(
+                    value: _RecipeView.list,
+                    icon: Icon(Icons.list),
+                    label: Text('List')),
+                ButtonSegment(
+                    value: _RecipeView.graph,
+                    icon: Icon(Icons.hub),
+                    label: Text('Graph')),
+              ],
+              selected: {_view},
+              showSelectedIcon: false,
+              onSelectionChanged: (s) => setState(() => _view = s.first),
+            ),
+          ),
+        ],
+      ),
+      body: entries.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : (_view == _RecipeView.list
+              ? _buildList(entries)
+              : RecipeGraphView(index: entries, onOpen: widget.onOpen)),
+    );
+  }
+
+  Widget _buildList(List<Map<String, dynamic>> entries) {
+    final q = _query.toLowerCase().trim();
+    bool matches(Map<String, dynamic> r) {
+      if (_scalableOnly && r['hasBasis'] != true) return false;
+      if (q.isEmpty) return true;
+      final hay = StringBuffer()
+        ..write((r['path'] ?? '').toString().toLowerCase())
+        ..write(' ')
+        ..write((r['name'] ?? '').toString().toLowerCase());
+      for (final i in (r['ingredients'] as List? ?? const [])) {
+        hay
+          ..write(' ')
+          ..write(i.toString().toLowerCase());
+      }
+      return hay.toString().contains(q);
+    }
+
+    final filtered = entries.where(matches).toList();
+    final byCat = <String, List<Map<String, dynamic>>>{};
+    for (final r in filtered) {
+      final c = (r['category'] ?? '').toString();
+      byCat.putIfAbsent(c.isEmpty ? 'other' : c, () => []).add(r);
+    }
+    final cats = byCat.keys.toList()..sort();
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+          child: TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              hintText: 'search name or ingredient…',
+              prefixIcon: const Icon(Icons.search),
+              isDense: true,
+              border: const OutlineInputBorder(),
+              suffixIcon: _query.isEmpty
+                  ? null
+                  : IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        _searchController.clear();
+                        setState(() => _query = '');
+                      },
+                    ),
+            ),
+            onChanged: (v) => setState(() => _query = v),
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: FilterChip(
+              label: const Text('⚖ scalable'),
+              selected: _scalableOnly,
+              onSelected: (v) => setState(() => _scalableOnly = v),
+            ),
+          ),
+        ),
+        Expanded(
+          child: filtered.isEmpty
+              ? const Center(child: Text('no matches'))
+              : ListView(
+                  children: [
+                    for (final c in cats)
+                      ExpansionTile(
+                        title: Text('$c  (${byCat[c]!.length})',
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                        initiallyExpanded: q.isNotEmpty,
+                        children: [
+                          for (final r in byCat[c]!)
+                            ListTile(
+                              dense: true,
+                              title: Text(_displayLabel(r)),
+                              trailing: r['hasBasis'] == true
+                                  ? const Text('⚖',
+                                      style: TextStyle(color: Colors.blue))
+                                  : null,
+                              onTap: () =>
+                                  widget.onOpen((r['path']).toString()),
+                            ),
+                        ],
+                      ),
+                  ],
+                ),
+        ),
+      ],
+    );
+  }
+
+  String _displayLabel(Map<String, dynamic> r) {
+    final path = (r['path'] ?? '').toString();
+    final cat = (r['category'] ?? '').toString();
+    if (cat.isNotEmpty && path.startsWith('$cat/')) {
+      return path.substring(cat.length + 1);
+    }
+    return path;
+  }
+}
+
+/// Force-directed graph of recipes. Nodes are coloured by category; edges are
+/// explicit cross-references (strong) plus shared distinctive ingredients
+/// (weak). Pan/zoom via InteractiveViewer; tap a node to open the recipe.
+class RecipeGraphView extends StatefulWidget {
+  const RecipeGraphView({super.key, required this.index, required this.onOpen});
+
+  final List<Map<String, dynamic>> index;
+  final void Function(String path) onOpen;
+
+  @override
+  State<RecipeGraphView> createState() => _RecipeGraphViewState();
+}
+
+class _RecipeGraphViewState extends State<RecipeGraphView> {
+  static const double _w = 2400;
+  static const double _h = 2400;
+
+  List<_GNode> _nodes = [];
+  List<_GEdge> _edges = [];
+  List<String> _categories = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _layout();
+  }
+
+  @override
+  void didUpdateWidget(RecipeGraphView old) {
+    super.didUpdateWidget(old);
+    if (old.index.length != widget.index.length) _layout();
+  }
+
+  void _layout() {
+    final entries = widget.index;
+    final n = entries.length;
+    _categories = entries
+        .map((e) => (e['category'] ?? '').toString())
+        .toSet()
+        .toList()
+      ..sort();
+
+    final idxOf = <String, int>{};
+    for (var i = 0; i < n; i++) {
+      idxOf[(entries[i]['path']).toString()] = i;
+    }
+
+    final edgeKeys = <String>{};
+    final edges = <_GEdge>[];
+    void addEdge(int a, int b, bool strong) {
+      if (a == b) return;
+      final key = a < b ? '$a-$b' : '$b-$a';
+      if (edgeKeys.add(key)) edges.add(_GEdge(a, b, strong));
+    }
+
+    // Strong edges: explicit cross-references.
+    for (var i = 0; i < n; i++) {
+      for (final r in (entries[i]['refs'] as List? ?? const [])) {
+        final j = idxOf[r.toString()];
+        if (j != null) addEdge(i, j, true);
+      }
+    }
+
+    // Weak edges: pairs sharing >=2 distinctive ingredients (df in 2..12).
+    final df = <String, int>{};
+    for (final e in entries) {
+      for (final i in (e['ingredients'] as List? ?? const [])) {
+        df[i.toString()] = (df[i.toString()] ?? 0) + 1;
+      }
+    }
+    final inverted = <String, List<int>>{};
+    for (var i = 0; i < n; i++) {
+      for (final ing in (entries[i]['ingredients'] as List? ?? const [])) {
+        final c = df[ing.toString()] ?? 0;
+        if (c >= 2 && c <= 12) {
+          inverted.putIfAbsent(ing.toString(), () => []).add(i);
+        }
+      }
+    }
+    final shared = <String, int>{};
+    for (final members in inverted.values) {
+      for (var x = 0; x < members.length; x++) {
+        for (var y = x + 1; y < members.length; y++) {
+          final a = members[x], b = members[y];
+          final key = a < b ? '$a-$b' : '$b-$a';
+          shared[key] = (shared[key] ?? 0) + 1;
+        }
+      }
+    }
+    shared.forEach((key, count) {
+      if (count >= 2) {
+        final parts = key.split('-');
+        addEdge(int.parse(parts[0]), int.parse(parts[1]), false);
+      }
+    });
+
+    // Seeded initial positions for a deterministic layout.
+    final rnd = Random(42);
+    final nodes = List.generate(n, (i) {
+      return _GNode(
+        path: (entries[i]['path']).toString(),
+        label: (entries[i]['path']).toString().split('/').last.replaceAll('-', ' '),
+        category: (entries[i]['category'] ?? '').toString(),
+        x: rnd.nextDouble() * _w,
+        y: rnd.nextDouble() * _h,
+      );
+    });
+
+    // Fruchterman–Reingold force-directed layout.
+    final area = _w * _h;
+    final k = sqrt(area / (n == 0 ? 1 : n));
+    double temp = _w / 8;
+    const iters = 300;
+    final dx = List.filled(n, 0.0);
+    final dy = List.filled(n, 0.0);
+    for (var it = 0; it < iters; it++) {
+      for (var i = 0; i < n; i++) {
+        dx[i] = 0;
+        dy[i] = 0;
+      }
+      for (var i = 0; i < n; i++) {
+        for (var j = i + 1; j < n; j++) {
+          var ddx = nodes[i].x - nodes[j].x;
+          var ddy = nodes[i].y - nodes[j].y;
+          var dist = sqrt(ddx * ddx + ddy * ddy);
+          if (dist < 0.01) {
+            ddx = rnd.nextDouble() - 0.5;
+            ddy = rnd.nextDouble() - 0.5;
+            dist = 0.01;
+          }
+          final f = (k * k) / dist;
+          final fx = ddx / dist * f, fy = ddy / dist * f;
+          dx[i] += fx;
+          dy[i] += fy;
+          dx[j] -= fx;
+          dy[j] -= fy;
+        }
+      }
+      for (final e in edges) {
+        var ddx = nodes[e.a].x - nodes[e.b].x;
+        var ddy = nodes[e.a].y - nodes[e.b].y;
+        var dist = sqrt(ddx * ddx + ddy * ddy);
+        if (dist < 0.01) dist = 0.01;
+        final f = (dist * dist) / k;
+        final fx = ddx / dist * f, fy = ddy / dist * f;
+        dx[e.a] -= fx;
+        dy[e.a] -= fy;
+        dx[e.b] += fx;
+        dy[e.b] += fy;
+      }
+      for (var i = 0; i < n; i++) {
+        final d = sqrt(dx[i] * dx[i] + dy[i] * dy[i]);
+        if (d > 0) {
+          nodes[i].x += dx[i] / d * min(d, temp);
+          nodes[i].y += dy[i] / d * min(d, temp);
+        }
+        nodes[i].x = nodes[i].x.clamp(20.0, _w - 20);
+        nodes[i].y = nodes[i].y.clamp(20.0, _h - 20);
+      }
+      temp = max(temp * 0.95, 1.0);
+    }
+
+    _nodes = nodes;
+    _edges = edges;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        InteractiveViewer(
+          constrained: false,
+          minScale: 0.1,
+          maxScale: 4,
+          boundaryMargin: const EdgeInsets.all(400),
+          child: SizedBox(
+            width: _w,
+            height: _h,
+            child: Stack(
+              children: [
+                CustomPaint(
+                  size: const Size(_w, _h),
+                  painter: _GraphEdgePainter(_nodes, _edges),
+                ),
+                for (final node in _nodes)
+                  Positioned(
+                    left: node.x - 6,
+                    top: node.y - 6,
+                    child: GestureDetector(
+                      onTap: () => widget.onOpen(node.path),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 12,
+                            height: 12,
+                            decoration: BoxDecoration(
+                              color: _categoryColor(node.category, _categories),
+                              shape: BoxShape.circle,
+                              border:
+                                  Border.all(color: Colors.white, width: 1),
+                            ),
+                          ),
+                          Text(node.label,
+                              style: const TextStyle(fontSize: 7)),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        Positioned(
+          left: 8,
+          top: 8,
+          child: Card(
+            color: Colors.white.withOpacity(0.85),
+            child: Padding(
+              padding: const EdgeInsets.all(6),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (final c in _categories)
+                    Row(mainAxisSize: MainAxisSize.min, children: [
+                      Container(
+                          width: 8,
+                          height: 8,
+                          color: _categoryColor(c, _categories)),
+                      const SizedBox(width: 4),
+                      Text(c.isEmpty ? 'other' : c,
+                          style: const TextStyle(fontSize: 9)),
+                    ]),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _GNode {
+  _GNode({
+    required this.path,
+    required this.label,
+    required this.category,
+    required this.x,
+    required this.y,
+  });
+
+  final String path;
+  final String label;
+  final String category;
+  double x;
+  double y;
+}
+
+class _GEdge {
+  _GEdge(this.a, this.b, this.strong);
+  final int a;
+  final int b;
+  final bool strong;
+}
+
+class _GraphEdgePainter extends CustomPainter {
+  _GraphEdgePainter(this.nodes, this.edges);
+
+  final List<_GNode> nodes;
+  final List<_GEdge> edges;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final weak = Paint()
+      ..color = Colors.grey.withOpacity(0.25)
+      ..strokeWidth = 0.6;
+    final strong = Paint()
+      ..color = Colors.blueGrey.withOpacity(0.6)
+      ..strokeWidth = 1.4;
+    for (final e in edges) {
+      final a = nodes[e.a], b = nodes[e.b];
+      canvas.drawLine(
+          Offset(a.x, a.y), Offset(b.x, b.y), e.strong ? strong : weak);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_GraphEdgePainter old) =>
+      old.nodes != nodes || old.edges != edges;
 }
