@@ -7,6 +7,7 @@ Backend API for dashboard
 
 
 import json
+import re
 import yaml
 from fastapi import FastAPI
 import uvicorn
@@ -127,6 +128,99 @@ def list_recipes() -> list[Path]:
         for path in HQ_RECIPES.rglob("*")
         if not path.is_dir()
     )
+
+
+# Recipe-name tokens too short or common to be meaningful as cross-references.
+_REF_SKIP = {"base", "steak", "bacon", "pasta", "saline", "prata", "sushi",
+             "basmati", "gravy", "mayo", "udon"}
+
+
+def _ingredient_items(data: dict) -> list[str]:
+    """All ingredient item names (top-level + components), lowercased."""
+    out: list[str] = []
+
+    def collect(lst) -> None:
+        for ing in lst or []:
+            if isinstance(ing, dict) and ing.get("item"):
+                out.append(str(ing["item"]).strip().lower())
+            elif isinstance(ing, str):
+                out.append(ing.strip().lower())
+
+    collect(data.get("ingredients"))
+    for comp in data.get("components") or []:
+        if isinstance(comp, dict):
+            collect(comp.get("ingredients"))
+    return out
+
+
+def _has_basis(data: dict) -> bool:
+    def scan(lst) -> bool:
+        return any(isinstance(i, dict) and i.get("basis") is True for i in lst or [])
+
+    if scan(data.get("ingredients")):
+        return True
+    return any(
+        isinstance(c, dict) and scan(c.get("ingredients"))
+        for c in data.get("components") or []
+    )
+
+
+@app.get("/recipe-index")
+def recipe_index() -> list[dict]:
+    """
+    Lightweight metadata for every recipe, in one call, for the dashboard's
+    grouped/searchable list and graph views.
+
+    Each entry has:
+        path: recipe path relative to the recipes dir (e.g. "meat/portugese-chicken")
+        category: the top-level directory (e.g. "meat"), or "" for root recipes
+        name: display name (the recipe's `name`, else the prettified filename)
+        hasBasis: whether the recipe has a scaling basis ingredient
+        ingredients: sorted unique ingredient item names (lowercased)
+        refs: paths of other recipes this one mentions by name (uses / serve-with)
+    """
+    files = sorted(p for p in HQ_RECIPES.rglob("*") if not p.is_dir())
+
+    raw: dict[str, str] = {}
+    parsed: dict[str, dict] = {}
+    for path in files:
+        rel = "/".join(path.relative_to(HQ_RECIPES).parts)
+        text = path.read_text(encoding="utf-8")
+        raw[rel] = text
+        try:
+            data = yaml.safe_load(text)
+        except yaml.YAMLError:
+            data = None
+        parsed[rel] = data if isinstance(data, dict) else {}
+
+    # Word-boundary search terms for cross-reference detection
+    terms: dict[str, str] = {}
+    for rel in parsed:
+        base = rel.split("/")[-1]
+        term = base.replace("-", " ")
+        if base not in _REF_SKIP and len(term) >= 5:
+            terms[rel] = term
+
+    index: list[dict] = []
+    for rel in (("/".join(p.relative_to(HQ_RECIPES).parts)) for p in files):
+        data = parsed[rel]
+        text = raw[rel].lower()
+        refs = [
+            other
+            for other, term in terms.items()
+            if other != rel and re.search(rf"\b{re.escape(term)}\b", text)
+        ]
+        index.append(
+            {
+                "path": rel,
+                "category": rel.split("/")[0] if "/" in rel else "",
+                "name": (data.get("name") or rel.split("/")[-1].replace("-", " ")),
+                "hasBasis": _has_basis(data),
+                "ingredients": sorted(set(_ingredient_items(data))),
+                "refs": refs,
+            }
+        )
+    return index
 
 
 @app.get("/relationship_time")
