@@ -7,7 +7,6 @@ Backend API for dashboard
 
 
 import json
-import re
 import yaml
 from fastapi import FastAPI
 import uvicorn
@@ -130,9 +129,17 @@ def list_recipes() -> list[Path]:
     )
 
 
-# Recipe-name tokens too short or common to be meaningful as cross-references.
-_REF_SKIP = {"base", "steak", "bacon", "pasta", "saline", "prata", "sushi",
-             "basmati", "gravy", "mayo", "udon"}
+def _resolve_use(token, parsed: dict, by_base: dict, exclude: str):
+    """Resolve a `uses:` entry (a recipe path or filename) to a recipe path.
+
+    Returns the path, or None if it can't be resolved unambiguously.
+    """
+    t = str(token).strip()
+    if t in parsed and t != exclude:  # already a full path
+        return t
+    base = t.split("/")[-1].replace(" ", "-")  # filename, or a spaced name
+    cands = [c for c in by_base.get(base, []) if c != exclude]
+    return cands[0] if len(cands) == 1 else None
 
 
 def _ingredient_items(data: dict) -> list[str]:
@@ -177,39 +184,35 @@ def recipe_index() -> list[dict]:
         name: display name (the recipe's `name`, else the prettified filename)
         hasBasis: whether the recipe has a scaling basis ingredient
         ingredients: sorted unique ingredient item names (lowercased)
-        refs: paths of other recipes this one mentions by name (uses / serve-with)
+        uses: resolved paths of recipes this one explicitly `uses:` (sub-recipes)
     """
     files = sorted(p for p in HQ_RECIPES.rglob("*") if not p.is_dir())
+    rels = ["/".join(p.relative_to(HQ_RECIPES).parts) for p in files]
 
-    raw: dict[str, str] = {}
     parsed: dict[str, dict] = {}
-    for path in files:
-        rel = "/".join(path.relative_to(HQ_RECIPES).parts)
-        text = path.read_text(encoding="utf-8")
-        raw[rel] = text
+    for path, rel in zip(files, rels):
         try:
-            data = yaml.safe_load(text)
+            data = yaml.safe_load(path.read_text(encoding="utf-8"))
         except yaml.YAMLError:
             data = None
         parsed[rel] = data if isinstance(data, dict) else {}
 
-    # Word-boundary search terms for cross-reference detection
-    terms: dict[str, str] = {}
-    for rel in parsed:
-        base = rel.split("/")[-1]
-        term = base.replace("-", " ")
-        if base not in _REF_SKIP and len(term) >= 5:
-            terms[rel] = term
+    # filename -> path(s), for resolving `uses:` entries written as bare names
+    by_base: dict[str, list[str]] = {}
+    for rel in rels:
+        by_base.setdefault(rel.split("/")[-1], []).append(rel)
 
     index: list[dict] = []
-    for rel in (("/".join(p.relative_to(HQ_RECIPES).parts)) for p in files):
+    for rel in rels:
         data = parsed[rel]
-        text = raw[rel].lower()
-        refs = [
-            other
-            for other, term in terms.items()
-            if other != rel and re.search(rf"\b{re.escape(term)}\b", text)
-        ]
+        uses_raw = data.get("uses") or []
+        if isinstance(uses_raw, str):
+            uses_raw = [uses_raw]
+        uses: list[str] = []
+        for token in uses_raw:
+            resolved = _resolve_use(token, parsed, by_base, rel)
+            if resolved and resolved not in uses:
+                uses.append(resolved)
         index.append(
             {
                 "path": rel,
@@ -217,7 +220,7 @@ def recipe_index() -> list[dict]:
                 "name": (data.get("name") or rel.split("/")[-1].replace("-", " ")),
                 "hasBasis": _has_basis(data),
                 "ingredients": sorted(set(_ingredient_items(data))),
-                "refs": refs,
+                "uses": uses,
             }
         )
     return index
