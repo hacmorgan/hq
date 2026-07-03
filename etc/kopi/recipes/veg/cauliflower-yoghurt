@@ -6,7 +6,8 @@ ingredients:
   - item: greek yoghurt
     mass: 150
   - item: lemon juice
-    mass: 30
+    mass: 5
+    note: previously 30 but seems too much
 steps:
   - steam cauliflower for 10 mins
   - add to blender with yoghurt and lemon juice
