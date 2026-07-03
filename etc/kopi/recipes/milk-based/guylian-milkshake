@@ -1,18 +1,21 @@
 ingredients:
   - item: guylian original shell
-    qty: 6
-    unit: ea
-    note: one small pack, 65g
+    qty: 65
+    unit: g
+    note: one small pack, 6 shells
+    basis: true
   - item: vanilla ice cream
     mass: 100
   - item: milk
     mass: 150
+  - item: milk (for slurry)
+    mass: 20
   - item: ice cubes
     qty: 10
     unit: ea
     note: like 50g
 steps:
-  - slurry chocolate with 20g milk over bain marie
+  - slurry chocolate with milk over bain marie
   - shake in cocktail shaker
 notes: |
   subs: guylian for 1:2 dark cadbury : whitakers
