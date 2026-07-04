@@ -1,0 +1,43 @@
+name: gyudon
+notes: |
+  Andy Cooks' gyudon — Japanese stewed beef & onion bowl
+  (https://youtu.be/M-PuGg7Ek-w).
+  Serve over rice (cook separately in a rice cooker). Poaching the beef gently keeps it tender.
+ingredients:
+  - item: beef
+    mass: 180
+    note: lean/economical cut, sliced thin against the grain; ~150-180g per person
+  - item: brown onion
+    qty: 1
+    unit: ea
+    note: sliced; lots — it cooks down
+  - item: water
+    mass: 100
+  - item: dashi powder
+    qty: 1
+    unit: packet
+  - mirin
+  - sake
+  - soy sauce
+  - item: garlic
+    qty: 1
+    unit: clove
+    note: finely grated
+  - item: ginger
+    note: small piece, finely grated
+  - item: egg
+    qty: 1
+    unit: ea
+    note: soft-boiled
+  - spring onions
+  - rice
+  - pink pickled ginger
+  - sesame seeds
+steps:
+  - soft-boil an egg for 6 mins, then shock in cold water and peel
+  - bring water to a simmer and add dashi powder, mirin, sake and soy sauce
+  - grate in garlic and ginger, keep at a very gentle simmer (no salt needed — dashi has it)
+  - add sliced onion and cook down until soft
+  - add the thin beef and poach gently until just cooked and a little fat renders; add a splash of water if dry
+  - taste and adjust salt; heat off, stir through most of the spring onions
+  - serve over rice, topped with the soft-boiled egg, pink pickled ginger, remaining spring onion greens and sesame seeds
