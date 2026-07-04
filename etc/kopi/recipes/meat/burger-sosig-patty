@@ -1,5 +1,8 @@
 yield: per 100g of mince
 ingredients:
+  - item: mince
+    mass: 100
+    basis: true
   - item: onion salt
     mass: 2
     optional: true
