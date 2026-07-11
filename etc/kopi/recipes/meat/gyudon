@@ -1,43 +1,60 @@
 name: gyudon
 notes: |
   Andy Cooks' gyudon — Japanese stewed beef & onion bowl
-  (https://youtu.be/M-PuGg7Ek-w).
-  Serve over rice (cook separately in a rice cooker). Poaching the beef gently keeps it tender.
+  (video: https://youtu.be/M-PuGg7Ek-w, recipe: https://www.andy-cooks.com/blogs/recipes/gyudon-japanese-beef-and-rice-bowl).
+  Serve over rice (cook separately in a rice cooker). Poaching the beef gently keeps it tender —
+  no dry heat to toughen the fibres.
+  Freeze the beef 20-30 mins before slicing for cleaner, thinner cuts; slice against the grain.
+  Beef & broth keep separately up to 2 days; reheat gently with a splash of water.
 ingredients:
   - item: beef
     mass: 180
-    note: lean/economical cut, sliced thin against the grain; ~150-180g per person
+    basis: true
+    note: ribeye is ideal; steak offcuts or supermarket stir-fry beef also work. sliced paper-thin against the grain; ~150-220g per person
   - item: brown onion
     qty: 1
     unit: ea
-    note: sliced; lots — it cooks down
+    note: finely sliced; lots — it cooks down
   - item: water
     mass: 100
   - item: dashi powder
+    qty: 0.5
+    unit: tsp
+    note: instant; Andy Cooks' site uses 1 tsp
+  - item: soy sauce
     qty: 1
-    unit: packet
-  - mirin
-  - sake
-  - soy sauce
+    unit: tbsp
+    note: light
+  - item: mirin
+    qty: 1
+    unit: tbsp
+  - item: sake
+    qty: 0.5
+    unit: tbsp
   - item: garlic
     qty: 1
     unit: clove
     note: finely grated
   - item: ginger
-    note: small piece, finely grated
+    note: ½ thumb-size piece, finely grated
   - item: egg
     qty: 1
     unit: ea
     note: soft-boiled
-  - spring onions
-  - rice
+  - item: spring onions
+    qty: 2
+    unit: ea
+    note: whites & greens separated
+  - item: rice
+    note: 1 cup steamed Japanese short-grain
   - pink pickled ginger
   - sesame seeds
 steps:
-  - soft-boil an egg for 6 mins, then shock in cold water and peel
-  - bring water to a simmer and add dashi powder, mirin, sake and soy sauce
+  - soft-boil an egg for exactly 6 mins, shock in ice water 1-2 mins, then peel and set aside
+  - bring water to a simmer and whisk in dashi powder, soy sauce, mirin and sake
   - grate in garlic and ginger, keep at a very gentle simmer (no salt needed — dashi has it)
-  - add sliced onion and cook down until soft
-  - add the thin beef and poach gently until just cooked and a little fat renders; add a splash of water if dry
-  - taste and adjust salt; heat off, stir through most of the spring onions
-  - serve over rice, topped with the soft-boiled egg, pink pickled ginger, remaining spring onion greens and sesame seeds
+  - add sliced onion and cook over low-medium heat for 4-5 mins until soft and translucent
+  - add the paper-thin beef in a single layer and poach 2-3 mins until just cooked; add a splash of water if dry
+  - slice the spring onion whites on an angle and fold through the beef; taste and adjust salt, then heat off
+  - serve over rice, ladling over plenty of broth
+  - top with the halved soft-boiled egg, pink pickled ginger, spring onion greens and sesame seeds
