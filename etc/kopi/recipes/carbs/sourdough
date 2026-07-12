@@ -110,7 +110,7 @@ components:
       - bake until desired crust colour / until internal temp reaches 92°C (20 more mins) with lid off
   - name: baking (B) — open bake (thinner soft conventional crust)
     steps:
-      - set oven to 200-210°C (no dutch oven, no steam — steam is what makes the thick crackly crust, so skip it here)
+      - set oven to 200-210°C conventional (no fan — fan dries & crisps the crust; drop ~20°C if you must use fan). no dutch oven, no steam — steam is what makes the thick crackly crust, so skip it here
       - score the loaf
       - bake on a tray (or in the loaf tin) until golden / internal 92°C, ~40-45 mins total
       - immediately out of the oven, while still hot, brush the top with milk or melted butter for a soft even golden crust — residual heat lets it soak in and steams the crust soft (don't brush before/during the bake; that firms the crust)
