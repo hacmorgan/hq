@@ -7,9 +7,9 @@ ingredients:
   - item: vanilla ice cream
     mass: 100
   - item: milk
-    mass: 150
+    mass: 130
   - item: milk (for slurry)
-    mass: 20
+    mass: 40
   - item: ice cubes
     qty: 10
     unit: ea
