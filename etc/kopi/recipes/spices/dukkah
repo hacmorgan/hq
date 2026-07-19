@@ -1,0 +1,77 @@
+name: dukkah
+yield: makes ~1 small jar
+notes: |
+  Tuned sweeter and less earthy than classic dukkah, for dipping bread in olive oil.
+  The earthiness in standard dukkah comes mostly from cumin, black pepper, and the
+  bitter skins on the nuts — so here cumin is minimal (or omitted), pepper is optional,
+  the hazelnuts are skinned, and the sweetness leans on fennel + coriander + warm
+  spices (cinnamon, cardamom) plus the natural sweetness of hazelnut.
+
+  Toast everything separately (they brown at different rates) and grind the whole spices
+  fresh — toasting-then-grinding is much sweeter and more aromatic than pre-ground.
+  Keep it coarse: for bread & oil you want crunch and cling, not powder. Don't over-blitz
+  the nuts or they turn to butter.
+
+  Nut swaps: pistachio (sweeter/floral, green) or almond (mild, cheap) work in place of
+  hazelnut, or a 2:1 hazelnut:pistachio blend. Toast them the same way regardless — every
+  nut gets toasted for sweetness and crunch; only hazelnuts also need skinning.
+
+  Store airtight; best within a few weeks before the nuts stale. Sprinkle also on labneh,
+  yoghurt, roast pumpkin, or (with the optional coconut sugar) ice cream.
+ingredients:
+  - item: hazelnuts
+    mass: 100
+    basis: true
+    note: toasted & skinned (skins are bitter/earthy). sub pistachios or almonds — still toasted, just no skinning needed
+  - item: white sesame seeds
+    mass: 50
+  - item: coriander seeds
+    mass: 15
+    qty: 2
+    unit: tbsp
+    note: citrusy-sweet, the main non-nut backbone
+  - item: fennel seeds
+    mass: 8
+    qty: 1
+    unit: tbsp
+    note: the biggest sweet/anise lever
+  - item: cumin seeds
+    mass: 3
+    qty: 1
+    unit: tsp
+    optional: true
+    note: the earthy one — keep small, or omit for the least earthy result
+  - item: ground cinnamon
+    mass: 1.5
+    qty: 0.5
+    unit: tsp
+  - item: ground cardamom
+    mass: 1
+    qty: 0.5
+    unit: tsp
+    note: or freshly ground seeds of ~3-4 pods
+  - item: flaky sea salt
+    mass: 5
+    note: a bit generous — it's eaten with oil & bread
+  - item: black pepper
+    optional: true
+    note: small pinch; omit to keep it sweet
+  - item: coconut sugar
+    mass: 10
+    qty: 1
+    unit: tbsp
+    optional: true
+    note: optional sweetness booster (or desiccated coconut ~2 tbsp); more dessert-leaning
+  - item: dried rose petals
+    optional: true
+    note: optional floral-sweet top note, ~1 tsp
+steps:
+  - toast hazelnuts in a 180°C oven (or dry pan) ~8-10 mins until fragrant and skins loosen
+  - tip hot hazelnuts into a tea towel and rub to remove as much skin as possible, then cool (for pistachios/almonds, toast the same way but skip the rub — they have no skins to remove)
+  - toast sesame seeds in a dry pan over medium until golden and popping, then tip out to cool
+  - 'toast the whole spices (coriander, fennel, cumin) in the dry pan ~1-2 mins until fragrant — don''t let them scorch, then cool'
+  - grind the toasted whole spices to a coarse powder (mortar & pestle or spice grinder)
+  - coarsely chop or briefly pulse the hazelnuts — keep them chunky, stop well before nut butter
+  - combine nuts, sesame, ground spices, cinnamon, cardamom, salt (and any optional coconut sugar / rose / pepper)
+  - pulse just once or twice to mix, keeping it coarse and craggy
+  - taste and adjust — more salt for bread & oil, more fennel/cinnamon to push sweeter
