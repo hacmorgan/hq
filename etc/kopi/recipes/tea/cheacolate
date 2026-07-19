@@ -1,25 +1,31 @@
 yield: serves 2
 notes: |
-  Ratio 1:1.67 (hot chocolate:tea)
+  For conventional nesquik:
+    Ratio 1 : 1.67 (hot chocolate : tea)
+    Tea: 1.3 : 5 : 100 (tea:sugar : water)
+    Hot chocolate: 1 : 4.2 (nesquik : milk)
 
-  Tea: 1.5:5:100 (tea:sugar:water)
-  Hot chocolate: 1:4.2 (nesquik:milk)
+  For real choc (steamed and poured over tea):
+    Ratio: 1 : 4 (hot chocolate : tea)
+    Tea: same as above
+    Hot chocolate: 1 : 3 (chocolate  : milk)
 components:
   - name: tea
     ingredients:
       - item: tea
-        qty: 3.75
+        qty: 5.2
         unit: g
-        note: 1.5 part ratio
+        note: 1.3g/100ml
       - item: sugar
-        qty: 12.5
+        qty: 20
         unit: g
         note: 5 part ratio
       - item: water
-        qty: 250
+        qty: 400
         unit: ml
         note: 100 part ratio
-  - name: hot chocolate
+        basis: true
+  - name: neqsquik hot chocolate
     ingredients:
       - item: nesquik
         qty: 35
@@ -29,3 +35,11 @@ components:
         qty: 150
         unit: ml
         note: 4.2 part ratio
+  - name: real hot chocolate
+    ingredients:
+      - item: chocolate
+        qty: 45
+        unit: g
+      - item: milk
+        qty: 100
+        unit: ml

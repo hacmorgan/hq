@@ -2,9 +2,12 @@ ingredients:
   - item: water
     mass: 300
     note: 96°C
+    basis: true
   - item: cadbury baking cocoa powder
     mass: 6
   - item: sugar
     mass: 15
   - item: milk
     mass: 40
+notes: |
+  450g water for two ppl
