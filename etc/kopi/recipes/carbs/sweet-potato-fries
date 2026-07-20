@@ -1,0 +1,34 @@
+name: sweet potato fries
+source: https://www.youtube.com/shorts/7URIUFUgtxw
+notes: |
+  Fallow's method.
+  Sweet potatoes have more sugar & water and less starch than regular potatoes,
+  so the surface caramelises and burns before the fry crisps. The fix is a thick,
+  layered coating plus a low fry temperature so the crust sets before the sugars catch.
+components:
+  - name: coating
+    ingredients:
+      - item: plain flour
+        note: body
+      - item: corn flour
+        note: light crispiness
+      - item: rice flour
+        note: locks in moisture, keeps fries crispy
+      - item: bicarbonate of soda
+        note: lift
+      - item: baking powder
+        note: lift
+    steps:
+      - mix the flours, bicarb and baking powder well
+  - name: liquid
+    ingredients:
+      - water
+      - item: white wine vinegar
+        note: lowers surface pH to slow caramelisation as it cooks
+steps:
+  - peel and cut sweet potatoes into 1cm batons
+  - dust the sweet potatoes with a third of the flour mix
+  - pour over half the liquid
+  - repeat until all the flour mix and liquid is worked through (flour should be last step, builds a thick, structured coating the potato can't form on its own)
+  - heat oil to 160°C (lower than you'd expect) and fry for 4 mins so the coating sets before the sugars catch
+  - onto a wire rack and season immediately

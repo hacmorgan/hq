@@ -1,4 +1,8 @@
-- 70g coconut cream
-- 10g icing mixture
-- stir with spoon
-- zhuzh with foamer
+ingredients:
+  - item: coconut cream
+    mass: 70
+  - item: icing mixture
+    mass: 10
+steps:
+  - stir with spoon
+  - zhuzh with foamer

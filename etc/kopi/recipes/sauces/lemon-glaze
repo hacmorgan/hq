@@ -1,9 +1,23 @@
-from 2 decent size lemons (375g)
-- zest one lemon (1.2g) and juice both (113g)
-- add 50g sugar
-- add 1g salt
-- add 40g cold water
-- bring to boil
-- simmer >= 30 mins
-- strain
-
+yield: from 2 decent size lemons (375g)
+ingredients:
+  - item: lemon
+    qty: 2
+    unit: ea
+    basis: true
+    mass: 375
+  - item: lemon zest
+    mass: 1.2
+    note: from one lemon
+  - item: lemon juice
+    mass: 113
+    note: from both lemons
+  - item: sugar
+    mass: 50
+  - item: salt
+    mass: 1
+  - item: cold water
+    mass: 40
+steps:
+  - bring to boil
+  - simmer for at least 30 mins
+  - strain

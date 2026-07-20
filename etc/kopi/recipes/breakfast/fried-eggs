@@ -1,0 +1,26 @@
+name: fried eggs
+notes: |
+  Temps are Breville Control Freak pan-surface settings.
+  Best fried in leftover bacon fat (see meat/bacon); otherwise butter or a neutral oil.
+  Seasoned (cast iron / carbon steel) or non-stick are the most forgiving.
+  On stainless: bring the pan fully up to temp first, add plenty of fat, and don't move the egg
+  until the white has set — otherwise it grabs the surface and tears.
+  Egg white sets ~63°C and the yolk thickens ~65-70°C, so keep it gentle to hold a runny yolk.
+ingredients:
+  - item: eggs
+  - item: bacon fat
+    note: or butter / neutral oil
+  - item: salt & pepper
+components:
+  - name: soft / sunny side up
+    steps:
+      - set pan to 130-140°C
+      - add fat, then crack in the eggs
+      - cook gently until the whites set but the yolk stays runny — starting estimate ~3-4 mins uncovered (refine to taste)
+      - to set the tops, baste with the hot fat or cover with a lid — whites set faster, so check ~2.5-3 mins
+      - season and serve
+  - name: crispy edges
+    steps:
+      - set pan to 180-190°C with a little extra fat
+      - crack in the eggs — the edges will bubble up and crisp
+      - baste the yolks or cover briefly to set the tops; season

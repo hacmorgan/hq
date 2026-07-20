@@ -1,5 +1,14 @@
-- hold 2 roughly equal size carrots from a 1.5kg bag aside for cooking
-- juice remianing carrots and strain
-- cook carrots in juice (nearly covered) for 15-20 mins, until good texture
-- cook down remaining juice/stock
-- coat carrots in reduced stock
+yield: per 2 carrots from a 1.5kg bag
+ingredients:
+  - item: carrots (equal size)
+    qty: 2
+    unit: ea
+    basis: true
+  - item: carrot juice
+    note: from remaining carrots in bag
+steps:
+  - hold 2 roughly equal size carrots from a 1.5kg bag aside for cooking
+  - juice remaining carrots and strain
+  - cook carrots in juice (nearly covered) for 15-20 mins, until good texture
+  - cook down remaining juice/stock
+  - coat carrots in reduced stock

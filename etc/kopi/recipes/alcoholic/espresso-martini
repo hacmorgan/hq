@@ -1,12 +1,29 @@
-[ basic ]
-- 60g vodka
-- 20g kahlua
-- 10g maple syrup
-- 40g espresso
-
-[ nutella ]
-- basic
-  - minus maple syrup
-  - extra 10g kahlua
-- slurry 20g nutella with 10g espresso
-- 30g hazelnut liquer
+name: espresso martini
+components:
+  - name: basic
+    ingredients:
+      - item: vodka
+        mass: 60
+      - item: kahlua
+        mass: 20
+      - item: maple syrup
+        mass: 10
+      - item: espresso
+        mass: 40
+  - name: nutella
+    ingredients:
+      - item: vodka
+        mass: 60
+      - item: kahlua
+        mass: 30
+        note: basic 20g plus extra 10g
+      - item: espresso
+        mass: 40
+      - item: nutella
+        mass: 20
+      - item: hazelnut liquer
+        mass: 30
+    steps:
+      - start from basic, minus maple syrup, extra 10g kahlua
+      - slurry 20g nutella with 10g espresso
+      - add 30g hazelnut liquer

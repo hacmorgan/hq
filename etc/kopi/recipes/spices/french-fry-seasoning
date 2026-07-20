@@ -1,4 +1,8 @@
-[ for 4 regular sized poatoes ]
-- 0.5g tajin seasoning
-- 0.2g chicken salt
-- 2g pink salt
+yield: for 4 regular sized potatoes
+ingredients:
+  - item: tajin seasoning
+    mass: 0.5
+  - item: chicken salt
+    mass: 0.2
+  - item: pink salt
+    mass: 2

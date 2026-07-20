@@ -1,5 +1,13 @@
-- 200g cauli, in small pieces
-- steam 10 mins
-- add to blender
-- 150g greek yog
-- 30g lemon juice
+ingredients:
+  - item: cauliflower
+    mass: 200
+    basis: true
+    note: in small pieces
+  - item: greek yoghurt
+    mass: 150
+  - item: lemon juice
+    mass: 5
+    note: previously 30 but seems too much
+steps:
+  - steam cauliflower for 10 mins
+  - add to blender with yoghurt and lemon juice

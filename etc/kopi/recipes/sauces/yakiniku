@@ -1,16 +1,36 @@
-For teppanyaki contexts - cooked in the pan
-
-- 80g soy sauce
-- 20g mirin
-- 10g sake
-- 2.5g toasted sesame oil
-- 1 large garlic clove, finely chopped (about 3.5g)
-- 1 teaspoon crushed garlic from jar (about 5g)
-
-[ seb style ]
-- 60g soy
-- 20g mirin
-- 5g shiso
-- 5g toasted sesame seeds
-- half a brown onion, shaved
-blitz
+notes: |
+  For teppanyaki contexts - cooked in the pan
+ingredients:
+  - item: soy sauce
+    mass: 80
+  - item: mirin
+    mass: 20
+  - item: sake
+    mass: 10
+  - item: toasted sesame oil
+    mass: 2.5
+  - item: garlic clove (fresh)
+    qty: 1
+    unit: ea
+    note: 1 large, finely chopped (about 3.5g)
+  - item: crushed garlic from jar
+    mass: 5
+    qty: 1
+    unit: tsp
+components:
+  - name: seb style
+    ingredients:
+      - item: soy
+        mass: 60
+      - item: mirin
+        mass: 20
+      - item: shiso
+        mass: 5
+      - item: toasted sesame seeds
+        mass: 5
+      - item: brown onion
+        qty: 0.5
+        unit: ea
+        note: shaved
+    steps:
+      - blitz

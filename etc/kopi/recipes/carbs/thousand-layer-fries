@@ -1,0 +1,60 @@
+name: thousand layer fries
+source: https://youtu.be/bpg1DwnbSwI
+notes: |
+  Fallow's take on Tom Booton's (The Dorchester) pommes Pont-Neuf / mille-feuille potato.
+  Two things people get wrong: not cooking the potato long enough (leftover moisture expands
+  when fried and the layers fall apart) and not pressing long enough after cooking.
+  Serves ~6. Scale up or down freely. Don't freeze — remaining moisture stops it holding together.
+components:
+  - name: terrine
+    ingredients:
+      - item: agria potatoes
+        note: starchy; peel but DO NOT wash — keep the starch, it binds the layers
+      - item: beef fat
+        note: 50/50 with clarified butter; either is optional
+      - item: clarified butter
+        note: 50/50 with beef fat
+      - item: corn flour
+        note: light dusting between layers for extra bind; too much goes gummy
+      - salt
+    steps:
+      - peel potatoes (do not wash) and slice lengthwise on a mandolin, very thin (almost see-through)
+      - line a mould with greaseproof paper
+      - layer the slices all the same direction, for structural integrity
+      - lightly salt and lightly dust corn flour layer by layer through a sieve
+      - prick all over
+      - warm the fat to ~110°C and pour over so it soaks into the middle, not just the sides
+      - cover the top with parchment
+      - bake at 140°C for ~3 hours (too hot caramelises the top before the inside cooks; too cold takes 5-6 hrs)
+      - check done — a knife through the paper meets no resistance
+      - press with a weight (couple of pints of milk / big bottle of oil) and chill in the fridge 5-6 hours
+      - portion into chunky chip shapes
+      - fry in neutral oil at 180°C for ~5 mins, moving so they don't stick to the bottom
+      - season with fine salt straight out of the fryer (mix is already salted, go light)
+  - name: cheese & bacon sauce
+    ingredients:
+      - item: whole egg
+        mass: 75
+        note: ~2 eggs
+      - item: egg yolk
+        mass: 120
+        note: ~6 yolks
+      - water
+      - cream
+      - item: paprika
+        note: mostly for colour
+      - item: red Leicester
+        note: finely grated (or red cheddar)
+      - item: American cheese
+      - salt
+      - item: Dijon mustard
+        note: a little, for acidity
+      - item: bacon
+        note: cut into lardons
+    steps:
+      - whisk eggs, yolks, water, cream and paprika together
+      - cook over a bain-marie (water lightly simmering), whisking constantly, up to 75°C until custard-like
+      - grate in red Leicester finely, then add American cheese and turn the heat off; keep warm to melt in
+      - stir (switch off the whisk — don't incorporate air) until glossy
+      - season with salt and stir in Dijon
+      - fry bacon lardons and scatter over the top to serve

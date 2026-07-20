@@ -1,17 +1,38 @@
-for 400g pork belly (/spare rib strips)
-- blanch pork belly cubes for a few mins & drain
-- add veg oil and 20g sugar to a 160°C pan to melt and start caramelising (few mins)
-- add chopped onion and cook for a few mins until translucent
-- add pork
-- add 1/4 cup dark soy
-- 1/4 cup light soy
-- 1/4 cup shaoxing
-- top up with water
-- cover with lid and simmer for 1.5 hours, stirring every 15 mins to prevent burning
-- remove lid and cook down to thicken sauce
-
-jap variant:
-- replace shaoxing with sake
-- add 1/8 cup mirin
-- drop soys to 1/8 cup
-- a teaspoon/tbsp of miso?
+yield: for 400g pork belly
+ingredients:
+  - item: pork belly
+    mass: 400
+    basis: true
+    note: or spare rib strips, cubed
+  - item: veg oil
+    note: amount tbd during caramelising
+  - item: sugar
+    mass: 20
+  - item: onion
+    note: chopped
+  - item: dark soy
+    qty: 0.25
+    unit: cup
+  - item: light soy
+    qty: 0.25
+    unit: cup
+  - item: shaoxing
+    qty: 0.25
+    unit: cup
+  - item: water
+    note: top up as needed
+steps:
+  - blanch pork belly cubes for a few mins and drain
+  - add veg oil and sugar to a 160°C pan to melt and start caramelising (few mins)
+  - add chopped onion and cook for a few mins until translucent
+  - add pork
+  - add dark soy, light soy, and shaoxing
+  - top up with water
+  - cover with lid and simmer for 1.5 hours, stirring every 15 mins to prevent burning
+  - remove lid and cook down to thicken sauce
+notes: |
+  Jap variant:
+  - Replace shaoxing with sake
+  - Add 1/8 cup mirin
+  - Drop soys to 1/8 cup each
+  - Add a teaspoon/tbsp of miso

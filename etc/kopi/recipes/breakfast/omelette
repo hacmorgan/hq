@@ -1,29 +1,41 @@
-per omelette:
-- 2-3 eggs
-- cooking butter
-- spring onion, chopped
-- tasty cheese, grated
-- feta
-- tomato, chopped
-- brown onion, shaved
-- salt & pepper
-- mushroom (optional)
-
-# Cooking filling
-- set pan to 130°C for onions
-- is using mushroom, add right at the end
-
-# Cooking mushroom
-- high temp pan (190°C), a little oil
-- don't stir first few mins for caramelised edges
-- season with salt and optionally butter at the end
-
-# Instructions
-- Whisk eggs with salt (1% of egg by weight), then sieve
-- Get pan to a stable 140°C
-- butter into pan
-- take pan off heat
-- pour egg mix onto butter
-- add cheese & pepper, cook slightly
-- sprinkle remaining ingredients
-- fold over
+yield: per omelette
+ingredients:
+  - item: eggs
+    mass: 100
+    qty: 2
+    unit: ea
+    basis: true
+    note: 2-3 eggs, 100g after straining, 120g ish before
+  - item: cooking butter
+  - item: spring onion
+    note: chopped
+  - item: tasty cheese
+    note: grated
+  - item: feta
+  - item: tomato
+    note: chopped
+  - item: brown onion
+    note: shaved
+  - item: salt & pepper
+  - item: mushroom
+    optional: true
+components:
+  - name: cooking filling
+    steps:
+      - set pan to 130°C for onions
+      - is using mushroom, add right at the end
+  - name: cooking mushroom
+    steps:
+      - high temp pan (190°C), a little oil
+      - don't stir first few mins for caramelised edges
+      - season with salt and optionally butter at the end
+  - name: instructions
+    steps:
+      - Whisk eggs with salt (1% of egg by weight), then sieve
+      - Get pan to a stable 140°C
+      - butter into pan
+      - take pan off heat
+      - pour egg mix onto butter
+      - add cheese & pepper, cook slightly
+      - sprinkle remaining ingredients
+      - fold over

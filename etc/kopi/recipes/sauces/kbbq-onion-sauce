@@ -1,6 +1,13 @@
-- 50g soy sauce
-- 25g mirin
-- 10g rice wine vinegar
-- 10g lemon juice
-- 5g caster sugar
-- shaved brown onion (to taste)
+ingredients:
+  - item: soy sauce
+    mass: 50
+  - item: mirin
+    mass: 25
+  - item: rice wine vinegar
+    mass: 10
+  - item: lemon juice
+    mass: 10
+  - item: caster sugar
+    mass: 5
+  - item: brown onion
+    note: shaved, to taste
