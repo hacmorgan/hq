@@ -643,7 +643,7 @@ function setup_dashboard
 
 function setup_local_llm_client
 {
-    say "Setting up local LLM client on leroy..."
+    say "Setting up local LLM client..."
     if (( options_dry_run )); then
         say "Would run: ~/hq/etc/setup-local-llm-client.sh"
     else
