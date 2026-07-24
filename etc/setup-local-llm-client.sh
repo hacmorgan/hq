@@ -16,18 +16,33 @@ if ! command -v pi &> /dev/null; then
     npm install -g --ignore-scripts @earendil-works/pi-coding-agent
 fi
 
+# Install the litellm proxy if not already available. This is a hard
+# dependency: Pi's local-qwen provider points at the litellm proxy on
+# localhost:4000 (not directly at Ollama), so without litellm installed Pi
+# has nothing to connect to ("pi can't connect"). Need the [proxy] extra for
+# the `litellm --config ... --port` server. Installs into whatever Python
+# environment `pip` currently resolves to (e.g. an active venv).
+if ! command -v litellm &> /dev/null && ! python3 -c "import litellm" &> /dev/null; then
+    echo "Installing litellm proxy..."
+    pip install 'litellm[proxy]'
+fi
+
 # Create pi agent directory structure if needed
 mkdir -p ~/.pi/agent/extensions
 mkdir -p ~/.pi/agent/skills
 mkdir -p ~/tmp
 
 # Create litellm proxy config, fronting Ollama via the ollama_chat provider.
-# The tool-call-leak callback is commented out by default: both qwen2.5's
-# JSON leak and qwen3's Hermes-style leak were only ever reproduced under
-# Claude Code's huge system prompt, never under Pi's much leaner one - and
-# the callback's buffering silently kills token-by-token streaming. Re-enable
-# by uncommenting if a leaked tool call (literal <function=...> or JSON text)
-# ever shows up in Pi.
+# The tool-call-leak callback is ENABLED by default: the qwen3-coder
+# Hermes-style leak (a bare <function=X><parameter=Y> text blob instead of a
+# structured tool call) DOES reproduce under Pi - confirmed on pi 0.82.0,
+# where a plain "run this bash command" task leaked the call as literal text
+# and no tool actually ran, making Pi unusable as a coding agent. Earlier
+# notes claimed the leak only happened under Claude Code's huge system
+# prompt; that no longer holds. Trade-off: the callback buffers each response
+# until done:true to detect the leak, so responses arrive whole rather than
+# token-by-token. If you ever want streaming back and are willing to risk the
+# leak, comment the two litellm_settings lines below out again.
 cat > ~/tmp/litellm-config.yaml << 'EOF'
 model_list:
   - model_name: qwen2.5-coder:32b
@@ -42,17 +57,17 @@ model_list:
       supports_function_calling: true
 
 # custom_callbacks.py handles qwen2.5-coder's JSON tool-call leak and
-# qwen3-coder's Hermes-style <function=X><parameter=Y> leak - but both were
-# only ever reproduced under Claude Code's huge system prompt. Disabled here
-# (2026-07-24) after confirming, across several real Pi + qwen3-coder
-# tool-calling tests, that the leak never reproduces under Pi's much leaner
-# prompt - tool calls always arrived as clean native tool_calls. The callback
-# buffers every response until done:true to make leak-detection possible,
-# which is what was silently killing token-by-token streaming in Pi. If a
-# leaked tool call (literal <function=...> or JSON text) ever shows up again,
-# re-enable by uncommenting below - no code changes needed.
-# litellm_settings:
-#   callbacks: custom_callbacks.proxy_handler_instance
+# qwen3-coder's Hermes-style <function=X><parameter=Y> leak. Enabled here
+# (2026-07-25) after the qwen3-coder leak was observed reproducing under Pi
+# 0.82.0 itself - a simple "run this bash command" task leaked the call as
+# literal <function=bash>...</function> text and no tool ran. (An earlier
+# 2026-07-24 note had disabled this, believing the leak only happened under
+# Claude Code's much larger system prompt - that turned out not to hold.) The
+# callback buffers every response until done:true to make leak-detection
+# possible, which trades away token-by-token streaming in Pi. To get
+# streaming back at the risk of the leak, comment the two lines below out.
+litellm_settings:
+  callbacks: custom_callbacks.proxy_handler_instance
 EOF
 
 # Create the tool-call-leak workaround itself (kept even while disabled above,
@@ -566,10 +581,75 @@ if [[ -d ~/.claude/skills/gitbutler ]]; then
     ln -sfn "$(readlink -f ~/.claude/skills/gitbutler)" ~/.agents/skills/gitbutler
 fi
 
+# Install a systemd --user unit so the litellm proxy comes back automatically
+# on boot / after a crash, instead of being a manual `litellm ... &` that dies
+# with the terminal. Only attempt this where a systemd user bus actually
+# exists (skips containers/WSL-without-systemd/CI); those fall back to the
+# manual command printed at the end.
+PROXY_MANAGED_BY_SYSTEMD=0
+if command -v systemctl &> /dev/null && systemctl --user show-environment &> /dev/null; then
+    echo "Installing systemd --user unit for the litellm proxy..."
+
+    # ExecStart needs an absolute litellm path: a --user unit does not inherit
+    # the shell PATH, so a bare `litellm` (which lives in a venv here) would
+    # not resolve. The console script's own shebang points back at the right
+    # interpreter, so the absolute path is self-contained. Prefer `command -v`
+    # (resolves the active-venv copy during setup); fall back to the bin dir of
+    # whichever python can import litellm.
+    LITELLM_BIN="$(command -v litellm 2>/dev/null || true)"
+    if [[ -z "$LITELLM_BIN" ]]; then
+        LITELLM_BIN="$(dirname "$(python3 -c 'import sys; print(sys.executable)')")/litellm"
+    fi
+
+    mkdir -p ~/.config/systemd/user
+    # %h expands to $HOME inside the unit. WorkingDirectory MUST be ~/tmp so
+    # litellm can import custom_callbacks.py (the tool-call-leak workaround) as
+    # a local module - it's loaded by module name relative to the CWD.
+    cat > ~/.config/systemd/user/litellm-proxy.service << EOF
+[Unit]
+Description=litellm proxy fronting Ollama for the local Pi coding agent (localhost:4000)
+Documentation=file://%h/notes/personal/howtos.org
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/tmp
+ExecStart=${LITELLM_BIN} --config %h/tmp/litellm-config.yaml --port 4000
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target
+EOF
+
+    # Keep the proxy running when no session is logged in (headless hosts,
+    # post-reboot before first login). Non-fatal if the platform disallows it.
+    loginctl enable-linger "$USER" 2>/dev/null || \
+        echo "  (could not enable linger - proxy will only run while you're logged in)"
+
+    systemctl --user daemon-reload
+    systemctl --user enable litellm-proxy.service > /dev/null 2>&1 || true
+    # restart (not start) so re-running setup picks up any config/unit changes
+    # and this is idempotent whether or not the service was already running.
+    systemctl --user restart litellm-proxy.service
+    PROXY_MANAGED_BY_SYSTEMD=1
+else
+    echo "No systemd --user bus detected - skipping proxy service install."
+    echo "  Start the proxy manually instead (see Next steps below)."
+fi
+
 echo "Local LLM client setup complete!"
 echo
 echo "Next steps:"
-echo "  1. Start the proxy:  litellm --config ~/tmp/litellm-config.yaml --port 4000 &"
+if [[ "$PROXY_MANAGED_BY_SYSTEMD" == "1" ]]; then
+    echo "  1. Proxy is running under systemd (auto-starts on boot):"
+    echo "       systemctl --user status litellm-proxy"
+    echo "       journalctl --user -u litellm-proxy -f      # logs"
+else
+    echo "  1. Start the proxy:  (cd ~/tmp && litellm --config ~/tmp/litellm-config.yaml --port 4000 &)"
+    echo "     (run from ~/tmp so custom_callbacks.py is importable)"
+fi
 echo "  2. Use pi:           pi --provider local-qwen --model qwen3-coder:30b --thinking off"
 echo
 echo "GPU host setup (Ollama env vars, SSH access) is separate - see ~/notes/personal/howtos.org."
