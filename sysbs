@@ -583,6 +583,17 @@ function setup_dashboard
 }
 
 
+function setup_local_llm_client
+{
+    say "Setting up local LLM client on leroy..."
+    if (( options_dry_run )); then
+        say "Would run: ~/hq/etc/setup-local-llm-client.sh"
+    else
+        ~/hq/etc/setup-local-llm-client.sh
+    fi
+}
+
+
 function configure_cctv
 {
     # Set up CCTV system on this host with Shinobi and MariaDB
@@ -650,7 +661,6 @@ function options
 {
     cat <<EOF
 --autostart-abyss-wireguard; Use systemd to effectively run 'sudo wg-quick up abyss' on boot
---enable-ssh-agent; Enable and start the systemd user ssh-agent service
 --configure-cctv; Configure this host as a CCTV server
 --configure-emacs; Clone emacs repositiory to ~/.emacs.d
 --configure-git; Tell git who you are (so you can commit)
@@ -676,6 +686,7 @@ function options
 --move-existing; If <file> exists, move it to <file>.old
 --no-sudo; Don't do anything that requires sudo
 --setup-dashboard; Build the Flutter UI, symlink dashboard service files, reload systemd, and enable/start the services
+--setup-local-llm-client; Setup local LLM client (pi agent harness with litellm proxy)
 --standard,-s; Do the standard bootstrap operations: ${STANDARD_OPERATIONS[@]}
 --symlink-dots; Symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
 --symlink-systemd-services; Symlink service files in etc/systemd to /etc/systemd/system/
@@ -745,6 +756,7 @@ fi
 (( options_install_mattpocock_skills ))   && install_mattpocock_skills
 (( options_install_gitbutler ))           && install_gitbutler
 (( options_setup_dashboard ))             && setup_dashboard
+(( options_setup_local_llm_client ))      && setup_local_llm_client
 
 
 exit 0
