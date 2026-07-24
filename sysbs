@@ -641,6 +641,17 @@ function setup_dashboard
 }
 
 
+function setup_local_llm_client
+{
+    say "Setting up local LLM client on leroy..."
+    if (( options_dry_run )); then
+        say "Would run: ~/hq/etc/setup-local-llm-client.sh"
+    else
+        ~/hq/etc/setup-local-llm-client.sh
+    fi
+}
+
+
 function configure_cctv
 {
     # Set up CCTV system on this host with Shinobi and MariaDB
@@ -734,6 +745,7 @@ function options
 --no-sudo; Don't do anything that requires sudo
 --remove-orphans; Remove orphaned packages (pacman -Qdt), prompting before removal
 --setup-dashboard; Build the Flutter UI, symlink dashboard service files, reload systemd, and enable/start the services
+--setup-local-llm-client; Setup local LLM client (pi agent harness with litellm proxy)
 --standard,-s; Do the standard bootstrap operations: ${STANDARD_OPERATIONS[@]}
 --symlink-dots; Symlink configs in 'dots' to ~/.config/, unless they are present in 'etc/homedots'
 --symlink-systemd-services; Symlink service files in etc/systemd to /etc/systemd/system/
@@ -806,6 +818,7 @@ fi
 (( options_install_mattpocock_skills ))   && install_mattpocock_skills
 (( options_install_gitbutler ))           && install_gitbutler
 (( options_setup_dashboard ))             && setup_dashboard
+(( options_setup_local_llm_client ))      && setup_local_llm_client
 
 
 exit 0
