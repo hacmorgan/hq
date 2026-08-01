@@ -1,0 +1,102 @@
+source: https://docs.google.com/document/d/1hyiZy6HdgWt9OfGpABK23pvsf4NxZo8w6GhAICOlFzE/edit
+uses:
+  - sourdough
+  - poached-eggs
+  - scrambled-eggs
+  - fried-eggs
+ingredients:
+  - item: fresh sourdough slices
+  - item: bacon
+    note: chopped
+  - item: eggs
+    note: whisked, fried, or poached
+  - item: feta cheese
+    note: crumbled
+  - item: tomatoes
+    note: diced, or cherry tomatoes halved
+  - item: spring onion
+    note: sliced
+  - item: silverbeet
+    note: stems removed, leaves finely shredded
+  - item: fresh parsley
+    note: finely chopped
+  - item: fresh basil
+    optional: true
+    note: torn
+  - item: olive oil
+    optional: true
+  - item: salt
+    optional: true
+  - item: pepper
+    optional: true
+components:
+  - name: prep the silverbeet
+    steps:
+      - cut the tough white/coloured stems away from the leaves
+      - wash the green leaves thoroughly to remove any grit
+      - shred the leaves finely so they cook down quickly
+      - 'stems: slice finely like celery and sauté 3 mins before the leaves go in — don''t waste them'
+  - name: crisp the bacon
+    steps:
+      - chopped bacon into a cold frying pan
+      - heat to medium-high
+      - cook until crispy and it has released its fat
+      - remove with a slotted spoon, leaving the bacon fat in the pan
+  - name: sauté the silverbeet & tomatoes
+    steps:
+      - silverbeet and tomatoes into the hot bacon fat
+      - sauté 3-4 mins until the silverbeet is completely wilted and the tomatoes soften
+      - remove and set aside with the bacon
+  - name: toast the sourdough
+    steps:
+      - wipe the pan lightly if needed, or use the remaining residue for flavour
+      - drizzle the sourdough slices with olive oil
+      - toast in the pan 2 mins each side until golden and crunchy
+      - remove onto the serving plates
+  - name: cook the eggs
+    steps:
+      - lower the heat to medium
+      - 'option A (scramble): whisked eggs straight into the pan, stir gently until softly set'
+      - 'option B (fried): crack straight into the pan, cook to your liking'
+      - 'option C (poached): done separately and ahead — see poached-eggs'
+  - name: assemble and garnish
+    steps:
+      - layer the wilted silverbeet and tomatoes onto the toasted sourdough
+      - top with the eggs and crispy bacon
+      - generously scatter the crumbled feta and sliced spring onion
+      - finish with a heavy handful of fresh parsley
+      - sauce or drizzle last, over the parsley
+  - name: sauce & drizzle options
+    ingredients:
+      - item: balsamic glaze
+        note: sweet, tangy contrast that cuts through the salty feta and rich bacon
+      - item: chilli jam
+        note: sweet heat, pairs with both the eggs and the silverbeet
+      - item: garlic aioli
+        note: rich and creamy, if you want to lean into comfort food
+      - item: lemon olive oil
+        note: fresh lemon juice whisked with extra virgin olive oil
+    steps:
+      - 'lemon olive oil: whisk lemon juice into extra virgin olive oil and drizzle over the parsley'
+notes: |
+  Prep 10 mins, cook 15 mins, one large frying pan. Everything comes out of the same pan in
+  sequence and gets reassembled at the end — bacon fat is the through-line, so don't wash
+  the pan between stages.
+
+  The basil twist: if you use basil instead of parsley, tear the leaves rather than chopping
+  them, and add them at the very last second — basil bruises easily and loses flavour if it
+  gets too hot.
+
+  Poached is the upgrade over the doc's scramble/fried options. Do the 63°C bath the night
+  before or while the bacon renders; the 2 min finishing poach slots in exactly where the
+  doc has you cooking the eggs, and the yolk breaking over the sourdough is doing the same
+  job a sauce would.
+
+  Drink pairings (all under alcoholic/):
+    bloody-mary        — mirrors the tomato and savoury notes of the dish
+    grapefruit-paloma  — tequila, lime, grapefruit soda; sharp citrus cleanses the palate
+                         after the rich bacon and cheese
+    tom-collins        — gin, lemon juice, sugar syrup, soda; light, bubbly, hyper-refreshing
+    aperol-spritz      — bright bitter orange cuts through the creamy feta
+
+  Works as dinner as readily as breakfast.
