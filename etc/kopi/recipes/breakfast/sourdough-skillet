@@ -4,6 +4,7 @@ uses:
   - poached-eggs
   - scrambled-eggs
   - fried-eggs
+  - garlic-aioli
 ingredients:
   - item: fresh sourdough slices
   - item: bacon
