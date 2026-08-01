@@ -1,0 +1,63 @@
+yield: fills a 500ml jar
+components:
+  - name: brine
+    ingredients:
+      - item: apple cider vinegar
+        mass: 150
+        note: sub white wine vinegar; rice vinegar for a softer, sweeter pickle
+      - item: water
+        mass: 150
+      - item: sugar
+        mass: 30
+      - item: salt
+        mass: 10
+      - item: black peppercorns
+        qty: 1
+        unit: tsp
+        optional: true
+      - item: bay leaf
+        qty: 1
+        unit: ea
+        optional: true
+    steps:
+      - heat everything until sugar and salt just dissolve, don't boil
+  - name: red onion
+    ingredients:
+      - item: red onion
+        mass: 200
+        qty: 1
+        unit: ea
+        basis: true
+        note: large, sliced 2mm on a mandoline
+    steps:
+      - slice thin, pack into the jar
+      - pour over hot brine to cover
+      - 10 mins to edible, 30 mins to properly pink, best after 2 hrs
+      - keeps 3 weeks in the fridge
+  - name: cucumber
+    ingredients:
+      - item: lebanese cucumber
+        mass: 200
+        note: 3mm rounds
+      - item: dill
+        optional: true
+        note: few sprigs
+      - item: garlic
+        qty: 1
+        unit: clove
+        note: smashed
+        optional: true
+    steps:
+      - salt the rounds 15 mins and pat dry first, or they go soft
+      - pack with dill and garlic, pour over brine cooled to warm — hot brine cooks the crunch out
+      - 1 hr minimum
+      - keeps 1 week in the fridge, crunch fades after 3-4 days
+notes: |
+  Not a preserve — no canning, no shelf stability, straight into the fridge.
+
+  Hot brine for onion (you want it softened and fully pink), warm brine for cucumber (you
+  want it to stay crunchy). That's the only real difference between the two.
+
+  On a pulled pork sandwich the pickles are doing a different job to the slaw: the slaw is
+  bulk crunch and creamy acid across the whole bite, the pickles are sharp punctuation.
+  Both, not either.

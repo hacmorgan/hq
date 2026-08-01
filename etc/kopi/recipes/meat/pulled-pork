@@ -1,0 +1,133 @@
+yield: for a 2kg boneless shoulder — serves 6-8 sandwiches
+uses:
+  - sourdough
+  - slaw
+  - quick-pickles
+ingredients:
+  - item: pork shoulder
+    mass: 2000
+    basis: true
+    note: boneless, skin off, fat cap trimmed to ~5mm; bone-in works, add ~1hr
+components:
+  - name: rub
+    ingredients:
+      - item: cooking salt
+        mass: 20
+        note: 1% of meat weight; kosher salt — reduce 25% for table salt, increase 50% for flakes
+      - item: brown sugar
+        mass: 40
+        qty: 2
+        unit: tbsp
+        note: sub white
+      - item: smoked paprika
+        mass: 15
+        qty: 2
+        unit: tbsp
+        note: sub sweet paprika
+      - item: garlic powder
+        mass: 9
+        qty: 1
+        unit: tbsp
+      - item: onion powder
+        mass: 6
+        qty: 2
+        unit: tsp
+      - item: mustard powder
+        mass: 5.5
+        qty: 2
+        unit: tsp
+      - item: cumin powder
+        mass: 4
+        qty: 2
+        unit: tsp
+      - item: coarse black pepper
+        mass: 4
+        qty: 1
+        unit: tbsp
+      - item: cayenne
+        mass: 0.4
+        qty: 0.5
+        unit: tsp
+        optional: true
+        note: for spice
+    steps:
+      - salt first, then the rest of the mix — all faces, into the crevices
+  - name: mop
+    ingredients:
+      - item: apple cider vinegar
+        mass: 120
+      - item: apple cider
+        mass: 120
+        note: or apple juice
+    steps:
+      - combine in a sprayer
+  - name: finishing sauce (carolina vinegar)
+    ingredients:
+      - item: apple cider vinegar
+        mass: 240
+      - item: water
+        mass: 60
+      - item: tomato sauce
+        mass: 60
+      - item: brown sugar
+        mass: 30
+      - item: salt
+        mass: 5
+      - item: chili flakes
+        mass: 2
+        qty: 1
+        unit: tsp
+      - item: black pepper
+        mass: 2
+        qty: 1
+        unit: tsp
+      - item: hot sauce
+        optional: true
+        note: few dashes
+    steps:
+      - whisk everything cold until sugar and salt dissolve — no cooking needed
+      - rest at least 30 mins for the chili to bloom
+  - name: procedure (oven)
+    steps:
+      - pat dry, apply rub, refrigerate uncovered overnight (4 hrs minimum)
+      - out of fridge 1 hr before cooking
+      - oven to 135°C, wire rack over a water-filled tray to catch drippings
+      - fat cap up, uncovered, until core hits 70-75°C and the bark is set and dark (3-4 hrs)
+      - spray with mop every hour once the surface looks dry
+      - wrap tight in foil (or butcher paper) with a splash of mop inside
+      - back in until core reaches 96°C and a skewer slides in with no resistance (another 3-4 hrs)
+      - rest wrapped 1 hr — this is not optional, it reabsorbs the juices
+      - unwrap over a bowl, keep the rendered juices
+      - pull with two forks or claws, discarding hard fat and gristle
+      - toss the pulled meat with the reserved juices first, then finishing sauce to taste
+  - name: procedure (slow-cooker)
+    steps:
+      - rub as above, sear all faces hard in a pan first (the slow cooker won't build bark)
+      - 8 hrs on low with 100g of the mop in the bottom, no other liquid
+      - lift out, pull, then reduce the cooking liquid in a pan before tossing it through
+    notes: |
+      Easier, but you trade the bark for it. Worth spreading the pulled meat on a tray and
+      blasting under a hot grill for 5-10 mins to get some crisp edges back.
+  - name: assembly
+    steps:
+      - thick slices of sourdough, toasted hard — it has to hold up to wet pork
+      - butter the toast while hot
+      - pile on pork, pickles over the pork, slaw over the top so it doesn't steam
+      - open-faced, or top slice on for a proper sandwich
+notes: |
+  Shoulder (aka pork butt / boston butt) only. Leg or loin will not pull — not enough
+  collagen or intramuscular fat, they go stringy and dry at the temps this needs.
+
+  The target isn't doneness, it's collagen breakdown. 96°C core held there long enough is
+  what turns connective tissue to gelatin; a shoulder pulled at 85°C is cooked but won't
+  shred. Go by probe feel over the thermometer at the end — no resistance anywhere.
+
+  The stall around 70-75°C is evaporative cooling, not a problem. Wrapping pushes through
+  it and stops the bark going leathery. Foil is faster and softens the bark; butcher paper
+  is slower and keeps it crisper.
+
+  Carolina vinegar sauce over a thick sweet bbq sauce, deliberately — the pork is already
+  rich and the toast is already carby. Acid is what makes the sandwich eat well instead of
+  sitting on you. Same reason the slaw is sharp.
+
+  Faster oven route: 160°C covered for ~5 hrs. Fine, but you lose most of the bark.
