@@ -59,6 +59,10 @@ components:
       - item: apple cider
         mass: 120
         note: or apple juice
+      - item: liquid smoke
+        mass: 4
+        optional: true
+        note: hickory; apple-wood to harmonise with the cider. see notes — hold 2g back for the finishing sauce
     steps:
       - combine in a sprayer
   - name: finishing sauce (carolina vinegar)
@@ -84,6 +88,10 @@ components:
       - item: hot sauce
         optional: true
         note: few dashes
+      - item: liquid smoke
+        mass: 2
+        optional: true
+        note: the 2g held back from the mop — add by drops, tasting
     steps:
       - whisk everything cold until sugar and salt dissolve — no cooking needed
       - rest at least 30 mins for the chili to bloom
@@ -155,5 +163,30 @@ notes: |
   Carolina vinegar sauce over a thick sweet bbq sauce, deliberately — the pork is already
   rich and the toast is already carby. Acid is what makes the sandwich eat well instead of
   sitting on you. Same reason the slaw is sharp.
+
+  Liquid smoke: optional, and dosed differently to pork-ribs. Pulling redistributes it.
+  Liquid smoke is a surface treatment — on a rack it stays in the layer you bite through,
+  concentrated, but shredding a shoulder mixes that surface through the whole 2kg. More even
+  than the ribs ever get, but weaker for the same dose.
+
+  Don't scale the ribs dose by weight. Ribs run 3.5g into 60g water for a 650g rack (5.4g/kg);
+  straight-scaled that's ~11g here, which is far too much. A rack is flat with enormous
+  surface per gram, a shoulder is a blocky roast. You're dosing surface area, not mass.
+
+  So: 4g into the mop, 2g held back for the finishing sauce. The sauce is the real control
+  point — the meat gets tossed in it anyway, so it distributes perfectly and you can taste
+  as you go. Liquid smoke turns acrid and ashtray fast with no way back, so arrive under and
+  add drops.
+
+  Not in the rub — it's water-based, it turns the rub pasty and works against the surface
+  drying that builds bark.
+
+  No curing salt, unlike pork-ribs. That's there for the pink smoke ring, and this gets
+  shredded, so nobody will ever see one. Dropping it also removes the ribs recipe's
+  constraint on resting overnight, which this wants anyway for the uncovered dry brine.
+
+  If you own a kettle or smoker, do it properly instead. Phase 1 — unwrapped, surface still
+  damp — is the smoke absorption window; meat largely stops taking smoke once the surface
+  dries and you wrap. Liquid smoke substitutes for not having that, it doesn't equal it.
 
   Faster oven route: 160°C covered for ~5 hrs. Fine, but you lose most of the bark.
