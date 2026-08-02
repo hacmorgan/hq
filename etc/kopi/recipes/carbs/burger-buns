@@ -19,6 +19,19 @@ notes: |
   Better than any bowl: a straight-sided clear container. Judging "doubled" in a curved bowl
   is guesswork; against straight sides you can mark the start height and read it. Same logic
   as the aliquot jar in sourdough.
+
+  Second proof: an inverted baking tray only has 2-3cm of lip, and these go in at ~3cm tall
+  and double, so a shallow tray will land on them. Give them 8cm of headroom.
+
+  Contact does more than dent. Proofed enriched dough is gassy and tacky, so anything
+  touching it deflates that spot and sticks, and lifting the cover tears the surface skin.
+  A torn bun bakes with a flat scar and takes the egg wash unevenly, and it can't be
+  repaired — reshaping means proofing again from scratch.
+
+  The cover is for humidity, not warmth. If the surface skins over the crust sets early,
+  which costs oven spring and makes the egg wash streaky. So it wants to come down near the
+  tray to trap moist air; a tray floating high on props with open sides does little. The
+  storage box and the bag both beat a propped tray on that count.
 components:
   - name: tangzhong
     ingredients:
@@ -77,7 +90,9 @@ components:
   - name: second proof
     steps:
       - place on greased parchment-lined tray with 6cm between buns
-      - cover with an inverted tray to prevent drying
+      - cover to prevent drying, with at least 8cm of headroom — nothing may touch the buns, see notes
+      - best is a large clear plastic storage box inverted over the tray; you can watch the rise without lifting it
+      - otherwise a deep roasting tray or big upturned bowl, the whole tray inside a puffed-up plastic bag, or an inverted tray propped on ramekins outside the 6cm spacing
       - proof at room temp 1-2 hours until doubled
   - name: baking
     ingredients:
