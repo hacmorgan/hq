@@ -4,6 +4,7 @@ components:
     ingredients:
       - item: soy sauce
         mass: 120
+        basis: true
       - item: mirin
         mass: 40
       - item: sugar

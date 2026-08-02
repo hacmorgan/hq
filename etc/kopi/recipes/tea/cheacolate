@@ -17,9 +17,9 @@ components:
         unit: g
         note: 1.3g/100ml
       - item: sugar
-        qty: 20
+        qty: 10
         unit: g
-        note: 5 part ratio
+        note: this value for real chocolate, double it for baking choc powder
       - item: water
         qty: 400
         unit: ml
@@ -39,6 +39,9 @@ components:
     ingredients:
       - item: chocolate
         qty: 45
+        unit: g
+      - item: dark chocolate (optional)
+        qty: 15
         unit: g
       - item: milk
         qty: 100
