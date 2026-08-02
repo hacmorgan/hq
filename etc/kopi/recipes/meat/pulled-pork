@@ -91,7 +91,8 @@ components:
     steps:
       - pat dry, apply rub, refrigerate uncovered overnight (4 hrs minimum)
       - out of fridge 1 hr before cooking
-      - oven to 135°C, wire rack over a water-filled tray to catch drippings
+      - oven to 115-120°C fan-forced, or 135°C conventional — fan is the better cook, see notes
+      - wire rack over a drip tray; leave the tray dry for maximum bark, or fill it with water as insurance against a dry exterior
       - fat cap up, uncovered, until core hits 70-75°C and the bark is set and dark (3-4 hrs)
       - spray with mop every hour once the surface looks dry
       - wrap tight in foil (or butcher paper) with a splash of mop inside
@@ -125,6 +126,31 @@ notes: |
   The stall around 70-75°C is evaporative cooling, not a problem. Wrapping pushes through
   it and stops the bark going leathery. Foil is faster and softens the bark; butcher paper
   is slower and keeps it crisper.
+
+  Fan-forced or conventional: fan, at 115-120°C. It only matters for the unwrapped phase —
+  once it's in foil there's no surface evaporation and airflow does nothing, so run whatever
+  you like after the wrap.
+
+  Two reasons fan wins on the first phase. Home ovens hold a low conventional setting badly,
+  cycling hard with a top-down radiant bias, and over six hours that means one end of the
+  shoulder finishes well ahead of the other; the fan gives an even, stable chamber. And bark
+  is surface dehydration plus Maillard, which is precisely what moving air does — it's why
+  offset smokers and pellet grills out-bark a still oven.
+
+  On the temperature drop: the usual "fan runs 20°C hotter" rule is calibrated for baking at
+  180-200°C. Down at 135°C the real offset is nearer 10-15°C, so 115-120°C fan is the
+  equivalent, not 115 flat.
+
+  The trade is a worse stall. More airflow means more evaporation means more evaporative
+  cooling, so fan deepens and lengthens it — phase 1 will run past 3-4 hrs. Go by the
+  70-75°C reading and the look of the bark, not the clock.
+
+  Conventional-only oven: 135°C as written is fine. Rotate the tray every couple of hours
+  and accept a patchier bark.
+
+  The drip tray is a genuine trade-off, not an oversight. Water in it stops the drippings
+  scorching and humidifies the chamber, which protects the exterior — but humidity is the
+  enemy of bark. Dry tray for bark, water for insurance.
 
   Carolina vinegar sauce over a thick sweet bbq sauce, deliberately — the pork is already
   rich and the toast is already carby. Acid is what makes the sandwich eat well instead of
