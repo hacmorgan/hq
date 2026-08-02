@@ -117,6 +117,35 @@ components:
     notes: |
       Easier, but you trade the bark for it. Worth spreading the pulled meat on a tray and
       blasting under a hot grill for 5-10 mins to get some crisp edges back.
+  - name: variant (leg instead of shoulder)
+    ingredients:
+      - item: salt
+        mass: 100
+        note: for a 5% wet brine in 2L water, 12-24 hrs, replacing the dry brine
+      - item: butter
+        mass: 50
+        note: at the pull, not the wrap — see notes
+      - item: lard or bacon fat
+        mass: 30
+        optional: true
+        note: into the foil at the wrap
+    steps:
+      - wet brine 12-24 hrs at 5% instead of the overnight dry brine — this is the change that matters most
+      - if there's no time to brine, inject with salted apple juice or stock instead; it works in minutes
+      - leave the fat cap thick and untrimmed, cap up
+      - keep water in the drip tray — with a lean cut, take the humidity over the bark
+      - wrap early, at 65°C rather than 70-75°C
+      - add 30g lard or bacon fat to the foil with the mop
+      - pull at 90-92°C, NOT 96°C
+      - expect 5-6 hrs for 2kg rather than 7-9
+      - there'll be less rendered juice, so toss with 50g melted butter at the pull and lean harder on the finishing sauce
+    notes: |
+      A compromise, not an equal. Leg runs ~8-10% intramuscular fat against shoulder's 20%+,
+      and its collagen sits in sheets between the muscle groups rather than webbed all the
+      way through, so it shreds coarser — sliceable-shreddable rather than fluffy.
+
+      If the leg has skin on, consider not pulling it at all. Roasted and sliced with
+      crackling is a better dinner than a compromised pulled pork.
   - name: assembly
     steps:
       - thick slices of sourdough, toasted hard — it has to hold up to wet pork
@@ -124,8 +153,23 @@ components:
       - pile on pork, pickles over the pork, slaw over the top so it doesn't steam
       - open-faced, or top slice on for a proper sandwich
 notes: |
-  Shoulder (aka pork butt / boston butt) only. Leg or loin will not pull — not enough
-  collagen or intramuscular fat, they go stringy and dry at the temps this needs.
+  Shoulder (aka pork butt / boston butt) by default. Leg or loin have nowhere near the
+  collagen or intramuscular fat, and cooked to these temps as written they go stringy and
+  dry — see the leg variant component if that's what you've got.
+
+  Where the fat goes, for a lean cut: at the pull, overwhelmingly. Fat does not penetrate
+  meat. Muscle is about 75% water and melted butter cannot migrate into the fibres, so
+  anything you put in the foil is coating the outside and pooling, not moisturising the
+  interior. What actually makes lean pulled pork feel dry is bare strands in the mouth with
+  nothing coating them, and that's a problem you can only fix after shredding, when the
+  surface area is enormous and every strand takes the fat.
+
+  Some fat at the wrap is still worth it, but for a different reason: it turns the wrap
+  liquid into a fatty braise rather than a thin acidic one, and you reclaim that liquid and
+  toss it through at the end anyway. Use lard or bacon fat there rather than butter —
+  butter is 16-18% water and milk solids, so you're adding less fat than you think, and it
+  reads oddly against the vinegar sauce. Save the butter for the pull, where you can taste
+  as you go.
 
   The target isn't doneness, it's collagen breakdown. 96°C core held there long enough is
   what turns connective tissue to gelatin; a shoulder pulled at 85°C is cooked but won't
