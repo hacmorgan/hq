@@ -163,6 +163,9 @@ components:
       - item: butter
         mass: 50
         note: at the pull, not the wrap — see notes
+      - item: salted apple juice
+        mass: 100
+        note: the main wrap liquid, lightly salted only. or stock
       - item: lard or bacon fat
         mass: 30
         optional: true
@@ -174,7 +177,9 @@ components:
       - leave the fat cap thick and untrimmed, cap up
       - keep water in the drip tray — with a lean cut, take the humidity over the bark
       - wrap early, at 65°C rather than 70-75°C
-      - add 30g lard or bacon fat to the foil with the mop
+      - 'into the foil: 100g salted apple juice as the main liquid, only a small splash of mop, and 30g lard or bacon fat if you have it'
+      - go light on the mop here — wrapping early and then holding means hours sealed, and that's too long for something half cider vinegar (same reasoning as the hold top-up)
+      - keep the salt light in the juice; the rub is already on and the finishing sauce brings more
       - pull at 90-92°C, NOT 96°C
       - expect 5-6 hrs for 2kg rather than 7-9
       - there'll be less rendered juice, so toss with 50g melted butter at the pull and lean harder on the finishing sauce
