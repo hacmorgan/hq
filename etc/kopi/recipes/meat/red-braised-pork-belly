@@ -11,10 +11,10 @@ ingredients:
   - item: onion
     note: chopped
   - item: dark soy
-    qty: 0.25
+    qty: 0.2
     unit: cup
   - item: light soy
-    qty: 0.25
+    qty: 0.2
     unit: cup
   - item: shaoxing
     qty: 0.25

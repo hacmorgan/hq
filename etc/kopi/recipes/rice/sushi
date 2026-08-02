@@ -4,8 +4,8 @@ ingredients:
     mass: 200
     basis: true
   - item: water
-    mass: 150
-    note: 0.75:1 water:rice
+    mass: 200
+    note: previously 0.75:1 water:rice, try 1:1.35 for 100g rice
   - item: caster sugar
     mass: 15
     qty: 1
