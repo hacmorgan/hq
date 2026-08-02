@@ -117,6 +117,39 @@ components:
     notes: |
       Easier, but you trade the bark for it. Worth spreading the pulled meat on a tray and
       blasting under a hot grill for 5-10 mins to get some crisp edges back.
+  - name: holding (if it's done early)
+    ingredients:
+      - item: chicken or pork stock
+        mass: 100
+        note: lightly salted, ~1%, to top up the wrap. salted apple juice also works — not the mop, see notes
+    steps:
+      - rest wrapped on the bench for the usual 1 hr first — don't go from 90°C straight into a warm oven, the rest only works while the temperature is falling
+      - hold it whole and wrapped, never shredded
+      - up to ~3 hrs — wrapped roast plus towels into a pre-warmed esky, sits around 60-70°C, gentlest option
+      - longer than that — oven at 65°C, topping up the liquid in the wrap
+      - past ~4 hrs — consider cooling it properly and reheating gently in its own juices instead
+      - shred at the last minute; get the toast going before the meat comes out of the wrap
+    notes: |
+      Shred late, always. Shredded meat has enormous surface area and dries and cools fast,
+      where a whole wrapped roast holds almost indefinitely. It's also mechanically easier —
+      meat that has cooled firms up and shreds worse.
+
+      60°C is the safety line: above it you're fine more or less forever, below it you're in
+      the danger zone. An esky drifts down, so if the hold creeps past 3 hrs move it to the
+      oven rather than hoping.
+
+      Top up with lightly salted stock, or salted apple juice — not the mop. The mop is half
+      cider vinegar, which is fine spraying onto an open surface where it mostly evaporates,
+      but sealed in a wrap for hours the acid keeps working and the exterior goes mushy and
+      over-tangy. Salt is what helps a lean cut hold moisture; acid does nothing for it. You
+      also reclaim this liquid and toss it through at the end, so you want it tasting like
+      pork jus — the vinegar comes later, in the finishing sauce, where you can taste as you
+      go.
+
+      Cool-and-reheat over a long hot hold is counterintuitive but sound: time at temperature
+      is what dries lean meat, and pulled or braised cuts reheat exceptionally well since
+      they're already broken down and sitting in liquid. It's fiddlier and passes the danger
+      zone twice, so it's only worth it past about four hours.
   - name: variant (leg instead of shoulder)
     ingredients:
       - item: salt
@@ -131,7 +164,8 @@ components:
         note: into the foil at the wrap
     steps:
       - wet brine 12-24 hrs at 5% instead of the overnight dry brine — this is the change that matters most
-      - if there's no time to brine, inject with salted apple juice or stock instead; it works in minutes
+      - if there's no time to brine, inject with salted apple juice or stock instead; it works in minutes, but only while the meat is still raw
+      - once it's up to temp it's too late to inject — the muscle is already contracting and squeezing liquid out, so put that liquid in the foil at the wrap instead
       - leave the fat cap thick and untrimmed, cap up
       - keep water in the drip tray — with a lean cut, take the humidity over the bark
       - wrap early, at 65°C rather than 70-75°C
