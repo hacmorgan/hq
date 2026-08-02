@@ -3,6 +3,22 @@ source: https://www.joshuaweissman.com/recipes/best-burger-buns-recipe
 yield: makes 6 buns, ~95-105g each
 notes: |
   Brioche-milk bread hybrid bun. Tangzhong makes the crumb soft and pillowy.
+
+  Grease the proofing bowl with neutral oil, not butter. Butter is 16-18% water plus milk
+  solids, so it films patchily and the solids can stick rather than release. Not extra
+  virgin olive either — its flavour is wrong against a sweet milk bun. The oil is purely a
+  release film. It matters more here than for a lean dough: tangzhong plus butter plus two
+  eggs makes this sticky.
+
+  A separate bowl to the mixer bowl is easier, though not important. Grease doesn't take
+  well over the dried dough and flour up the sides of the mixer bowl, and its tall narrow
+  shape makes turning the dough out fiddlier. If you'd rather not wash two, scrape the sides
+  down properly first and proof in it — the dough gets punched down anyway, so nothing is
+  lost either way.
+
+  Better than any bowl: a straight-sided clear container. Judging "doubled" in a curved bowl
+  is guesswork; against straight sides you can mark the start height and read it. Same logic
+  as the aliquot jar in sourdough.
 components:
   - name: tangzhong
     ingredients:
@@ -38,6 +54,8 @@ components:
       - item: butter
         mass: 42
         note: softened
+      - item: neutral oil
+        note: for greasing the proofing bowl — canola, vegetable or grapeseed. see notes
     steps:
       - warm 120g whole milk to 35°C
       - whisk in 9g instant yeast until dissolved, rest in a warm spot 8 mins
@@ -47,7 +65,8 @@ components:
       - add tangzhong, 1 egg, 1 egg yolk; mix on medium-low until combined, scraping down sides
       - gradually add 42g softened butter in pieces, fully incorporating before adding more
       - knead on medium-low 5-8 mins until smooth
-      - shape into ball, place seam-side down in greased bowl, cover with damp towel
+      - shape into ball, place seam-side down in a bowl greased with a tsp of neutral oil, wiped to a thin film up the sides too
+      - cover with a damp towel, or better cling film or a lid — towels stick to enriched dough and let it skin over
       - proof in a warm spot 1-1.5 hours until doubled
   - name: shaping
     steps:
