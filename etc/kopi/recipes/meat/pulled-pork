@@ -128,6 +128,7 @@ components:
         mass: 100
         note: lightly salted, ~1%, to top up the wrap. salted apple juice also works — not the mop, see notes
     steps:
+      - don't start the hold until it's probe-tender — at 65°C collagen conversion effectively stops, so holding a half-done roast just parks it half-done. tender first, then rest, then hold
       - rest wrapped on the bench for the usual 1 hr first — don't go from 90°C straight into a warm oven, the rest only works while the temperature is falling
       - hold it whole and wrapped, never shredded
       - up to ~3 hrs — wrapped roast plus towels into a pre-warmed esky, sits around 60-70°C, gentlest option
@@ -142,6 +143,9 @@ components:
       60°C is the safety line: above it you're fine more or less forever, below it you're in
       the danger zone. An esky drifts down, so if the hold creeps past 3 hrs move it to the
       oven rather than hoping.
+
+      The esky option assumes a full-size roast. Anything around 1kg has half the thermal
+      mass and drifts below 60°C much faster — use the 65°C oven instead.
 
       Top up with lightly salted stock, or salted apple juice — not the mop. The mop is half
       cider vinegar, which is fine spraying onto an open surface where it mostly evaporates,
@@ -234,6 +238,21 @@ notes: |
   The target isn't doneness, it's collagen breakdown. 96°C core held there long enough is
   what turns connective tissue to gelatin; a shoulder pulled at 85°C is cooked but won't
   shred. Go by probe feel over the thermometer at the end — no resistance anywhere.
+
+  Which means the number is necessary, not sufficient. Collagen conversion is time and
+  temperature together, so touching the target for a moment isn't the same as sitting at it
+  long enough. If it hits temp early and still feels tight, hold the temperature and give it
+  time rather than chasing a higher number — it's sealed and sitting in liquid at that point,
+  so the extra time is nearly free. Test several spots, especially on leg, where the muscle
+  groups are divided by connective sheets and go tender unevenly. A skewer should slide in
+  like into room-temperature butter.
+
+  Smaller cuts: time tracks thickness more than mass, so halving the weight doesn't halve
+  the cook — a 1kg piece wrapped early can be at temp in about 3 hrs, which is fast but not
+  wrong. Everything scales off the 2kg basis, so watch the salt in particular: full rub on a
+  half-size piece is double the concentration, and the wrap liquid and finishing sauce stack
+  on top of it. Taste at the pull before saucing. Reckon on ~600g pulled from 1kg, so four
+  sandwiches rather than six to eight.
 
   The stall around 70-75°C is evaporative cooling, not a problem. Wrapping pushes through
   it and stops the bark going leathery. Foil is faster and softens the bark; butcher paper
