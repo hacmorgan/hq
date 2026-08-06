@@ -2,19 +2,17 @@ name: gozleme bread
 components:
   - name: dough
     ingredients:
-      - item: greek yogurt
+      - item: full cream greek yogurt
         qty: 0.75
         unit: cup
-        note: i've used non-fat
-      - item: self raising flour
+        note: the fat replaces oil in the dough. non-fat works but comes out tougher
+      - item: plain flour
         qty: 1
         unit: cup
-        note: or all purpose flour (seems not enough)
-      - item: baking powder
-        qty: 1
-        unit: tsp
+        note: no leavening — gozleme is meant to stay flat
+      - item: water
         optional: true
-        note: only add if using all purpose flour
+        note: by the tsp if the dough won't come together. plain flour is thirstier than SR
       - item: extra virgin olive oil
         qty: 1.5
         unit: tbsp
@@ -24,8 +22,9 @@ components:
       - item: lemon wedges
         note: for serving
     steps:
-      - add flour, salt, and yogurt to a large bowl. add baking powder if using AP flour. mixing with a spoon or one hand to form a rough ball
-      - transfer to a floured table and knead for 3–5 mins until smooth. sprinkle more flour if too sticky or wet. then rest for 10 mins
+      - add flour, salt, and yogurt to a large bowl, mixing with a spoon or one hand to form a rough ball. add water a tsp at a time if it stays shaggy
+      - transfer to a floured table and knead by hand for 3–5 mins until smooth. sprinkle more flour if too sticky or wet
+      - rest covered for 20–30 mins. plain flour builds more gluten than SR, so it springs back when rolled — the long rest is what buys the thinness
   - name: filling
     ingredients:
       - item: spinach
@@ -40,8 +39,20 @@ components:
       - cut the dough into 2 equal pieces and roll them into balls
       - dust the table with flour and roll the dough into a thin circle (10–12 inches / 25–30 cm), flipping and sprinkling with flour regularly. roll as thin as possible without tearing
       - add half of the spinach mixture evenly to one half of the dough
-      - fold the dough over the filling and seal the edges with your fingers. repeat with the 2nd dough
+      - fold the dough over the filling. press from the fold outward to push the air out before sealing the edges, otherwise you trap a pocket
+      - prick the top through with a fork in a few places. the filling steams as it cooks and a sealed parcel has nowhere to vent — this is what balloons it, not the thickness
+      - repeat with the 2nd dough
       - heat a large pan over medium heat with 2 teaspoon olive oil. place a gozleme in the pan and cook for 3-5 minutes until golden
-      - brush or spray the top with oil, flip it over using a spatula and gently press it to flatten it
+      - brush or spray the top with oil, flip it over using a spatula and gently press it to flatten it. keep it pressed as it cooks; prick and flatten any bubble that forms rather than letting it set inflated
       - when golden brown, remove from the pan and place on a board. repeat with the 2nd dough
       - slice into triangles, add a squeeze of lemon and enjoy!
+notes: |
+  Self raising variant (the old default):
+  - Swap the plain flour for 1 cup self raising flour
+  - Rest 10 mins instead of 20–30 — softer flour, less springback
+  - Puffed up badly even rolled thin. Two causes: the leavening, and steam with
+    no vent. Adding 1 tsp baking powder to plain flour to fake SR flour makes it
+    worse, so don't
+  - The old note "AP flour seems not enough" was never resolved — unclear whether
+    it meant not enough flour for the yogurt, or not enough lift. Moot now
+  Untested with plain flour as of 2026-08-06 — the liquid may still need adjusting.
