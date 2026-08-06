@@ -1,0 +1,123 @@
+yield: for 1kg meat, 500g each — about 40 skewers, serves 4-6
+uses:
+  - satay-peanut-sauce
+ingredients:
+  - item: chicken thigh
+    mass: 500
+    basis: true
+    note: boneless, skin off, 2.5cm cubes — keep the fat on
+  - item: beef rump
+    mass: 500
+    note: or topside, 2cm cubes cut against the grain
+components:
+  - name: rempah (marinade)
+    ingredients:
+      - item: lemongrass
+        mass: 40
+        qty: 3
+        unit: stalk
+        note: white part only, sliced thin
+      - item: shallots
+        mass: 80
+        note: asian shallots
+      - item: garlic
+        mass: 15
+        qty: 4
+        unit: clove
+      - item: galangal
+        mass: 20
+      - item: fresh turmeric
+        mass: 15
+        note: sub 5g ground
+      - item: candlenuts
+        mass: 20
+        qty: 4
+        unit: ea
+        optional: true
+        note: sub macadamia
+      - item: coriander seed
+        mass: 8
+        qty: 3
+        unit: tsp
+      - item: cumin seed
+        mass: 3
+        qty: 1.5
+        unit: tsp
+      - item: fennel seed
+        mass: 3
+        qty: 1.5
+        unit: tsp
+      - item: gula melaka
+        mass: 60
+        note: palm sugar; sub dark brown sugar
+      - item: salt
+        mass: 12
+      - item: neutral oil
+        mass: 40
+    steps:
+      - toast the coriander, cumin and fennel in a dry pan until fragrant, then grind
+      - blend lemongrass, shallots, garlic, galangal, turmeric and candlenuts to a fine paste
+      - stir the ground spices, gula melaka, salt and oil through the paste
+  - name: chicken
+    steps:
+      - thigh, not breast — breast dries out over coals before it takes any colour
+      - 2.5cm cubes, fat left on; it bastes the skewer as it renders
+      - marinate 4 hrs to overnight
+      - thread 4-5 pieces tight, leaving a handle
+      - grill through, 2-3 mins a side
+  - name: beef
+    steps:
+      - rump or topside, 2cm cubes cut against the grain
+      - marinate overnight — beef takes the rempah more slowly than chicken
+      - thread 4-5 pieces tight
+      - grill hotter and faster than the chicken and pull at medium; beef satay goes tough well before it goes dry
+  - name: basting oil
+    ingredients:
+      - item: neutral oil
+        mass: 60
+      - item: reserved marinade
+        mass: 30
+      - item: lemongrass stalks
+        qty: 3
+        unit: ea
+        note: bruised at one end to make a brush
+    steps:
+      - combine oil and marinade in a bowl
+      - smash the ends of the lemongrass stalks flat and tie them into a brush
+      - baste at every turn — the brush is not just for show, it lays down aromatics that char onto the meat
+  - name: grilling
+    steps:
+      - soak bamboo skewers 30 mins minimum, or they burn through
+      - charcoal if you have it; this is a dish built around smoke and direct radiant heat
+      - grill screaming hot and fast, close to the coals
+      - keep them moving — the gula melaka means they go from caramelised to burnt quickly
+      - you want blackened spots and sticky edges, not an even brown or a uniform char
+      - shield the exposed skewer ends with foil if they catch
+  - name: serving
+    ingredients:
+      - item: cucumber
+        note: 2cm chunks, raw
+      - item: red onion
+        note: 2cm chunks, raw
+      - item: ketupat
+        optional: true
+        note: compressed rice cakes; plain steamed rice pressed and cut works
+    steps:
+      - pile the skewers up, peanut sauce in a bowl alongside for dipping
+      - raw cucumber and onion chunks on the side — they're the palate cleanser between sticks, not a garnish
+notes: |
+  Singapore hawker style, so rempah-driven and caramelised rather than the pale
+  coconut-milk-and-turmeric Thai version. The marinade has no coconut milk in it at all.
+
+  Gula melaka does most of the work. It's what gives the char, the sticky edges and the
+  smell — cut it back and you get spiced grilled meat, not satay. It's also why the grill
+  has to be fast and attended.
+
+  Same rempah for both meats. The difference is cut, marinating time and how you grill them:
+  chicken through, beef pulled at medium.
+
+  Fresh turmeric over ground if you can get it, and fresh galangal over the jarred stuff.
+  Neither has a good substitute — ginger is not galangal.
+
+  Scaling assumes the 50:50 chicken:beef split. Change the ratio and set the rempah against
+  the total meat weight instead.
