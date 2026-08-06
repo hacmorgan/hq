@@ -60,7 +60,7 @@ components:
         mass: 120
         note: or apple juice
       - item: liquid smoke
-        mass: 4
+        mass: 5
         optional: true
         note: hickory; apple-wood to harmonise with the cider. see notes — hold 2g back for the finishing sauce
     steps:
@@ -68,7 +68,7 @@ components:
   - name: finishing sauce (carolina vinegar)
     ingredients:
       - item: apple cider vinegar
-        mass: 240
+        mass: 160
       - item: water
         mass: 60
       - item: tomato sauce
