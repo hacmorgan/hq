@@ -1,0 +1,73 @@
+yield: for 1kg satay, about 600g sauce
+notes: |
+  Hawker-style — thick, coarse, sweet-hot, tamarind-sour underneath. Not the smooth
+  coconut-milk Thai version.
+
+  Grind the peanuts coarse. Texture is the point; a smooth sauce reads as peanut butter.
+
+  The doneness cue for the rempah is the oil splitting back out of the paste and pooling at
+  the edges. Until that happens the aromatics taste raw, and no amount of simmering later
+  fixes it. It takes longer than you think.
+
+  It thickens a lot as it cools — take it off looser than you want it, and slacken with hot
+  water when you reheat. Keeps a week in the fridge, freezes well.
+
+  Belacan is what makes it taste like the hawker centre rather than a peanut sauce. Toast it
+  first (foil, dry pan, until it smells) and open a window.
+components:
+  - name: rempah
+    ingredients:
+      - item: dried red chillies
+        mass: 25
+        qty: 10
+        unit: ea
+        note: soaked in hot water 20 mins, deseeded for less heat
+      - item: shallots
+        mass: 80
+        note: asian shallots
+      - item: garlic
+        mass: 15
+        qty: 4
+        unit: clove
+      - item: lemongrass
+        mass: 30
+        qty: 2
+        unit: stalk
+        note: white part only, sliced
+      - item: galangal
+        mass: 15
+      - item: candlenuts
+        mass: 20
+        qty: 4
+        unit: ea
+        note: sub macadamia
+      - item: belacan
+        mass: 5
+        optional: true
+        note: toasted first
+    steps:
+      - blend everything to a fine paste with a splash of water
+  - name: sauce
+    ingredients:
+      - item: roasted peanuts
+        mass: 250
+        basis: true
+        note: skins off, ground coarse
+      - item: neutral oil
+        mass: 80
+      - item: tamarind pulp
+        mass: 40
+        note: soaked in 200g hot water, pushed through a sieve
+      - item: gula melaka
+        mass: 80
+        note: palm sugar; sub dark brown sugar
+      - item: salt
+        mass: 8
+      - item: water
+        mass: 400
+    steps:
+      - fry the rempah in the oil over medium-low 15-20 mins until it darkens and the oil splits back out
+      - stir in the ground peanuts, 2 mins
+      - add tamarind water, gula melaka, salt and the water
+      - simmer 20-30 mins until it coats a spoon, stirring so it doesn't catch
+      - balance at the end — sweet, sour, salty, hot, in that order of prominence
