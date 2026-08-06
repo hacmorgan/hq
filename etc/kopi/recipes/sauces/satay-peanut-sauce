@@ -1,7 +1,20 @@
 yield: for 1kg satay, about 600g sauce
 notes: |
-  Hawker-style — thick, coarse, sweet-hot, tamarind-sour underneath. Not the smooth
-  coconut-milk Thai version.
+  Hawker-style — thick, coarse, sweet and nutty with tamarind sour underneath. Not the
+  smooth coconut-milk Thai version.
+
+  This should not come out spicy. The chillies are in the rempah for colour and a rounded
+  fruity depth, which is why the quantity looks alarming — big dried long reds are
+  thin-fleshed and genuinely mild, and deseeded and soaked they contribute almost no heat.
+  Ten of those is right. Ten dried bird's eye would be a completely different and much worse
+  sauce. Get the variety right before worrying about the count.
+
+  Milder still: drop to 5-6. You lose some colour, not much else.
+
+  The sugar and the peanut fat blunt whatever heat is there — fat dissolves capsaicin, so it
+  doesn't land the way the same chilli would in a thin broth. Singapore hawker versions run
+  sweeter and milder than Indonesian bumbu kacang; some stalls grate pineapple in, which
+  pushes it sweeter again.
 
   Grind the peanuts coarse. Texture is the point; a smooth sauce reads as peanut butter.
 
@@ -17,11 +30,11 @@ notes: |
 components:
   - name: rempah
     ingredients:
-      - item: dried red chillies
+      - item: dried long red chillies
         mass: 25
         qty: 10
         unit: ea
-        note: soaked in hot water 20 mins, deseeded for less heat
+        note: the big mild 10-15cm ones (cabai kering) — for colour, not heat. deseeded, soaked in hot water 20 mins. NOT bird's eye, see notes
       - item: shallots
         mass: 80
         note: asian shallots
