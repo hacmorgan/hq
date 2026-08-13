@@ -1,0 +1,55 @@
+#!/bin/sh
+# Lock the screen after IDLE_MS milliseconds of X inactivity.
+#
+# This deliberately does NOT use the X screensaver (xset s / xss-lock's idle
+# path). Chromium and Firefox call XScreenSaverSuspend to inhibit blanking, so
+# with a browser running the screensaver may never activate and idle locking
+# silently never fires. The XSync IDLETIME counter that xprintidle reads keeps
+# counting regardless, so we poll that instead.
+#
+# xss-lock is still responsible for lock-on-suspend and `loginctl lock-session`.
+
+IDLE_MS=${IDLE_MS:-600000}
+LOCKER="$(dirname "$0")/lock-screen"
+MIN_SLEEP=5
+
+warn() {
+    # Startup runs from i3's exec, which can beat the notification daemon up.
+    if command -v notify-send >/dev/null 2>&1; then
+        notify-send -u critical -a i3 "Idle auto-lock disabled" "$1"
+    fi
+    echo "idle-lock: $1" >&2
+}
+
+# Missing tools mean no auto-lock at all, so say so rather than spinning
+# forever. Exit 0: a failed autostart shouldn't look like an i3 error.
+sleep 5
+if ! command -v i3lock >/dev/null 2>&1; then
+    warn "i3lock is not installed - the screen will NOT lock automatically."
+    exit 0
+fi
+if ! command -v xprintidle >/dev/null 2>&1; then
+    warn "xprintidle is not installed - cannot measure idle time."
+    exit 0
+fi
+# Not fatal: idle locking still works, but the machine won't lock on suspend.
+if ! command -v xss-lock >/dev/null 2>&1; then
+    warn "xss-lock is not installed - the screen will NOT lock on suspend."
+fi
+
+while :; do
+    idle=$(xprintidle 2>/dev/null) || { sleep "$MIN_SLEEP"; continue; }
+
+    if [ "$idle" -ge "$IDLE_MS" ]; then
+        # lock-screen blocks until the user authenticates, so the loop parks
+        # here while locked. The guard avoids stacking a second instance on top
+        # of a lock xss-lock already raised.
+        pgrep -x i3lock >/dev/null || "$LOCKER"
+        sleep "$MIN_SLEEP"
+    else
+        # Sleep only as long as it would take to reach the threshold.
+        remaining=$(( (IDLE_MS - idle) / 1000 + 1 ))
+        [ "$remaining" -lt "$MIN_SLEEP" ] && remaining=$MIN_SLEEP
+        sleep "$remaining"
+    fi
+done
