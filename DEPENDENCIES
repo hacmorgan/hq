@@ -2,3 +2,5 @@ notify-send
 i3lock
 xss-lock
 xprintidle
+fuser
+pactl

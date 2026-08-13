@@ -9,9 +9,15 @@
 #
 # xss-lock is still responsible for lock-on-suspend and `loginctl lock-session`.
 
+# Defer locking while a call is in progress (see in-call), but only up to
+# MAX_INHIBIT_MS of real inactivity, so a browser that leaves a stream open
+# after a meeting can't disable locking indefinitely. Set to 0 for no ceiling.
 IDLE_MS=${IDLE_MS:-600000}
+MAX_INHIBIT_MS=${MAX_INHIBIT_MS:-7200000}
 LOCKER="$(dirname "$0")/lock-screen"
+PRESENCE="$(dirname "$0")/in-call"
 MIN_SLEEP=5
+CALL_POLL=30
 
 warn() {
     # Startup runs from i3's exec, which can beat the notification daemon up.
@@ -41,6 +47,14 @@ while :; do
     idle=$(xprintidle 2>/dev/null) || { sleep "$MIN_SLEEP"; continue; }
 
     if [ "$idle" -ge "$IDLE_MS" ]; then
+        # Hold off during a call. A missing/failing in-call check counts as "not
+        # in a call" so the failure direction is to lock, not to stay unlocked.
+        if [ -x "$PRESENCE" ] && "$PRESENCE" \
+           && { [ "$MAX_INHIBIT_MS" -eq 0 ] || [ "$idle" -lt "$MAX_INHIBIT_MS" ]; }; then
+            sleep "$CALL_POLL"
+            continue
+        fi
+
         # lock-screen blocks until the user authenticates, so the loop parks
         # here while locked. The guard avoids stacking a second instance on top
         # of a lock xss-lock already raised.
