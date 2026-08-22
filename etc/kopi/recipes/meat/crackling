@@ -1,9 +1,115 @@
-steps:
-  - blanch pork skin
-  - optionally leave in fridge to dry
-  - gently clamp between two wire racks to keep straight
-  - oven at 120°C FF until fat renders a bit (20 mins)
-  - add flake salt and toss in fat
-  - back into gentle clamps
-  - oven to 160°C FF
-  - back in until done (about 30 mins)
+yield: skin off 3-4 loin steaks — a snack for two
+ingredients:
+  - item: pork skin
+    mass: 150
+    basis: true
+    note: cut off loin steaks, with whatever backfat came away with it
+  - item: fine salt
+    mass: 3
+    note: 2% of skin weight
+  - item: bicarb soda
+    mass: 0.4
+    optional: true
+    note: roughly a quarter of the salt by weight — see notes
+  - item: flake salt
+    note: to finish, off the heat
+components:
+  - name: prep
+    steps:
+      - trim the backfat back to 3-5mm — thicker than that will not render in the time the skin takes to crisp, and you get a crisp shell sitting on a chewy layer
+      - cut into 1-2cm strips now, not later — cooked crackling shatters under a knife, and strips render more evenly than a sheet
+      - pat bone dry on both faces and along the cut edges
+      - rub the fine salt into the skin side, and the bicarb with it if using
+      - uncovered on a rack in the fridge for as long as you have — overnight is best, an hour helps, none is survivable. see notes
+      - blot off any beaded moisture before it goes near the oven
+  - name: render
+    steps:
+      - gently clamp between two wire racks to keep it flat — skin contracts as it heats and will curl into a tube otherwise
+      - clamp over a tray; the fat has to go somewhere
+      - oven at 140°C fan-forced, 25-35 mins
+      - done when the fat has run and the skin is pale, matte and dry to the touch, with no soft wobble of unrendered fat underneath
+      - pour the fat off and keep it — that is lard, and it is the best thing you will ever roast a potato in
+      - leave a film on the strips, not a pool
+  - name: puff
+    steps:
+      - oven up to 220°C fan-forced
+      - unclamp for the blistered, puffed texture; leave clamped for flat glassy shards. see notes
+      - back in for 8-15 mins, watching from 6 — it goes from perfect to acrid in about two minutes
+      - out when it is blistered across the whole surface, deep gold, and taps hard and hollow
+      - onto a rack, not paper towel — it wants air underneath and it keeps crisping as it cools
+      - flake salt now, off the heat, so it stays crunchy instead of dissolving into the fat
+  - name: variant (blanched and puffed)
+    steps:
+      - simmer the skin 45-60 mins until it is soft enough to scrape
+      - scrape every trace of fat off the underside with a spoon — this is the whole point of the simmer, and it is tedious
+      - dry hard — uncovered in the fridge overnight, or 2-3 hrs in the oven at 80°C fan-forced, until it is translucent, rigid and rattles like plastic
+      - blast at 220°C fan-forced, or shallow-fry in the rendered lard at 190°C, until it puffs — 30-90 seconds in oil
+    notes: |
+      The real chicharrón route, and it produces something the roast route cannot: light,
+      hollow, fully puffed, no dense layer anywhere. It also needs the day before, or most
+      of an afternoon, and the scraping is genuinely unpleasant work.
+
+      Worth it if you have a lot of skin and want a party snack. Not worth it for the
+      trimmings off four steaks.
+notes: |
+  The day-before question, directly: an overnight uncovered fridge dry is the single
+  highest-leverage step in crackling, but on skin this thin the render phase does most of
+  the same job, so skipping it costs you less than it would on a belly. Call it 80-85% of
+  the result with none of the planning. A whole belly is 20mm+ of fat and skin and the low
+  oven cannot dry it and render it at once; a 5mm strip off a loin steak dries in the first
+  ten minutes at 140°C anyway.
+
+  Two cheap substitutes if you want most of the difference back on the day. Uncovered in
+  the freezer for 30-45 mins — freezers are extremely dry and it pulls surface water fast,
+  and thin skin will not freeze solid in that time. Or hold the render at 120°C for the
+  first 15 mins before letting it climb, which is just fridge-drying with the door shut.
+
+  The blanch is gone from the default. It was doing the front half of the puffed variant
+  below, and stopping there gets you the wet skin without the payoff — you soak the thing
+  and then have to drive that water back out, which is precisely the step you were trying
+  to avoid. Blanching earns its place when you follow through and scrape the fat off, and
+  not otherwise.
+
+  So the two routes are coherent and the middle is not: dry it and roast it, or simmer it,
+  scrape it, dehydrate it and puff it. Pick one.
+
+  160°C for the finish crisps by dehydration and gets there eventually, but it is a slower
+  and harder-textured result — glassy and tooth-cracking rather than light. The blistering
+  comes from water left in the collagen flashing to steam faster than it can escape, and
+  that needs real heat. Hence 220°C. Anything hotter risks the fat smoking before the
+  centre of a thick strip is through.
+
+  Render low, puff high, in that order, and do not compress the two into one temperature.
+  The render is about time at temperature — fat rendering out from under the skin — and the
+  puff is about a thermal shock. A single medium heat does both badly.
+
+  Bicarb raises the surface pH, which accelerates Maillard browning and loosens the
+  collagen so it puffs more readily. A quarter of the salt weight is the ceiling; past that
+  it reads soapy and faintly metallic, and there is no fixing it once it is on. Skip it if
+  you are unsure — it is a 10% improvement, not a load-bearing ingredient.
+
+  The clamp is a genuine trade-off. Clamped through both phases gives flat, even, snappable
+  shards that stack and dip well. Released before the blast gives curl and bubble and a
+  lighter bite, but they twist into awkward shapes. Clamping through the render is not
+  optional either way; that is where the curling force is.
+
+  Doneness by look, not clock. Blistered across the entire surface and hard when tapped.
+  Any patch still amber and translucent has unrendered fat under it and will be chewy — put
+  it back rather than accepting it, because that texture does not improve on cooling. If
+  most of a batch is done and a few strips are not, pull the done ones and give the rest
+  another five minutes.
+
+  Salt timing is split on purpose. Fine salt before the oven seasons and draws moisture;
+  flakes at the end stay as discrete crunchy grains. Flake salt added at the render stage
+  just dissolves into the fat and you lose the texture you paid for it.
+
+  It is best within a couple of hours and goes leathery overnight in any humidity. Store it
+  in a paper bag rather than an airtight container — sealed, its own residual moisture
+  redistributes and softens it. Re-crisp at 200°C fan-forced for 3-4 mins.
+
+  Loin skin is thinner and leaner than belly skin, and less forgiving in one direction and
+  more in another: it crisps faster and burns faster, but there is far less fat to render,
+  so the whole thing is a 45-minute job rather than a two-hour one.
+
+  Scale by surface area, not weight. Twice the skin at the same thickness is the same
+  timings and possibly two trays; twice the thickness is a much longer render.
