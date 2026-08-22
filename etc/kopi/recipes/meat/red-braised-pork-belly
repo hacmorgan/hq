@@ -30,6 +30,70 @@ steps:
   - top up with water
   - cover with lid and simmer for 1.5 hours, stirring every 15 mins to prevent burning
   - remove lid and cook down to thicken sauce
+components:
+  - name: variant (fallow — dry caramel, aromats not onion)
+    ingredients:
+      - item: pork belly
+        note: diced into ~2cm chunks
+      - item: palm sugar
+        note: more common in Chinese cooking; light brown or caster sugar both work
+      - item: shaoxing
+        qty: 30
+        unit: ml
+      - item: light soy
+        qty: 2
+        unit: part
+      - item: dark soy
+        qty: 1
+        unit: part
+        note: for the rich colour and the heavy saltiness
+      - item: ginger
+        note: sliced
+      - item: star anise
+        qty: 1
+        unit: ea
+      - item: spring onion
+        note: cut into ~4cm chunks, into the braise
+      - item: green onion
+        note: fresh, stirred through at the end
+      - item: water
+        note: only 3/4 up the belly, not covering
+    steps:
+      - blanch the diced belly in boiling water ~3 mins to render a little fat and start the cook
+      - drain, pat dry on paper, tip the water out and put the same pan back on the heat
+      - palm sugar into the dry pan on low heat, melt until it turns a dark rich caramel
+      - pork back in, cook out 1-2 mins to boil off the water still clinging to it
+      - shaoxing in, then turn the heat right down
+      - light and dark soy, 2:1
+      - spring onion, ginger and star anise
+      - water last, only 3/4 up the belly — too much and it costs you flavour
+      - lid on, low heat, ~1 hr then check
+      - at ~40 mins the soy has reduced but the belly still has no give under the spoon — add a touch more water and carry on
+      - from ~1.5 hrs keep moving and stirring so the fat and juices homogenise into a glaze
+      - fresh green onion through at the end for the raw allium hit
+      - serve with steamed rice and Chinese spinach
+    notes: |
+      Fallow's level-1 belly. Same dish as the version above, but three changes worth stealing
+      even if you cook the original: a dry caramel taken properly dark before the pork goes in,
+      aromats (ginger, star anise, spring onion) in place of the brown onion, and much less
+      liquid.
+
+      The dry caramel is the real one. Melting sugar alone lets you see the colour and take it
+      to a dark bitter-edged caramel; sugar melted into oil with onion softening in it never
+      gets there, and you end up with sweetness rather than the faintly burnt-toffee bitterness
+      that stops red-braise being cloying. Trade-off is that dry caramel goes from dark to acrid
+      in seconds — have the pork within reach.
+
+      Damp pork into hot caramel will spit. That's what the 1-2 min cook-out is for; the water
+      has to go before anything else does.
+
+      Water only 3/4 up, not covering. Less liquid to drive off at the end means the sauce
+      arrives at a glaze while the belly is arriving at tender, instead of you boiling hard at
+      the finish to catch up.
+
+      2:1 light:dark soy is the ratio to hold onto. Dark soy is for colour and a heavier salt,
+      not for the primary seasoning — leading with it gives you something that looks right and
+      tastes flat and slightly bitter.
 notes: |
   Jap variant:
   - Replace shaoxing with sake
