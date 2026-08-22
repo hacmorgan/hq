@@ -1,0 +1,238 @@
+yield: whatever cut and weight you've got — see notes for matching the variant to it
+ingredients:
+  - item: brisket
+    note: point, flat, or a thin cheap flat — the cut on hand decides which variant fits, see notes
+components:
+  - name: the drum (equipment notes)
+    notes: |
+      Oil drum, wood burning on a lower grate, meat on the upper grate, an upturned steel
+      mixing bowl standing in for a lid. No damper, no vents — there's no way to throttle it
+      between hot and not hot once it's lit, it just runs at whatever the fire happens to be
+      doing. The only real lever you have is how long you let the wood burn down before the
+      meat goes on: fresh flame is hot, sooty and scorches sugar; a bed of glowing coals an
+      hour or so in is hotter-tasting, cleaner, and far more forgiving. Build the fire well
+      before you need it and let it settle to coals, not flame, before anything touches the
+      grate.
+
+      That makes it a searing tool, not a smoker. Real barbecue smoke is low, thin and blue,
+      held at one stable temperature for hours, and that needs a chamber you can hold a
+      temperature in. This rig can't do that for fifteen minutes let alone all afternoon, so
+      every low-and-slow phase below happens in the oven, full stop. The drum's job is short,
+      hot, watched passes measured in minutes: kickstarting bark and picking up whatever
+      smoke sticks at the start, or firming bark and glazing at the end. Neither needs temp
+      control, just proximity, timing and attention.
+
+      No lid also means smoke that would normally circulate and cling just rises past the
+      meat once and is gone. Expect a fraction of what a closed smoker deposits in the same
+      window — real wood exposure here is a flavour bonus layered on top of liquid smoke,
+      never a substitute for it.
+
+      If fat dripping onto the fire flares up, that's normal — it just means move the meat to
+      whichever part of the grate isn't directly over the flare for a minute rather than
+      panicking about it; there's no damper to choke the fire down with.
+
+      Sugar scorches on open direct heat with no way to back off, which is why variant B
+      never puts a dry sugared rub anywhere near the drum — by the time that variant reaches
+      the fire the sugar is already dissolved into a wet sauce, which behaves completely
+      differently under direct heat (it lacquers instead of burning black).
+  - name: variant A — sliced (texas style)
+    ingredients:
+      - item: cooking salt
+        note: 1% of brisket weight — kosher; e.g. ~20g for a 2kg piece. reduce 25% for table salt, increase 50% for flakes
+      - item: coarse black pepper
+        note: matched to the salt by volume, which is roughly 60-80% of it by weight (pepper is less dense) — e.g. ~14g alongside 20g salt
+      - item: liquid smoke dilution
+        optional: true
+        note: dose by surface area not weight. pork-ribs runs ~5.4g/kg into a spray of water for a flat rack shape, and a brisket flat has similar surface-per-mass — as a concrete example, a 2kg flat is roughly 10-11g liquid smoke into ~120g water. arrive under and add drops; it turns acrid fast with no way back
+    steps:
+      - dry brine — rub salt then pepper over every face, uncovered on a rack in the fridge overnight (4 hrs minimum)
+      - out of the fridge 1 hr before cooking
+      - build the drum's fire well ahead so it's settled to coals by the time you need it
+      - drum pass (optional but recommended) — straight onto the hot grate over the coal bed, 15-20 mins, turning once. this is the smoke-pickup and bark-kickstart window, while the surface is still damp and takes smoke best — see "the drum". skip it entirely and go straight to the oven if the fire isn't going; you lose the smoke kiss but nothing else changes
+      - into the oven, 115-120°C fan-forced, wire rack over a dry drip tray for max bark or a wet one as insurance against drying out
+      - if using the liquid smoke dilution, first mop once the surface looks dry rather than wet or beaded — usually 45 mins-1 hr in — then again every 45 mins-1 hr while it's still unwrapped, 2-3 passes total before you wrap. stop mopping the moment it's wrapped; see notes on why
+      - uncovered until core hits 70-75°C and the bark is dark and set — roughly 2.5-3.5 hrs depending on thickness, go by the look of the bark and the temp, not the clock
+      - wrap tight — foil for a thin flat, butcher paper for a fattier point — with a splash of the mop inside
+      - back in until core reaches 96-99°C and a skewer meets no resistance anywhere, checking several spots
+      - rest wrapped at least 1 hr before anything else — the rest works while the temperature is falling, so don't go from the wrap straight into a hold
+      - optional second drum pass — unwrap, straight back onto the hot grate 3-5 mins a side to re-firm the bark the wrap softened. watch it continuously, it goes from perfect to burnt in under a minute with no lid to choke the heat back
+      - slice against the grain, pencil-thick
+    notes: |
+      If it's ready early: rest wrapped on the bench 1 hr first (never go from 90°C+ straight
+      into a warm hold — the rest only works while the temperature is actively falling), then
+      wrapped-roast-plus-towels into a pre-warmed esky for up to ~3 hrs, which sits it around
+      60-70°C, the gentlest option. Longer than that, move to a 65°C oven instead, topping up
+      the wrap liquid. 60°C is the safety line — above it you're fine indefinitely, below it
+      you're in the danger zone, and an esky drifts down over time so don't just hope it holds.
+      A cut this size has noticeably less thermal mass than a full pork shoulder and drifts
+      under 60°C faster, so lean toward the oven sooner than you would for a big roast.
+
+      Mopping stops at the wrap because from there the meat is sealed and sitting in its own
+      steam for hours — more liquid smoke added to that just concentrates and turns harsh,
+      the same reason the wrap liquid itself is kept plain rather than more mop. Everything
+      the mop is going to contribute happens in the open, unwrapped phase, which is also why
+      it's timed to a schedule instead of a single dousing: a single early mop dries out and
+      stops contributing well before the bark is actually set.
+  - name: variant B — rub
+    ingredients:
+      - item: brown sugar
+        mass: 20
+        qty: 1
+        unit: tbsp
+        note: sub white. per 1kg brisket — scale linearly to your weight
+      - item: paprika
+        mass: 5
+        qty: 2
+        unit: tsp
+      - item: garlic powder
+        mass: 2.5
+        qty: 1
+        unit: tsp
+        note: sub 1 tsp fresh garlic
+      - item: onion powder
+        mass: 1.5
+        qty: 1
+        unit: tsp
+        note: sub garlic powder
+      - item: cumin powder
+        qty: 0.5
+        unit: tsp
+      - item: mustard powder
+        mass: 2.5
+        qty: 0.75
+        unit: tsp
+      - item: cooking salt
+        qty: 1
+        unit: tsp
+        note: kosher — reduce 25% for table salt, increase 50% for flakes
+      - item: black pepper
+        mass: 0.5
+        qty: 0.5
+        unit: tsp
+  - name: variant B — sauce
+    ingredients:
+      - item: garlic
+        qty: 2
+        unit: clove
+        note: minced; sub 2 tsp powder
+      - item: apple cider vinegar
+        mass: 125
+        qty: 125
+        unit: ml
+      - item: ketchup
+        mass: 335
+        note: or Aussie tomato sauce
+      - item: brown sugar
+        mass: 80
+        note: loosely packed, not tightly; sub white
+      - item: black pepper
+        qty: 2
+        unit: tsp
+      - item: onion powder
+        qty: 2
+        unit: tsp
+      - item: mustard powder
+        qty: 2
+        unit: tsp
+      - item: cayenne pepper
+        qty: 1
+        unit: tsp
+        note: adjust to taste
+      - item: worcestershire sauce
+        qty: 1
+        unit: tbsp
+        note: sub soy sauce
+      - item: water
+        mass: 500
+        qty: 500
+        unit: ml
+        note: only when using this as braising liquid — leave out if reserving the sauce for a finishing toss or glaze instead
+    steps:
+      - make the sauce (everything except the water) in the baking pan, then stir in the water for the braise. leave the water out entirely if you're making this to toss through variant C instead
+  - name: variant B — procedure (braised, oven start to finish)
+    steps:
+      - oven to 160°C
+      - coat brisket in the rub, then in the sauce, meat side down
+      - cover with lid or foil, bake 3.5 hrs or until it pulls apart under a fork, basting intermittently
+      - lift the meat out, spoon more sauce over, and strain the braising liquid
+      - drum finish (optional) — only worth doing if you've already got the fire down to a coal bed; skip it without any loss to the dish, a hot oven grill does the same job. reduce the strained sauce a little on the stove first if it's thin. lay the meat directly on the hot grate over the coals (never over open flame — that's what scorches the sugar), baste with the reduced sauce every 2-3 mins, turning once, for about 8-12 mins total, until the sauce has tackified into a lacquer and the edges have caught a little char
+      - oven alternative to the drum finish — same basting cadence, under a hot grill/broiler on a foil-lined tray. broilers run hotter and closer than a coal bed, so watch it more closely and expect it to be done sooner
+    notes: |
+      Most forgiving of the three by a wide margin, and it's the safe fallback for a genuinely
+      poor cheap cut — you lose the bark and it stops reading as "brisket" specifically, but
+      that's the right trade for a bad piece rather than a failure.
+
+      This variant never has an unwrapped, undressed phase — it's coated and covered from the
+      very first minute in the oven — so there's no window for it to pick up real smoke the
+      way A and C can on the drum's opening pass. A few drops of liquid smoke stirred into the
+      sauce's water component is worth considering here if you want any smoke character at all
+      out of this one.
+  - name: variant C — chopped or pulled (lean/thin flat)
+    ingredients:
+      - item: cooking salt
+        note: 1% of brisket weight for the dry brine, same as variant A — or see the wet brine alternative below
+      - item: coarse black pepper
+        note: matched to the salt by volume, as variant A
+      - item: salt
+        optional: true
+        note: for a 5% wet brine in water, 12-24 hrs, as an alternative to the dry brine — the single change that matters most for a genuinely lean, thin flat
+      - item: liquid smoke dilution
+        optional: true
+        note: same dilution as variant A — dosed by surface area, not the wet brine's weight. use the same ~5g/kg-into-water ratio and arrive under
+      - item: salted stock or apple juice
+        note: lightly salted (~1%) only — this goes in the foil at the wrap, not the liquid-smoke mop
+      - item: butter or reserved rendered fat
+        note: a couple of tablespoons, melted through at the very end, tasting as you add it
+    steps:
+      - dry brine overnight as variant A, or wet brine 5% for 12-24 hrs instead if you have the time — a lean flat holds moisture far better coming out of a wet brine than a dry one
+      - drum pass exactly as variant A (optional) — 15-20 mins over the coal bed, turning once, while the surface is still damp
+      - oven to 115-120°C fan-forced, water in the drip tray this time — lean cut, take the humidity over the bark, since there's much less fat here to protect it from drying out
+      - if using the liquid smoke dilution, mop on the same schedule as variant A — once the surface looks dry, then every 45 mins-1 hr while unwrapped. this variant's unwrapped window is shorter, since it wraps at 65°C rather than 70-75°C, so expect only 1-2 passes rather than A's 2-3 before you get to the wrap
+      - wrap earlier than variant A, at 65°C rather than 70-75°C — a lean cut can't spare the extra time unwrapped that the point-end version can
+      - into the foil — a splash of the lightly salted stock or apple juice, not more liquid smoke. sealed in foil for hours, the mop's vinegar keeps working on the meat instead of mostly evaporating like it does on an open surface, and it goes mushy and over-tangy; salt is what actually helps a lean cut hold onto moisture, acid doesn't
+      - back in until fully tender and a skewer meets no resistance anywhere — expect this closer to 90-93°C than the 96-99°C of a fattier piece, and go by probe feel over the number
+      - rest wrapped 1 hr
+      - chop or pull rather than slice
+      - toss with the reclaimed wrap juices first
+      - melt the butter or reserved fat through next — fat doesn't penetrate meat, it coats the outside of already-separated strands, so it only does anything once the meat is chopped and the surface area is enormous. doing this before chopping is wasted
+      - optional: toss with variant B's sauce to taste at this point, at full strength (leave out that sauce's 500g water — that was there to make a braising liquid, not a finishing sauce) — see notes
+    notes: |
+      This is the option that actually rescues a cheap thin flat — slicing exposes every dry
+      fibre in a lean piece, chopping and tossing in juice and fat hides exactly that. No
+      second drum pass needed here the way variant A has one; the chopped surface hides what
+      slicing would otherwise expose, so there's nothing left to re-firm.
+
+      For "bbq pulled meat" in the usual sense, this is the variant to land on rather than
+      variant B. B is sauced and covered from the first minute and never builds bark or takes
+      on smoke, so what falls apart there is closer to a bbq-sauce pot roast than to pulled
+      brisket — it just happens to also be shreddable. This variant builds real bark, can pick
+      up real smoke on the drum's opening pass, gets taken to genuinely tender, and only then
+      gets tossed — which is the actual sequence and texture of pulled brisket. The only piece
+      it's missing versus a classic sauced pulled brisket is the sauce itself, which is why
+      variant B's sauce is offered here as a final toss rather than a braising liquid: make it,
+      skip the water, and stir it through to taste after the juices and fat rather than before
+      — that way you're seasoning the outside of already-separated meat instead of stewing in
+      it, which is the whole point of pulling before saucing.
+
+      Same holding logic as variant A applies if it's ready early: rest 1 hr, esky up to ~3
+      hrs, 65°C oven beyond that, 60°C is the line. Once it's shredded, though, hold it
+      differently to a whole roast — shredded meat has huge surface area and dries and cools
+      fast, so don't shred until just before serving, and if it has to wait, keep it whole and
+      wrapped and shred at the last minute.
+notes: |
+  Match the variant to the cut, not the other way round. Point end (fatty, 20-30% fat)
+  behaves like pork shoulder and is forgiving of any of the three. Flat or navel (lean,
+  8-12%) wants variant C's earlier wrap and pulled treatment. A thin cheap flat under ~4cm —
+  which is what cheap brisket usually is — defaults to C unless you're confident in the piece.
+
+  Check it isn't already wet-cured for corning before doing anything else with it. It'll be
+  pink and noticeably salty straight out of the bag, and every salt number above assumes it
+  isn't already seasoned.
+
+  No curing salt anywhere here, unlike pork-ribs — that's there for a pink smoke ring nobody
+  needs to see through a knife cut on a piece this size, and the drum pass gives a genuine if
+  faint one anyway, from real wood smoke.
+
+  If separating a whole packer into point and flat, do it before cooking whichever variant —
+  their grains run roughly 90° apart, and no single slicing or chopping angle is right for
+  both once they've become one cooked mass.
