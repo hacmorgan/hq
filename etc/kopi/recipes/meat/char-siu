@@ -1,0 +1,90 @@
+source: https://www.facebook.com/reel/1449664100263555
+yield: as stated by the source, no weight given — see the reference component for a workable basis
+ingredients:
+  - item: pork shoulder
+    note: no cut, shape or weight given by the source
+  - item: soy sauce
+  - item: hoisin sauce
+  - item: five spice powder
+  - item: other seasonings
+    note: unspecified by the source beyond "other seasonings" — see the reference marinade below for a filled-in guess
+steps:
+  - combine soy sauce, hoisin sauce, five spice powder and the other seasonings into a marinade
+  - add the pork shoulder, marinate a few hours up to overnight for best results
+  - air fry, flipping and basting twice, until cooked through with a slight char
+  - serve with rice and yu choy (or another Chinese green) — "you chou" in the auto-captions, almost certainly yu choy/choy sum
+components:
+  - name: reference marinade (not from the source — a typical char siu ratio, filled in so this is actually cookable; tune to taste)
+    ingredients:
+      - item: pork shoulder
+        mass: 500
+        basis: true
+        note: cut into strips roughly 4-5cm wide and ~2cm thick — the timing below assumes this
+      - item: light soy sauce
+        mass: 30
+        qty: 2
+        unit: tbsp
+      - item: hoisin sauce
+        mass: 45
+        qty: 3
+        unit: tbsp
+      - item: shaoxing wine
+        mass: 15
+        qty: 1
+        unit: tbsp
+        optional: true
+      - item: five spice powder
+        mass: 2
+        qty: 0.5
+        unit: tsp
+      - item: brown sugar
+        mass: 30
+        qty: 2
+        unit: tbsp
+        note: or maltose, more traditional and stickier
+      - item: garlic
+        qty: 2
+        unit: clove
+        note: minced
+      - item: sesame oil
+        note: a few drops
+      - item: red fermented bean curd (nam yu)
+        optional: true
+        note: traditional source of the classic red colour — a drop of red food colouring is the common shortcut, both purely cosmetic
+    steps:
+      - whisk everything but the pork together into a marinade
+      - reserve a couple of tablespoons of the marinade, untouched by raw meat, for basting later — or plan to boil the used portion briefly before it touches the pork again
+      - add the pork, turn to coat, marinate 4 hrs to overnight in the fridge, turning occasionally
+  - name: procedure (air fryer)
+    steps:
+      - air fryer to 190°C
+      - cook ~20 mins total, flipping and basting with the reserved marinade at roughly the 7 and 14 min marks — matches the source's "flip and baste twice"
+      - watch the last few minutes closely — the sugar in the marinade catches fast in an air fryer's concentrated heat, so drop the temperature if it's colouring faster than it's cooking through
+      - rest a few mins, slice, serve with rice and steamed yu choy or choy sum
+  - name: procedure (oven, wire rack)
+    steps:
+      - oven to 200-210°C fan-forced — hotter than the air fryer figure above, see notes for why
+      - wire rack over a foil-lined tray, strips spread with gaps between them for airflow underneath as well as over
+      - bake ~25-30 mins for strips around 2cm thick, flipping and basting with the reserved marinade at roughly a third and two-thirds of the way through rather than fixed clock minutes — oven runtimes vary more than an air fryer's
+      - go by colour and a probe (aim for the low-to-mid 60s°C core) rather than the clock, same as the air fryer version — thickness drives the time far more than weight does
+      - if it's cooked through but hasn't caught the char the source describes, finish under a hot grill/broiler for 1-2 mins a side with a final baste — this is what recovers the concentrated blast an air fryer gives for free
+      - rest a few mins, slice, serve with rice and steamed yu choy or choy sum
+notes: |
+  Source is a 30-second reel with no written recipe attached — the caption is a
+  "comment 'recipe' and I'll send you the link" hook, so the actual quantities live behind
+  that DM flow, not in the post. Everything under "reference marinade & timing" above is
+  filled in from a standard char siu ratio, not from this source — treat it as a solid
+  starting point rather than gospel, and adjust once you've made it once.
+
+  The oven procedure exists because an air fryer isn't just a small oven at the same
+  temperature — the fan sits much closer to the food in a much smaller chamber, so the air
+  moving across the surface is far more concentrated. A full-size fan oven at the air
+  fryer's dial temperature will cook slower and brown less in the same time, which is why
+  the oven version runs 10-20°C hotter and allows a bit more time. The wire rack over a tray
+  is the direct equivalent of the air fryer's perforated basket — air underneath as well as
+  over, and the tray catches the sugary drips before they burn onto the oven floor.
+
+  Because a big oven is gentler and more even rather than concentrated, it may finish the
+  meat through without ever quite catching the char an air fryer gives almost by default —
+  that's what the grill/broiler finish is for, and it's worth planning for rather than
+  treating as a failure if the first attempt comes out pale.
