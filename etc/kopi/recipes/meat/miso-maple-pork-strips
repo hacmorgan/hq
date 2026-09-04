@@ -37,8 +37,7 @@ components:
         unit: tsp
         note: try 50:50
       - item: water or stock
-        qty: 3
-        unit: tbsp
+        mass: 45
         note: 3-4 tbsp, to dilute
   - name: cook
     steps:
@@ -50,6 +49,31 @@ components:
       - 'split glaze: ~2/3 cooking, ~1/3 reserve for serving'
       - brush cooking glaze onto pork; blast 200-220°C fan-forced (on rack not back in foil) for 5-10 mins watching closely - second coat halfway through for thicker lacquer; blowtorch works great here
       - rest, then slice perpendicular into 1.5-2cm pieces
+  - name: cook — over coals (variant)
+    steps:
+      - braise exactly as above — the foil parcel is steam, not smoke, and gains nothing from the fire; oven, full stop
+      - build the fire well ahead and let it burn down to a settled coal bed — fresh flame scorches this glaze in seconds
+      - rake the coals to one side so there's a cooler half of the grate to work over
+      - reduce and split the glaze as above, but hold back ~half rather than a third — fire flattens the bright top notes harder than an oven does
+      - brush the cooking glaze on and start on the cool side, upturned bowl over the top, 3-4 mins to set and tack up
+      - second coat, then short passes over the edge of the coal bed — 20-30 secs a face, turning constantly, never parked over live heat
+      - pull the moment the edges bubble and darken; blistered black spots are good, a uniformly carbonised face is not
+      - rest and slice as above, serving glaze at the plate
+    notes: |
+      The blast at the end is the only part of this recipe that wants fire, and it's the part
+      coals genuinely do better — the fat cap picks up a rendered, faintly smoky crispness a
+      fan oven won't give you, plus a bit of drip-flare character.
+
+      Sugar is the whole constraint. Reduced maple and miso is high-sugar and high-protein, and
+      it starts burning around 160-170°C surface temp — far below what a live coal bed gives
+      you directly. Hence banking the coals and working the cool side first: the glaze sets
+      and tacks up where it can't scorch, and only then takes brief direct passes for colour.
+      Same reasoning as brisket variant B keeping dry sugar away from the drum entirely.
+
+      Keep the smoke to a kiss. This is a ten-minute exposure at most — the braise flavour is
+      delicate and an afternoon of smoke would bury it. The no-lid drum's thin smoke deposit
+      works in your favour here for once.
+
   - name: serving glaze
     steps:
       - 'loosen reserved glaze: squeeze of lime or few drops rice vinegar'
