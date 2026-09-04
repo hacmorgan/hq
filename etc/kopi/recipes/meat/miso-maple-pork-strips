@@ -40,21 +40,21 @@ components:
   - name: cook
     steps:
       - marinate a few hours (max ~12hr — miso enzymes turn meat mealy past that)
-      - foil parcel with just a few tbsp of marinade per strip — braise, not swim
-      - 140-150°C conventional for 90min–1h45 (check at 75 mins) until yielding and wobbly; no springiness when pressed
-      - open foil; lift pork onto rack; pour braising liquid into saucepan
+      - foil parcel, or a lidded stainless gastronorm — just a few tbsp of marinade per strip either way; braise, not swim (see notes on the vessel)
+      - 140-150°C conventional for 90min–1h45 until yielding and wobbly; no springiness when pressed — check at 75 mins in foil, 60-65 in a gastronorm
+      - open up; lift pork onto rack; pour braising liquid into saucepan
       - reduce braising liquid to thick, glossy, mahogany glaze
       - 'split glaze: ~2/3 cooking, ~1/3 reserve for serving'
       - brush cooking glaze onto pork; blast 200-220°C fan-forced (on rack not back in foil) for 5-10 mins watching closely - second coat halfway through for thicker lacquer; blowtorch works great here
       - rest, then slice perpendicular into 1.5-2cm pieces
   - name: cook — over coals (variant)
     steps:
-      - braise exactly as above — the foil parcel is steam, not smoke, and gains nothing from the fire; oven, full stop
+      - braise exactly as above — the parcel is steam, not smoke, and gains nothing from the fire; oven, full stop
       - build the fire well ahead and let it burn down to a settled coal bed — fresh flame scorches this glaze in seconds
-      - rake the coals to one side so there's a cooler half of the grate to work over
+      - if the bed height adjusts, set it so the hand test at grate level reads 4-5 secs; otherwise rake the coals to one side for a cooler half
       - reduce and split the glaze as above, but hold back ~half rather than a third — fire flattens the bright top notes harder than an oven does
-      - brush the cooking glaze on and start on the cool side, upturned bowl over the top, 3-4 mins to set and tack up
-      - second coat, then short passes over the edge of the coal bed — 20-30 secs a face, turning constantly, never parked over live heat
+      - brush the cooking glaze on and set it at that height, upturned bowl over the top, 3-4 mins to tack up
+      - second coat, then drop the bed to a 2-3 sec height for colour — 30-60 secs a face, turning; on a fixed grate instead take 20-30 sec passes over the edge of the coals, never parked over live heat
       - pull the moment the edges bubble and darken; blistered black spots are good, a uniformly carbonised face is not
       - rest and slice as above, serving glaze at the plate
     notes: |
@@ -64,9 +64,16 @@ components:
 
       Sugar is the whole constraint. Reduced maple and miso is high-sugar and high-protein, and
       it starts burning around 160-170°C surface temp — far below what a live coal bed gives
-      you directly. Hence banking the coals and working the cool side first: the glaze sets
-      and tacks up where it can't scorch, and only then takes brief direct passes for colour.
-      Same reasoning as brisket variant B keeping dry sugar away from the drum entirely.
+      you directly. Hence setting the glaze at a distance first, where it can't scorch, and
+      only then taking brief closer passes for colour. Same reasoning as brisket variant B
+      keeping dry sugar away from the drum entirely.
+
+      If the bed height adjusts, use that rather than banking. Radiant heat falls off roughly
+      with the square of the distance, so height is a smooth continuous control where banking
+      is two settings — and you can leave the strips sitting at the high setting for minutes
+      instead of doing 20-second dashes. Moving the bed also beats handling sticky glazed pork
+      repeatedly. Keep sliding sideways off the coals as the instant bail-out if a face darkens
+      faster than you want to crank for.
 
       Keep the smoke to a kiss. This is a ten-minute exposure at most — the braise flavour is
       delicate and an afternoon of smoke would bury it. The no-lid drum's thin smoke deposit
@@ -85,6 +92,24 @@ components:
       - serving glaze drizzled over
       - thinly sliced spring onion or toasted sesame seeds to finish
 notes: |
+  [ the vessel — foil vs gastronorm ]
+  A lidded stainless gastronorm is the better container. The marinade is both salty and acidic
+  (miso, soy, vinegar), which attacks aluminium over 90 mins at 150°C — grey pitting inside the
+  parcel and a faint metallic edge. Stainless doesn't care.
+
+  Use the smallest pan the strips fit in — a 1/6 or 1/9 deep, not a 1/3 sitting mostly empty.
+  Part of why foil works is that it's tight: minimal headspace means the few tbsp of liquid
+  saturate the air straight away and stay there. A large pan is a lot of cold air to fill and
+  the liquid goes to the lid instead. A GN lid rests rather than seals, so if it rattles, sit a
+  sheet of baking paper under it (paper, not foil — same reason as above) or crimp foil over the
+  rim outside the lid. Condensate should drip back in, not escape.
+
+  Same 140-150°C either way — the target is steam at ~100°C in the pan and the oven temp only
+  sets how fast you get there. Stainless conducts better than a pouch and the base sits in real
+  contact with the rack, so it runs a little faster and the underside gets actual pan contact
+  and browns rather than just steaming, which is a plus. Don't preheat the pan; strips go in
+  cold with the marinade.
+
   [ why so little liquid in the parcel ]
   The braising liquid that comes out should be a few tablespoons of intense, slightly fatty,
   mahogany-coloured liquid — not a cup of pale water. A lot of liquid dilutes the pork's own
