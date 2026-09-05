@@ -172,19 +172,24 @@ components:
       - item: cooking salt
         note: 1% of brisket weight for the dry brine, same as variant A — or see the wet brine alternative below
       - item: coarse black pepper
-        note: matched to the salt by volume, as variant A
+        note: matched to the salt by volume, as variant A — dose off the pre-brine weight, since a wet-brined piece goes in a few percent heavier
       - item: salt
         optional: true
-        note: for a 5% wet brine in water, 12-24 hrs, as an alternative to the dry brine — the single change that matters most for a genuinely lean, thin flat
+        note: |
+          for a wet brine, instead of — never as well as — the dry brine above. either 5% in water for
+          12-24 hrs, or by equilibrium at 1-1.25% of the combined meat-plus-water weight, which cannot
+          over-salt no matter how long it sits. a rescue lever for a genuinely poor lean flat, not a
+          general upgrade; see notes
       - item: liquid smoke dilution
         optional: true
         note: same dilution as variant A — dosed by surface area, not the wet brine's weight. use the same ~5g/kg-into-water ratio and arrive under
       - item: salted stock or apple juice
-        note: lightly salted (~1%) only — this goes in the foil at the wrap, not the liquid-smoke mop
+        note: lightly salted (~1%) only — this goes in the foil at the wrap, not the liquid-smoke mop. use it plain and unsalted if you wet brined, the meat is already carrying that salt
       - item: butter or reserved rendered fat
         note: a couple of tablespoons, melted through at the very end, tasting as you add it
     steps:
-      - dry brine overnight as variant A, or wet brine 5% for 12-24 hrs instead if you have the time — a lean flat holds moisture far better coming out of a wet brine than a dry one
+      - dry brine overnight as variant A, or wet brine instead if you have the time — a lean flat holds moisture better coming out of a wet brine than a dry one. brine chilled and fully submerged, weighing the flat down so it doesn't float
+      - if wet brined — pat dry hard, then uncovered on a rack in the fridge 4-12 hrs to dry the surface back before anything else. skipping this costs you the bark and most of the smoke; it also means a wet brine wants more lead time than a dry one, not less
       - drum pass exactly as variant A (optional) — 15-20 mins over the coal bed, turning once, while the surface is still damp
       - oven to 115-120°C fan-forced, water in the drip tray this time — lean cut, take the humidity over the bark, since there's much less fat here to protect it from drying out
       - if using the liquid smoke dilution, mop on the same schedule as variant A — once the surface looks dry, then every 45 mins-1 hr while unwrapped. this variant's unwrapped window is shorter, since it wraps at 65°C rather than 70-75°C, so expect only 1-2 passes rather than A's 2-3 before you get to the wrap
@@ -193,9 +198,9 @@ components:
       - back in until fully tender and a skewer meets no resistance anywhere — expect this closer to 90-93°C than the 96-99°C of a fattier piece, and go by probe feel over the number
       - rest wrapped 1 hr
       - chop or pull rather than slice
-      - toss with the reclaimed wrap juices first
+      - toss with the reclaimed wrap juices first — taste before adding any salt, especially if you wet brined; expect more juice than usual out of a wet-brined piece, so go easy on the splash at the wrap
       - melt the butter or reserved fat through next — fat doesn't penetrate meat, it coats the outside of already-separated strands, so it only does anything once the meat is chopped and the surface area is enormous. doing this before chopping is wasted
-      - optional: toss with variant B's sauce to taste at this point, at full strength (leave out that sauce's 500g water — that was there to make a braising liquid, not a finishing sauce) — see notes
+      - optional: toss with variant B's sauce to taste at this point, at full strength (leave out that sauce's 500g water — that was there to make a braising liquid, not a finishing sauce) — see notes. that sauce is salty in its own right, so taste as it goes in rather than tipping the lot
     notes: |
       This is the option that actually rescues a cheap thin flat — slicing exposes every dry
       fibre in a lean piece, chopping and tossing in juice and fat hides exactly that. No
@@ -213,6 +218,28 @@ components:
       skip the water, and stir it through to taste after the juices and fat rather than before
       — that way you're seasoning the outside of already-separated meat instead of stewing in
       it, which is the whole point of pulling before saucing.
+
+      On whether the wet brine is worth it: the gain is real but modest, and narrower than it's
+      usually sold as. Salt lets the muscle hold more water and shrink less, and it goes in carrying
+      5-8% extra weight — but brisket is the worst case for that, since hours held at 90°C+ drives
+      most of the added water back out again. What saves it here specifically is that this variant
+      reclaims the purge and tosses it back through the chopped meat, so the water takes a detour
+      through the foil and comes back as juice rather than being lost. The other genuine benefit is
+      insurance: a wet-brined lean flat is more forgiving of being pushed too far. Against that you
+      pay in bark, a slightly bouncy ham-like texture, an extra day of lead time, and several ways to
+      double up on salt. Worth it for a poor, thin, lean flat where dryness is the actual risk being
+      managed; for anything decent, dry brine and don't bother.
+
+      Salt stacks in four places once you wet brine, and all four need backing off: no salt in the
+      rub that follows, plain rather than salted liquid in the foil, taste the reclaimed juices before
+      correcting them, and taste variant B's sauce in rather than tipping it in. The general note about
+      checking the piece isn't already wet-cured for corning matters double here — pre-cured plus a
+      brine is inedible, with nothing to be done about it.
+
+      On brine strength: 5% for the full 24 hrs is the aggressive end, and a thin flat under ~4cm
+      equilibrates fast enough to come out tasting like salt beef. Use 12 hrs at that strength for a
+      thin piece and save 24 for something 5cm or thicker — or sidestep the clock entirely with the
+      equilibrium option, which is the better fit for a cut whose thickness you're guessing at anyway.
 
       Same holding logic as variant A applies if it's ready early: rest 1 hr, esky up to ~3
       hrs, 65°C oven beyond that, 60°C is the line. Once it's shredded, though, hold it
