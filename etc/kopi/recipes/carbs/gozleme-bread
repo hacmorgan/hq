@@ -79,6 +79,7 @@ components:
         note: kosher
     steps:
       - combine flour, oil, salt and water in a stand mixer with the dough hook. mix 2.5 mins on medium-high (speed 7) until it forms a smooth pliable ball, not sticky
+      - "(speed 7 is Nagi's number, kept as she wrote it, but it's well above kitchenaid's own dough-hook guidance of speed 2. her dough is stiff, low-hydration and only in there 2.5 mins, which is a far gentler ask on the gearbox than a long knead at that speed would be — so it's a smaller risk than it looks, but if you'd rather not, speed 2 for 5-6 mins gets to the same place)"
       - rest covered 20 mins
       - cut into 4 and roll each into a 35 x 20cm (14 x 8 inch) rectangle on a floured surface — rectangles, not the circles-folded-to-semicircles of the yogurt version
       - can be refrigerated up to 3 days after the rest
@@ -181,64 +182,74 @@ components:
       Cooked gozleme keeps 3 days in the fridge or freezes 3 months. Reheat by pan-frying for the
       crisp, or in the oven at 180°C for ~7 mins
       Works with gluten-free flour, but the dough is less stretchy — make 5 smaller ones
+  - name: variant — self raising flour (the old default)
+    notes: |
+      - Swap the plain flour for 1 cup self raising flour
+      - Rest 10 mins instead of 20-30 — softer flour, less springback
+      - Puffed up badly even rolled thin. Two causes: the leavening, and steam with no vent.
+        Adding 1 tsp baking powder to plain flour to fake SR flour makes it worse, so don't
+      - The old note "AP flour seems not enough" was never resolved — unclear whether it meant
+        not enough flour for the yogurt, or not enough lift. Moot now
+  - name: tuning — stretchier and less pastry-like
+    notes: |
+      The 2026-09 result came out too short and pastry-like. Levers, roughly in order of how
+      much they matter:
+
+      Fat — the main culprit. Fat coats gluten strands and stops them linking, which is what
+      "short" means in shortcrust. Full cream greek yogurt is ~10% fat, so 180g of it is ~18g
+      into 165g flour, around 11% baker's fat. Use plain non-greek low- or no-fat yogurt, or
+      replace some of the yogurt with water.
+
+      But don't go to zero — fat cuts both ways by dose. Under ~5% of flour weight it acts as
+      a lubricant, letting gluten sheets slide past each other: more extensible, rolls thinner
+      without tearing, stays supple instead of leathery, stales slower. Over ~10% it shortens
+      instead. Aim for 3-5%, i.e. 5-8g (1-1.5 tsp) olive oil per 165g flour. So the "add olive
+      oil if low fat" ingredient note is right, it just needs a dose on it — with no-fat yogurt
+      you've stripped out essentially all the fat and should add it back deliberately.
+
+      Pan oil is its own lever, separate from the dough. Shallow-frying in 2 tsp gives a fried,
+      crisp, pastry-ish surface, and that's a real part of the mouthfeel. For soft and stretchy,
+      cook in a dry or barely-wiped pan, tortilla-style. That plus the tea towel below is
+      probably the biggest single change to how it eats.
+
+      Acid — yogurt's lactic acid degrades gluten. It's a tenderiser, and effective even over a
+      30 min rest. Softness and tang come at the direct cost of chew; you can't have both out of
+      the one dough. Worth knowing that traditional gozleme dough is just flour, water and salt,
+      no yogurt at all — if stretchy is the target, the yogurt is what's in the way. Nagi's
+      variant is further from it, not closer: 80ml oil in 320g flour is ~25% fat, twice as short
+      as this one.
+
+      Gluten development — knead longer, and more so with less fat, not less, since there's now
+      nothing coating the gluten to work against. 3-5 mins by hand is modest, and chew needs the
+      gluten actually developed rather than merely present. 8-10 mins, or knead 5 / rest 15 /
+      knead 5, which makes the second knead far more effective.
+
+      Kitchenaid works, with a catch: 165g flour (~1 cup) is below the working minimum for a 5qt
+      bowl, and the hook will shove a ball that small around the outside without ever engaging
+      it — less development than by hand. Either scale up to 400-500g flour (which suits Nagi's
+      4-piece yield anyway) or knead this size by hand. Dough hook, speed 2, 8-10 mins.
+
+      Don't chase a full windowpane though. A rolled flatbread wants extensibility more than
+      strength, and an over-developed dough that hasn't relaxed fights the pin and springs back —
+      the same springback the plain-flour ingredient note describes, amplified. Develop it well,
+      then rest longer than the 20-30 mins in the method: 45 mins, or an hour in the fridge.
+
+      Flour and salt — bread flour over plain, for the obvious reason; real but smaller than the
+      levers above. A touch more salt (1.5-2% of flour vs the current ~1.2%) strengthens gluten.
+
+      Cooking — hotter and faster. 3-5 mins at 190°C is long for something this thin and dries
+      the inside to crackery. Hotter pan, ~90 secs to 2 mins a side, colour fast then off. Stop
+      pressing once you've got contact; sustained pressing squeezes moisture out. Then stack them
+      under a clean tea towel straight off the pan — the trapped steam softens the crust, and
+      it's the cheapest thing on this list.
+
+      For real chew rather than just softness, ~1% fresh yeast (or 1/4 tsp instant) and an hour.
+      But that reopens the ballooning problem, so only alongside the pricking and the pressing.
 notes: |
-  Self raising variant (the old default):
-  - Swap the plain flour for 1 cup self raising flour
-  - Rest 10 mins instead of 20–30 — softer flour, less springback
-  - Puffed up badly even rolled thin. Two causes: the leavening, and steam with
-    no vent. Adding 1 tsp baking powder to plain flour to fake SR flour makes it
-    worse, so don't
-  - The old note "AP flour seems not enough" was never resolved — unclear whether
-    it meant not enough flour for the yogurt, or not enough lift. Moot now
-  Untested with plain flour as of 2026-08-06 — the liquid may still need adjusting.
-
-  Pushing it stretchier and less pastry-like (the 2026-09 result was too short):
-  - Fat is the main culprit — fat coats gluten strands and stops them linking, which is
-    what "short" means in shortcrust. Full cream greek yogurt is ~10% fat, so 180g of it
-    is ~18g fat into 165g flour, around 11% baker's fat. Use plain non-greek low- or
-    no-fat yogurt, or replace some of the yogurt with water
-  - But don't go to zero fat. It cuts both ways by dose: under ~5% of flour weight fat
-    acts as a lubricant, letting gluten sheets slide past each other — more extensible,
-    rolls thinner without tearing, stays supple instead of leathery, and stales slower.
-    Over ~10% it shortens instead, coating the strands and blocking them from linking.
-    Aim for 3-5%, i.e. 5-8g (1-1.5 tsp) olive oil per 165g flour. So the "add olive oil
-    if low fat" note above is right, it just needs a dose on it — with no-fat yogurt
-    you've stripped out essentially all the fat and should add that back deliberately
-  - The 2 tsp of pan oil is its own lever, separate from the dough. Shallow-frying gives
-    a fried, crisp, pastry-ish surface, which is a real part of the mouthfeel. For soft
-    and stretchy, cook it in a dry or barely-wiped pan, tortilla-style. That plus the tea
-    towel is probably the biggest single change to how it eats
-  - Yogurt's lactic acid degrades gluten — it's a tenderiser, and effective even over a
-    30 min rest. Softness and tang come at the direct cost of chew; can't have both out
-    of the one dough
-  - Knead longer — more so with less fat, not less, since there's now nothing coating the
-    gluten to work against. 3-5 mins by hand is modest and chew needs the gluten actually
-    developed, not just present. 8-10 mins, or knead 5 / rest 15 / knead 5, which makes
-    the second knead far more effective
-  - Kitchenaid works, with a catch: 165g flour (~1 cup) is below the working minimum for a
-    5qt bowl, and the hook will shove a ball that small around the outside without ever
-    engaging it — less development than by hand. Either scale up to 400-500g flour (which
-    suits Nagi's 4-piece yield anyway) or knead this size by hand. Dough hook, speed 2,
-    8-10 mins. Never above speed 2 — that's about the gearbox, not the dough
-  - Don't chase a full windowpane though. A rolled flatbread wants extensibility more than
-    strength, and an over-developed dough that hasn't relaxed fights the pin and springs
-    back — the same springback the plain-flour note above describes, amplified. Develop it
-    well, then rest it longer than the 20-30 mins above: 45 mins, or an hour in the fridge
-  - Bread flour over plain, for the obvious reason. Real but smaller than the three above
-  - A touch more salt (1.5-2% of flour vs the current ~1.2%) strengthens gluten
-  - Cook hotter and faster — 3-5 mins at 190°C is long for something this thin and dries
-    the inside to crackery. Hotter pan, ~90 secs to 2 mins a side, colour fast then off.
-    And stop pressing once you've got contact; sustained pressing squeezes moisture out
-  - Stack them under a clean tea towel straight off the pan. Trapped steam softens the
-    crust, and it's the cheapest thing on this list
-  - For real chew rather than just softness, ~1% fresh yeast (or 1/4 tsp instant) and an
-    hour — but that reopens the ballooning problem, so only with the pricking and pressing
-  - Note that traditional gozleme dough is just flour, water and salt, no yogurt at all.
-    If stretchy is the target the yogurt is what's in the way, and Nagi's variant is
-    further from it, not closer — 80ml oil in 320g flour is ~25% fat, twice as short
-
   Two doughs, two characters: the yogurt dough (default above) is soft, tangy and pliable;
   Nagi's oil-and-water dough is crisper and more pastry-like, easier to roll thin, and scales
   to 4 rather than 2. Her fillings are richer than the plain spinach-and-feta above — egg and
   mozzarella in the veg one, and a whole spiced mince option — and either filling works with
   either dough.
+
+  Untested with plain flour as of 2026-08-06 — the liquid may still need adjusting.
