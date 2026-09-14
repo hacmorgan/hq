@@ -65,7 +65,7 @@ layout {
     tab name="claude" {
         pane cwd="$HOME/src/abyss" {
             command "bash"
-            args "-c" "source ${venv_path}/bin/activate && sleep 2 && claude --ide"
+            args "-c" "source ${venv_path}/bin/activate && sleep 2 && claude --ide --name 'abyss-trinity-${session_name}'"
         }
     }
     tab name="repl" {
@@ -107,7 +107,7 @@ else
          -t "$session_name:edit" \
          -n claude \
          -c "$HOME/src/abyss" \
-         "$SOURCE_VENV && sleep 2 && claude --ide"
+         "$SOURCE_VENV && sleep 2 && claude --ide --name \"abyss-trinity-$session_name\""
 
     tmux new-window -a \
          -t "$session_name:claude" \
