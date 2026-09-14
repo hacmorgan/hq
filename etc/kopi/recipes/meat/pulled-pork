@@ -1,0 +1,315 @@
+yield: for a 2kg boneless shoulder — serves 6-8 sandwiches
+uses:
+  - sourdough
+  - slaw
+  - quick-pickles
+ingredients:
+  - item: pork shoulder
+    mass: 2000
+    basis: true
+    note: boneless, skin off, fat cap trimmed to ~5mm; bone-in works, add ~1hr
+components:
+  - name: rub
+    ingredients:
+      - item: cooking salt
+        mass: 20
+        note: 1% of meat weight; kosher salt — reduce 25% for table salt, increase 50% for flakes
+      - item: brown sugar
+        mass: 40
+        qty: 2
+        unit: tbsp
+        note: sub white
+      - item: smoked paprika
+        mass: 15
+        qty: 2
+        unit: tbsp
+        note: sub sweet paprika
+      - item: garlic powder
+        mass: 9
+        qty: 1
+        unit: tbsp
+      - item: onion powder
+        mass: 6
+        qty: 2
+        unit: tsp
+      - item: mustard powder
+        mass: 5.5
+        qty: 2
+        unit: tsp
+      - item: cumin powder
+        mass: 4
+        qty: 2
+        unit: tsp
+      - item: coarse black pepper
+        mass: 4
+        qty: 1
+        unit: tbsp
+      - item: cayenne
+        mass: 0.4
+        qty: 0.5
+        unit: tsp
+        optional: true
+        note: for spice
+    steps:
+      - salt first, then the rest of the mix — all faces, into the crevices
+  - name: mop
+    ingredients:
+      - item: apple cider vinegar
+        mass: 120
+      - item: apple cider
+        mass: 120
+        note: or apple juice
+      - item: liquid smoke
+        mass: 5
+        optional: true
+        note: hickory; apple-wood to harmonise with the cider. see notes — hold 2g back for the finishing sauce
+    steps:
+      - combine in a sprayer
+  - name: finishing sauce (carolina vinegar)
+    ingredients:
+      - item: apple cider vinegar
+        mass: 160
+      - item: water
+        mass: 60
+      - item: tomato sauce
+        mass: 60
+      - item: brown sugar
+        mass: 30
+      - item: salt
+        mass: 5
+      - item: chili flakes
+        mass: 2
+        qty: 1
+        unit: tsp
+      - item: black pepper
+        mass: 2
+        qty: 1
+        unit: tsp
+      - item: hot sauce
+        optional: true
+        note: few dashes
+      - item: liquid smoke
+        mass: 2
+        optional: true
+        note: the 2g held back from the mop — add by drops, tasting
+    steps:
+      - whisk everything cold until sugar and salt dissolve — no cooking needed
+      - rest at least 30 mins for the chili to bloom
+  - name: procedure (oven)
+    steps:
+      - pat dry, apply rub, refrigerate uncovered overnight (4 hrs minimum)
+      - out of fridge 1 hr before cooking
+      - oven to 115-120°C fan-forced, or 135°C conventional — fan is the better cook, see notes
+      - wire rack over a drip tray; leave the tray dry for maximum bark, or fill it with water as insurance against a dry exterior
+      - fat cap up, uncovered, until core hits 70-75°C and the bark is set and dark (3-4 hrs)
+      - spray with mop every hour once the surface looks dry
+      - wrap tight in foil (or butcher paper) with a splash of mop inside
+      - double layer, seams folded up on top, foil tight against the meat with minimal airspace, parcel sat in a tray in case it weeps
+      - 'leave-in probe: bring the cable out through the top seam and crimp the foil around it — liquid pools at the bottom, so a top exit only loses steam'
+      - don't pull the probe to make wrapping easier — every hole is a leak path, and re-siting it blind risks landing in a fat seam that lies about the core temp
+      - keep the tray drippings, but taste them first — see notes
+      - deglaze the still-warm tray with a splash of apple juice or stock, scrape the fond in
+      - back in until core reaches 96°C and a skewer slides in with no resistance (another 3-4 hrs)
+      - rest wrapped 1 hr — this is not optional, it reabsorbs the juices
+      - unwrap over a bowl, keep the rendered juices
+      - pull with two forks or claws, discarding hard fat and gristle
+      - toss the pulled meat with the reserved juices first, then finishing sauce to taste
+  - name: procedure (slow-cooker)
+    steps:
+      - rub as above, sear all faces hard in a pan first (the slow cooker won't build bark)
+      - 8 hrs on low with 100g of the mop in the bottom, no other liquid
+      - lift out, pull, then reduce the cooking liquid in a pan before tossing it through
+    notes: |
+      Easier, but you trade the bark for it. Worth spreading the pulled meat on a tray and
+      blasting under a hot grill for 5-10 mins to get some crisp edges back.
+  - name: holding (if it's done early)
+    ingredients:
+      - item: chicken or pork stock
+        mass: 100
+        note: lightly salted, ~1%, to top up the wrap. salted apple juice also works — not the mop, see notes
+    steps:
+      - don't start the hold until it's probe-tender — at 65°C collagen conversion effectively stops, so holding a half-done roast just parks it half-done. tender first, then rest, then hold
+      - rest wrapped on the bench for the usual 1 hr first — don't go from 90°C straight into a warm oven, the rest only works while the temperature is falling
+      - hold it whole and wrapped, never shredded
+      - up to ~3 hrs — wrapped roast plus towels into a pre-warmed esky, sits around 60-70°C, gentlest option
+      - longer than that — oven at 65°C, topping up the liquid in the wrap
+      - past ~4 hrs — consider cooling it properly and reheating gently in its own juices instead
+      - shred at the last minute; get the toast going before the meat comes out of the wrap
+    notes: |
+      Shred late, always. Shredded meat has enormous surface area and dries and cools fast,
+      where a whole wrapped roast holds almost indefinitely. It's also mechanically easier —
+      meat that has cooled firms up and shreds worse.
+
+      60°C is the safety line: above it you're fine more or less forever, below it you're in
+      the danger zone. An esky drifts down, so if the hold creeps past 3 hrs move it to the
+      oven rather than hoping.
+
+      The esky option assumes a full-size roast. Anything around 1kg has half the thermal
+      mass and drifts below 60°C much faster — use the 65°C oven instead.
+
+      Top up with lightly salted stock, or salted apple juice — not the mop. The mop is half
+      cider vinegar, which is fine spraying onto an open surface where it mostly evaporates,
+      but sealed in a wrap for hours the acid keeps working and the exterior goes mushy and
+      over-tangy. Salt is what helps a lean cut hold moisture; acid does nothing for it. You
+      also reclaim this liquid and toss it through at the end, so you want it tasting like
+      pork jus — the vinegar comes later, in the finishing sauce, where you can taste as you
+      go.
+
+      Cool-and-reheat over a long hot hold is counterintuitive but sound: time at temperature
+      is what dries lean meat, and pulled or braised cuts reheat exceptionally well since
+      they're already broken down and sitting in liquid. It's fiddlier and passes the danger
+      zone twice, so it's only worth it past about four hours.
+  - name: variant (leg instead of shoulder)
+    ingredients:
+      - item: salt
+        mass: 100
+        note: for a 5% wet brine in 2L water, 12-24 hrs, replacing the dry brine
+      - item: butter
+        mass: 50
+        note: at the pull, not the wrap — see notes
+      - item: salted apple juice
+        mass: 100
+        note: the main wrap liquid, lightly salted only. or stock
+      - item: lard or bacon fat
+        mass: 30
+        optional: true
+        note: into the foil at the wrap
+    steps:
+      - wet brine 12-24 hrs at 5% instead of the overnight dry brine — this is the change that matters most
+      - if there's no time to brine, inject with salted apple juice or stock instead; it works in minutes, but only while the meat is still raw
+      - once it's up to temp it's too late to inject — the muscle is already contracting and squeezing liquid out, so put that liquid in the foil at the wrap instead
+      - leave the fat cap thick and untrimmed, cap up
+      - keep water in the drip tray — with a lean cut, take the humidity over the bark
+      - wrap early, at 65°C rather than 70-75°C
+      - 'into the foil: 100g salted apple juice as the main liquid, only a small splash of mop, and 30g lard or bacon fat if you have it'
+      - go light on the mop here — wrapping early and then holding means hours sealed, and that's too long for something half cider vinegar (same reasoning as the hold top-up)
+      - keep the salt light in the juice; the rub is already on and the finishing sauce brings more
+      - pull at 90-92°C, NOT 96°C
+      - expect 5-6 hrs for 2kg rather than 7-9
+      - there'll be less rendered juice, so toss with 50g melted butter at the pull and lean harder on the finishing sauce
+      - better than the butter if the tray drippings came out clean — use the fat lifted off those instead
+    notes: |
+      A compromise, not an equal. Leg runs ~8-10% intramuscular fat against shoulder's 20%+,
+      and its collagen sits in sheets between the muscle groups rather than webbed all the
+      way through, so it shreds coarser — sliceable-shreddable rather than fluffy.
+
+      If the leg has skin on, consider not pulling it at all. Roasted and sliced with
+      crackling is a better dinner than a compromised pulled pork.
+  - name: assembly
+    steps:
+      - thick slices of sourdough, toasted hard — it has to hold up to wet pork
+      - butter the toast while hot
+      - pile on pork, pickles over the pork, slaw over the top so it doesn't steam
+      - open-faced, or top slice on for a proper sandwich
+notes: |
+  Shoulder (aka pork butt / boston butt) by default. Leg or loin have nowhere near the
+  collagen or intramuscular fat, and cooked to these temps as written they go stringy and
+  dry — see the leg variant component if that's what you've got.
+
+  Drippings are worth reclaiming, but taste them before you commit. If the tray ran dry the
+  rub can scorch — there's 40g of brown sugar in it and the tray takes direct radiant heat.
+  Dark brown and rich, keep it; black or acrid, bin it, because it will poison the whole
+  batch and there's no getting it back out.
+
+  If they're good, they beat butter for finishing. Pour them into a container and refrigerate
+  while the meat rests or holds: the fat sets into a disc you lift straight off, leaving
+  concentrated jus underneath. Melt that rendered pork fat through the meat at the pull —
+  right flavour, pure fat with none of butter's water, and it came out of the same animal.
+  Deglazing the warm tray gets you the fond as well, which is the most concentrated flavour
+  in the whole cook.
+
+  Don't tip drippings into the wrap. The fat just pools, and you'd be adding liquid to a
+  pouch whose level you're already managing. Reclaim it separately and use it at the pull.
+
+  Where the fat goes, for a lean cut: at the pull, overwhelmingly. Fat does not penetrate
+  meat. Muscle is about 75% water and melted butter cannot migrate into the fibres, so
+  anything you put in the foil is coating the outside and pooling, not moisturising the
+  interior. What actually makes lean pulled pork feel dry is bare strands in the mouth with
+  nothing coating them, and that's a problem you can only fix after shredding, when the
+  surface area is enormous and every strand takes the fat.
+
+  Some fat at the wrap is still worth it, but for a different reason: it turns the wrap
+  liquid into a fatty braise rather than a thin acidic one, and you reclaim that liquid and
+  toss it through at the end anyway. Use lard or bacon fat there rather than butter —
+  butter is 16-18% water and milk solids, so you're adding less fat than you think, and it
+  reads oddly against the vinegar sauce. Save the butter for the pull, where you can taste
+  as you go.
+
+  The target isn't doneness, it's collagen breakdown. 96°C core held there long enough is
+  what turns connective tissue to gelatin; a shoulder pulled at 85°C is cooked but won't
+  shred. Go by probe feel over the thermometer at the end — no resistance anywhere.
+
+  Which means the number is necessary, not sufficient. Collagen conversion is time and
+  temperature together, so touching the target for a moment isn't the same as sitting at it
+  long enough. If it hits temp early and still feels tight, hold the temperature and give it
+  time rather than chasing a higher number — it's sealed and sitting in liquid at that point,
+  so the extra time is nearly free. Test several spots, especially on leg, where the muscle
+  groups are divided by connective sheets and go tender unevenly. A skewer should slide in
+  like into room-temperature butter.
+
+  Smaller cuts: time tracks thickness more than mass, so halving the weight doesn't halve
+  the cook — a 1kg piece wrapped early can be at temp in about 3 hrs, which is fast but not
+  wrong. Everything scales off the 2kg basis, so watch the salt in particular: full rub on a
+  half-size piece is double the concentration, and the wrap liquid and finishing sauce stack
+  on top of it. Taste at the pull before saucing. Reckon on ~600g pulled from 1kg, so four
+  sandwiches rather than six to eight.
+
+  The stall around 70-75°C is evaporative cooling, not a problem. Wrapping pushes through
+  it and stops the bark going leathery. Foil is faster and softens the bark; butcher paper
+  is slower and keeps it crisper.
+
+  Fan-forced or conventional: fan, at 115-120°C. It only matters for the unwrapped phase —
+  once it's in foil there's no surface evaporation and airflow does nothing, so run whatever
+  you like after the wrap.
+
+  Two reasons fan wins on the first phase. Home ovens hold a low conventional setting badly,
+  cycling hard with a top-down radiant bias, and over six hours that means one end of the
+  shoulder finishes well ahead of the other; the fan gives an even, stable chamber. And bark
+  is surface dehydration plus Maillard, which is precisely what moving air does — it's why
+  offset smokers and pellet grills out-bark a still oven.
+
+  On the temperature drop: the usual "fan runs 20°C hotter" rule is calibrated for baking at
+  180-200°C. Down at 135°C the real offset is nearer 10-15°C, so 115-120°C fan is the
+  equivalent, not 115 flat.
+
+  The trade is a worse stall. More airflow means more evaporation means more evaporative
+  cooling, so fan deepens and lengthens it — phase 1 will run past 3-4 hrs. Go by the
+  70-75°C reading and the look of the bark, not the clock.
+
+  Conventional-only oven: 135°C as written is fine. Rotate the tray every couple of hours
+  and accept a patchier bark.
+
+  The drip tray is a genuine trade-off, not an oversight. Water in it stops the drippings
+  scorching and humidifies the chamber, which protects the exterior — but humidity is the
+  enemy of bark. Dry tray for bark, water for insurance.
+
+  Carolina vinegar sauce over a thick sweet bbq sauce, deliberately — the pork is already
+  rich and the toast is already carby. Acid is what makes the sandwich eat well instead of
+  sitting on you. Same reason the slaw is sharp.
+
+  Liquid smoke: optional, and dosed differently to pork-ribs. Pulling redistributes it.
+  Liquid smoke is a surface treatment — on a rack it stays in the layer you bite through,
+  concentrated, but shredding a shoulder mixes that surface through the whole 2kg. More even
+  than the ribs ever get, but weaker for the same dose.
+
+  Don't scale the ribs dose by weight. Ribs run 3.5g into 60g water for a 650g rack (5.4g/kg);
+  straight-scaled that's ~11g here, which is far too much. A rack is flat with enormous
+  surface per gram, a shoulder is a blocky roast. You're dosing surface area, not mass.
+
+  So: 4g into the mop, 2g held back for the finishing sauce. The sauce is the real control
+  point — the meat gets tossed in it anyway, so it distributes perfectly and you can taste
+  as you go. Liquid smoke turns acrid and ashtray fast with no way back, so arrive under and
+  add drops.
+
+  Not in the rub — it's water-based, it turns the rub pasty and works against the surface
+  drying that builds bark.
+
+  No curing salt, unlike pork-ribs. That's there for the pink smoke ring, and this gets
+  shredded, so nobody will ever see one. Dropping it also removes the ribs recipe's
+  constraint on resting overnight, which this wants anyway for the uncovered dry brine.
+
+  If you own a kettle or smoker, do it properly instead. Phase 1 — unwrapped, surface still
+  damp — is the smoke absorption window; meat largely stops taking smoke once the surface
+  dries and you wrap. Liquid smoke substitutes for not having that, it doesn't equal it.
+
+  Faster oven route: 160°C covered for ~5 hrs. Fine, but you lose most of the bark.

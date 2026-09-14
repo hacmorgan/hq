@@ -1,23 +1,255 @@
-Ingredients 
+name: gozleme bread
+components:
+  - name: dough
+    ingredients:
+      - item: full cream greek yogurt
+        qty: 180
+        unit: g
+        note: 0.75 cup, add olive oil if low fat
+      - item: plain flour
+        qty: 165
+        unit: g
+        note: no leavening — gozleme is meant to stay flat
+      - item: water
+        optional: true
+        note: by the tsp if the dough won't come together. plain flour is thirstier than SR
+      - item: extra virgin olive oil
+        qty: 1.5
+        unit: tbsp
+        note: for frying
+      - item: salt
+        qty: 2
+        unit: g
+        note: good pinch
+      - item: lemon wedges
+        note: for serving
+    steps:
+      - add flour, salt, and yogurt to a large bowl, mixing with a spoon or one hand to form a rough ball. add water a tsp at a time if it stays shaggy
+      - transfer to a floured table and knead by hand for 3–5 mins until smooth. sprinkle more flour if too sticky or wet
+      - rest covered for 20–30 mins. plain flour builds more gluten than SR, so it springs back when rolled — the long rest is what buys the thinness
+  - name: filling
+    ingredients:
+      - item: spinach
+        note: chopped
+      - item: feta cheese
+      - item: salt
+      - item: pepper
+    steps:
+      - add chopped spinach to a bowl and scrunch with your hands to soften. then crumble in the feta cheese, add salt and pepper, and stir together
+  - name: assembly and cook
+    steps:
+      - cut the dough into 2 equal pieces and roll them into balls
+      - dust the table with flour and roll the dough into a thin circle (10–12 inches / 25–30 cm), flipping and sprinkling with flour regularly. roll as thin as possible without tearing
+      - add half of the spinach mixture evenly to one half of the dough
+      - fold the dough over the filling. press from the fold outward to push the air out before sealing the edges, otherwise you trap a pocket
+      - prick the top through with a fork in a few places. the filling steams as it cooks and a sealed parcel has nowhere to vent — this is what balloons it, not the thickness
+      - repeat with the 2nd dough
+      - heat a stainless pan to 190 with 2 teaspoon olive oil. place a gozleme in the pan and cook for 3-5 minutes until golden
+      - brush or spray the top with oil, flip it over using a spatula and gently press it to flatten it. keep it pressed as it cooks; prick and flatten any bubble that forms rather than letting it set inflated
+      - when golden brown, remove from the pan and place on a board. repeat with the 2nd dough
+      - slice into triangles, add a squeeze of lemon and enjoy!
+  - name: variant — nagi's dough (recipetineats)
+    notes: |
+      https://www.recipetineats.com/gozleme/ — a completely different dough to the yogurt one
+      above: flour, olive oil and water, no dairy at all. Yields 4 gozleme off 320g flour where
+      the yogurt dough yields 2 off 165g. Nagi's is the more forgiving one to roll — she calls it
+      elastic and non-tearing — and it fries crisper and more pastry-like, since the fat is worked
+      through the dough rather than sitting in the pan. The yogurt dough is softer and more
+      pliable eating. Same 20 min rest either way
+    ingredients:
+      - item: plain flour
+        mass: 320
+        qty: 2.5
+        unit: cup
+        note: plain/all purpose
+      - item: extra virgin olive oil
+        mass: 80
+        qty: 80
+        unit: ml
+        note: 1/3 cup — this is in the dough, on top of the frying oil
+      - item: water
+        mass: 180
+        qty: 180
+        unit: ml
+        note: 3/4 cup
+      - item: cooking salt
+        mass: 3
+        qty: 0.5
+        unit: tsp
+        note: kosher
+    steps:
+      - combine flour, oil, salt and water in a stand mixer with the dough hook. mix 2.5 mins on medium-high (speed 7) until it forms a smooth pliable ball, not sticky
+      - "(speed 7 is Nagi's number, kept as she wrote it, but it's well above kitchenaid's own dough-hook guidance of speed 2. her dough is stiff, low-hydration and only in there 2.5 mins, which is a far gentler ask on the gearbox than a long knead at that speed would be — so it's a smaller risk than it looks, but if you'd rather not, speed 2 for 5-6 mins gets to the same place)"
+      - rest covered 20 mins
+      - cut into 4 and roll each into a 35 x 20cm (14 x 8 inch) rectangle on a floured surface — rectangles, not the circles-folded-to-semicircles of the yogurt version
+      - can be refrigerated up to 3 days after the rest
+  - name: variant — nagi's spinach & feta filling
+    notes: |
+      Fills 4. Egg and mozzarella are the two things the simpler filling above doesn't have —
+      the egg binds and enriches, the mozzarella is what actually makes it stretch and ooze.
+      Hold the mozzarella out of the mixing bowl and add it at assembly
+    ingredients:
+      - item: baby spinach
+        mass: 250
+      - item: garlic
+        qty: 2
+        unit: clove
+        note: minced
+      - item: eggs
+        qty: 2
+        unit: ea
+        note: large, ~50g each in shell
+      - item: black pepper
+        qty: 0.25
+        unit: tsp
+      - item: feta cheese
+        mass: 250
+        note: danish or greek
+      - item: mozzarella
+        qty: 2
+        unit: cup
+        note: shredded, tightly packed — added at assembly, not into the bowl
+    steps:
+      - put the spinach, garlic, egg and pepper in a bowl and scrunch with your hands to reduce the volume
+      - crumble in the feta and stir through gently
+      - add the mozzarella when assembling
+  - name: variant — nagi's spiced lamb or beef filling
+    notes: |
+      Fills 4. Must be cooled before it goes near the dough — warm filling steams the pastry from
+      the inside and you lose the crisp. Feta goes on at assembly, not into the pan
+    ingredients:
+      - item: olive oil
+        qty: 1
+        unit: tbsp
+      - item: garlic
+        qty: 2
+        unit: clove
+        note: minced
+      - item: onion
+        qty: 1
+        unit: ea
+        note: finely chopped
+      - item: beef or lamb mince
+        mass: 400
+      - item: red capsicum
+        qty: 1
+        unit: ea
+        note: small, diced
+      - item: baby spinach
+        mass: 90
+      - item: cumin powder
+        qty: 1.5
+        unit: tsp
+      - item: paprika
+        qty: 1
+        unit: tsp
+      - item: cayenne
+        qty: 0.25
+        unit: tsp
+      - item: cooking salt
+        qty: 0.75
+        unit: tsp
+        note: kosher
+      - item: black pepper
+        qty: 0.25
+        unit: tsp
+      - item: water
+        qty: 1
+        unit: tbsp
+      - item: feta cheese
+        mass: 120
+        note: danish or greek — crumbled in at assembly
+    steps:
+      - heat the oil in a skillet over high heat. cook the garlic and onion 1 min
+      - add the capsicum, cook 2 mins
+      - add the mince and cook until brown, breaking it apart
+      - add the cumin, paprika, cayenne, salt, pepper and water, cook 2 mins
+      - add the spinach and stir until wilted
+      - cool before using. crumble the feta in at assembly
+  - name: variant — nagi's assembly and cook
+    steps:
+      - spread the filling over half the pastry, pushing it right to the edges
+      - fold the other half over. press the edges firmly, expelling the air pockets as you go. wet the edge with water if it won't seal
+      - flour a pizza paddle and slide the gozleme onto it to move it
+      - heat 1-1.5 tbsp olive oil in a large skillet over medium-high. slide the gozleme in and cook, pressing lightly, until deep golden and crispy — about 3 mins
+      - flip and cook until crispy on the second side
+      - cut into 6 or 8 pieces and serve immediately with lemon wedges
+    notes: |
+      Nagi doesn't prick the top the way the yogurt version above needs — the pressing-and-sealing
+      does the air expulsion, and this dough has no leavening either. If it balloons anyway, prick
+      and flatten it as per the main method; the cause is the same trapped steam
+      Don't assemble ahead of time, the filling weeps and wets the pastry
+      Cooked gozleme keeps 3 days in the fridge or freezes 3 months. Reheat by pan-frying for the
+      crisp, or in the oven at 180°C for ~7 mins
+      Works with gluten-free flour, but the dough is less stretchy — make 5 smaller ones
+  - name: variant — self raising flour (the old default)
+    notes: |
+      - Swap the plain flour for 1 cup self raising flour
+      - Rest 10 mins instead of 20-30 — softer flour, less springback
+      - Puffed up badly even rolled thin. Two causes: the leavening, and steam with no vent.
+        Adding 1 tsp baking powder to plain flour to fake SR flour makes it worse, so don't
+      - The old note "AP flour seems not enough" was never resolved — unclear whether it meant
+        not enough flour for the yogurt, or not enough lift. Moot now
+  - name: tuning — stretchier and less pastry-like
+    notes: |
+      The 2026-09 result came out too short and pastry-like. Levers, roughly in order of how
+      much they matter:
 
-▢¾ cup Greek yogurt - I’ve used non-fat
-▢1 cup self raising flour - or all purpose flour (seems not enough)
+      Fat — the main culprit. Fat coats gluten strands and stops them linking, which is what
+      "short" means in shortcrust. Full cream greek yogurt is ~10% fat, so 180g of it is ~18g
+      into 165g flour, around 11% baker's fat. Use plain non-greek low- or no-fat yogurt, or
+      replace some of the yogurt with water.
 
-▢1 teaspoon baking powder - only add if using all purpose flour
-▢1 ½ tablespoons extra virgin olive oil for frying
-▢Good pinch of salt
-▢Lemon wedges for serving
+      But don't go to zero — fat cuts both ways by dose. Under ~5% of flour weight it acts as
+      a lubricant, letting gluten sheets slide past each other: more extensible, rolls thinner
+      without tearing, stays supple instead of leathery, stales slower. Over ~10% it shortens
+      instead. Aim for 3-5%, i.e. 5-8g (1-1.5 tsp) olive oil per 165g flour. So the "add olive
+      oil if low fat" ingredient note is right, it just needs a dose on it — with no-fat yogurt
+      you've stripped out essentially all the fat and should add it back deliberately.
 
-Instructions
-Add flour, salt, and yogurt to a large bowl. *Add baking powder if using AP flour. Mixing with a spoon or one hand to form a rough ball
-Transfer to a floured table and knead for 3–5 mins until smooth. *Sprinkle more flour if too sticky or wet. Then rest for 10 mins
-Add chopped spinach to a bowl and scrunch with your hands to soften. Then crumble in the feta cheese, add salt and pepper, and stir together
-Cut the dough into 2 equal pieces and roll them into balls
-Dust the table with flour and roll the dough into a thin circle (10–12 inches / 25–30 cm), flipping and sprinkling with flour regularly. Roll as thin as possible without tearing
-Add half of the spinach mixture evenly to one half of the dough
+      Pan oil is its own lever, separate from the dough. Shallow-frying in 2 tsp gives a fried,
+      crisp, pastry-ish surface, and that's a real part of the mouthfeel. For soft and stretchy,
+      cook in a dry or barely-wiped pan, tortilla-style. That plus the tea towel below is
+      probably the biggest single change to how it eats.
 
-Fold the dough over the filling and seal the edges with your fingers. Repeat with the 2nd dough
-Heat a large pan over medium heat with 2 teaspoon olive oil. Place a gozleme in the pan and cook for 3-5 minutes until golden
-Brush or spray the top with oil, flip it over using a spatula and and gently press it to flatten it
-When golden brown, remove from the pan and place on a board. Repeat with the 2nd dough.
-Slice into triangles, add a squeeze of lemon and enjoy!
+      Acid — yogurt's lactic acid degrades gluten. It's a tenderiser, and effective even over a
+      30 min rest. Softness and tang come at the direct cost of chew; you can't have both out of
+      the one dough. Worth knowing that traditional gozleme dough is just flour, water and salt,
+      no yogurt at all — if stretchy is the target, the yogurt is what's in the way. Nagi's
+      variant is further from it, not closer: 80ml oil in 320g flour is ~25% fat, twice as short
+      as this one.
+
+      Gluten development — knead longer, and more so with less fat, not less, since there's now
+      nothing coating the gluten to work against. 3-5 mins by hand is modest, and chew needs the
+      gluten actually developed rather than merely present. 8-10 mins, or knead 5 / rest 15 /
+      knead 5, which makes the second knead far more effective.
+
+      Kitchenaid works, with a catch: 165g flour (~1 cup) is below the working minimum for a 5qt
+      bowl, and the hook will shove a ball that small around the outside without ever engaging
+      it — less development than by hand. Either scale up to 400-500g flour (which suits Nagi's
+      4-piece yield anyway) or knead this size by hand. Dough hook, speed 2, 8-10 mins.
+
+      Don't chase a full windowpane though. A rolled flatbread wants extensibility more than
+      strength, and an over-developed dough that hasn't relaxed fights the pin and springs back —
+      the same springback the plain-flour ingredient note describes, amplified. Develop it well,
+      then rest longer than the 20-30 mins in the method: 45 mins, or an hour in the fridge.
+
+      Flour and salt — bread flour over plain, for the obvious reason; real but smaller than the
+      levers above. A touch more salt (1.5-2% of flour vs the current ~1.2%) strengthens gluten.
+
+      Cooking — hotter and faster. 3-5 mins at 190°C is long for something this thin and dries
+      the inside to crackery. Hotter pan, ~90 secs to 2 mins a side, colour fast then off. Stop
+      pressing once you've got contact; sustained pressing squeezes moisture out. Then stack them
+      under a clean tea towel straight off the pan — the trapped steam softens the crust, and
+      it's the cheapest thing on this list.
+
+      For real chew rather than just softness, ~1% fresh yeast (or 1/4 tsp instant) and an hour.
+      But that reopens the ballooning problem, so only alongside the pricking and the pressing.
+notes: |
+  Two doughs, two characters: the yogurt dough (default above) is soft, tangy and pliable;
+  Nagi's oil-and-water dough is crisper and more pastry-like, easier to roll thin, and scales
+  to 4 rather than 2. Her fillings are richer than the plain spinach-and-feta above — egg and
+  mozzarella in the veg one, and a whole spiced mince option — and either filling works with
+  either dough.
+
+  Untested with plain flour as of 2026-08-06 — the liquid may still need adjusting.

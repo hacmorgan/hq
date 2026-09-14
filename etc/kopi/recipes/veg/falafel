@@ -1,13 +1,38 @@
-- soak dried chickpeas overnight
-- drain chickpeas
-- add to food processor:
-  - drained chickpeas
-  - 1 cup roughly chopped parsley
-  - 1 cup rough chopped coriander leaves
-  - 6 spring onions fine chopped (white and light green sections)
-  - 2 minced garlic cloves
-  - 0.5 tsp corainder powder
-  - 3 tsp salt
-  - 0.5 tsp baking powder
-  - 4 tsp flour
-  - 5 tbsp water
+ingredients:
+  - item: dried chickpeas
+    note: soaked overnight and drained
+  - item: parsley
+    qty: 1
+    unit: cup
+    note: roughly chopped
+  - item: coriander leaves
+    qty: 1
+    unit: cup
+    note: roughly chopped
+  - item: spring onion
+    qty: 6
+    unit: ea
+    note: white and light green sections, finely chopped
+  - item: garlic clove
+    qty: 2
+    unit: ea
+    note: minced
+  - item: coriander powder
+    qty: 0.5
+    unit: tsp
+  - item: salt
+    qty: 3
+    unit: tsp
+  - item: baking powder
+    qty: 0.5
+    unit: tsp
+  - item: flour
+    qty: 4
+    unit: tsp
+  - item: water
+    qty: 5
+    unit: tbsp
+steps:
+  - soak dried chickpeas overnight
+  - drain chickpeas
+  - add all ingredients to food processor and blend until combined

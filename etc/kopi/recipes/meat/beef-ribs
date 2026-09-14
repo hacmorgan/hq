@@ -1,36 +1,94 @@
-For 3 short ribs, 1kg incl. bone
-
-[ rub ]
-- 20g (1 tbsp) brown sugar (sub white)
-- 5g (2 tsp) paprika
-- 2.5g (1 tsp) garlic powder (sub 1 tsp fresh garlic)
-- 1.5g (1 tsp) onion powder (sub garlic powder)
-- 0.5 tsp cumin powder
-- 2.5g (0.75 tsp) mustard powder (Note 2)
-- 1 tsp cooking salt / kosher salt (reduce by 25% for table salt, increase 50% for salt flakes)
-- 0.5g (0.5 tsp) black pepper
-
-[ sauce ]
-- 2 garlic cloves , minced (sub 2 tsp powder)
-- 125 ml apple cider vinegar (Note 2 subs)
-- 335 g ketchup , or Aussie tomato sauce
-- 80 g brown sugar , loosely packed (ie don't pack it tight)(sub white)
-- 2 tsp EACH black pepper, onion powder, mustard powder (Note 2)
-- 1 tsp cayenne pepper (adjust to taste re: spiciness)
-- 1 tbsp Worcestershire sauce (sub soy sauce)
-- 500 ml water
-
-[ procedure - slow-cooker ]
-- replace oven with slow cooker
-- reduce sauce to replace oven evaporation
-
-[ procedure - oven ]
-- oven to 160°C
-- coat ribs in rub
-- make sauce (except water) in baking pan, then add water
-- coat ribs in sauce
-- bake meat side down 3.5hr covered with lid or foil until meat pulls apart
-  - baste intermittently
-- spoon sauce over then separate meat and strain sauce
-- finish over barbecue, basting regularly
-
+yield: 3 short ribs, 1kg incl. bone
+ingredients:
+  - item: beef short ribs
+    mass: 1000
+    basis: true
+components:
+  - name: rub
+    ingredients:
+      - item: brown sugar
+        mass: 20
+        qty: 1
+        unit: tbsp
+        note: sub white
+      - item: paprika
+        mass: 5
+        qty: 2
+        unit: tsp
+      - item: garlic powder
+        mass: 2.5
+        qty: 1
+        unit: tsp
+        note: sub 1 tsp fresh garlic
+      - item: onion powder
+        mass: 1.5
+        qty: 1
+        unit: tsp
+        note: sub garlic powder
+      - item: cumin powder
+        qty: 0.5
+        unit: tsp
+      - item: mustard powder
+        mass: 2.5
+        qty: 0.75
+        unit: tsp
+      - item: cooking salt
+        qty: 1
+        unit: tsp
+        note: kosher salt — reduce by 25% for table salt, increase 50% for salt flakes
+      - item: black pepper
+        mass: 0.5
+        qty: 0.5
+        unit: tsp
+  - name: sauce
+    ingredients:
+      - item: garlic
+        qty: 2
+        unit: clove
+        note: minced; sub 2 tsp powder
+      - item: apple cider vinegar
+        mass: 125
+        qty: 125
+        unit: ml
+      - item: ketchup
+        mass: 335
+        note: or Aussie tomato sauce
+      - item: brown sugar
+        mass: 80
+        note: loosely packed (ie don't pack it tight); sub white
+      - item: black pepper
+        qty: 2
+        unit: tsp
+      - item: onion powder
+        qty: 2
+        unit: tsp
+      - item: mustard powder
+        qty: 2
+        unit: tsp
+      - item: cayenne pepper
+        qty: 1
+        unit: tsp
+        note: 'adjust to taste re: spiciness'
+      - item: Worcestershire sauce
+        qty: 1
+        unit: tbsp
+        note: sub soy sauce
+      - item: water
+        mass: 500
+        qty: 500
+        unit: ml
+    steps:
+      - make sauce (except water) in baking pan, then add water
+  - name: procedure (oven)
+    steps:
+      - oven to 160°C
+      - coat ribs in rub
+      - coat ribs in sauce
+      - bake meat side down 3.5hr covered with lid or foil until meat pulls apart
+      - baste intermittently
+      - spoon sauce over then separate meat and strain sauce
+      - finish over barbecue, basting regularly
+  - name: procedure (slow-cooker)
+    notes: |
+      Replace oven with slow cooker.
+      Reduce sauce to replace oven evaporation.

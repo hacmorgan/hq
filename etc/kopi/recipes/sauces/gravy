@@ -1,15 +1,22 @@
-Enough for 1 person
-
-Maggi Professional (1:6):
-    10g maggi powder
-    60g water
-
-    mix half water with gravy powder until combined
-    add remaining water
-    bring to boil
-    simmer 3 mins
-
-Gravox:
-    8g gravox powder
-    40g boiling water
-    
+yield: enough for 1 person
+components:
+  - name: Maggi Professional (1:6)
+    ingredients:
+      - item: maggi powder
+        mass: 10
+        basis: true
+      - item: water
+        mass: 60
+        qty: 6
+        unit: part
+    steps:
+      - mix half water with gravy powder until combined
+      - add remaining water
+      - bring to boil
+      - simmer 3 mins
+  - name: Gravox
+    ingredients:
+      - item: gravox powder
+        mass: 8
+      - item: boiling water
+        mass: 40

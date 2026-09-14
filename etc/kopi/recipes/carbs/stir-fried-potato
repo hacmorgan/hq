@@ -1,37 +1,79 @@
-for 1kg potatoes (3 massive):
-- 12g (10 small cloves) garlic
-- 16g (two) spring onions, chopped
-- 2 tsp toasted sesame seeds
-
-[ both spice mixes ]
-- 2.5g salt
-- 5g (1 tsp) granulated sugar
-- 6.5g chicken bullion
-
-[ western spice mix ]
-- 3g (two sprigs) rosemary, finely chopped
-- 0.5g black pepper
-- 0.5g white pepper
-
-[ chinese spice mix ]
-- 3.5g (2.5 tsp) sichuan peppercorn
-- 2.7g (1 tsp) white peppercorns
-- 1.8g (1 tsp) fennel seeds
-- 1 star anise pod (optional)
-- toasted in wok for 2 mins
-- grind in mortar and pestle
-
-[ jap spice mix ]
-- 2g togarashi chilli powder
-- 1 ground niboshi (dried anchovy)
-- 2g furikake
-
-- chop potato into 2cm cubes
-- boil for 5 mins until just tender and knife goes in easy
-  - still needs to survive frying
-- leave tatos on drying rack to dry
-- get high temp oil shimmering in pan (180°C) (try 200)
-- stir fry about 4 mins until brown spots on potatoes (about 4 mins)
-- clear a space in the centre of the pan and add garlic, spring onions, sesame seeds, and spice mix. Stir fry for 15 seconds
-- toss everything for another 15 seconds
-- season with more salt as required
+yield: for 1kg potatoes (3 massive)
+ingredients:
+  - item: potatoes
+    mass: 1000
+    basis: true
+  - item: garlic
+    mass: 12
+    qty: 10
+    unit: clove
+  - item: spring onions chopped
+    mass: 16
+    qty: 2
+    unit: ea
+  - item: toasted sesame seeds
+    qty: 2
+    unit: tsp
+  - item: salt
+    mass: 2.5
+  - item: granulated sugar
+    mass: 5
+    qty: 1
+    unit: tsp
+  - item: chicken bullion
+    mass: 6.5
+components:
+  - name: western spice mix
+    ingredients:
+      - item: rosemary finely chopped
+        mass: 3
+        qty: 2
+        unit: sprig
+      - item: black pepper
+        mass: 0.5
+      - item: white pepper
+        mass: 0.5
+  - name: chinese spice mix
+    ingredients:
+      - item: sichuan peppercorn
+        mass: 3.5
+        qty: 2.5
+        unit: tsp
+      - item: white peppercorns
+        mass: 2.7
+        qty: 1
+        unit: tsp
+      - item: fennel seeds
+        mass: 1.8
+        qty: 1
+        unit: tsp
+      - item: star anise pod
+        qty: 1
+        unit: ea
+        optional: true
+    steps:
+      - toast in wok for 2 mins
+      - grind in mortar and pestle
+  - name: jap spice mix
+    ingredients:
+      - item: togarashi chilli powder
+        mass: 2
+      - item: ground niboshi
+        qty: 1
+        unit: ea
+        note: dried anchovy
+      - item: furikake
+        mass: 2
+steps:
+  - chop potato into 2cm cubes
+  - step: boil for 5 mins until just tender and knife goes in easy
+    substeps:
+      - still needs to survive frying
+  - leave tatos on drying rack to dry
+  - get high temp oil shimmering in pan (180°C) (try 200)
+  - stir fry about 4 mins until brown spots on potatoes
+  - clear a space in the centre of the pan and add garlic, spring onions, sesame seeds, and spice mix. Stir fry for 15 seconds
+  - toss everything for another 15 seconds
+  - season with more salt as required
+notes: |
+  Choose one spice mix: western (rosemary & peppers), chinese (toasted sichuan & fennel), or jap (togarashi & furikake).

@@ -1,6 +1,16 @@
-per 100g corn chips:
-- 2.5g salt (if unsalted)
-- 2g tajin seasoning
-- 1g garlic powder
-- 0.5g paprika
-- 0.1g cayenne
+yield: per 100g corn chips
+ingredients:
+  - item: corn chips
+    mass: 100
+    basis: true
+  - item: salt
+    mass: 2.5
+    note: if unsalted
+  - item: tajin seasoning
+    mass: 2
+  - item: garlic powder
+    mass: 1
+  - item: paprika
+    mass: 0.5
+  - item: cayenne
+    mass: 0.1

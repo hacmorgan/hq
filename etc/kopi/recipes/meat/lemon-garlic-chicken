@@ -1,9 +1,22 @@
-- 1 chicken thigh per person (250g)
-- decent sprinkle of salt per thigh before marinating
-
-marinade, per chicken thigh:
-- 3 small lemons
-- 3 garlic cloves
-- 1/4 teaspoon oregano
-- a splash of olive oil
-
+yield: per person
+ingredients:
+  - item: chicken thigh
+    mass: 250
+    basis: true
+  - item: salt
+    note: decent sprinkle before marinating
+components:
+  - name: marinade
+    ingredients:
+      - item: lemon
+        qty: 3
+        unit: ea
+        note: small
+      - item: garlic clove
+        qty: 3
+        unit: ea
+      - item: oregano
+        qty: 0.25
+        unit: tsp
+      - item: olive oil
+        note: a splash

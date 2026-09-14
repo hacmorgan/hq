@@ -1,17 +1,34 @@
-# Espresso shot ++
-- double shot espresso
-- 6g nesquik
-- [OPTIONAL - real chocolate] 10g (2 squares) cadbury 45% dark choc
-- [OPTIONAL - chai] - 1.2g chai powder
-
-# Milk
-- 200g milk
-- cubed ice
-- 4g sugar
-- (1 small scoop) vanilla ice cream
-- [OPTIONAL - chai] - 20g honey
-
-# Steps
-1. pull shot over chocolate and nesquik
-2. shake milk mix in a cocktail shaker
-3. pour milk over espresso mix like a normal coffee
+components:
+  - name: espresso shot ++
+    ingredients:
+      - item: double shot espresso
+      - item: nesquik
+        mass: 6
+      - item: cadbury 45% dark choc
+        mass: 10
+        qty: 2
+        unit: squares
+        optional: true
+        note: real chocolate
+      - item: chai powder
+        mass: 1.2
+        optional: true
+        note: chai variant
+  - name: milk
+    ingredients:
+      - item: milk
+        mass: 200
+      - item: cubed ice
+      - item: sugar
+        mass: 4
+      - item: vanilla ice cream
+        qty: 1
+        unit: small scoop
+      - item: honey
+        mass: 20
+        optional: true
+        note: chai variant
+steps:
+  - pull shot over chocolate and nesquik
+  - shake milk mix in a cocktail shaker
+  - pour milk over espresso mix like a normal coffee

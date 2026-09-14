@@ -1,0 +1,24 @@
+yield: per-serve
+ingredients:
+  - item: gin
+    mass: 45
+  - item: lemon juice
+    mass: 25
+  - item: sugar syrup
+    mass: 15
+    note: 1:1 sugar:water
+  - item: soda water
+    mass: 75
+  - item: lemon wheel
+    note: to garnish
+steps:
+  - shake gin, lemon juice and syrup hard with ice
+  - strain into a tall glass over fresh ice
+  - top with soda water
+  - garnish with a lemon wheel
+notes: |
+  Pairs with breakfast/sourdough-skillet — light, bubbly and hyper-refreshing, the least
+  assertive of the four pairings.
+
+  Fresh ice for the glass, not the shaker ice — shaker ice is already half melted and will
+  water it down.

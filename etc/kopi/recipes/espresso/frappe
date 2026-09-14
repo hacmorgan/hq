@@ -1,11 +1,31 @@
-- 150g milk
-- 75g ice cream
-- 100g ice
-- double shot espresso (40g)
-- [optional] 10g sugar
-
-for espresso martini frappe, subs milk for:
-- 50g vodka
-- 20g kahlua
-- 5g maple syrup
-- add 20g extra ice
+components:
+  - name: espresso frappe
+    ingredients:
+      - item: milk
+        mass: 150
+      - item: ice cream
+        mass: 75
+      - item: ice
+        mass: 100
+      - item: double shot espresso
+        mass: 40
+      - item: sugar
+        mass: 10
+        optional: true
+  - name: espresso martini frappe
+    ingredients:
+      - item: ice cream
+        mass: 75
+      - item: ice
+        mass: 120
+        note: 100g base + 20g extra
+      - item: double shot espresso
+        mass: 40
+      - item: vodka
+        mass: 50
+      - item: kahlua
+        mass: 20
+      - item: maple syrup
+        mass: 5
+notes: |
+  Espresso martini frappe substitutes milk (150g) with vodka (50g), kahlua (20g), maple syrup (5g), and adds 20g extra ice.

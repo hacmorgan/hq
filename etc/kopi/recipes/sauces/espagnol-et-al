@@ -1,14 +1,43 @@
-[ espagnol ]
-- start with bacon in pan, render some fat
-- add a chopped onion and cook down slightly (not too brown) until most water gone
-- add finely chopped carrot and celery
-- add 50g butter once mirepoix is softened
-- add flour (forms roux with butter) once butter is melted.
-  - roughly 1:1 with butter, a bit less
-- add beef stock and continue to cook down for like 15 mins
-
-[ a l'orange ]
-- strain espagnol (max 1 big push through strainer, not too hard)
-- add fresh squeezed orange juice
-- season with salt & vinegar to taste
-- cook duck mostly on crown at 150°C
+components:
+  - name: espagnol
+    ingredients:
+      - bacon
+      - item: onion
+        qty: 1
+        unit: ea
+        note: chopped
+      - item: carrot
+        note: finely chopped
+      - item: celery
+        note: finely chopped
+      - item: butter
+        mass: 50
+      - item: flour
+        note: roughly 1:1 with butter, a bit less
+      - item: beef stock
+        note: to cover
+    steps:
+      - start with bacon in pan, render some fat
+      - add chopped onion and cook down slightly (not too brown) until most water gone
+      - add finely chopped carrot and celery
+      - add 50g butter once mirepoix is softened
+      - add flour (forms roux with butter) once butter is melted
+      - add beef stock and continue to cook down for like 15 mins
+  - name: à l'orange
+    ingredients:
+      - item: espagnol sauce
+        note: strained (max 1 big push through strainer, not too hard)
+      - item: fresh orange juice
+        note: fresh squeezed
+      - item: salt
+        optional: true
+      - item: vinegar
+        optional: true
+        note: to taste
+    steps:
+      - strain espagnol (max 1 big push through strainer, not too hard)
+      - add fresh squeezed orange juice
+      - season with salt and vinegar to taste
+      - cook duck mostly on crown at 150°C
+notes: |
+  Espagnol is a French brown sauce base. À l'orange is a variant using orange juice with duck.

@@ -1,0 +1,73 @@
+yield: for 2kg pulled pork — 6-8 sandwiches
+uses:
+  - mayo
+components:
+  - name: cabbage prep
+    ingredients:
+      - item: green cabbage
+        mass: 500
+        basis: true
+        note: shredded 2-3mm, core removed
+      - item: red cabbage
+        mass: 150
+        note: shredded, for colour
+        optional: true
+      - item: carrot
+        mass: 120
+        qty: 1
+        unit: ea
+        note: large, coarsely grated or julienned
+      - item: spring onion
+        qty: 3
+        unit: ea
+        note: thin diagonal slices, whites and greens
+      - item: salt
+        mass: 10
+        note: for pre-salting, mostly rinses away
+    steps:
+      - shred cabbage 2-3mm — thinner goes limp, thicker won't take dressing
+      - toss cabbage with the salt in a colander, sit 30-45 mins over the sink
+      - rinse briefly, then squeeze hard in a tea towel until it stops giving water
+      - combine with carrot and spring onion
+  - name: dressing
+    ingredients:
+      - item: mayo
+        mass: 100
+      - item: apple cider vinegar
+        mass: 25
+      - item: dijon mustard
+        mass: 12
+      - item: sugar
+        mass: 10
+      - item: celery seed
+        mass: 1
+        qty: 0.5
+        unit: tsp
+        optional: true
+      - item: black pepper
+        mass: 1
+        qty: 0.5
+        unit: tsp
+      - item: salt
+        note: to taste, after dressing — the cabbage is already seasoned
+    steps:
+      - whisk everything together, taste, adjust vinegar until it's sharper than seems right
+  - name: assembly
+    steps:
+      - dress no more than 30 mins before serving
+      - start with two thirds of the dressing, add the rest only if it looks dry
+      - taste for salt and vinegar just before it goes on the sandwich
+notes: |
+  Built to go on a sandwich, so the priority is that it stays crunchy and doesn't leak.
+  Pre-salting is the whole trick: it pulls the water out on your terms instead of into the
+  bread. Skip it and you get a puddle in the toast within minutes.
+
+  Sharper than a side-dish slaw on purpose — it's cutting rich pork and a vinegar sauce,
+  not standing alone. Taste it on its own and it should read slightly too acidic.
+
+  Dress late. Even salted cabbage softens once the dressing is on; an hour ahead is already
+  past its best. Undressed prepped veg keeps 2 days in the fridge.
+
+  Vinegar-only version: drop the mayo, go 60g cider vinegar + 40g oil + the sugar and
+  mustard. Lighter, holds much longer on the plate, better if the pork is already sauced
+  heavily.

@@ -1,5 +1,24 @@
-- 52g (4½ Tbsp) Worcestershire sauce (use vegan Worcestershire sauce for vegan)
-- 27g (2 Tbsp) sugar (plus more to taste)
-- stir to combine
-- 72g (5 Tbsp) ketchup
-- 28g (2 Tbsp) oyster sauce (use Lee Kum Kee Vegetarian Stir-Fry Sauce for vegetarian or if you‘re allergic to shellfish)
+ingredients:
+  - item: Worcestershire sauce
+    mass: 52
+    qty: 4.5
+    unit: tbsp
+    note: use vegan Worcestershire sauce for vegan
+  - item: sugar
+    mass: 27
+    qty: 2
+    unit: tbsp
+    note: plus more to taste
+  - item: ketchup
+    mass: 72
+    qty: 5
+    unit: tbsp
+  - item: oyster sauce
+    mass: 28
+    qty: 2
+    unit: tbsp
+    note: use Lee Kum Kee Vegetarian Stir-Fry Sauce for vegetarian or if allergic to shellfish
+steps:
+  - stir Worcestershire sauce and sugar to combine
+  - add ketchup and oyster sauce
+  - mix all together

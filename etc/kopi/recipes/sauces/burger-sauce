@@ -1,8 +1,50 @@
-30:20:10 - mayo:tomato:mustard
-30:20:10:5:1 - mayo:tomato:mustard:bbq:tabasco-buffalo
-30:20:10:20:3 - mayo:tomato:mustard:bbq:tabasco-buffalo (v2)
-
-typically numbers above are in grams (for 2 people)
-
-mayo can be 50:50 kewpie:hellmann's
-
+yield: for 2 people
+notes: |
+  Multiple ratio variations below. Numbers are in grams.
+  Mayo can be 50:50 kewpie:hellmann's.
+components:
+  - name: basic
+    ingredients:
+      - item: mayo
+        qty: 30
+        unit: part
+      - item: tomato
+        qty: 20
+        unit: part
+      - item: mustard
+        qty: 10
+        unit: part
+  - name: with bbq and hot sauce
+    ingredients:
+      - item: mayo
+        qty: 30
+        unit: part
+      - item: tomato
+        qty: 20
+        unit: part
+      - item: mustard
+        qty: 10
+        unit: part
+      - item: bbq sauce
+        qty: 5
+        unit: part
+      - item: tabasco-buffalo
+        qty: 1
+        unit: part
+  - name: v2 (more bbq and hot sauce)
+    ingredients:
+      - item: mayo
+        qty: 30
+        unit: part
+      - item: tomato
+        qty: 20
+        unit: part
+      - item: mustard
+        qty: 10
+        unit: part
+      - item: bbq sauce
+        qty: 20
+        unit: part
+      - item: tabasco-buffalo
+        qty: 3
+        unit: part

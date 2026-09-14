@@ -1,43 +1,112 @@
+name: burger buns
 source: https://www.joshuaweissman.com/recipes/best-burger-buns-recipe
-Brioche-milk bread hybrid bun. Tangzhong makes the crumb soft and pillowy.
+yield: makes 6 buns, ~95-105g each
+notes: |
+  Brioche-milk bread hybrid bun. Tangzhong makes the crumb soft and pillowy.
 
-[ tangzhong ]
-- whisk together in small saucepan:
-  - 60g whole milk
-  - 27g water
-  - 20g bread flour
-- heat on medium, whisk constantly until thickened into a paste
-- set aside
+  Grease the proofing bowl with neutral oil, not butter. Butter is 16-18% water plus milk
+  solids, so it films patchily and the solids can stick rather than release. Not extra
+  virgin olive either — its flavour is wrong against a sweet milk bun. The oil is purely a
+  release film. It matters more here than for a lean dough: tangzhong plus butter plus two
+  eggs makes this sticky.
 
-[ dough ]
-- warm 120g whole milk to 35°C
-- whisk in 9g instant yeast until dissolved, rest in a warm spot 8 mins
-- in stand mixer bowl, whisk together:
-  - 320g bread flour
-  - 35g granulated sugar
-  - 7g fine sea salt
-- fit dough hook, turn to low
-- slowly stream in milk/yeast mixture, mix briefly to combine
-- add tangzhong, 1 egg, 1 egg yolk; mix on medium-low until combined, scraping down sides
-- gradually add 42g softened butter in pieces, fully incorporating before adding more
-- knead on medium-low 5-8 mins until smooth
-- shape into ball, place seam-side down in greased bowl, cover with damp towel
-- proof in a warm spot 1-1.5 hours until doubled
+  A separate bowl to the mixer bowl is easier, though not important. Grease doesn't take
+  well over the dried dough and flour up the sides of the mixer bowl, and its tall narrow
+  shape makes turning the dough out fiddlier. If you'd rather not wash two, scrape the sides
+  down properly first and proof in it — the dough gets punched down anyway, so nothing is
+  lost either way.
 
-[ shaping ]
-- punch dough down, turn onto lightly floured surface
-- divide into 6 pieces, ~95-105g each
-- for each piece: stretch and fold edges toward centre, flip seam-side down
-- drag dough toward you keeping contact with the board to build tension; rotate 90°, repeat around the perimeter until a tight smooth ball forms
+  Better than any bowl: a straight-sided clear container. Judging "doubled" in a curved bowl
+  is guesswork; against straight sides you can mark the start height and read it. Same logic
+  as the aliquot jar in sourdough.
 
-[ second proof ]
-- place on greased parchment-lined tray with 6cm between buns
-- cover with an inverted tray to prevent drying
-- proof at room temp 1-2 hours until doubled
+  Second proof: an inverted baking tray only has 2-3cm of lip, and these go in at ~3cm tall
+  and double, so a shallow tray will land on them. Give them 8cm of headroom.
 
-[ baking ]
-- preheat oven to 190°C
-- whisk 1 egg with a splash of milk; brush tops of buns
-- bake 16-18 mins until deeply golden
-- immediately brush generously with melted butter
-- cool completely on rack before slicing
+  Contact does more than dent. Proofed enriched dough is gassy and tacky, so anything
+  touching it deflates that spot and sticks, and lifting the cover tears the surface skin.
+  A torn bun bakes with a flat scar and takes the egg wash unevenly, and it can't be
+  repaired — reshaping means proofing again from scratch.
+
+  The cover is for humidity, not warmth. If the surface skins over the crust sets early,
+  which costs oven spring and makes the egg wash streaky. So it wants to come down near the
+  tray to trap moist air; a tray floating high on props with open sides does little. The
+  storage box and the bag both beat a propped tray on that count.
+components:
+  - name: tangzhong
+    ingredients:
+      - item: whole milk
+        mass: 60
+      - item: water
+        mass: 27
+      - item: bread flour
+        mass: 20
+    steps:
+      - whisk together in small saucepan
+      - heat on medium, whisk constantly until thickened into a paste
+      - set aside
+  - name: dough
+    ingredients:
+      - item: whole milk
+        mass: 120
+        note: warm to 35°C
+      - item: instant yeast
+        mass: 9
+      - item: bread flour
+        mass: 320
+      - item: granulated sugar
+        mass: 35
+      - item: fine sea salt
+        mass: 7
+      - item: egg
+        qty: 1
+        unit: ea
+      - item: egg yolk
+        qty: 1
+        unit: ea
+      - item: butter
+        mass: 42
+        note: softened
+      - item: neutral oil
+        note: for greasing the proofing bowl — canola, vegetable or grapeseed. see notes
+    steps:
+      - warm 120g whole milk to 35°C
+      - whisk in 9g instant yeast until dissolved, rest in a warm spot 8 mins
+      - in stand mixer bowl, whisk together 320g bread flour, 35g granulated sugar, 7g fine sea salt
+      - fit dough hook, turn to low
+      - slowly stream in milk/yeast mixture, mix briefly to combine
+      - add tangzhong, 1 egg, 1 egg yolk; mix on medium-low until combined, scraping down sides
+      - gradually add 42g softened butter in pieces, fully incorporating before adding more
+      - knead on medium-low 5-8 mins until smooth
+      - shape into ball, place seam-side down in a bowl greased with a tsp of neutral oil, wiped to a thin film up the sides too
+      - cover with a damp towel, or better cling film or a lid — towels stick to enriched dough and let it skin over
+      - proof in a warm spot 1-1.5 hours until doubled
+  - name: shaping
+    steps:
+      - punch dough down, turn onto lightly floured surface
+      - divide into 6 pieces, ~95-105g each
+      - 'for each piece: stretch and fold edges toward centre, flip seam-side down'
+      - drag dough toward you keeping contact with the board to build tension; rotate 90°, repeat around the perimeter until a tight smooth ball forms
+  - name: second proof
+    steps:
+      - place on greased parchment-lined tray with 6cm between buns
+      - cover to prevent drying, with at least 8cm of headroom — nothing may touch the buns, see notes
+      - best is a large clear plastic storage box inverted over the tray; you can watch the rise without lifting it
+      - otherwise a deep roasting tray or big upturned bowl, the whole tray inside a puffed-up plastic bag, or an inverted tray propped on ramekins outside the 6cm spacing
+      - proof at room temp 1-2 hours until doubled
+  - name: baking
+    ingredients:
+      - item: egg
+        qty: 1
+        unit: ea
+        note: for egg wash, whisked with a splash of milk
+      - item: milk
+        note: a splash, for egg wash
+      - item: melted butter
+        note: for brushing after baking
+    steps:
+      - preheat oven to 190°C
+      - whisk 1 egg with a splash of milk; brush tops of buns
+      - bake 16-18 mins until deeply golden
+      - immediately brush generously with melted butter
+      - cool completely on rack before slicing

@@ -1,17 +1,32 @@
-- cut florettes into bite sized pieces
-- double dredge in pun-chun marinade and dry dredge
-- fry at 150°C for a few mins until golden brown
-- serve with cauliflower yoghurt
-
-for 150g cauli nuggets:
-[ pun chun marinade ]
-- 30g pun chun
-- 15g soy
-- 30g honey
-
-[ dry dredge ]
-- 60g flour
-- 1g msg
-- 1g baking soda
-- 2.5g salt
-- 0.5g pepper (50:50 black:white)
+ingredients:
+  - item: cauliflower florets
+    mass: 150
+    basis: true
+    note: cut into bite-sized pieces
+components:
+  - name: pun chun marinade
+    ingredients:
+      - item: pun chun
+        mass: 30
+      - item: soy
+        mass: 15
+      - item: honey
+        mass: 30
+  - name: dry dredge
+    ingredients:
+      - item: flour
+        mass: 60
+      - item: msg
+        mass: 1
+      - item: baking soda
+        mass: 1
+      - item: salt
+        mass: 2.5
+      - item: pepper
+        mass: 0.5
+        note: 50:50 black:white mix
+  - name: cooking
+    steps:
+      - double dredge florets in pun chun marinade then dry dredge
+      - fry at 150°C for a few mins until golden brown
+      - serve with cauliflower yoghurt

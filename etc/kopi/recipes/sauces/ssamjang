@@ -1,10 +1,42 @@
-70g (¼ cup) doenjang (fermented soybean paste)
-- [OPTIONAL - rice miso] replace doenjang with 40g white rice miso
-- [OPTIONAL - tomsac] 5g tomato sauce (good when missing doengjan) 
-10g (1 tbs) gochujang (hot pepper paste)
-6.5g (1 stalk) of minced spring onion
-6.5g (1 clove) minced garlic
-30g (¼ cup) chopped onion
-30g (2.5 ts) honey
-3.5g (2 ts) toasted toasted sesame seeds
-6.0g (2 ts) toasted sesame oil
+ingredients:
+  - item: doenjang (fermented soybean paste)
+    mass: 70
+    qty: 0.25
+    unit: cup
+  - item: gochujang (hot pepper paste)
+    mass: 10
+    qty: 1
+    unit: tbsp
+  - item: spring onion
+    mass: 6.5
+    qty: 1
+    unit: stalk
+    note: minced
+  - item: garlic
+    mass: 6.5
+    qty: 1
+    unit: clove
+    note: minced
+  - item: onion
+    mass: 30
+    qty: 0.25
+    unit: cup
+    note: chopped
+  - item: honey
+    mass: 30
+    qty: 2.5
+    unit: tsp
+  - item: sesame seeds
+    mass: 3.5
+    qty: 2
+    unit: tsp
+    note: toasted
+  - item: sesame oil
+    mass: 6
+    qty: 2
+    unit: tsp
+    note: toasted
+notes: |
+  Optional substitutions:
+  - rice miso: replace doenjang with 40g white rice miso
+  - tomsac: 5g tomato sauce (good when missing doenjang)

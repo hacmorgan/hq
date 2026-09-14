@@ -1,3 +1,11 @@
-- 1 nutmeg, broken into bits
-- 3 black cardamons, peeled
-- 
+notes: |
+  INCOMPLETE/WIP - trailing empty bullet in original
+ingredients:
+  - item: nutmeg
+    qty: 1
+    unit: ea
+    note: broken into bits
+  - item: black cardamons
+    qty: 3
+    unit: ea
+    note: peeled

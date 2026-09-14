@@ -1,6 +1,7 @@
-60g/L
-water first
-2 min steep
-shake down
-30 sec
-release
+notes: 60g/L (coffee-to-water ratio)
+steps:
+  - add water first
+  - steep 2 min
+  - shake down
+  - wait 30 sec
+  - release

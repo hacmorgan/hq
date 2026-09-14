@@ -1,5 +1,14 @@
-  60g genshu
-  30g whisky (Suntory Toki is best)
-  20g lemon lime bitters cordial (red elk)
-  60g yuzu kochi (alcoholic soda, Nippon Chuhi brand)
-on lots crushed ice
+ingredients:
+  - item: genshu
+    mass: 60
+  - item: whisky
+    mass: 30
+    note: Suntory Toki is best
+  - item: lemon lime bitters cordial
+    mass: 20
+    note: red elk
+  - item: yuzu kochi
+    mass: 60
+    note: alcoholic soda, Nippon Chuhi brand
+steps:
+  - serve on lots crushed ice

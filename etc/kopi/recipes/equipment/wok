@@ -1,0 +1,100 @@
+name: seasoning a carbon steel wok
+yield: one wok, 3-5 rounds
+ingredients:
+  - item: carbon steel wok
+    basis: true
+    note: not stainless — see notes for how to tell. a wax or lacquer shipping coating is itself a strong hint it's carbon steel
+  - item: canola or grapeseed oil
+    note: smoke points ~205°C and ~215°C. skip flaxseed despite the internet — it builds the hardest layer and also the flakiest, and a wok flexes and gets scraped far more than a skillet
+  - item: scourer or steel wool
+    note: for the wax. this is the one time abrasives are welcome on this pan
+  - item: paper towel or lint-free rag
+    note: a lot of it — most of the technique is wiping oil back off
+components:
+  - name: strip the wax
+    steps:
+      - scrub the whole thing, inside and out, with a scourer or steel wool, dish soap, and water as hot as you can stand. wax needs mechanical removal, soap alone won't shift it
+      - keep going until a paper towel comes off clean. any wax left behind burns to a sticky brown patch that seasoning won't stick to
+      - rinse and dry immediately, then dry it further over heat until no moisture is left. bare carbon steel starts rusting within minutes of being wet
+    notes: |
+      This is also the moment to confirm what the metal actually is, before committing to any of
+      the below — leave a droplet of water on the inside for ~20 mins. A rust ring means carbon
+      steel and everything here applies. No mark means stainless, and seasoning it is close to
+      futile: oil won't bond to the chromium oxide passive layer, so whatever you build flakes
+      into your food within a few cooks. Don't use a magnet to decide, plenty of stainless is
+      magnetic. Carbon steel also looks dull matte grey rather than shiny
+  - name: method A — gas bbq (preferred)
+    notes: |
+      Better than the oven on every axis. It reaches temperatures no domestic oven does, so it
+      can actually blue the steel; the smoke happens outside, which alone decides it (an hour of
+      above-smoke-point oil indoors is genuinely unpleasant); and with the lid up you can hang a
+      wooden handle out over the edge away from the flame, which the oven gives you no way to do.
+      If the bbq has a side burner, that's effectively a high-output gas hob and the best thing
+      in the house for this — and for cooking in the wok afterwards
+    steps:
+      - blueing pass, lid up, straight over a burner on full, no oil. grates on, wok sitting on them
+      - chase the colour across the surface — straw, then blue-grey — moving and rotating the wok continuously. bbq burners are long bars rather than a concentrated ring, so leave it still and you'll get stripes tracking the burner layout. work the whole bowl, sides included. this is the step an oven simply cannot do
+      - oil rounds, lid down. wipe the thinnest possible film of oil over the whole wok, then wipe it back off until it looks dry and not glossy. visible sheen means too much, which means sticky patches
+      - lid closed, burners low-to-medium, ~250°C, 45-60 mins. let it cool, then repeat
+      - 3 rounds minimum, 4-5 is better. colour should go straw, then bronze, then near-black
+      - faster alternative for rounds 2 onward — direct over the burner with the lid up, 10-15 mins a round, just until the oil smokes off and stops smoking. less even than lid-down, but on a wok you mostly care about the inside bowl, which is exactly what direct heat covers well
+    ingredients:
+      - item: gas bbq
+        note: with a lid
+  - name: method B — stovetop
+    notes: |
+      What you do if there's no bbq, or the burner is the only heat you've got. How well it works
+      depends entirely on the hob:
+
+      Gas is the best case and the traditional one — a concentrated ring lets you tilt and rotate
+      the wok to bring every part of the bowl over the flame in turn, which is exactly what wok
+      seasoning wants. Treat the flame as a moving spotlight and work the surface in patches.
+
+      Electric coil or ceramic is workable but slower and less even. The element is flat and
+      fixed, so it only really heats the base; the sides get conducted heat at best. Expect to do
+      more rounds, and expect the sides to end up thinner than the base — finish those in an oven
+      or bbq if you can.
+
+      Induction is the worst case: it only heats the flat contact zone, so the sides get almost
+      nothing. You can season the base this way and that's about it. Worth knowing that induction
+      is also bad for actually cooking in a wok — a round-bottom won't work on it at all, and a
+      flat-bottom works poorly — so if that's your hob, the bbq isn't just the seasoning venue,
+      it's your wok station permanently. Which is a good argument for seasoning there anyway: you
+      want the seasoning to form under the heat it'll actually live under
+    steps:
+      - extraction fan on full, windows open, and consider pulling the battery on a nearby smoke alarm. this smokes a lot
+      - blueing pass, dry, no oil. burner on full, and keep the wok moving — tilt and rotate it so the flame works across the whole bowl, chasing straw then blue-grey. on electric, leave it on the element longer and accept that the sides will lag
+      - wipe the thinnest possible film of oil on the hot metal, then wipe it back off until it looks dry
+      - hold it on the heat until it smokes, and keep it there until the smoking stops. that's the round finished — roughly 10-15 mins depending on the hob
+      - cool enough to handle, then repeat. 4-5 rounds here rather than 3, since the coverage is patchier than a lid-down bbq round
+      - if the sides stayed pale, finish them in an oven at 230°C for 1 hr with the same wipe-on-wipe-off film — the oven's advantage is evenness on surfaces the burner can't reach, and that's all you're using it for
+  - name: aftercare
+    steps:
+      - cook fatty and hot for the first several uses — this is still seasoning, just with dinner in it
+      - avoid simmering water, stocks, and anything acidic (tomato, vinegar, wine, lemon) for the first while. long wet contact is what strips a young seasoning
+      - wash with hot water and a brush or a soft sponge, soap if you want it. no soaking, and no scourers or steel wool from here on
+      - dry it over heat every time, not on a rack. a thin wipe of oil after drying if it's going into a cupboard for a while
+      - patchy or flaked spots aren't a failure, just scrub those back to bare metal and do another round or two
+notes: |
+  The mechanism is polymerization, not "oil soaking in": the oil has to be held above its smoke
+  point so it cross-links into a hard layer bonded to the iron. Below roughly 200°C you get gummy
+  varnish instead, which is the usual cause of a sticky wok. That's why oven seasoning wants
+  230°C — about 20-30°C above canola's smoke point — and why the bbq's higher ceiling helps.
+
+  Thin coats, many times. Each round adds a layer a few molecules thick and there is no way to
+  shortcut this with one thick coat — that's the classic failure, and it produces exactly the
+  gummy, flaking finish people then blame the oil for. Wiping the oil back off until the wok
+  looks dry feels wrong and is correct.
+
+  Three things to check before starting, in the oven case especially: wooden or phenolic handles
+  won't survive 230°C and can't be worked around with the lid down, a 30cm+ wok often won't clear
+  the oven walls diagonally, and the bbq's hood thermometer reads dome air rather than the grate
+  and is typically optimistic by 20-30°C. Wind outdoors also steals more heat than you'd expect —
+  shelter it or expect longer rounds.
+
+  Fat drips causing flare-ups on the bbq means you left too much oil on. Wipe harder next round.
+
+  If the wok does turn out to be stainless, don't season it — get the non-stick from heat
+  management instead. Preheat dry until a water droplet skitters across as an intact bead rather
+  than spitting and evaporating (the Leidenfrost point, ~200°C), then add cold oil, then the food.
+  Done right that releases fish skin, which no amount of seasoning on stainless ever will.

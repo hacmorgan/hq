@@ -1,5 +1,9 @@
-honey: 17g
-mayo: 8g
-mustard: 19g
-
-As salad dressing, 3:3:1 honey:mustard:rice wine vinegar
+ingredients:
+  - item: honey
+    mass: 17
+  - item: mayo
+    mass: 8
+  - item: mustard
+    mass: 19
+notes: |
+  As salad dressing, use 3:3:1 honey:mustard:rice wine vinegar

@@ -1,28 +1,59 @@
-serves 6 — good for easter / mother's day
-
-- 2-2.5kg lamb shoulder (bone-in or rolled)
-- 5 large potatoes, peeled & mandoline-sliced
-- 1 large onion, mandoline-sliced
-- 500ml lamb or chicken stock
-
-[ glaze 1 ]
-- 1 tsp dijon
-- 4 tbsp evoo
-- sea salt
-- rosemary & thyme leaves
-- 2 crushed garlic cloves
-- juice of 1 lemon
-
-[ glaze 2 ]
-- 1 tsp honey
-- 1 tsp miso
-- 1 tsp dried oregano
-- 4 tbsp boiling water
-
-- oven to 160°C
-- layer potatoes & onion in a tray, lamb on top
-- score the meat 1cm deep
-- rub glaze 1 over the lamb, pour stock around it
-- cover with foil, bake 4-5 hours until tender
-- up to 180°C, brush on glaze 2, baste potatoes with pan juices
-- uncovered 20-30 mins until golden
+yield: serves 6 — good for easter / mother's day
+ingredients:
+  - item: lamb shoulder
+    mass: 2250
+    basis: true
+    note: 2-2.5kg, bone-in or rolled
+  - item: large potatoes
+    qty: 5
+    unit: ea
+    note: peeled & mandoline-sliced
+  - item: large onion
+    qty: 1
+    unit: ea
+    note: mandoline-sliced
+  - item: lamb or chicken stock
+    mass: 500
+    qty: 500
+    unit: ml
+components:
+  - name: glaze 1
+    ingredients:
+      - item: dijon
+        qty: 1
+        unit: tsp
+      - item: evoo
+        qty: 4
+        unit: tbsp
+      - sea salt
+      - item: rosemary & thyme leaves
+        note: fresh
+      - item: garlic cloves
+        qty: 2
+        unit: ea
+        note: crushed
+      - item: lemon juice
+        note: from 1 lemon
+  - name: glaze 2
+    ingredients:
+      - item: honey
+        qty: 1
+        unit: tsp
+      - item: miso
+        qty: 1
+        unit: tsp
+      - item: dried oregano
+        qty: 1
+        unit: tsp
+      - item: boiling water
+        qty: 4
+        unit: tbsp
+  - name: procedure
+    steps:
+      - oven to 160°C
+      - layer potatoes & onion in a tray, lamb on top
+      - score the meat 1cm deep
+      - rub glaze 1 over the lamb, pour stock around it
+      - cover with foil, bake 4-5 hours until tender
+      - up to 180°C, brush on glaze 2, baste potatoes with pan juices
+      - uncovered 20-30 mins until golden

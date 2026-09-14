@@ -1,6 +1,17 @@
-For two people
-
-- Add 6.5g chopped/ground mushrooms to infuser basket
-- Add 400g 96C water (incl. bloom)
-- Infuse 20 min
-- Mix 30g honey and hefty lemon squeeze (probably half of a lime-sized lemon)
+yield: serves 2
+ingredients:
+  - item: mushrooms
+    mass: 6.5
+    note: chopped/ground
+  - item: water
+    mass: 400
+    note: 96°C incl. bloom
+  - item: honey
+    mass: 30
+  - item: lemon
+    note: hefty squeeze (probably half of a lime-sized lemon)
+steps:
+  - add chopped/ground mushrooms to infuser basket
+  - add 400g 96°C water (incl. bloom)
+  - infuse 20 min
+  - mix honey and lemon squeeze

@@ -1,22 +1,37 @@
-# Chickpeas
-- 1 can chickpeas -> separate water from chickpeas but keep water
-
-# Liquids
-- 65g chickpea water
-- 30g olive oil
-- 2.5g toasted sesame oil
-
-# Toasted seeds
-- 20g toasted pine nuts (a tiny pan-ful)
-- 5g toasted sesame seeds
-
-# Spices
-- 2.5g paprika (not too much)
-- 0.3g cayenne pepper
-- 1.0g black pepper
-- 0.5g white pep
-- 2.2g salt
-
-# Vegetable matter
-- 2.5g (a smallish clove) chopped garlic
-- 15g (half a) lemon
+yield: from 1 can chickpeas
+ingredients:
+  - item: chickpeas
+    qty: 1
+    unit: can
+    basis: true
+  - item: chickpea water
+    mass: 65
+  - item: olive oil
+    mass: 30
+  - item: toasted sesame oil
+    mass: 2.5
+  - item: toasted pine nuts
+    mass: 20
+    note: a tiny pan-ful
+  - item: toasted sesame seeds
+    mass: 5
+  - item: paprika
+    mass: 2.5
+    note: not too much
+  - item: cayenne pepper
+    mass: 0.3
+  - item: black pepper
+    mass: 1.0
+  - item: white pepper
+    mass: 0.5
+  - item: salt
+    mass: 2.2
+  - item: garlic
+    mass: 2.5
+    note: a smallish clove, chopped
+  - item: lemon
+    mass: 15
+    note: half a
+steps:
+  - combine all ingredients
+  - blend until smooth

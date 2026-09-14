@@ -1,3 +1,13 @@
-- 6 * 40g double shot espressos
-- 1800g milk (6 * 300g)
-- 120g nesquik (6 * 20g)
+yield: 6 servings
+ingredients:
+  - item: double shot espresso
+    qty: 6
+    unit: ea
+    basis: true
+    note: 40g each (240g total)
+  - item: milk
+    mass: 1800
+    note: 300g per serving (6 * 300g)
+  - item: nesquik
+    mass: 120
+    note: 20g per serving (6 * 20g)

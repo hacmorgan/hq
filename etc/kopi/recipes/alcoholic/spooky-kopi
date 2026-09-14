@@ -1,4 +1,8 @@
-Each drink:
-20g kahlua
-40g whiskey
-60g frangelico
+yield: each drink
+ingredients:
+  - item: kahlua
+    mass: 20
+  - item: whiskey
+    mass: 40
+  - item: frangelico
+    mass: 60

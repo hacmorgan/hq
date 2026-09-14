@@ -1,0 +1,84 @@
+source: https://drveganblog.com/pan-fried-garlic-focaccia/
+yield: 8 pieces
+notes: |
+  No oven needed — it's cooked covered in a pan on the stovetop, which is the whole point
+  of the recipe.
+
+  Prep 4 hrs 20 mins, cook 15 mins, rise 1 day, total 1 day 35 mins.
+
+  480ml water to 625g flour is 77% hydration, so expect a slack, sticky dough — that's
+  correct, don't flour it into submission. It's shaped loose and never kneaded after the
+  rise.
+
+  Written vegan. Dairy butter and real parmesan swap in at the same weights if you're not
+  fussed.
+components:
+  - name: dough
+    ingredients:
+      - item: active dry yeast
+        qty: 2.25
+        unit: tsp
+        note: 2 1/4 tsp
+      - item: lukewarm water
+        mass: 480
+        qty: 480
+        unit: ml
+      - item: all-purpose flour
+        mass: 625
+        basis: true
+      - item: salt
+        qty: 2.5
+        unit: tsp
+      - item: extra-virgin olive oil
+        qty: 4
+        unit: tbsp
+    steps:
+      - in a large bowl, mix the lukewarm water and yeast and let sit for 5 mins until lightly foamy
+      - add the flour and salt and mix until no dry flour remains
+      - add the olive oil and mix until incorporated; the dough should be soft and slightly sticky
+  - name: first rise
+    steps:
+      - transfer the dough to a lightly oiled bowl, cover, and refrigerate 8-24 hrs until doubled in size and bubbly
+      - alternatively, let rise at room temperature for 3-4 hrs
+  - name: shape
+    steps:
+      - divide the dough into two equal portions and gently shape each into loose rounds without kneading
+  - name: pan-fry
+    ingredients:
+      - item: extra-virgin olive oil
+        note: for the pan, a generous amount
+    steps:
+      - heat two pans over medium-low heat and add a generous amount of olive oil
+      - once the oil is hot and shimmering, carefully place the dough into the pans
+      - cover and cook 6-8 mins until the bottom is golden and crisp
+      - flip carefully, add more olive oil if needed, cover again, and cook 5-7 mins until cooked through
+  - name: garlic butter topping
+    ingredients:
+      - item: olive oil
+        qty: 240
+        unit: ml
+      - item: garlic
+        qty: 8
+        unit: clove
+        note: 8-10, peeled
+      - item: vegan butter
+        mass: 60
+        note: softened
+      - item: vegan parmesan
+        mass: 50
+        note: finely grated
+      - item: fresh parsley
+        qty: 2
+        unit: tbsp
+        note: 2-3 tbsp, finely chopped
+      - item: salt
+        note: to taste
+      - item: black pepper
+        note: to taste
+      - item: chili flakes
+        optional: true
+    steps:
+      - add the garlic cloves and olive oil to a small saucepan
+      - cook over very low heat for 20-25 mins until the garlic is soft and lightly golden
+      - mash the garlic with a small amount of the oil and mix with vegan butter until smooth
+      - stir in vegan parmesan, parsley, salt, pepper, and chili flakes

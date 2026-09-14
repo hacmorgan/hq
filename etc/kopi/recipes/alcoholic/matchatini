@@ -1,9 +1,16 @@
-[ matcha mix ]
-- 2g matcha
-- 40g strawberries
-- 20g honey
-
-[ final shake ]
-- matcha mix from above
-- 80g vodka
-- ice with caster sugar dusted over
+components:
+  - name: matcha mix
+    ingredients:
+      - item: matcha
+        mass: 2
+      - item: strawberries
+        mass: 40
+      - item: honey
+        mass: 20
+  - name: final shake
+    ingredients:
+      - item: matcha mix from above
+      - item: vodka
+        mass: 80
+      - item: ice
+        note: with caster sugar dusted over

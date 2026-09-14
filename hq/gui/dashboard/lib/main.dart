@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:async';
 import 'dart:convert';
 
 void main() {
@@ -114,36 +115,57 @@ class _MyHomePageState extends State<MyHomePage> {
       final response =
           await http.get(Uri.parse('http://192.168.0.247:10498/recipes/$denestedRecipeId'));
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(utf8.decode(response.bodyBytes));
-        showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text(data["name"]),
-                content: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height * 0.6,
-                  ),
-                  child: SingleChildScrollView(
-                    child: Text(data["recipe"]),
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        _showRecipeEditDialog(recipeId, data["recipe"]);
-                      },
-                      child: const Text("edit")),
-                  TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text("close")),
-                ],
-              );
-            });
-      } else {
+      if (response.statusCode != 200) {
         throw Exception('Failed to load recipe details');
+      }
+
+      final Map<String, dynamic> data = json.decode(utf8.decode(response.bodyBytes));
+      final recipe = data["recipe"];
+      final String raw = (data["raw"] ?? data["recipe"] ?? "").toString();
+      final String title = (data["name"] ?? recipeId).toString();
+
+      if (!mounted) return;
+
+      if (recipe is Map<String, dynamic>) {
+        // Structured, scalable view
+        showDialog(
+          context: context,
+          builder: (context) => RecipeDetailDialog(
+            title: (recipe["name"] ?? title).toString(),
+            recipe: recipe,
+            onEdit: () {
+              Navigator.pop(context);
+              _showRecipeEditDialog(recipeId, raw);
+            },
+          ),
+        );
+      } else {
+        // Fallback: YAML didn't parse into a mapping — show the raw text
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(title),
+              content: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.6,
+                ),
+                child: SingleChildScrollView(child: Text(raw)),
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _showRecipeEditDialog(recipeId, raw);
+                    },
+                    child: const Text("edit")),
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("close")),
+              ],
+            );
+          },
+        );
       }
     } catch (e) {
       print('Error fetching recipe details: $e');
@@ -151,45 +173,20 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _showRecipeEditDialog(String recipeId, String currentContent) {
-    final controller = TextEditingController(text: currentContent);
     showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Edit: $recipeId'),
-          content: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.6,
-            ),
-            child: TextField(
-              controller: controller,
-              maxLines: null,
-              expands: true,
-              keyboardType: TextInputType.multiline,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('cancel'),
-            ),
-            TextButton(
-              onPressed: () async {
-                await _updateRecipe(recipeId, controller.text);
-                Navigator.pop(context);
-              },
-              child: const Text('save'),
-            ),
-          ],
-        );
-      },
-    );
+      builder: (context) => RecipeEditDialog(
+        recipeId: recipeId,
+        initialContent: currentContent,
+        onSave: (content) => _updateRecipe(recipeId, content),
+      ),
+    ).then((_) {
+      // Re-open the (now updated) structured view after the editor closes.
+      if (mounted) _fetchRecipeDetails(recipeId);
+    });
   }
 
-  Future<void> _updateRecipe(String recipeId, String content) async {
+  Future<bool> _updateRecipe(String recipeId, String content) async {
     try {
       String denestedRecipeId = recipeId.replaceAll("/", "..");
       final response = await http.put(
@@ -199,9 +196,12 @@ class _MyHomePageState extends State<MyHomePage> {
       );
       if (response.statusCode != 200) {
         print('Failed to update recipe: ${response.statusCode}');
+        return false;
       }
+      return true;
     } catch (e) {
       print('Error updating recipe: $e');
+      return false;
     }
   }
 
@@ -807,6 +807,519 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Recipe rendering + scaling
+// ---------------------------------------------------------------------------
+
+/// Format a (possibly scaled) numeric amount for display: adaptive precision,
+/// trailing zeros stripped. e.g. 0.15, 2.5, 22.5, 1800.
+String _fmtNum(num value) {
+  final double v = value.toDouble();
+  final double abs = v.abs();
+  String s;
+  if (abs >= 100) {
+    s = v.toStringAsFixed(0);
+  } else if (abs >= 1) {
+    s = v.toStringAsFixed(1);
+  } else {
+    s = v.toStringAsFixed(2);
+  }
+  if (s.contains('.')) {
+    s = s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+  }
+  return s;
+}
+
+/// Find the single ingredient flagged `basis: true`, searching top-level
+/// ingredients first, then each component's ingredients.
+Map? _findBasis(Map recipe) {
+  Map? scan(dynamic list) {
+    if (list is List) {
+      for (final ing in list) {
+        if (ing is Map && ing['basis'] == true) return ing;
+      }
+    }
+    return null;
+  }
+
+  final top = scan(recipe['ingredients']);
+  if (top != null) return top;
+  final comps = recipe['components'];
+  if (comps is List) {
+    for (final c in comps) {
+      if (c is Map) {
+        final found = scan(c['ingredients']);
+        if (found != null) return found;
+      }
+    }
+  }
+  return null;
+}
+
+/// The reference amount of the basis ingredient (mass preferred, else qty).
+double? _basisReference(Map? basis) {
+  if (basis == null) return null;
+  if (basis['mass'] is num) return (basis['mass'] as num).toDouble();
+  if (basis['qty'] is num) return (basis['qty'] as num).toDouble();
+  return null;
+}
+
+/// The unit to label the basis input with ('g' for masses, else the qty unit).
+String _basisUnit(Map basis) {
+  if (basis['mass'] is num) return 'g';
+  final u = (basis['unit'] ?? '').toString();
+  return u == 'ea' ? '' : u;
+}
+
+/// Human-readable, scaled amount string for one ingredient, e.g.
+/// "500g", "1 tbsp", "20g (1 tbsp)", "3", "2 parts".
+String _ingredientAmount(Map ing, double scale) {
+  String? massStr;
+  String? qtyStr;
+  if (ing['mass'] is num) {
+    massStr = '${_fmtNum((ing['mass'] as num) * scale)}g';
+  }
+  if (ing['qty'] is num) {
+    final String q = _fmtNum((ing['qty'] as num) * scale);
+    final String unit = (ing['unit'] ?? '').toString();
+    if (unit.isEmpty || unit == 'ea') {
+      qtyStr = q;
+    } else if (unit == 'part') {
+      qtyStr = '$q ${q == '1' ? 'part' : 'parts'}';
+    } else {
+      qtyStr = '$q $unit';
+    }
+  }
+  if (massStr != null && qtyStr != null) return '$massStr ($qtyStr)';
+  return massStr ?? qtyStr ?? '';
+}
+
+/// A scrollable, structured recipe view with an optional scaling control.
+class RecipeDetailDialog extends StatefulWidget {
+  const RecipeDetailDialog({
+    super.key,
+    required this.title,
+    required this.recipe,
+    required this.onEdit,
+  });
+
+  final String title;
+  final Map<String, dynamic> recipe;
+  final VoidCallback onEdit;
+
+  @override
+  State<RecipeDetailDialog> createState() => _RecipeDetailDialogState();
+}
+
+class _RecipeDetailDialogState extends State<RecipeDetailDialog> {
+  Map? _basis;
+  double? _reference;
+  late final TextEditingController _basisController;
+  double _scale = 1.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _basis = _findBasis(widget.recipe);
+    _reference = _basisReference(_basis);
+    _basisController = TextEditingController(
+      text: _reference != null ? _fmtNum(_reference!) : '',
+    );
+  }
+
+  @override
+  void dispose() {
+    _basisController.dispose();
+    super.dispose();
+  }
+
+  void _onBasisChanged(String text) {
+    final entered = double.tryParse(text.trim());
+    setState(() {
+      if (entered != null && _reference != null && _reference! > 0) {
+        _scale = entered / _reference!;
+      } else {
+        _scale = 1.0;
+      }
+    });
+  }
+
+  void _resetScale() {
+    setState(() {
+      _scale = 1.0;
+      if (_reference != null) _basisController.text = _fmtNum(_reference!);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final recipe = widget.recipe;
+    final children = <Widget>[];
+
+    final yieldText = recipe['yield']?.toString();
+    if (yieldText != null && yieldText.trim().isNotEmpty) {
+      children.add(Padding(
+        padding: const EdgeInsets.only(bottom: 6),
+        child: Text(
+          yieldText,
+          style: const TextStyle(
+              fontStyle: FontStyle.italic, color: Colors.black54),
+        ),
+      ));
+    }
+
+    final source = recipe['source']?.toString();
+    if (source != null && source.trim().isNotEmpty) {
+      children.add(Padding(
+        padding: const EdgeInsets.only(bottom: 6),
+        child: SelectableText(
+          'source: $source',
+          style: const TextStyle(fontSize: 12, color: Colors.blue),
+        ),
+      ));
+    }
+
+    // Scaling control (only when a basis ingredient exists).
+    if (_basis != null && _reference != null) {
+      final unit = _basisUnit(_basis!);
+      final item = (_basis!['item'] ?? 'basis').toString();
+      children.add(Card(
+        color: Colors.blue[50],
+        elevation: 0,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _basisController,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  decoration: InputDecoration(
+                    labelText: '$item${unit.isNotEmpty ? ' ($unit)' : ''}',
+                    isDense: true,
+                    border: const OutlineInputBorder(),
+                  ),
+                  onChanged: _onBasisChanged,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text('×${_fmtNum(_scale)}',
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              IconButton(
+                icon: const Icon(Icons.refresh, size: 20),
+                tooltip: 'reset to original',
+                onPressed: _resetScale,
+              ),
+            ],
+          ),
+        ),
+      ));
+      children.add(const SizedBox(height: 4));
+    }
+
+    // Top-level ingredients.
+    final ingredients = recipe['ingredients'];
+    if (ingredients is List && ingredients.isNotEmpty) {
+      children.add(_sectionHeader('Ingredients'));
+      children.addAll(ingredients.map((ing) => _ingredientWidget(ing)));
+      children.add(const SizedBox(height: 8));
+    }
+
+    // Top-level steps.
+    final steps = recipe['steps'];
+    if (steps is List && steps.isNotEmpty) {
+      children.add(_sectionHeader('Steps'));
+      children.addAll(_stepWidgets(steps));
+      children.add(const SizedBox(height: 8));
+    }
+
+    // Components.
+    final components = recipe['components'];
+    if (components is List) {
+      for (final comp in components) {
+        if (comp is! Map) continue;
+        children.add(const Divider());
+        final cname = (comp['name'] ?? '').toString();
+        if (cname.isNotEmpty) {
+          children.add(Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Text(
+              cname,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.indigo),
+            ),
+          ));
+        }
+        final cyield = comp['yield']?.toString();
+        if (cyield != null && cyield.trim().isNotEmpty) {
+          children.add(Text(
+            cyield,
+            style: const TextStyle(
+                fontStyle: FontStyle.italic, color: Colors.black54),
+          ));
+        }
+        final cIng = comp['ingredients'];
+        final hasCIng = cIng is List && cIng.isNotEmpty;
+        if (hasCIng) {
+          children.addAll(cIng.map((ing) => _ingredientWidget(ing)));
+        }
+        final cSteps = comp['steps'];
+        if (cSteps is List && cSteps.isNotEmpty) {
+          if (hasCIng) children.add(const SizedBox(height: 4));
+          children.addAll(_stepWidgets(cSteps));
+        }
+        final cNotes = comp['notes']?.toString();
+        if (cNotes != null && cNotes.trim().isNotEmpty) {
+          children.add(_notesWidget(cNotes));
+        }
+      }
+    }
+
+    // Top-level notes.
+    final notes = recipe['notes']?.toString();
+    if (notes != null && notes.trim().isNotEmpty) {
+      children.add(const Divider());
+      children.add(_sectionHeader('Notes'));
+      children.add(_notesWidget(notes));
+    }
+
+    if (children.isEmpty) {
+      children.add(const Text('(empty recipe)'));
+    }
+
+    return AlertDialog(
+      title: Text(widget.title),
+      content: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.7,
+          maxWidth: 500,
+        ),
+        child: SizedBox(
+          width: 460,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: children,
+            ),
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(onPressed: widget.onEdit, child: const Text('edit')),
+        TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('close')),
+      ],
+    );
+  }
+
+  Widget _sectionHeader(String text) => Padding(
+        padding: const EdgeInsets.only(top: 4, bottom: 2),
+        child: Text(text,
+            style:
+                const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+      );
+
+  Widget _notesWidget(String notes) => Container(
+        width: double.infinity,
+        margin: const EdgeInsets.symmetric(vertical: 4),
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Text(notes.trimRight(),
+            style: const TextStyle(fontSize: 13, color: Colors.black87)),
+      );
+
+  Widget _bullet(InlineSpan content, {double indent = 0}) => Padding(
+        padding: EdgeInsets.only(left: indent, top: 2, bottom: 2),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('•  '),
+            Expanded(
+              child: RichText(
+                text: TextSpan(
+                  style: const TextStyle(
+                      color: Colors.black, fontSize: 14, height: 1.3),
+                  children: [content],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget _ingredientWidget(dynamic ing) {
+    if (ing is String) {
+      return _bullet(TextSpan(text: ing));
+    }
+    if (ing is! Map) return const SizedBox.shrink();
+
+    final amount = _ingredientAmount(ing, _scale);
+    final item = (ing['item'] ?? '').toString();
+    final note = ing['note']?.toString();
+    final optional = ing['optional'] == true;
+    final isBasis = ing['basis'] == true;
+
+    final spans = <InlineSpan>[];
+    if (amount.isNotEmpty) {
+      spans.add(TextSpan(
+        text: '$amount ',
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue[800]),
+      ));
+    }
+    spans.add(TextSpan(text: item));
+    if (optional) {
+      spans.add(const TextSpan(
+        text: ' (optional)',
+        style: TextStyle(color: Colors.black45, fontStyle: FontStyle.italic),
+      ));
+    }
+    if (note != null && note.trim().isNotEmpty) {
+      spans.add(TextSpan(
+        text: ' — $note',
+        style:
+            const TextStyle(color: Colors.black54, fontStyle: FontStyle.italic),
+      ));
+    }
+    if (isBasis) {
+      spans.add(const TextSpan(
+        text: '  ⚖',
+        style: TextStyle(color: Colors.blue),
+      ));
+    }
+    return _bullet(TextSpan(children: spans));
+  }
+
+  List<Widget> _stepWidgets(List steps) {
+    final widgets = <Widget>[];
+    for (final s in steps) {
+      if (s is String) {
+        widgets.add(_bullet(TextSpan(text: s)));
+      } else if (s is Map) {
+        widgets.add(_bullet(TextSpan(text: (s['step'] ?? '').toString())));
+        final subs = s['substeps'];
+        if (subs is List) {
+          for (final sub in subs) {
+            widgets.add(_bullet(TextSpan(text: sub.toString()), indent: 22));
+          }
+        }
+      }
+    }
+    return widgets;
+  }
+}
+
+/// Raw-YAML editor with debounced autosave. Edits persist as you type (after a
+/// short pause) and are flushed on close, so tapping away never loses progress.
+class RecipeEditDialog extends StatefulWidget {
+  const RecipeEditDialog({
+    super.key,
+    required this.recipeId,
+    required this.initialContent,
+    required this.onSave,
+  });
+
+  final String recipeId;
+  final String initialContent;
+  final Future<bool> Function(String content) onSave;
+
+  @override
+  State<RecipeEditDialog> createState() => _RecipeEditDialogState();
+}
+
+class _RecipeEditDialogState extends State<RecipeEditDialog> {
+  late final TextEditingController _controller;
+  Timer? _debounce;
+  String _lastSaved = '';
+  String _status = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialContent);
+    _lastSaved = widget.initialContent;
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    // Flush any unsaved edits on close (covers tap-away / back button).
+    if (_controller.text != _lastSaved) {
+      widget.onSave(_controller.text);
+    }
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onChanged(String _) {
+    setState(() => _status = 'unsaved');
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 900), _flush);
+  }
+
+  Future<void> _flush() async {
+    final text = _controller.text;
+    if (text == _lastSaved) return;
+    if (mounted) setState(() => _status = 'saving…');
+    final ok = await widget.onSave(text);
+    _lastSaved = text;
+    if (mounted) setState(() => _status = ok ? 'saved ✓' : 'save failed');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Row(
+        children: [
+          Expanded(child: Text('Edit: ${widget.recipeId}')),
+          Text(
+            _status,
+            style: TextStyle(
+              fontSize: 12,
+              color: _status == 'save failed' ? Colors.red : Colors.black54,
+            ),
+          ),
+        ],
+      ),
+      content: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.6,
+          maxWidth: 600,
+        ),
+        child: SizedBox(
+          width: 600,
+          child: TextField(
+            controller: _controller,
+            maxLines: null,
+            expands: true,
+            keyboardType: TextInputType.multiline,
+            style: const TextStyle(fontFamily: 'monospace', fontSize: 13),
+            decoration: const InputDecoration(border: OutlineInputBorder()),
+            onChanged: _onChanged,
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () async {
+            _debounce?.cancel();
+            await _flush();
+            if (mounted) Navigator.pop(context);
+          },
+          child: const Text('done'),
+        ),
+      ],
     );
   }
 }

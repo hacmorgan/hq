@@ -1,0 +1,55 @@
+source: https://youtube.com/shorts/RYNFRbP4OWQ
+notes: |
+  Fallow's restaurant method (they run it 1000 eggs at a time), adapted from a steam oven
+  to a water bath on the Control Freak.
+
+  Two stages, doing two different jobs. The 63°C stage cooks the yolk to a custard and just
+  barely sets the inner white — that's the texture you're actually after, and it's the part
+  you can't hit by dropping a raw egg into hot water. The 2 min poach afterwards is purely
+  cosmetic: it firms the outer white into a neat parcel and cooks off the loose watery
+  albumen. By then the inside is already done.
+
+  On "steaming at 62°C": at atmospheric pressure water boils at 100°C, so there's no such
+  thing as 62°C steam in the stovetop sense. A combi oven doesn't boil the chamber — a
+  separate boiler injects vapour into a chamber whose temperature is held independently, so
+  you get air fully saturated with water vapour at 62°C. The cooking happens because that
+  vapour condenses on the cooler egg, which moves heat far faster than dry air at the same
+  temperature. It's a humidity trick, not a steam-pressure one.
+
+  Which is why the Control Freak swap is not a compromise — it's strictly better. Water
+  conducts heat into the shell faster than saturated air does, and you're holding the same
+  63°C, so the same time applies. Nothing to adjust.
+
+  Temperature: the short says 62°C, Fallow's own write-up of the same method says 63°C.
+  Anywhere in 62-64°C works — the white sets from about 62°C and the yolk starts thickening
+  around 65°C, so you're deliberately sitting in the gap. Higher in the range = firmer yolk.
+
+  Doing 2-4 eggs for breakfast: skip the cool and the reheat entirely. Straight out of the
+  bath, into the vinegar water for 2 mins, onto the plate. The cool/ice/reheat cycle exists
+  so a restaurant can hold hundreds of eggs ready for service, not because it improves them.
+ingredients:
+  - item: eggs
+    note: in shell, fridge-cold is fine
+  - item: cider vinegar
+    note: splash, for the poaching water
+  - item: water
+    note: enough to cover the eggs in both pots
+components:
+  - name: stage 1 — temperature bath (control freak)
+    steps:
+      - set the Control Freak to 63°C, pot of water, probe in, lid on
+      - once it's holding temp, lower the eggs in whole and unbroken
+      - 40 mins
+      - lid stays on, no stirring, nothing to do
+  - name: stage 2 — poach
+    steps:
+      - second pan of water with a splash of cider vinegar, brought to a shimmer — moving but not simmering, no rolling bubbles
+      - crack each bath egg gently into the shimmering water
+      - 2 mins
+      - lift out with a slotted spoon, drain on paper towel
+  - name: service (make-ahead / batch)
+    steps:
+      - after stage 1, cool the eggs before cracking them
+      - after the 2 min poach, straight into an ice bath to stop them
+      - hold in the fridge until needed
+      - reheat in hot water for 30-60 secs to plate

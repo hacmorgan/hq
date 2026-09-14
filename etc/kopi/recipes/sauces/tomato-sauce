@@ -1,11 +1,22 @@
-- 4 normal size tomatoes
-- half a brown onion, sliced (not diced)
-- add a small knob of butter to pan
-- cook ontions until starting to caramelise
-- add tomatoes
-- lid on and cook down until soft
-- vegetable mill
-- cook down to desired consistency
-- season to taste with salt and sugar
-  - 3g brown sug
-
+ingredients:
+  - item: tomato
+    qty: 4
+    unit: ea
+    note: normal size
+  - item: brown onion
+    qty: 0.5
+    unit: ea
+    note: sliced, not diced
+  - item: butter
+    note: a small knob
+  - item: brown sugar
+    mass: 3
+    note: to taste; adjust with salt
+steps:
+  - add a small knob of butter to pan
+  - cook onions until starting to caramelise
+  - add tomatoes
+  - lid on and cook down until soft
+  - vegetable mill
+  - cook down to desired consistency
+  - season to taste with salt and sugar
