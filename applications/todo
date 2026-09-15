@@ -1,20 +1,180 @@
-#!/usr/bin/env python3
+#!/usr/bin/env bash
 
 
-"""
-Lightweight application for writing and aggregating TODOs
-"""
+##  todo
+#
+# Lightweight application for writing and aggregating TODOs
+#
+# TODOs are org files saved under a year/month directory tree. By default, `todo`
+# opens today's TODO, seeding it from the most recent previous TODO if it doesn't
+# exist yet.
 
 
-from os import environ
-from sys import argv
-from hq.cli.todo import todo
-
-from hq.cli import run_typer_app
-
-from hq.shell import sh_run
+source $( type -p bash-std )
 
 
-if __name__ == "__main__":
+# Parent directory under which TODOs are saved, overridable from the environment
+TODO_ROOT="${HQ_TODO_ROOT:-/home/${SUDO_USER:-$USER}/.hq-secret/etc/todo}"
 
-    run_typer_app(todo)
+# File format of TODO files
+TODO_SUFFIX=".org"
+
+# Command to run an editor, overridable from the environment
+TODO_EDITOR="${TODO_EDITOR:-emacs -nw}"
+
+
+function prologue
+{
+    cat <<EOF
+
+${fmt_red}todo - write and aggregate TODOs${fmt_reset}
+
+    todo                  open today's TODO, copying the previous one if it is new
+    todo groceries        open a named TODO under this year/month
+    todo work/backlog     open a TODO at a path relative to ${TODO_ROOT}
+EOF
+}
+
+
+function options
+{
+    cat <<EOF
+name;default=; Name for this TODO, instead of the default name by date. Saved under a directory for the current year/month, unless it contains a "/" anywhere, in which case it is treated as a path relative to the TODO root
+--new,-n; Start the TODO blank instead of copying from the previous daily TODO
+--previous,-p; Act on the most recent previous TODO instead of today's
+--dump,-d; Dump the TODO to stdout instead of opening an editor
+--thermal,-t; Print the TODO on the thermal printer instead of opening an editor
+--list,-l; List existing TODOs and exit
+EOF
+}
+
+
+bash-std-application-init "$@" < <( options ) || die "failed parsing args"
+
+
+function sanitize_inputs
+{
+    if (( options_dump + options_thermal + options_list > 1 )); then
+        die "--dump, --thermal and --list are mutually exclusive"
+    fi
+    if (( options_new && options_previous )); then
+        die "--new and --previous are mutually exclusive"
+    fi
+    if (( options_list && options_previous )); then
+        die "--list ignores --previous, pass one or the other"
+    fi
+    if [[ -n "$options_name" ]] && (( options_previous )); then
+        die "--previous ignores the given name, pass one or the other"
+    fi
+
+    # bash-std hands any unrecognised flag to the positional argument, which would
+    # silently create a TODO named after the typo
+    if [[ "$options_name" == -* ]]; then
+        die "unrecognised option: $options_name"
+    fi
+}
+
+
+function todo_path_for_name
+{
+    # Resolve the TODO path for a given name, defaulting to today's date
+    local name="$1"
+    if [[ -z "$name" ]]; then
+        echo "${TODO_ROOT}/$( date +%Y/%m/%d )${TODO_SUFFIX}"
+    elif [[ "$name" == */* ]]; then
+        echo "${TODO_ROOT}/${name%${TODO_SUFFIX}}${TODO_SUFFIX}"
+    else
+        echo "${TODO_ROOT}/$( date +%Y/%m )/${name%${TODO_SUFFIX}}${TODO_SUFFIX}"
+    fi
+}
+
+
+function list_todos
+{
+    # List every real TODO, oldest first, skipping emacs lock/autosave/backup files
+    find "$TODO_ROOT" -type f \
+         -not -name '.*'      \
+         -not -name '#*'      \
+         -not -name '*~'      \
+        | sort
+}
+
+
+function is_daily_todo
+{
+    # A daily TODO is one named by date, i.e. <root>/YYYY/MM/DD.org
+    grep --quiet --extended-regexp "/[0-9]{4}/[0-9]{2}/[0-9]{2}${TODO_SUFFIX}\$" <<< "$1"
+}
+
+
+function find_previous
+{
+    # Find the most recent daily TODO other than the one we are about to work on.
+    # Named TODOs are deliberately ignored, so a one-off list can't become the thing
+    # tomorrow's TODO gets seeded from
+    local exclude="$1"
+    list_todos \
+        | grep --extended-regexp "/[0-9]{4}/[0-9]{2}/[0-9]{2}${TODO_SUFFIX}\$" \
+        | grep --invert-match --line-regexp --fixed-strings "$exclude" \
+        | tail -n 1
+}
+
+
+function relative_todo_name
+{
+    sed -e "s#^${TODO_ROOT}/##" -e "s#${TODO_SUFFIX}\$##"
+}
+
+
+# Check args are legit
+sanitize_inputs
+
+
+# Listing is a mode of its own, and doesn't need a TODO to act on
+if (( options_list )); then
+    list_todos | relative_todo_name
+    exit 0
+fi
+
+
+# Work out which TODO we are acting on
+todo_path="$( todo_path_for_name "$options_name" )"
+if (( options_previous )); then
+    todo_path="$( find_previous "$( todo_path_for_name "" )" )"
+    [[ -n "$todo_path" ]] || die "no previous daily TODO found under $TODO_ROOT"
+fi
+saymore "acting on $( relative_todo_name <<< "$todo_path" )"
+
+
+# Dumping and printing read an existing TODO, and never create one
+if (( options_dump )); then
+    [[ -f "$todo_path" ]] || die "no such TODO: $( relative_todo_name <<< "$todo_path" )"
+    cat "$todo_path"
+    exit 0
+fi
+if (( options_thermal )); then
+    [[ -f "$todo_path" ]] || die "no such TODO: $( relative_todo_name <<< "$todo_path" )"
+    python3 -m hq.cli.todo "$todo_path"
+    exit 0
+fi
+
+
+# Seed a new daily TODO from the previous one, unless we were asked for a blank slate.
+# Named TODOs always start blank, since there is no sensible thing to carry over
+if [[ ! -f "$todo_path" ]]; then
+    mkdir --parents "$( dirname "$todo_path" )"
+    previous=""
+    if (( ! options_new )) && is_daily_todo "$todo_path"; then
+        previous="$( find_previous "$todo_path" )"
+    fi
+    if [[ -n "$previous" ]]; then
+        say "copying $( relative_todo_name <<< "$previous" ) -> $( relative_todo_name <<< "$todo_path" )"
+        cp "$previous" "$todo_path"
+    else
+        say "starting a blank TODO: $( relative_todo_name <<< "$todo_path" )"
+    fi
+fi
+
+
+# Edit the TODO
+eval "$TODO_EDITOR $( printf '%q' "$todo_path" )"
