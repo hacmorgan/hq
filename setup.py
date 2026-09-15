@@ -42,7 +42,7 @@ setup(
         "cattrs",
         "cloudpickle",
         "distro",
-        "escpos",
+        "python-escpos",
         "fastapi",
         "flake8",
         "ipython",
