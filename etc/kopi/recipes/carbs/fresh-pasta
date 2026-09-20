@@ -21,38 +21,7 @@ notes: |
   everything here — coarse, doesn't hydrate, so cut strands sit in it, where soft flour turns to
   paste and welds a nest solid. Buy 00 as well for the textbook silky sfoglia, but that's the
   smaller upgrade. 50/50 00 and semola is a good middle: some bite, still rolls thin.
-ingredients:
-  - item: 00 flour
-    mass: 500
-    basis: true
-    note: or all purpose. not bakers flour. 50/50 with semola rimacinata for more bite — 70:30 if you're hand-rolling, semolina stiffens the dough and fights the pin
-  - item: eggs
-    mass: 275
-    qty: 5
-    unit: ea
-    note: weigh — 55g of egg out of the shell per 100g flour. ~6 large AU eggs to hit 275g
-  - item: salt
-    mass: 5
-    optional: true
-    note: 1%. some traditions salt the dough, some only the water. it slightly tightens the gluten
-  - item: semola rimacinata
-    note: for dusting, as much as needed. not optional in practice
 components:
-  - name: mix and knead
-    steps:
-      - mound the flour, make a wide well, beat the eggs in it with a fork and pull flour from the inner wall until it's too stiff to fork. a bowl works too — the well's only real advantage is that you can stop pulling flour in when the dough says so
-      - don't discard the leftover flour, and don't force it all in either — work it in gradually over the first minutes of kneading and stop when the dough stops accepting it, usually with 5-10% left on the board. forcing the last of it in to use it up is the commonest way this goes wrong
-      - the sticky paste stuck to the board is dough, not flour — scrape it up and knead it in. only the loose dry flour gets swept aside
-      - "how to tell it's had enough: the board tells you, not the dough. early on the ball visibly hoovers up loose flour every time it touches the bench; when it's done the flour just sits there and the dough skids over it. clean board and clean hands means stop"
-      - "palm test — press the ball into your palm and pull away. still wants flour: leaves residue. done: releases clean, faintly tacky. overshot: matte and floury rather than cool and smooth"
-      - "fold test — fold the ball in half. fissures or cracks at the fold means too dry; smears and welds shut means it wants more. thumbprint should hold a smooth impression without cracking at the rim"
-      - stop while it's still slightly tackier than you think it should be. flour keeps absorbing egg through the whole rest, so the dough you wrap isn't the dough you unwrap — it firms up noticeably. dough that feels perfect going in comes out stiff and crack-prone
-      - err wet. too wet is fixed in ten seconds with a pinch of flour at any stage; too dry is near unfixable, because water won't re-enter a developed gluten network without turning it to a slippery mess
-      - bring together, scrape the board clean, knead 10 mins
-      - it should finish smooth, tight and firmer than bread dough, like firm plasticine. tacky — knead in flour a pinch at a time. won't clump after 2-3 mins of pressing — water by the teaspoon, not more egg
-      - the knead is developing gluten and finishing hydration at once. under-kneaded dough tears on thin passes and no rest fixes it
-      - wrap tightly, rest 30 mins minimum, an hour better. not optional — unrested dough springs back and never gets thin
-      - keeps 24 hrs in the fridge. back to room temp before rolling or it cracks
   - name: rolling — machine
     steps:
       - cut into 4, keep the rest wrapped — dough skins over fast and a dried edge tears
@@ -110,7 +79,64 @@ components:
       - "lasagne — rectangles to fit the dish, no drying step, blanch 30s before layering"
       - "farfalle — 3x5cm rectangles with a fluted wheel, pinched hard in the middle. pinch on a slightly damp sheet or they spring open in the water"
       - "garganelli — 4cm squares rolled diagonally around a pencil over a ridged board"
-  - name: variant — eggless semolina and water
+  - name: filled pasta
+    steps:
+      - roll to 0.8mm and work fast. this is the one case where you don't dry the sheet — it needs to stay tacky enough to seal
+      - mounds of filling 3-4cm apart
+      - mist lightly with water between the mounds, lay the top sheet over, press out from each mound to expel air before sealing the edges. trapped air bursts them in the water
+      - "ravioli — square, fluted wheel"
+      - "tortellini — 4cm squares, fold to a triangle, wrap the long edge around your finger, pinch the corners together"
+      - "agnolotti del plin — pipe a continuous line of filling, fold over, pinch (plin) at intervals, cut between the pinches"
+      - cook 3-4 mins. they float before they're done — floating is the air inside expanding, not the pasta cooking
+  - name: drying and storing
+    steps:
+      - same day if you can, that's the point
+      - fridge — nests on a semolina-dusted tray, loosely covered, 1-2 days. tacky and darkening after that
+      - freeze — nests on a tray until solid, then bag, 1 month. cook from frozen, don't thaw, add ~1 min
+      - fully dry — only the eggless dough, only thin shapes, 24-48 hrs on a rack until it snaps cleanly. home-dried egg pasta is a salmonella-adjacent gamble and it cracks
+      - filled shapes freeze well and fridge badly — the filling weeps and the base goes soggy within hours
+  - name: cooking
+    steps:
+      - big pot, hard rolling boil, 10g salt per litre. the water is the only seasoning the pasta itself gets
+      - no oil in the water. it only coats the strands and stops sauce sticking later
+      - 60-180 secs, not minutes. thin tagliolini can be done at 45 secs. taste from 45 secs and don't walk away
+      - done when it's just past raw in the centre. fresh egg pasta has no real al dente stage — it goes from underdone to soft over about 20 seconds, so err early
+      - the water goes starchy much faster than with dried pasta and emulsifies better. save a mugful before draining
+      - finish in the sauce pan, not the bowl — 30 secs with a splash of that water and vigorous tossing off the heat is what makes sauce cling
+      - it keeps absorbing after it leaves the pan. plate looser than looks right, serve immediately
+variants:
+  - name: egg dough (the default)
+    ingredients:
+      - item: 00 flour
+        mass: 500
+        basis: true
+        note: or all purpose. not bakers flour. 50/50 with semola rimacinata for more bite — 70:30 if you're hand-rolling, semolina stiffens the dough and fights the pin
+      - item: eggs
+        mass: 275
+        qty: 5
+        unit: ea
+        note: weigh — 55g of egg out of the shell per 100g flour. ~6 large AU eggs to hit 275g
+      - item: salt
+        mass: 5
+        optional: true
+        note: 1%. some traditions salt the dough, some only the water. it slightly tightens the gluten
+      - item: semola rimacinata
+        note: for dusting, as much as needed. not optional in practice
+    steps:
+      - mound the flour, make a wide well, beat the eggs in it with a fork and pull flour from the inner wall until it's too stiff to fork. a bowl works too — the well's only real advantage is that you can stop pulling flour in when the dough says so
+      - don't discard the leftover flour, and don't force it all in either — work it in gradually over the first minutes of kneading and stop when the dough stops accepting it, usually with 5-10% left on the board. forcing the last of it in to use it up is the commonest way this goes wrong
+      - the sticky paste stuck to the board is dough, not flour — scrape it up and knead it in. only the loose dry flour gets swept aside
+      - "how to tell it's had enough: the board tells you, not the dough. early on the ball visibly hoovers up loose flour every time it touches the bench; when it's done the flour just sits there and the dough skids over it. clean board and clean hands means stop"
+      - "palm test — press the ball into your palm and pull away. still wants flour: leaves residue. done: releases clean, faintly tacky. overshot: matte and floury rather than cool and smooth"
+      - "fold test — fold the ball in half. fissures or cracks at the fold means too dry; smears and welds shut means it wants more. thumbprint should hold a smooth impression without cracking at the rim"
+      - stop while it's still slightly tackier than you think it should be. flour keeps absorbing egg through the whole rest, so the dough you wrap isn't the dough you unwrap — it firms up noticeably. dough that feels perfect going in comes out stiff and crack-prone
+      - err wet. too wet is fixed in ten seconds with a pinch of flour at any stage; too dry is near unfixable, because water won't re-enter a developed gluten network without turning it to a slippery mess
+      - bring together, scrape the board clean, knead 10 mins
+      - it should finish smooth, tight and firmer than bread dough, like firm plasticine. tacky — knead in flour a pinch at a time. won't clump after 2-3 mins of pressing — water by the teaspoon, not more egg
+      - the knead is developing gluten and finishing hydration at once. under-kneaded dough tears on thin passes and no rest fixes it
+      - wrap tightly, rest 30 mins minimum, an hour better. not optional — unrested dough springs back and never gets thin
+      - keeps 24 hrs in the fridge. back to room temp before rolling or it cracks
+  - name: eggless semolina and water
     notes: |
       The southern dough: durum semolina, warm water, salt. Firmer, chewier, pale rather than
       golden, and it holds shape through a hard toss where egg pasta goes soft. The dough for
@@ -136,7 +162,7 @@ components:
       - "pici — 3-4mm ropes rolled by hand. thick, uneven, chewy, the most forgiving shape there is"
       - "busiate — wrap a rope around a skewer at an angle for a long spiral"
       - these cook 4-8 mins depending on thickness, far longer than egg pasta
-  - name: variant — yolk-rich sfoglia (the fine-dining one)
+  - name: yolk-rich sfoglia (the fine-dining one)
     notes: |
       Richer, more tender, deep orange — for when the pasta is the point rather than the vehicle.
       Yolks bring fat and emulsifier and no water, so the dough is drier and more delicate: gentler
@@ -168,28 +194,3 @@ components:
       - as the default dough, but expect it to look hopelessly dry before it comes together — a full 5 mins of pressing before you add any water
       - rest an hour minimum. fat-rich dough relaxes slowly
       - "milder version — 3 whole eggs per 500g plus 6 extra yolks. ~80% of the effect, far easier to handle"
-  - name: filled pasta
-    steps:
-      - roll to 0.8mm and work fast. this is the one case where you don't dry the sheet — it needs to stay tacky enough to seal
-      - mounds of filling 3-4cm apart
-      - mist lightly with water between the mounds, lay the top sheet over, press out from each mound to expel air before sealing the edges. trapped air bursts them in the water
-      - "ravioli — square, fluted wheel"
-      - "tortellini — 4cm squares, fold to a triangle, wrap the long edge around your finger, pinch the corners together"
-      - "agnolotti del plin — pipe a continuous line of filling, fold over, pinch (plin) at intervals, cut between the pinches"
-      - cook 3-4 mins. they float before they're done — floating is the air inside expanding, not the pasta cooking
-  - name: drying and storing
-    steps:
-      - same day if you can, that's the point
-      - fridge — nests on a semolina-dusted tray, loosely covered, 1-2 days. tacky and darkening after that
-      - freeze — nests on a tray until solid, then bag, 1 month. cook from frozen, don't thaw, add ~1 min
-      - fully dry — only the eggless dough, only thin shapes, 24-48 hrs on a rack until it snaps cleanly. home-dried egg pasta is a salmonella-adjacent gamble and it cracks
-      - filled shapes freeze well and fridge badly — the filling weeps and the base goes soggy within hours
-  - name: cooking
-    steps:
-      - big pot, hard rolling boil, 10g salt per litre. the water is the only seasoning the pasta itself gets
-      - no oil in the water. it only coats the strands and stops sauce sticking later
-      - 60-180 secs, not minutes. thin tagliolini can be done at 45 secs. taste from 45 secs and don't walk away
-      - done when it's just past raw in the centre. fresh egg pasta has no real al dente stage — it goes from underdone to soft over about 20 seconds, so err early
-      - the water goes starchy much faster than with dried pasta and emulsifies better. save a mugful before draining
-      - finish in the sauce pan, not the bowl — 30 secs with a splash of that water and vigorous tossing off the heat is what makes sauce cling
-      - it keeps absorbing after it leaves the pan. plate looser than looks right, serve immediately
