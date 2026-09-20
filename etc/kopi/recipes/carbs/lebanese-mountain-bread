@@ -44,3 +44,98 @@ steps:
   - invert a smooth mixing bowl on the work surface; lightly flour the bottom. lightly stretch the dough and place the dough circle on the floured surface of the inverted bowl. gently stretch dough evenly down the sides of the bowl, working your way around the edges, until it is very thin and translucent, or as thin as you can get it without tearing it.
   - heat a cast iron skillet over high heat. flour your hands and carefully remove the dough circle from the bottom of the bowl. transfer to hot skillet. cook until blisters form and begin to brown, about 45 to 60 seconds per side.
   - transfer to a dish and cover to allow bread to steam and stay moist and supple.
+components:
+  - name: variant — khubz arabi (thick pocket pita)
+    notes: |
+      A different bread to the markook above, not a tweak of it. Markook is paper-thin, cooked
+      seconds a side on a domed saj, and eats like a wrapper. This is the everyday round loaf —
+      5-8mm rolled, puffs into a pocket, chewy crumb, blistered brown top. Bread flour and a
+      cold ferment are what buy the chew and the colour; the markook dough is too soft and too
+      quick for either.
+
+      Bakers percentages off 500g flour: 65% water, 2% salt, 1% instant yeast, 2% sugar,
+      2% oil. Yields 8.
+    ingredients:
+      - item: bread flour
+        mass: 500
+        basis: true
+        note: 12-13% protein. plain flour works but the chew is noticeably slacker
+      - item: warm water
+        mass: 325
+        note: 65% — wetter than it feels like it should be. a slack dough rolls thin without fighting back and steams harder in the oven, which is what opens the pocket
+      - item: instant yeast
+        mass: 5
+        qty: 1.5
+        unit: tsp
+      - item: sugar
+        mass: 10
+        qty: 2
+        unit: tsp
+        note: browning, not sweetness — see notes on why it's needed
+      - item: fine salt
+        mass: 10
+        qty: 1.75
+        unit: tsp
+      - item: olive oil
+        mass: 10
+        qty: 2
+        unit: tsp
+        note: 2% — enough to keep the crumb supple for a day, low enough not to shorten the gluten. don't scale this up
+    steps:
+      - mix flour, yeast, sugar and water to a shaggy mass and leave it 20-30 mins before the salt and oil go in. the rest does most of the gluten work for you
+      - add salt and oil, then knead 8-10 mins by hand, or dough hook on speed 2 for 6-8. you want a smooth ball that passes a rough windowpane — this one does want the gluten, unlike the rolled flatbreads
+      - bulk ferment 1-1.5 hrs until doubled
+      - knock back, divide into 8 (~105g each), roll into tight balls, cover
+      - "cold ferment: bag the balls and refrigerate 12-24 hrs. optional, but it's the single biggest lever on flavour and on how brown the tops go"
+      - bring back to room temp, 1-1.5 hrs, before rolling. cold dough springs back and won't hold a thin disc
+      - meanwhile put a baking steel or stone on the top-ish shelf and heat the oven as hot as it goes, 250-280°C, for a full 45 mins. an underheated stone is the usual reason a pita refuses to puff
+      - roll each ball to a 5-8mm disc, ~18cm across. flour lightly, and roll evenly — a thick patch anchors the two layers together and the pocket only half forms
+      - rest the rolled discs 10-15 mins under a cloth before baking
+      - bake 2-3 at a time directly on the stone, 2-4 mins. they balloon at around 60-90 secs; give them another 60 secs after that for colour
+      - if the tops are still pale when the pocket has set, 30-60 secs under the grill/broiler. watch it, it goes from blond to burnt fast
+      - stack straight off the stone under a tea towel and let them deflate and soften there for 10 mins. skipping this is what makes homemade pita crackery
+  - name: variant — khubz arabi, skillet method
+    notes: |
+      No stone, no 280°C oven. Gives better browning than the oven does and a chewier, more
+      irregular crumb, at the cost of a less reliable pocket — the heat only comes from below,
+      so the top skin sets later and the steam has somewhere to leak. Roll a touch thinner
+      (4-5mm) and accept that some of them will be half-pocket.
+    steps:
+      - dry cast iron or heavy carbon steel, high heat, 5+ mins until a drop of water skitters
+      - lay the disc in, 30-45 secs until the underside has a few brown freckles and the top has gone opaque
+      - flip. it should start to balloon within 30 secs
+      - if it's sluggish, press the flat of a folded tea towel gently on the puffed part — pushing the steam sideways levers the rest of the layer apart
+      - 45-60 secs on the second side, then back to the first for a final 15-20 secs of colour if it needs it
+      - straight into the tea towel stack
+  - name: tuning — browning vs pocket
+    notes: |
+      These two fight each other and it's worth knowing why before chasing both.
+
+      The pocket is steam. A thin disc hits a very hot surface, the water in the dough flashes,
+      the outer skin sets before the steam can escape, and the pressure delaminates the disc
+      into two layers. Everything that helps it is about speed: hottest possible surface, thin
+      and even rolling, a well-rested dough that doesn't spring back into a thick middle, and
+      enough hydration to have steam to give.
+
+      Browning is Maillard, and it needs time and residual sugar. A 2 min bake at 280°C simply
+      doesn't sit there long enough, and a fully fermented dough has had its free sugars eaten
+      by the yeast — which is exactly why a long cold ferment, good for flavour, can leave the
+      tops paler than a quick same-day dough. Hence the 2% sugar in the ingredients: it's there
+      to survive fermentation and still be around at bake time.
+
+      So: get the pocket first on raw heat, then add colour separately at the end — the grill in
+      the oven method, the return-to-the-first-side in the skillet. Trying to get colour by
+      baking longer at a lower temperature loses the pocket and dries the crumb to a cracker.
+
+      Other levers on colour: a teaspoon of milk powder or a brush of milk adds lactose and
+      protein and browns readily; honey in place of the sugar does the same and browns earlier.
+      A pinch of bicarb raises surface pH and speeds Maillard, but too much tastes soapy — 1/8
+      tsp in this dough is the ceiling.
+
+      Chew levers, if it's still too soft: bread flour over plain (already specified), push
+      hydration to 68-70%, and lengthen the cold ferment to the full 24 hrs. Don't add more oil
+      — past ~3% it shortens the crumb and works against the chew, the same way it does in the
+      gozleme dough.
+
+      They keep 2 days in a bag at room temp, freeze well, and revive on a dry hot pan for
+      20 secs a side.

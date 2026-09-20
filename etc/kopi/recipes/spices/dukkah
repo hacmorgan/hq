@@ -32,9 +32,7 @@ ingredients:
     unit: tbsp
     note: citrusy-sweet, the main non-nut backbone
   - item: fennel seeds
-    mass: 8
-    qty: 1
-    unit: tbsp
+    mass: 4
     note: the biggest sweet/anise lever
   - item: cumin seeds
     mass: 3

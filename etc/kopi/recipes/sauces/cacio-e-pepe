@@ -1,0 +1,136 @@
+name: cacio e pepe
+source: https://www.youtube.com/shorts/XuNv9nk4VbE
+uses:
+  - carbs/fresh-pasta
+  - carbs/pasta
+yield: serves 2
+notes: |
+  Pasta, pecorino, black pepper, pasta water. No cream, butter or oil — it's all technique, and
+  the technique is all about not clumping the cheese.
+
+  Temperature is the dish. Pecorino's proteins seize and squeeze out their fat above ~80°C, so
+  water straight off the boil at 100°C curdles it into stringy lumps in a grey puddle. Everything
+  that touches the cheese goes in at ~70°C / 150°F.
+
+  Agitation is the other half. You're forcing an emulsion of cheese fat, water and starch, and it
+  only forms under mechanical work — stir hard with two forks, and the more you mix the creamier
+  it gets. Undermixed cacio e pepe is thin.
+
+  Quantities are standard proportions; the 60-second source doesn't state its own.
+ingredients:
+  - item: pasta
+    mass: 200
+    basis: true
+    note: DRIED weight. for fresh use 250-300g — see the fresh pasta component before scaling
+  - item: pecorino romano
+    mass: 120
+    note: real Pecorino Romano DOP. microplane it — box-grater shreds clump, full stop
+  - item: black pepper
+    qty: 1.5
+    unit: tsp
+    note: whole peppercorns, cracked coarse yourself. see the pepper component
+  - item: salt
+    note: for the water, lighter than usual — pecorino is very salty
+components:
+  - name: pepper
+    notes: |
+      Coarse isn't needed for the bloom to work — fine extracts faster — it's needed for the
+      result. Fine grind over-extracts to acrid and turns the sauce grey and dusty. Coarse gives
+      aromatic bursts and speckle without harshness, and blooming is what compensates for its
+      slower extraction. Mortar and pestle or a pan-bottom crush beats a grinder's coarsest
+      setting. Pre-ground is dead — the volatile aromatics are half the dish.
+
+      The water bloom pulls piperine and aromatics into the liquid, so the pepper dissolves
+      through the sauce instead of sitting on it as grit. No fat in this dish, so water extracts.
+    steps:
+      - dry-toast the WHOLE peppercorns over medium (160°C) for 60-90 secs until sharp and floral. toasting whole is the point — ground pepper scorches and loses its aromatics before it reaches the pan
+      - cool 2 mins, then crack coarsely. a grinder on its coarsest setting is fine; grinding them hot gums the burrs
+      - return to the pan with 3-4 tbsp pasta water and swirl 30-60 secs to a fragrant slurry
+      - this water stays in the pan and becomes the base of the sauce — it is never tipped out. the only water discarded is the pot you drain the pasta from
+      - "no mortar or grinder: peppercorns on a board, heavy flat-bottomed pan on top, lean your weight on it and ROCK. rocking cracks, hammering powders them and fires them across the kitchen"
+
+  - name: method
+    notes: |
+      Pan timeline: hot for the toast and bloom, hot for the pasta toss, then OFF and never back
+      on. A thin stainless pan helps — it sheds heat fast. Cast iron holds enough residual heat to
+      curdle the cheese after it leaves the burner; give it a full minute off, or tip into a
+      warmed bowl.
+    steps:
+      - boil the pasta in lightly salted water, using less water than usual — a smaller volume goes far starchier, and starch is what stabilises the emulsion
+      - ladle out a mug of pasta water and let it cool to ~70°C, a minute or two. use a thermometer the first few times to calibrate what that looks like
+      - toast and bloom the pepper (above) while the pasta cooks
+      - grate the pecorino into a bowl and add the 70°C water a splash at a time, stirring to a smooth paste the consistency of thick cream
+      - if it's grainy now it will be grainy on the plate — work it smooth before the pasta goes near it
+      - drain the pasta just shy of al dente, add to the bloomed-pepper pan with a ladle of water, toss over medium 30-60 secs to finish it and reduce the water to syrupy
+      - take the pan off the heat and wait ~30 secs to drop to 65-70°C
+      - add the cheese paste and stir vigorously with two forks, tossing and lifting, until glossy and coating every strand. keep going past the point it looks done
+      - loosen with pasta water if it tightens. never return it to the flame to thicken — that's how it splits
+      - serve immediately in warmed bowls with more pepper. it tightens as it cools and there's no rescuing it
+  - name: temperature-controlled pan (breville control freak)
+    notes: |
+      Removes the one thing that makes this dish hard. The failure is heat overshoot at the cheese
+      stage, and here you just hold 68°C and stir as long as you like without it splitting.
+
+      The Control Freak reads the pan base, so contents sit a touch below the setpoint — close
+      enough that the numbers below are the contents temperature you want. Use medium intensity
+      throughout; fast overshoots on the way to target, which is the one thing to avoid.
+
+      It heats but can't cool. Coming down from the 90°C toss to the 68°C emulsion, lift the pan
+      off the hob for ~30 secs rather than waiting for it to coast — a thin stainless pan sheds
+      that 20°C quickly off the element, and slowly on it.
+
+      Thick clad base (aluminium core) changes both ends of that. Better at the hold: it's far
+      more stable once equilibrated, so 68°C is rock solid, and 160°C toasts the pepper dead even
+      with no scorching. Worse through the drop: the base is a heat reservoir and the Freak's
+      sensor reads the base, not the food, so it keeps dumping stored heat into the contents after
+      the setpoint falls — the contents sail past 68°C while the display says you're there. So
+      set the hob to 65°C rather than 68 and let residual carry it up, lift for 60-90 secs rather
+      than 30, and toss the pasta at 85°C rather than 90 so there's less to shed. Simplest of all:
+      take it off the hob entirely for the cheese stage — a thick clad pan holds ~68°C unaided for
+      several minutes, far longer than the stir takes. Back on the 65°C hob only if it drags.
+    steps:
+      - "160°C, medium intensity — dry-toast the whole peppercorns, 60-90 secs. nudge to 175°C if nothing is happening by 2 mins"
+      - "100°C — add the 3-4 tbsp pasta water to the cracked pepper and bloom to a slurry, 30-60 secs"
+      - "90°C — add drained pasta and a ladle of water, toss 30-60 secs to finish it and reduce to syrupy"
+      - lift the pan off the hob for 30 secs and set the hob to 68°C
+      - "68°C, held — return the pan, add the cheese paste and stir hard with two forks until glossy. this is the whole advantage: it cannot creep past 80°C while you work, so stir as long as you like"
+      - "the separate mug of water for the cheese paste still needs to hit ~70°C off-appliance. let it stand and check with a thermometer — don't dilute it with cold water to get there, you'd be thinning out the starch that stabilises the emulsion"
+      - "pasta pot, if it's on the Freak: 100°C, fast intensity"
+  - name: with fresh pasta
+    notes: |
+      Fine here, unlike aglio e olio — it's the authentic version. Roman tonnarelli IS fresh egg
+      pasta: a square-section strand cut from a sheet rolled thicker than tagliatelle.
+
+      Flour: 70:30 or 50:50 00 to semola rimacinata, same egg ratio. Durum brings the firm toothy
+      bite, which is the fix for the softness problem rather than a compromise on it. Not all
+      semolina with egg — that's chitarra dough, stiff to roll, and you lose the egg's tenderness.
+      All 00 or all AP still makes good tonnarelli; just don't roll it thin.
+
+      Square means cross-section — spaghetti with corners, not a folded or filled shape. Flat
+      faces and sharp edges hold a clinging emulsion far better than a round strand's single
+      tangent of contact. Roll the egg dough from carbs/fresh-pasta to 2.5mm (vs 1-1.5mm for
+      tagliatelle) and cut at the same width. A machine spaghetti cutter won't take a sheet this
+      thick, so cut by hand — easy at this width. The traditional tool is the chitarra, a
+      wire-strung box you press the sheet through with a pin.
+
+      Thickness is doing real work: this is a sharp, salty, one-note sauce and it needs chew to
+      play off. With the flour blend you can go to 2mm for a more sauce-forward result, but not
+      below — the square section stops reading and the cook drops to ~60 secs, leaving no margin.
+      Hold at 2.5mm the first time; thicker is the forgiving direction.
+
+      Weights don't convert 1:1. The 200g above is dried, which is ~12% moisture and drinks water
+      as it cooks; fresh already carries its egg. 100g dried is 125-150g fresh per person, so two
+      people want 250-300g of fresh tonnarelli — about 190g of flour's worth, a bit over a third
+      of the 500g batch in carbs/fresh-pasta.
+
+      Don't enter the fresh weight as the basis — the excess over the dried figure is water, not
+      pasta, and everything scales up with it. Convert first: fresh x 0.75 = dried equivalent.
+      That holds up against the dry matter, e.g. 200g flour (~14% moisture, ~172g dry) plus 110g
+      egg (~25% solids, ~27g dry) is ~199g dry matter, which at dried pasta's ~12% moisture is
+      ~226g dried equivalent — near enough the 232g the 0.75 rule gives.
+
+      So a 310g fresh batch goes in as ~232g, which scales the pecorino to ~139g.
+
+      Two adjustments: fresh pasta water goes starchy much faster so it emulsifies readily, but
+      add it more cautiously or the sauce goes slack. And fresh pasta keeps drinking sauce after
+      plating — finish it looser than looks right and serve immediately.

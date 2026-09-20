@@ -44,7 +44,7 @@ components:
       - fold the dough over the filling. press from the fold outward to push the air out before sealing the edges, otherwise you trap a pocket
       - prick the top through with a fork in a few places. the filling steams as it cooks and a sealed parcel has nowhere to vent — this is what balloons it, not the thickness
       - repeat with the 2nd dough
-      - heat a stainless pan to 190 with 2 teaspoon olive oil. place a gozleme in the pan and cook for 3-5 minutes until golden
+      - heat a stainless pan to 200 with 2 teaspoon olive oil. place a gozleme in the pan and cook for 3-5 minutes until golden
       - brush or spray the top with oil, flip it over using a spatula and gently press it to flatten it. keep it pressed as it cooks; prick and flatten any bubble that forms rather than letting it set inflated
       - when golden brown, remove from the pan and place on a board. repeat with the 2nd dough
       - slice into triangles, add a squeeze of lemon and enjoy!
@@ -63,10 +63,8 @@ components:
         unit: cup
         note: plain/all purpose
       - item: extra virgin olive oil
-        mass: 80
-        qty: 80
-        unit: ml
-        note: 1/3 cup — this is in the dough, on top of the frying oil
+        mass: 10
+        note: was 80mL, but that makes it less chewy so we drop it — this is in the dough, on top of the frying oil
       - item: water
         mass: 180
         qty: 180
@@ -78,8 +76,9 @@ components:
         unit: tsp
         note: kosher
     steps:
-      - combine flour, oil, salt and water in a stand mixer with the dough hook. mix 2.5 mins on medium-high (speed 7) until it forms a smooth pliable ball, not sticky
+      - combine flour, oil, salt and water in a stand mixer with the dough hook. mix 2.5 mins on speed 2 until it forms a smooth pliable ball, not sticky
       - "(speed 7 is Nagi's number, kept as she wrote it, but it's well above kitchenaid's own dough-hook guidance of speed 2. her dough is stiff, low-hydration and only in there 2.5 mins, which is a far gentler ask on the gearbox than a long knead at that speed would be — so it's a smaller risk than it looks, but if you'd rather not, speed 2 for 5-6 mins gets to the same place)"
+      - if the dough isn't being worked in the mixer, finish knead by hand
       - rest covered 20 mins
       - cut into 4 and roll each into a 35 x 20cm (14 x 8 inch) rectangle on a floured surface — rectangles, not the circles-folded-to-semicircles of the yogurt version
       - can be refrigerated up to 3 days after the rest
