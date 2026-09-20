@@ -142,33 +142,44 @@ def _resolve_use(token, parsed: dict, by_base: dict, exclude: str):
     return cands[0] if len(cands) == 1 else None
 
 
-def _ingredient_items(data: dict) -> list[str]:
-    """All ingredient item names (top-level + components), lowercased."""
-    out: list[str] = []
+def _scopes(data: dict):
+    """Every mapping in a recipe that can carry `ingredients` directly.
 
-    def collect(lst) -> None:
-        for ing in lst or []:
+    That is the recipe itself, its components, each variant, and each variant's
+    own components — so callers don't have to know where a recipe happens to
+    keep a given ingredient.
+    """
+
+    def components_of(node: dict):
+        for comp in node.get("components") or []:
+            if isinstance(comp, dict):
+                yield comp
+
+    yield data
+    yield from components_of(data)
+    for variant in data.get("variants") or []:
+        if isinstance(variant, dict):
+            yield variant
+            yield from components_of(variant)
+
+
+def _ingredient_items(data: dict) -> list[str]:
+    """All ingredient item names, across every scope, lowercased."""
+    out: list[str] = []
+    for scope in _scopes(data):
+        for ing in scope.get("ingredients") or []:
             if isinstance(ing, dict) and ing.get("item"):
                 out.append(str(ing["item"]).strip().lower())
             elif isinstance(ing, str):
                 out.append(ing.strip().lower())
-
-    collect(data.get("ingredients"))
-    for comp in data.get("components") or []:
-        if isinstance(comp, dict):
-            collect(comp.get("ingredients"))
     return out
 
 
 def _has_basis(data: dict) -> bool:
-    def scan(lst) -> bool:
-        return any(isinstance(i, dict) and i.get("basis") is True for i in lst or [])
-
-    if scan(data.get("ingredients")):
-        return True
     return any(
-        isinstance(c, dict) and scan(c.get("ingredients"))
-        for c in data.get("components") or []
+        isinstance(i, dict) and i.get("basis") is True
+        for scope in _scopes(data)
+        for i in scope.get("ingredients") or []
     )
 
 
