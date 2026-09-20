@@ -15,7 +15,7 @@ components:
   - name: dry dredge
     ingredients:
       - item: flour
-        mass: 60
+        mass: 70
       - item: msg
         mass: 1
       - item: baking soda
