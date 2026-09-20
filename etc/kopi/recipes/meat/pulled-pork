@@ -95,33 +95,8 @@ components:
     steps:
       - whisk everything cold until sugar and salt dissolve — no cooking needed
       - rest at least 30 mins for the chili to bloom
-  - name: procedure (oven)
-    steps:
-      - pat dry, apply rub, refrigerate uncovered overnight (4 hrs minimum)
-      - out of fridge 1 hr before cooking
-      - oven to 115-120°C fan-forced, or 135°C conventional — fan is the better cook, see notes
-      - wire rack over a drip tray; leave the tray dry for maximum bark, or fill it with water as insurance against a dry exterior
-      - fat cap up, uncovered, until core hits 70-75°C and the bark is set and dark (3-4 hrs)
-      - spray with mop every hour once the surface looks dry
-      - wrap tight in foil (or butcher paper) with a splash of mop inside
-      - double layer, seams folded up on top, foil tight against the meat with minimal airspace, parcel sat in a tray in case it weeps
-      - 'leave-in probe: bring the cable out through the top seam and crimp the foil around it — liquid pools at the bottom, so a top exit only loses steam'
-      - don't pull the probe to make wrapping easier — every hole is a leak path, and re-siting it blind risks landing in a fat seam that lies about the core temp
-      - keep the tray drippings, but taste them first — see notes
-      - deglaze the still-warm tray with a splash of apple juice or stock, scrape the fond in
-      - back in until core reaches 96°C and a skewer slides in with no resistance (another 3-4 hrs)
-      - rest wrapped 1 hr — this is not optional, it reabsorbs the juices
-      - unwrap over a bowl, keep the rendered juices
-      - pull with two forks or claws, discarding hard fat and gristle
-      - toss the pulled meat with the reserved juices first, then finishing sauce to taste
-  - name: procedure (slow-cooker)
-    steps:
-      - rub as above, sear all faces hard in a pan first (the slow cooker won't build bark)
-      - 8 hrs on low with 100g of the mop in the bottom, no other liquid
-      - lift out, pull, then reduce the cooking liquid in a pan before tossing it through
-    notes: |
-      Easier, but you trade the bark for it. Worth spreading the pulled meat on a tray and
-      blasting under a hot grill for 5-10 mins to get some crisp edges back.
+  # the selected variant renders here, between the shared parts
+  - variants: here
   - name: holding (if it's done early)
     ingredients:
       - item: chicken or pork stock
@@ -159,7 +134,41 @@ components:
       is what dries lean meat, and pulled or braised cuts reheat exceptionally well since
       they're already broken down and sitting in liquid. It's fiddlier and passes the danger
       zone twice, so it's only worth it past about four hours.
-  - name: variant (leg instead of shoulder)
+  - name: assembly
+    steps:
+      - thick slices of sourdough, toasted hard — it has to hold up to wet pork
+      - butter the toast while hot
+      - pile on pork, pickles over the pork, slaw over the top so it doesn't steam
+      - open-faced, or top slice on for a proper sandwich
+variants:
+  - name: shoulder — oven (the default)
+    steps:
+      - pat dry, apply rub, refrigerate uncovered overnight (4 hrs minimum)
+      - out of fridge 1 hr before cooking
+      - oven to 115-120°C fan-forced, or 135°C conventional — fan is the better cook, see notes
+      - wire rack over a drip tray; leave the tray dry for maximum bark, or fill it with water as insurance against a dry exterior
+      - fat cap up, uncovered, until core hits 70-75°C and the bark is set and dark (3-4 hrs)
+      - spray with mop every hour once the surface looks dry
+      - wrap tight in foil (or butcher paper) with a splash of mop inside
+      - double layer, seams folded up on top, foil tight against the meat with minimal airspace, parcel sat in a tray in case it weeps
+      - 'leave-in probe: bring the cable out through the top seam and crimp the foil around it — liquid pools at the bottom, so a top exit only loses steam'
+      - don't pull the probe to make wrapping easier — every hole is a leak path, and re-siting it blind risks landing in a fat seam that lies about the core temp
+      - keep the tray drippings, but taste them first — see notes
+      - deglaze the still-warm tray with a splash of apple juice or stock, scrape the fond in
+      - back in until core reaches 96°C and a skewer slides in with no resistance (another 3-4 hrs)
+      - rest wrapped 1 hr — this is not optional, it reabsorbs the juices
+      - unwrap over a bowl, keep the rendered juices
+      - pull with two forks or claws, discarding hard fat and gristle
+      - toss the pulled meat with the reserved juices first, then finishing sauce to taste
+  - name: shoulder — slow-cooker
+    steps:
+      - rub as above, sear all faces hard in a pan first (the slow cooker won't build bark)
+      - 8 hrs on low with 100g of the mop in the bottom, no other liquid
+      - lift out, pull, then reduce the cooking liquid in a pan before tossing it through
+    notes: |
+      Easier, but you trade the bark for it. Worth spreading the pulled meat on a tray and
+      blasting under a hot grill for 5-10 mins to get some crisp edges back.
+  - name: leg instead of shoulder
     ingredients:
       - item: salt
         mass: 100
@@ -195,12 +204,6 @@ components:
 
       If the leg has skin on, consider not pulling it at all. Roasted and sliced with
       crackling is a better dinner than a compromised pulled pork.
-  - name: assembly
-    steps:
-      - thick slices of sourdough, toasted hard — it has to hold up to wet pork
-      - butter the toast while hot
-      - pile on pork, pickles over the pork, slaw over the top so it doesn't steam
-      - open-faced, or top slice on for a proper sandwich
 notes: |
   Shoulder (aka pork butt / boston butt) by default. Leg or loin have nowhere near the
   collagen or intramuscular fat, and cooked to these temps as written they go stringy and

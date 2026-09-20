@@ -1,37 +1,38 @@
 yield: for 400g pork belly
-ingredients:
-  - item: pork belly
-    mass: 400
-    basis: true
-    note: or spare rib strips, cubed
-  - item: veg oil
-    note: amount tbd during caramelising
-  - item: sugar
-    mass: 20
-  - item: onion
-    note: chopped
-  - item: dark soy
-    qty: 0.2
-    unit: cup
-  - item: light soy
-    qty: 0.2
-    unit: cup
-  - item: shaoxing
-    qty: 0.25
-    unit: cup
-  - item: water
-    note: top up as needed
-steps:
-  - blanch pork belly cubes for a few mins and drain
-  - add veg oil and sugar to a 160°C pan to melt and start caramelising (few mins)
-  - add chopped onion and cook for a few mins until translucent
-  - add pork
-  - add dark soy, light soy, and shaoxing
-  - top up with water
-  - cover with lid and simmer for 1.5 hours, stirring every 15 mins to prevent burning
-  - remove lid and cook down to thicken sauce
-components:
-  - name: variant (fallow — dry caramel, aromats not onion)
+variants:
+  - name: onion and wet caramel (the default)
+    ingredients:
+      - item: pork belly
+        mass: 400
+        basis: true
+        note: or spare rib strips, cubed
+      - item: veg oil
+        note: amount tbd during caramelising
+      - item: sugar
+        mass: 20
+      - item: onion
+        note: chopped
+      - item: dark soy
+        qty: 0.2
+        unit: cup
+      - item: light soy
+        qty: 0.2
+        unit: cup
+      - item: shaoxing
+        qty: 0.25
+        unit: cup
+      - item: water
+        note: top up as needed
+    steps:
+      - blanch pork belly cubes for a few mins and drain
+      - add veg oil and sugar to a 160°C pan to melt and start caramelising (few mins)
+      - add chopped onion and cook for a few mins until translucent
+      - add pork
+      - add dark soy, light soy, and shaoxing
+      - top up with water
+      - cover with lid and simmer for 1.5 hours, stirring every 15 mins to prevent burning
+      - remove lid and cook down to thicken sauce
+  - name: fallow — dry caramel, aromats not onion
     ingredients:
       - item: pork belly
         note: diced into ~2cm chunks

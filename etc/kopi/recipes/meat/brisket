@@ -35,7 +35,10 @@ components:
       never puts a dry sugared rub anywhere near the drum — by the time that variant reaches
       the fire the sugar is already dissolved into a wet sauce, which behaves completely
       differently under direct heat (it lacquers instead of burning black).
-  - name: variant A — sliced (texas style)
+  # the selected variant renders here, between the shared parts
+  - variants: here
+variants:
+  - name: A — sliced (texas style)
     ingredients:
       - item: cooking salt
         note: 1% of brisket weight — kosher; e.g. ~20g for a 2kg piece. reduce 25% for table salt, increase 50% for flakes
@@ -73,101 +76,103 @@ components:
       the mop is going to contribute happens in the open, unwrapped phase, which is also why
       it's timed to a schedule instead of a single dousing: a single early mop dries out and
       stops contributing well before the bark is actually set.
-  - name: variant B — rub
-    ingredients:
-      - item: brown sugar
-        mass: 20
-        qty: 1
-        unit: tbsp
-        note: sub white. per 1kg brisket — scale linearly to your weight
-      - item: paprika
-        mass: 5
-        qty: 2
-        unit: tsp
-      - item: garlic powder
-        mass: 2.5
-        qty: 1
-        unit: tsp
-        note: sub 1 tsp fresh garlic
-      - item: onion powder
-        mass: 1.5
-        qty: 1
-        unit: tsp
-        note: sub garlic powder
-      - item: cumin powder
-        qty: 0.5
-        unit: tsp
-      - item: mustard powder
-        mass: 2.5
-        qty: 0.75
-        unit: tsp
-      - item: cooking salt
-        qty: 1
-        unit: tsp
-        note: kosher — reduce 25% for table salt, increase 50% for flakes
-      - item: black pepper
-        mass: 0.5
-        qty: 0.5
-        unit: tsp
-  - name: variant B — sauce
-    ingredients:
-      - item: garlic
-        qty: 2
-        unit: clove
-        note: minced; sub 2 tsp powder
-      - item: apple cider vinegar
-        mass: 125
-        qty: 125
-        unit: ml
-      - item: ketchup
-        mass: 335
-        note: or Aussie tomato sauce
-      - item: brown sugar
-        mass: 80
-        note: loosely packed, not tightly; sub white
-      - item: black pepper
-        qty: 2
-        unit: tsp
-      - item: onion powder
-        qty: 2
-        unit: tsp
-      - item: mustard powder
-        qty: 2
-        unit: tsp
-      - item: cayenne pepper
-        qty: 1
-        unit: tsp
-        note: adjust to taste
-      - item: worcestershire sauce
-        qty: 1
-        unit: tbsp
-        note: sub soy sauce
-      - item: water
-        mass: 500
-        qty: 500
-        unit: ml
-        note: only when using this as braising liquid — leave out if reserving the sauce for a finishing toss or glaze instead
-    steps:
-      - make the sauce (everything except the water) in the baking pan, then stir in the water for the braise. leave the water out entirely if you're making this to toss through variant C instead
-  - name: variant B — procedure (braised, oven start to finish)
-    steps:
-      - oven to 160°C
-      - coat brisket in the rub, then in the sauce, meat side down
-      - cover with lid or foil, bake 3.5 hrs or until it pulls apart under a fork, basting intermittently
-      - lift the meat out, spoon more sauce over, and strain the braising liquid
-      - drum finish (optional) — only worth doing if you've already got the fire down to a coal bed; skip it without any loss to the dish, a hot oven grill does the same job. reduce the strained sauce a little on the stove first if it's thin. lay the meat directly on the hot grate over the coals (never over open flame — that's what scorches the sugar), baste with the reduced sauce every 2-3 mins, turning once, for about 8-12 mins total, until the sauce has tackified into a lacquer and the edges have caught a little char
-      - oven alternative to the drum finish — same basting cadence, under a hot grill/broiler on a foil-lined tray. broilers run hotter and closer than a coal bed, so watch it more closely and expect it to be done sooner
-    notes: |
-      Most forgiving of the three by a wide margin, and it's the safe fallback for a genuinely
-      poor cheap cut — you lose the bark and it stops reading as "brisket" specifically, but
-      that's the right trade for a bad piece rather than a failure.
+  - name: B — braised and sauced
+    components:
+      - name: rub
+        ingredients:
+          - item: brown sugar
+            mass: 20
+            qty: 1
+            unit: tbsp
+            note: sub white. per 1kg brisket — scale linearly to your weight
+          - item: paprika
+            mass: 5
+            qty: 2
+            unit: tsp
+          - item: garlic powder
+            mass: 2.5
+            qty: 1
+            unit: tsp
+            note: sub 1 tsp fresh garlic
+          - item: onion powder
+            mass: 1.5
+            qty: 1
+            unit: tsp
+            note: sub garlic powder
+          - item: cumin powder
+            qty: 0.5
+            unit: tsp
+          - item: mustard powder
+            mass: 2.5
+            qty: 0.75
+            unit: tsp
+          - item: cooking salt
+            qty: 1
+            unit: tsp
+            note: kosher — reduce 25% for table salt, increase 50% for flakes
+          - item: black pepper
+            mass: 0.5
+            qty: 0.5
+            unit: tsp
+      - name: sauce
+        ingredients:
+          - item: garlic
+            qty: 2
+            unit: clove
+            note: minced; sub 2 tsp powder
+          - item: apple cider vinegar
+            mass: 125
+            qty: 125
+            unit: ml
+          - item: ketchup
+            mass: 335
+            note: or Aussie tomato sauce
+          - item: brown sugar
+            mass: 80
+            note: loosely packed, not tightly; sub white
+          - item: black pepper
+            qty: 2
+            unit: tsp
+          - item: onion powder
+            qty: 2
+            unit: tsp
+          - item: mustard powder
+            qty: 2
+            unit: tsp
+          - item: cayenne pepper
+            qty: 1
+            unit: tsp
+            note: adjust to taste
+          - item: worcestershire sauce
+            qty: 1
+            unit: tbsp
+            note: sub soy sauce
+          - item: water
+            mass: 500
+            qty: 500
+            unit: ml
+            note: only when using this as braising liquid — leave out if reserving the sauce for a finishing toss or glaze instead
+        steps:
+          - make the sauce (everything except the water) in the baking pan, then stir in the water for the braise. leave the water out entirely if you're making this to toss through variant C instead
+      - name: procedure (braised, oven start to finish)
+        steps:
+          - oven to 160°C
+          - coat brisket in the rub, then in the sauce, meat side down
+          - cover with lid or foil, bake 3.5 hrs or until it pulls apart under a fork, basting intermittently
+          - lift the meat out, spoon more sauce over, and strain the braising liquid
+          - drum finish (optional) — only worth doing if you've already got the fire down to a coal bed; skip it without any loss to the dish, a hot oven grill does the same job. reduce the strained sauce a little on the stove first if it's thin. lay the meat directly on the hot grate over the coals (never over open flame — that's what scorches the sugar), baste with the reduced sauce every 2-3 mins, turning once, for about 8-12 mins total, until the sauce has tackified into a lacquer and the edges have caught a little char
+          - oven alternative to the drum finish — same basting cadence, under a hot grill/broiler on a foil-lined tray. broilers run hotter and closer than a coal bed, so watch it more closely and expect it to be done sooner
+        notes: |
+          Most forgiving of the three by a wide margin, and it's the safe fallback for a genuinely
+          poor cheap cut — you lose the bark and it stops reading as "brisket" specifically, but
+          that's the right trade for a bad piece rather than a failure.
 
-      This variant never has an unwrapped, undressed phase — it's coated and covered from the
-      very first minute in the oven — so there's no window for it to pick up real smoke the
-      way A and C can on the drum's opening pass. A few drops of liquid smoke stirred into the
-      sauce's water component is worth considering here if you want any smoke character at all
-      out of this one.
-  - name: variant C — chopped or pulled (lean/thin flat)
+          This variant never has an unwrapped, undressed phase — it's coated and covered from the
+          very first minute in the oven — so there's no window for it to pick up real smoke the
+          way A and C can on the drum's opening pass. A few drops of liquid smoke stirred into the
+          sauce's water component is worth considering here if you want any smoke character at all
+          out of this one.
+  - name: C — chopped or pulled (lean/thin flat)
     ingredients:
       - item: cooking salt
         note: 1% of brisket weight for the dry brine, same as variant A — or see the wet brine alternative below

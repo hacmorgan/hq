@@ -13,32 +13,34 @@ ingredients:
     note: roughly a quarter of the salt by weight — see notes
   - item: flake salt
     note: to finish, off the heat
-components:
-  - name: prep
-    steps:
-      - trim the backfat back to 3-5mm — thicker than that will not render in the time the skin takes to crisp, and you get a crisp shell sitting on a chewy layer
-      - cut into 1-2cm strips now, not later — cooked crackling shatters under a knife, and strips render more evenly than a sheet
-      - pat bone dry on both faces and along the cut edges
-      - rub the fine salt into the skin side, and the bicarb with it if using
-      - uncovered on a rack in the fridge for as long as you have — overnight is best, an hour helps, none is survivable. see notes
-      - blot off any beaded moisture before it goes near the oven
-  - name: render
-    steps:
-      - gently clamp between two wire racks to keep it flat — skin contracts as it heats and will curl into a tube otherwise
-      - clamp over a tray; the fat has to go somewhere
-      - oven at 140°C fan-forced, 25-35 mins
-      - done when the fat has run and the skin is pale, matte and dry to the touch, with no soft wobble of unrendered fat underneath
-      - pour the fat off and keep it — that is lard, and it is the best thing you will ever roast a potato in
-      - leave a film on the strips, not a pool
-  - name: puff
-    steps:
-      - oven up to 220°C fan-forced
-      - unclamp for the blistered, puffed texture; leave clamped for flat glassy shards. see notes
-      - back in for 8-15 mins, watching from 6 — it goes from perfect to acrid in about two minutes
-      - out when it is blistered across the whole surface, deep gold, and taps hard and hollow
-      - onto a rack, not paper towel — it wants air underneath and it keeps crisping as it cools
-      - flake salt now, off the heat, so it stays crunchy instead of dissolving into the fat
-  - name: variant (blanched and puffed)
+variants:
+  - name: dry and roast (the default)
+    components:
+      - name: prep
+        steps:
+          - trim the backfat back to 3-5mm — thicker than that will not render in the time the skin takes to crisp, and you get a crisp shell sitting on a chewy layer
+          - cut into 1-2cm strips now, not later — cooked crackling shatters under a knife, and strips render more evenly than a sheet
+          - pat bone dry on both faces and along the cut edges
+          - rub the fine salt into the skin side, and the bicarb with it if using
+          - uncovered on a rack in the fridge for as long as you have — overnight is best, an hour helps, none is survivable. see notes
+          - blot off any beaded moisture before it goes near the oven
+      - name: render
+        steps:
+          - gently clamp between two wire racks to keep it flat — skin contracts as it heats and will curl into a tube otherwise
+          - clamp over a tray; the fat has to go somewhere
+          - oven at 140°C fan-forced, 25-35 mins
+          - done when the fat has run and the skin is pale, matte and dry to the touch, with no soft wobble of unrendered fat underneath
+          - pour the fat off and keep it — that is lard, and it is the best thing you will ever roast a potato in
+          - leave a film on the strips, not a pool
+      - name: puff
+        steps:
+          - oven up to 220°C fan-forced
+          - unclamp for the blistered, puffed texture; leave clamped for flat glassy shards. see notes
+          - back in for 8-15 mins, watching from 6 — it goes from perfect to acrid in about two minutes
+          - out when it is blistered across the whole surface, deep gold, and taps hard and hollow
+          - onto a rack, not paper towel — it wants air underneath and it keeps crisping as it cools
+          - flake salt now, off the heat, so it stays crunchy instead of dissolving into the fat
+  - name: blanched and puffed
     steps:
       - simmer the skin 45-60 mins until it is soft enough to scrape
       - scrape every trace of fat off the underside with a spoon — this is the whole point of the simmer, and it is tedious
