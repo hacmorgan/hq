@@ -442,6 +442,55 @@ function configure_tmux
 }
 
 
+function configure_xinput
+{
+    ## Make touchpad settings survive the touchpad being re-probed
+    #
+    # Properties set at runtime with 'xinput set-prop' belong to a device instance, so
+    # they are lost whenever X re-adds the device - notably on resume, where psmouse
+    # re-probes the touchpad and tap-to-click and natural scrolling both revert to
+    # their (off) defaults. An InputClass snippet is reapplied every time the device is
+    # added, so this only needs to be run once, and only on a machine with a touchpad.
+
+    local config=/etc/X11/xorg.conf.d/30-touchpad.conf
+
+    function check_touchpad_present
+    {
+        grep --ignore-case --quiet touchpad /proc/bus/input/devices ||
+            die "${fmt_red}No touchpad found in /proc/bus/input/devices, is this a laptop?${fmt_reset}"
+    }
+
+    function write_touchpad_config
+    {
+        cat <<EOF | sudo tee $config
+Section "InputClass"
+Identifier "touchpad"
+MatchIsTouchpad "on"
+MatchDriver "libinput"
+Option "Tapping" "on"
+Option "NaturalScrolling" "true"
+# Set to "false" to keep the touchpad live while something (a cat) sits on the keyboard
+Option "DisableWhileTyping" "true"
+EndSection
+EOF
+    }
+
+    if (( options_no_sudo )); then
+        die "Configuring the touchpad requires sudo"
+    fi
+
+    check_touchpad_present
+
+    if (( options_dry_run )); then
+        say "write $config"
+        return
+    fi
+
+    write_touchpad_config
+    say "${fmt_yellow}Restart X for $config to take effect${fmt_reset}"
+}
+
+
 function install_zellij
 {
     local install_prefix="${options_install_prefix:-$HOME/.local}"
@@ -724,6 +773,7 @@ function options
 --configure-git; Tell git who you are (so you can commit)
 --configure-tmux; Configure tmux with plugins
 --configure-vnc; Configure a VNC server
+--configure-xinput; Persist laptop touchpad settings (tap-to-click, natural scrolling) across resume
 --configure-zsh; Do this after installing oh-my-zsh
 --create-shared-mountpoints; Create all mountpoints in 'etc/mountpoints' and transfer ownership to hamish
 --dry-run; Talk the talk but don't walk the walk
@@ -796,6 +846,7 @@ fi
 (( options_configure_git ))               && configure_git
 (( options_configure_vnc ))               && configure_vnc
 (( options_configure_tmux ))              && configure_tmux
+(( options_configure_xinput ))            && configure_xinput
 (( options_configure_zsh ))               && configure_zsh
 (( options_create_shared_mountpoints ))   && create_shared_mountpoints
 (( options_install_fonts ))               && install_fonts
