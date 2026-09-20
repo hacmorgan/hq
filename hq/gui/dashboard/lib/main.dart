@@ -1098,7 +1098,7 @@ class _RecipeDetailDialogState extends State<RecipeDetailDialog> {
     if (source != null && source.trim().isNotEmpty) {
       children.add(Padding(
         padding: const EdgeInsets.only(bottom: 6),
-        child: SelectableText(
+        child: Text(
           'source: $source',
           style: const TextStyle(fontSize: 12, color: Colors.blue),
         ),
@@ -1395,12 +1395,13 @@ class _RecipeDetailDialogState extends State<RecipeDetailDialog> {
           children: [
             const Text('•  '),
             Expanded(
-              child: RichText(
-                text: TextSpan(
-                  style: const TextStyle(
-                      color: Colors.black, fontSize: 14, height: 1.3),
-                  children: [content],
-                ),
+              // Text.rich, not a bare RichText: only Text registers itself with
+              // the enclosing SelectionArea, and a raw RichText would leave the
+              // step text unselectable while its bullet beside it selected fine.
+              child: Text.rich(
+                TextSpan(children: [content]),
+                style: const TextStyle(
+                    color: Colors.black, fontSize: 14, height: 1.3),
               ),
             ),
           ],
