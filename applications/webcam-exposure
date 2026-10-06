@@ -1,0 +1,315 @@
+#!/usr/bin/env bash
+
+
+##  webcam-exposure - lock the webcam exposure so a bright background can't wash it out
+
+
+source "$(type -p bash-std)"
+
+
+AUTO_EXPOSURE_MANUAL=1
+AUTO_EXPOSURE_AUTOMATIC=3
+EXPOSURE_MIN=2
+EXPOSURE_MAX=1250
+
+METER_RESOLUTION=640x360
+METER_SETTLE_FRAMES=12
+METER_ITERATIONS=9
+
+# Centre region used for metering, as fractions of the frame. Spans the middle
+# 40% horizontally and 20%-70% vertically, which is where a face sits.
+METER_CROP="iw*0.4:ih*0.5:iw*0.3:ih*0.2"
+
+STATE_DIR="$HOME/.cache/webcam-exposure"
+
+
+function prologue
+{
+    say "Lock the webcam exposure so a bright background can't wash it out."
+    echo
+    echo "    webcam-exposure --meter     # work out a good exposure and lock it" 1>&2
+    echo "    webcam-exposure --lock      # lock at the last known good exposure" 1>&2
+    echo "    webcam-exposure --brighter  # nudge up if you're still too dark" 1>&2
+    echo "    webcam-exposure --unlock    # hand control back to the camera" 1>&2
+}
+
+
+function get_ctrl
+{
+    # Read a single v4l2 control value
+    local control="$1"
+    v4l2-ctl --device "$options_device" --get-ctrl "$control" 2>/dev/null |
+        cut -d' ' -f2
+}
+
+
+function set_ctrl
+{
+    # Write a single v4l2 control value
+    local control="$1"
+    local value="$2"
+    v4l2-ctl --device "$options_device" --set-ctrl "$control=$value" 2>&1 1>/dev/null |
+        grep . 1>&2
+    return 0
+}
+
+
+function state_path
+{
+    echo "$STATE_DIR/$1"
+}
+
+
+function save_state
+{
+    local key="$1"
+    local value="$2"
+    mkdir -p "$STATE_DIR"
+    echo "$value" > "$(state_path "$key")"
+}
+
+
+function load_state
+{
+    local key="$1"
+    cat "$(state_path "$key")" 2>/dev/null
+}
+
+
+function clamp_exposure
+{
+    local value="$1"
+    (( value < EXPOSURE_MIN )) && value=$EXPOSURE_MIN
+    (( value > EXPOSURE_MAX )) && value=$EXPOSURE_MAX
+    echo "$value"
+}
+
+
+function device_holders
+{
+    fuser "$options_device" 2>/dev/null |
+        xargs --no-run-if-empty ps --no-headers -o comm= -p 2>/dev/null |
+        sort --unique |
+        paste --serial --delimiters=,
+}
+
+
+function is_locked
+{
+    [[ "$(get_ctrl auto_exposure)" == "$AUTO_EXPOSURE_MANUAL" ]]
+}
+
+
+function remember_automatic_settings
+{
+    # Only record these the first time we lock, so repeated locks don't
+    # overwrite the settings we need to put back on unlock.
+    is_locked && return 0
+    save_state prior-auto-exposure      "$(get_ctrl auto_exposure)"
+    save_state prior-dynamic-framerate  "$(get_ctrl exposure_dynamic_framerate)"
+    save_state prior-white-balance      "$(get_ctrl white_balance_automatic)"
+}
+
+
+function apply_lock
+{
+    local exposure="$1"
+
+    remember_automatic_settings
+
+    set_ctrl auto_exposure $AUTO_EXPOSURE_MANUAL
+    set_ctrl exposure_time_absolute "$exposure"
+
+    # Stop the camera trading frame rate for a longer exposure now that we are
+    # the ones choosing the exposure.
+    set_ctrl exposure_dynamic_framerate 0
+
+    if (( options_lock_white_balance )); then
+        local temperature="$(get_ctrl white_balance_temperature)"
+        set_ctrl white_balance_automatic 0
+        set_ctrl white_balance_temperature "$temperature"
+        saymore "white balance locked at ${temperature}K"
+    fi
+
+    save_state last-exposure "$exposure"
+    say "exposure ${fmt_green}locked${fmt_reset} at $exposure"
+}
+
+
+function unlock
+{
+    local prior_auto_exposure="$(load_state prior-auto-exposure)"
+    local prior_dynamic_framerate="$(load_state prior-dynamic-framerate)"
+    local prior_white_balance="$(load_state prior-white-balance)"
+
+    set_ctrl auto_exposure "${prior_auto_exposure:-$AUTO_EXPOSURE_AUTOMATIC}"
+    set_ctrl exposure_dynamic_framerate "${prior_dynamic_framerate:-0}"
+    set_ctrl white_balance_automatic "${prior_white_balance:-1}"
+
+    say "exposure ${fmt_yellow}unlocked${fmt_reset} - the camera is choosing again"
+}
+
+
+function centre_brightness
+{
+    # Mean brightness (0-255) of the centre of the frame at a given exposure.
+    # The camera needs a few frames to act on a new exposure, so we grab a
+    # short burst and measure only the last one.
+    local exposure="$1"
+
+    set_ctrl exposure_time_absolute "$exposure"
+
+    ffmpeg -hide_banner -loglevel error                   \
+           -f v4l2                                        \
+           -input_format mjpeg                            \
+           -video_size $METER_RESOLUTION                  \
+           -i "$options_device"                           \
+           -frames:v $METER_SETTLE_FRAMES                 \
+           -vf "crop=$METER_CROP"                         \
+           -pix_fmt gray                                  \
+           -f rawvideo - 2>/dev/null |
+        python3 -c "
+import sys
+
+frames = sys.stdin.buffer.read()
+if not frames:
+    sys.exit(1)
+
+# The last frame is the one captured furthest from the exposure change.
+width, height = [int(n) for n in '$METER_RESOLUTION'.split('x')]
+size = int(width * 0.4) * int(height * 0.5)
+last = frames[-size:] if len(frames) >= size else frames
+print(round(sum(last) / len(last)))
+"
+}
+
+
+function meter
+{
+    # Binary search for the exposure that puts the centre of frame at the
+    # target brightness. Brightness rises monotonically with exposure, so this
+    # converges in a handful of steps.
+    local holders="$(device_holders)"
+    [[ -n "$holders" ]] &&
+        die "$options_device is in use by $holders - close it, then meter before you join the call"
+
+    remember_automatic_settings
+    set_ctrl auto_exposure $AUTO_EXPOSURE_MANUAL
+
+    local low=$EXPOSURE_MIN
+    local high=$EXPOSURE_MAX
+    local exposure=""
+    local brightness=""
+
+    for iteration in $(seq $METER_ITERATIONS); do
+        exposure=$(( (low + high) / 2 ))
+        brightness="$(centre_brightness "$exposure")"
+        [[ -n "$brightness" ]] ||
+            die "could not capture from $options_device - is another application using it?"
+
+        saymore "exposure $exposure -> centre brightness $brightness"
+
+        if (( brightness < options_target )); then
+            low=$exposure
+        else
+            high=$exposure
+        fi
+    done
+
+    say "metered centre brightness $brightness (target $options_target)"
+    apply_lock "$exposure"
+}
+
+
+function nudge
+{
+    local direction="$1"
+
+    is_locked || die "exposure is not locked - run --lock or --meter first"
+
+    local current="$(get_ctrl exposure_time_absolute)"
+    local adjusted=""
+
+    if [[ "$direction" == "brighter" ]]; then
+        adjusted=$(( current * (100 + options_step) / 100 ))
+        (( adjusted == current )) && adjusted=$(( current + 1 ))
+    else
+        adjusted=$(( current * 100 / (100 + options_step) ))
+        (( adjusted == current )) && adjusted=$(( current - 1 ))
+    fi
+
+    adjusted="$(clamp_exposure "$adjusted")"
+    set_ctrl exposure_time_absolute "$adjusted"
+    save_state last-exposure "$adjusted"
+    say "exposure $current -> ${fmt_bold}$adjusted${fmt_reset}"
+}
+
+
+function lock
+{
+    # An explicit value wins, then the last value we settled on, and failing
+    # both we work one out from what the camera can currently see.
+    local exposure="$options_exposure"
+    [[ -n "$exposure" ]] || exposure="$(load_state last-exposure)"
+
+    if [[ -z "$exposure" ]]; then
+        say "no remembered exposure - metering one now"
+        meter
+        return
+    fi
+
+    apply_lock "$(clamp_exposure "$exposure")"
+}
+
+
+function status
+{
+    local holders="$(device_holders)"
+
+    if is_locked; then
+        say "${fmt_green}locked${fmt_reset} at $(get_ctrl exposure_time_absolute)"
+    else
+        say "${fmt_yellow}automatic${fmt_reset} - the camera is choosing its own exposure"
+    fi
+
+    echo "    device          $options_device" 1>&2
+    echo "    exposure range  $EXPOSURE_MIN - $EXPOSURE_MAX" 1>&2
+    echo "    last locked at  $(load_state last-exposure || echo 'never')" 1>&2
+    echo "    white balance   $( [[ "$(get_ctrl white_balance_automatic)" == 1 ]] && echo automatic || echo locked )" 1>&2
+    echo "    in use by       ${holders:-nothing}" 1>&2
+}
+
+
+function options
+{
+    cat <<EOF
+--meter,-m; Work out a good exposure by metering the centre of frame, then lock it (needs the camera free)
+--lock,-l; Lock the exposure, using --exposure, else the last known good value, else metering
+--unlock,-u; Hand exposure control back to the camera
+--brighter,-b; Raise the locked exposure by --step percent
+--darker,-d; Lower the locked exposure by --step percent
+--status,-s; Show what the camera is currently doing
+--exposure,-e=[<value>]; Exposure time to lock at, $EXPOSURE_MIN-$EXPOSURE_MAX
+--target=<brightness>; default=105; Mean brightness (0-255) to aim the centre of frame at when metering
+--step=<percent>; default=25; How much --brighter and --darker move the exposure
+--lock-white-balance,-w; Also pin white balance when locking, to stop colour drifting too
+--device=<path>; default=/dev/video0; Video device to control
+--verbose,-v; Show each metering step
+EOF
+}
+
+bash-std-application-init "$@" < <( options ) || die "failed parsing args"
+
+
+[[ -e "$options_device" ]] || die "no such video device: $options_device"
+command -v v4l2-ctl > /dev/null || die "v4l2-ctl not found (pacman -S v4l-utils)"
+
+
+if   (( options_meter ));    then meter
+elif (( options_unlock ));   then unlock
+elif (( options_brighter )); then nudge brighter
+elif (( options_darker ));   then nudge darker
+elif (( options_lock ));     then lock
+elif (( options_status ));   then status
+else                              status
+fi
