@@ -16,6 +16,9 @@ METER_RESOLUTION=640x360
 METER_SETTLE_FRAMES=12
 METER_ITERATIONS=9
 
+SET_CTRL_ATTEMPTS=3
+SET_CTRL_RETRY_DELAY=0.2
+
 # Centre region used for metering, as fractions of the frame. Spans the middle
 # 40% horizontally and 20%-70% vertically, which is where a face sits.
 METER_CROP="iw*0.4:ih*0.5:iw*0.3:ih*0.2"
@@ -45,12 +48,27 @@ function get_ctrl
 
 function set_ctrl
 {
-    # Write a single v4l2 control value
+    # Write a single v4l2 control value and confirm it took. The camera can
+    # refuse a write while it is streaming, and v4l2-ctl exits 0 either way,
+    # so reading the value back is the only way to know we got what we asked
+    # for - otherwise we cheerfully report a lock that never happened.
     local control="$1"
     local value="$2"
-    v4l2-ctl --device "$options_device" --set-ctrl "$control=$value" 2>&1 1>/dev/null |
-        grep . 1>&2
-    return 0
+    local attempt=""
+    local readback=""
+
+    for attempt in $(seq $SET_CTRL_ATTEMPTS); do
+        v4l2-ctl --device "$options_device" --set-ctrl "$control=$value" 2>&1 1>/dev/null |
+            grep . 1>&2
+
+        readback="$(get_ctrl "$control")"
+        [[ "$readback" == "$value" ]] && return 0
+
+        saymore "$control read back as ${readback:-nothing}, wanted $value - retrying ($attempt)"
+        sleep $SET_CTRL_RETRY_DELAY
+    done
+
+    die "could not set $control to $value - the camera reports ${readback:-nothing}"
 }
 
 
@@ -91,6 +109,14 @@ function device_holders
         xargs --no-run-if-empty ps --no-headers -o comm= -p 2>/dev/null |
         sort --unique |
         paste --serial --delimiters=,
+}
+
+
+function check_device_supports_exposure
+{
+    v4l2-ctl --device "$options_device" --list-ctrls 2>/dev/null |
+        grep --quiet "auto_exposure" ||
+        die "$options_device has no exposure controls - wrong device? (try --device /dev/video0)"
 }
 
 
@@ -303,6 +329,7 @@ bash-std-application-init "$@" < <( options ) || die "failed parsing args"
 
 [[ -e "$options_device" ]] || die "no such video device: $options_device"
 command -v v4l2-ctl > /dev/null || die "v4l2-ctl not found (pacman -S v4l-utils)"
+check_device_supports_exposure
 
 
 if   (( options_meter ));    then meter
