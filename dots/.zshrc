@@ -177,6 +177,7 @@ alias spkg="echo $HQ_VENV/lib/python*/site-packages"
 # Webcam exposure, for sitting outside with a bright background behind you
 alias camlock='webcam-exposure --lock'
 alias camoutside='webcam-exposure --lock --exposure 20'
+alias camset='webcam-exposure --lock --exposure'  # camset 20
 alias camunlock='webcam-exposure --unlock'
 alias cammeter='webcam-exposure --meter --verbose'
 alias camup='webcam-exposure --brighter'
