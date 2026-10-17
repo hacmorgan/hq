@@ -882,10 +882,60 @@ Map? _findBasis(List<Map> scopes) {
 /// One display block of a `notes:` string: either a reflowed prose paragraph or
 /// a chunk the author laid out by hand, kept verbatim.
 class _NotesBlock {
-  const _NotesBlock(this.text, {required this.preformatted});
+  const _NotesBlock(this.text,
+      {required this.preformatted, this.heading = false});
 
   final String text;
   final bool preformatted;
+
+  /// A line that stood alone as a heading: rendered on its own line, bold,
+  /// tight against the paragraph it introduces.
+  final bool heading;
+}
+
+/// The heading text of a line that stands alone as one — `## Foo`, or a line
+/// that is entirely bold, `**Foo**` — or null when the line is ordinary prose.
+String? _headingText(String line) {
+  final l = line.trim();
+  final atx = RegExp(r'^#{1,6}\s+(.+)$').firstMatch(l);
+  if (atx != null) return atx.group(1)!.trim();
+  // `[^*]+`, not `.+?`: a line of two separate bold runs — `**a** and **b**`
+  // — is a sentence, not a heading.
+  final bold = RegExp(r'^\*\*([^*]+)\*\*:?$').firstMatch(l);
+  if (bold != null) return bold.group(1)!.trim();
+  return null;
+}
+
+/// Inline markdown — `**bold**`, `*italic*` / `_italic_`, `` `code` `` — as
+/// spans over [base].
+///
+/// Deliberately small rather than a markdown package: the notes are prose with
+/// the occasional emphasis, and a full renderer would have to be taught the
+/// unwrapping and preformatted rules above before it agreed with them. The
+/// italic lookarounds keep `snake_case` and mid-word asterisks literal.
+List<InlineSpan> _mdSpans(String text, TextStyle base) {
+  final pattern = RegExp(
+      r'\*\*(.+?)\*\*|(?<![A-Za-z0-9])[*_](.+?)[*_](?![A-Za-z0-9])|`(.+?)`');
+  final spans = <InlineSpan>[];
+  var i = 0;
+  for (final m in pattern.allMatches(text)) {
+    if (m.start > i) spans.add(TextSpan(text: text.substring(i, m.start)));
+    if (m.group(1) != null) {
+      spans.add(TextSpan(
+          text: m.group(1),
+          style: const TextStyle(fontWeight: FontWeight.bold)));
+    } else if (m.group(2) != null) {
+      spans.add(TextSpan(
+          text: m.group(2),
+          style: const TextStyle(fontStyle: FontStyle.italic)));
+    } else {
+      spans.add(TextSpan(
+          text: m.group(3), style: const TextStyle(fontFamily: 'monospace')));
+    }
+    i = m.end;
+  }
+  if (i < text.length) spans.add(TextSpan(text: text.substring(i)));
+  return spans;
 }
 
 /// Split a YAML block scalar into display blocks, undoing its hard wrapping.
@@ -911,8 +961,16 @@ List<_NotesBlock> _reflowNotes(String notes) {
         indents.first == 0 &&
         !lines.any(_looksLikeListItem);
     if (isProse) {
-      blocks.add(_NotesBlock(lines.map((l) => l.trim()).join(' '),
-          preformatted: false));
+      var body = lines;
+      final head = _headingText(lines.first);
+      if (head != null) {
+        blocks.add(_NotesBlock(head, preformatted: false, heading: true));
+        body = lines.sublist(1);
+      }
+      if (body.isNotEmpty) {
+        blocks.add(_NotesBlock(body.map((l) => l.trim()).join(' '),
+            preformatted: false));
+      }
     } else {
       final base = indents.reduce(min);
       blocks.add(_NotesBlock(
@@ -1248,11 +1306,12 @@ class _RecipeDetailDialogState extends State<RecipeDetailDialog> {
         ),
       ),
     ];
+    widgets.addAll(_scopeWidgets(variant));
     final vNotes = variant['notes']?.toString();
     if (vNotes != null && vNotes.trim().isNotEmpty) {
+      widgets.add(_sectionHeader('Notes'));
       widgets.add(_notesWidget(vNotes));
     }
-    widgets.addAll(_scopeWidgets(variant));
     return widgets;
   }
 
@@ -1361,7 +1420,16 @@ class _RecipeDetailDialogState extends State<RecipeDetailDialog> {
         children: [
           for (var i = 0; i < blocks.length; i++)
             Padding(
-              padding: EdgeInsets.only(top: i == 0 ? 0 : 10),
+              // A heading belongs to the paragraph under it, so the gap goes
+              // above the heading rather than between it and its body.
+              padding: EdgeInsets.only(
+                  top: i == 0
+                      ? 0
+                      : blocks[i].heading
+                          ? 14
+                          : blocks[i - 1].heading
+                              ? 2
+                              : 10),
               child: _notesBlockWidget(blocks[i]),
             ),
         ],
@@ -1370,21 +1438,30 @@ class _RecipeDetailDialogState extends State<RecipeDetailDialog> {
   }
 
   Widget _notesBlockWidget(_NotesBlock block) {
-    final text = Text(
-      block.text,
-      style: TextStyle(
-        fontSize: 13,
-        height: 1.35,
-        color: Colors.black87,
-        fontFamily: block.preformatted ? 'monospace' : null,
-      ),
-    );
-    if (!block.preformatted) return text;
-    // Hand-aligned blocks keep their line breaks, so let them scroll sideways
-    // rather than re-wrap and lose the alignment they were written for.
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: text,
+    if (block.preformatted) {
+      // Hand-aligned blocks are left exactly as written — no inline markdown,
+      // since a bold run would shift the columns they were aligned for — and
+      // they scroll sideways rather than re-wrap.
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Text(
+          block.text,
+          style: const TextStyle(
+            fontSize: 13,
+            height: 1.35,
+            color: Colors.black87,
+            fontFamily: 'monospace',
+          ),
+        ),
+      );
+    }
+    const base = TextStyle(fontSize: 13, height: 1.35, color: Colors.black87);
+    final style = block.heading
+        ? base.copyWith(
+            fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black)
+        : base;
+    return Text.rich(
+      TextSpan(style: style, children: _mdSpans(block.text, base)),
     );
   }
 
