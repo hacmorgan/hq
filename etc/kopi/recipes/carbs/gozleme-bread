@@ -61,9 +61,9 @@ variants:
       - name: dough
         ingredients:
           - item: full cream greek yogurt
-            qty: 180
+            qty: 150
             unit: g
-            note: 0.75 cup, add olive oil if low fat
+            note: 0.75 cup, add olive oil if low fat (previously 180, but so much flour had to be added that we trying 150)
           - item: plain flour
             qty: 165
             unit: g
@@ -106,6 +106,43 @@ variants:
           - brush or spray the top with oil, flip it over using a spatula and gently press it to flatten it. keep it pressed as it cooks; prick and flatten any bubble that forms rather than letting it set inflated
           - when golden brown, remove from the pan and place on a board. repeat with the 2nd dough
           - slice into triangles, add a squeeze of lemon and enjoy!
+  - name: classic (flour, water, salt)
+    components:
+      - name: dough
+        notes: |
+          The traditional dough — no yogurt, so nothing tenderising the gluten, and fat dosed
+          deliberately instead of riding in on the dairy (see "tuning"). Untested as of
+          2026-10-17. Water at ~58% of flour: under 55% fights the pin and tears, over ~62% gets
+          sticky and soaks up so much bench flour it dries out. Nagi's sits at ~56% and rolls
+          without tearing. Bread flour is thirstier — go to 100g water. Leave out the oil and
+          add ~5g more water instead.
+
+          Doubled (330g flour, 190g water, 12g oil, 6g salt) is enough for the kitchenaid bowl
+          to actually engage — 165g isn't.
+        ingredients:
+          - item: plain flour
+            mass: 165
+            note: or bread flour, for more chew
+          - item: water
+            mass: 95
+            note: lukewarm. hold back 10g and add it only if the dough is stiff
+          - item: extra virgin olive oil
+            mass: 6
+            qty: 1.25
+            unit: tsp
+            note: in the dough, ~3.5% of flour — a lubricant at this dose, not a shortener
+          - item: salt
+            mass: 3
+            note: ~1.8% of flour
+        steps:
+          - mix flour, salt, water and oil into a rough ball
+          - knead 8-10 mins until smooth and supple, or knead 5 / rest 15 / knead 5
+          - rest covered 45 mins, or an hour in the fridge — longer than the yogurt dough, since nothing here softens the gluten for you
+      - name: filling and cook
+        steps:
+          - filling, assembly and pricking as the default variant
+          - cook in a dry or barely-wiped pan, hotter and faster — ~90 secs to 2 mins a side, colour fast then off. stop pressing once you've got contact
+          - stack under a clean tea towel straight off the pan so the steam softens the crust
   - name: nagi's (recipetineats)
     components:
       - name: dough
