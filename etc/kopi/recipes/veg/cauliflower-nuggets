@@ -20,6 +20,7 @@ components:
         mass: 70
       - item: msg
         mass: 1
+        note: try 2.5x mass as chicken bullion
       - item: baking soda
         mass: 1
       - item: salt

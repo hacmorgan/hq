@@ -122,19 +122,53 @@ variants:
         note: 1%. some traditions salt the dough, some only the water. it slightly tightens the gluten
       - item: semola rimacinata
         note: for dusting, as much as needed. not optional in practice
+    notes: |
+      **The well**
+      A bowl works just as well — the well's only real advantage is that you can stop pulling
+      flour in when the dough says so, rather than committing all of it up front.
+
+      **The leftover flour**
+      Don't discard it, and don't force it all in either. Work it in gradually over the first
+      minutes of kneading and stop when the dough stops accepting it, usually with 5-10% left
+      on the board. Forcing the last of it in to use it up is the commonest way this goes
+      wrong. The sticky paste stuck to the board is dough, not flour — scrape it up and knead
+      it in. Only the loose dry flour gets swept aside.
+
+      **Reading the dough**
+      The board tells you, not the dough: early on the ball visibly hoovers up loose flour
+      every time it touches the bench; when it's done the flour just sits there and the dough
+      skids over it. Clean board and clean hands means stop. Two confirmations:
+
+        palm test — press the ball into your palm and pull away. still wants flour: leaves
+                    residue. done: releases clean, faintly tacky. overshot: matte and floury
+                    rather than cool and smooth
+        fold test — fold the ball in half. fissures or cracks at the fold means too dry; smears
+                    and welds shut means it wants more. thumbprint should hold a smooth
+                    impression without cracking at the rim
+
+      **Err wet**
+      Flour keeps absorbing egg through the whole rest, so the dough you wrap isn't the dough
+      you unwrap — it firms up noticeably, and dough that feels perfect going in comes out
+      stiff and crack-prone. Too wet is fixed in ten seconds with a pinch of flour at any
+      stage; too dry is near unfixable, because water won't re-enter a developed gluten network
+      without turning it to a slippery mess. Tacky at the end of the knead — work flour in a
+      pinch at a time. Won't clump after 2-3 mins of pressing — water by the teaspoon, not more
+      egg.
+
+      **The knead**
+      It's developing gluten and finishing hydration at once. Under-kneaded dough tears on thin
+      passes and no rest fixes it.
+
+      **The rest**
+      Not optional — unrested dough springs back and never gets thin.
     steps:
-      - mound the flour, make a wide well, beat the eggs in it with a fork and pull flour from the inner wall until it's too stiff to fork. a bowl works too — the well's only real advantage is that you can stop pulling flour in when the dough says so
-      - don't discard the leftover flour, and don't force it all in either — work it in gradually over the first minutes of kneading and stop when the dough stops accepting it, usually with 5-10% left on the board. forcing the last of it in to use it up is the commonest way this goes wrong
-      - the sticky paste stuck to the board is dough, not flour — scrape it up and knead it in. only the loose dry flour gets swept aside
-      - "how to tell it's had enough: the board tells you, not the dough. early on the ball visibly hoovers up loose flour every time it touches the bench; when it's done the flour just sits there and the dough skids over it. clean board and clean hands means stop"
-      - "palm test — press the ball into your palm and pull away. still wants flour: leaves residue. done: releases clean, faintly tacky. overshot: matte and floury rather than cool and smooth"
-      - "fold test — fold the ball in half. fissures or cracks at the fold means too dry; smears and welds shut means it wants more. thumbprint should hold a smooth impression without cracking at the rim"
-      - stop while it's still slightly tackier than you think it should be. flour keeps absorbing egg through the whole rest, so the dough you wrap isn't the dough you unwrap — it firms up noticeably. dough that feels perfect going in comes out stiff and crack-prone
-      - err wet. too wet is fixed in ten seconds with a pinch of flour at any stage; too dry is near unfixable, because water won't re-enter a developed gluten network without turning it to a slippery mess
+      - mound the flour, make a wide well, beat the eggs in it with a fork and pull flour from the inner wall until it's too stiff to fork
+      - work the leftover flour in gradually over the first minutes of kneading, stopping when the dough stops accepting it
       - bring together, scrape the board clean, knead 10 mins
-      - it should finish smooth, tight and firmer than bread dough, like firm plasticine. tacky — knead in flour a pinch at a time. won't clump after 2-3 mins of pressing — water by the teaspoon, not more egg
-      - the knead is developing gluten and finishing hydration at once. under-kneaded dough tears on thin passes and no rest fixes it
-      - wrap tightly, rest 30 mins minimum, an hour better. not optional — unrested dough springs back and never gets thin
+      - step: it should finish smooth, tight and firmer than bread dough, like firm plasticine
+        substeps:
+          - stop while it's still slightly tackier than you think it should be
+      - wrap tightly, rest 30 mins minimum, an hour better
       - keeps 24 hrs in the fridge. back to room temp before rolling or it cracks
   - name: eggless semolina and water
     notes: |
