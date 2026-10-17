@@ -66,13 +66,13 @@ function main
         fi
         case "$selected_type" in
             "select region")
-                scrot -s -e "$expression" ;;
+                scrot -z -s -e "$expression" ;;
             "full screen")
-                scrot -e "$expression" ;;
+                scrot -z -e "$expression" ;;
             "select region (delay)")
-                sleep "$(select-delay)"; scrot -s -e "$expression" ;;
+                sleep "$(select-delay)"; scrot -z -s -e "$expression" ;;
             "full screen (delay)")
-                sleep "$(select-delay)"; scrot -e "$expression" ;;
+                sleep "$(select-delay)"; scrot -z -e "$expression" ;;
         esac
     }
 
