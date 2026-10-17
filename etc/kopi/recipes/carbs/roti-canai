@@ -1,0 +1,73 @@
+yield: 10 roti, ~85g dough balls
+ingredients:
+  - item: plain flour
+    mass: 500
+    basis: true
+    note: plain, not bread flour — the stretch wants extensibility, not strength
+  - item: water
+    mass: 230
+    note: lukewarm. hold back 20g and add only if the dough is stiff — with the egg that's ~56% liquid, soft and slightly tacky
+  - item: egg
+    qty: 1
+    unit: ea
+    note: ~50g out of shell
+  - item: sweetened condensed milk
+    mass: 20
+    qty: 1
+    unit: tbsp
+    note: sub 10g more sugar and 15g milk
+  - item: sugar
+    mass: 10
+  - item: salt
+    mass: 8
+  - item: ghee
+    mass: 25
+    note: in the dough. sub softened butter
+  - item: ghee or neutral oil
+    mass: 150
+    note: for soaking the balls overnight and for the stretch — most of it comes back out of the container. ghee for the layers if you have it, oil is fine for the soak
+components:
+  - name: dough (the day before)
+    steps:
+      - whisk water, egg, condensed milk, sugar and salt until the sugar dissolves
+      - add flour and mix to a shaggy ball, then knead in the 25g ghee
+      - knead 10-15 mins by hand, or kitchenaid dough hook speed 2 for 8-10 mins, until very smooth, soft and slightly tacky — softer than bread dough. err soft; a stiff dough won't stretch thin
+      - rest covered 20 mins, then divide into 10 balls (~85g each), tucking each tight and smooth
+      - coat each ball generously in oil or ghee and pack them snugly in a container, pouring the rest of the fat over so they sit half submerged
+      - cover and rest at room temp 4 hrs minimum, or overnight in the fridge (8-12 hrs) — better. bring back to room temp 1 hr before stretching
+  - name: stretch and coil
+    steps:
+      - oil the bench (not flour — flour toughens it and stops the layers separating) and oil your hands
+      - press a ball flat with your palm, then work it outward from the centre with your fingertips, lifting and pulling the edges, until it's paper-thin and you can see the bench through it — ~50-60cm across. small holes are fine
+      - or the flip — pick it up by one edge and slap it onto the bench in an arc, flipping it over itself, a few times. faster once you have it; the fingertip method gets there without the practice
+      - drizzle ~1 tsp ghee over the whole sheet
+      - gather it into a loose rope by pushing it together from both sides, ruffled like a fan — don't flatten it, the air pockets are the layers
+      - coil the rope into a loose snail, tucking the end underneath
+      - repeat with the rest, then rest the coils covered 15-30 mins so the gluten relaxes for the final press
+  - name: cook
+    steps:
+      - heat a flat pan or tawa to medium-high, ~200°C
+      - press a coil out to ~20cm with your fingers, pushing from the centre outward — don't roll it, the pin seals the layers back together
+      - into the dry pan with ~1/2 tsp ghee, 1-2 mins a side until blistered and golden in patches, flipping once or twice
+      - straight off the pan, scrunch it — clap it hard between both hands from the sides, or push the edges inward on the board, so the layers break apart and fluff up. this is half the texture, don't skip it
+      - serve immediately with dhal or curry
+notes: |
+  The texture comes from three things, and they're all about getting a sheet thin enough
+  that coiling it builds real layers:
+
+  The overnight rest. The fat-soaked rest is what lets a dough ball stretch to a window
+  without tearing. Gluten relaxes with time, and the fat coating stops a skin forming. 4
+  hrs works, overnight is noticeably easier and thinner. Kneading doesn't fix an under-rested
+  dough — time does.
+
+  Fat between the layers. The ghee on the stretched sheet is what keeps the layers apart
+  when they hit the pan, and the steam from the dough's water puffs them. Ghee over butter
+  because butter's water and milk solids make it stick and scorch. Oil on the bench, never
+  flour.
+
+  The scrunch. Cooked layers are stuck together at the edges; clapping it breaks those
+  welds and opens up the flake. It's the difference between a layered flatbread and roti
+  canai.
+
+  Dough balls keep 2-3 days in their fat in the fridge, and coiled roti freeze well between
+  baking paper — cook from frozen, a little lower and slower.
