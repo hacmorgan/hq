@@ -23,7 +23,7 @@ clears the thread's `Parent:` field, which is what unfolds it.
 Unclaimed ones sit in the `review_queue` thread's lane on the board; a thread claims one by listing
 its URL in `Links:`, after which it renders as a chip on that thread instead.
 
-**Only this session publishes the board.** Other agents update `OPEN_WORK.md` and stop there; the
+**Only the `abyss-trinity-open` session publishes the board.** Other agents update `OPEN_WORK.md` and stop there; the
 session that owns the board renders and publishes it. Two sessions publishing means the second one
 must read the whole published page before it can overwrite — 2,500+ lines of derived HTML.
 
@@ -53,7 +53,8 @@ seeds any missing priority cookie, and `--adopt` creates a stub thread for each 
 Propose the slugs it generates to the user before adopting a batch — they are what the user will
 read in emacs.
 
-Republish with the Artifact tool: `publish`, `url:` the board URL above, `file_path:`
+If you are `abyss-trinity-open`, republish with the Artifact tool (anyone else: `SendMessage` it
+and ask it to republish): `publish`, `url:` the board URL above, `file_path:`
 `~/src/abyss/.open-work/board.html`. **Omit `capabilities`** — the stored `db` declaration carries
 forward, and restating a different set would revoke it.
 
@@ -192,7 +193,7 @@ a TODO edit — the cookie is the source of truth, the tracker mirrors it.
 4. GitHub — request the reviewers that were agreed, close what was agreed closed. Say what was
    done, not what was decided.
 5. `closed_work.py archive` — every thread closed in this session, now the user has seen it.
-6. `build.py`, then republish.
+6. `build.py`, then republish (or ask `abyss-trinity-open` to).
 
 ### What it must not do
 
@@ -217,6 +218,12 @@ a shared epic is not evidence. Ask about `parked` work at all.
 - `~/src/abyss` is not a git repo; `OPEN_WORK.md` is the only copy.
 
 ## Tooling
+
+The code lives in hq, `~/hq/etc/claude/skills/open-work/scripts/`, and is symlinked into
+`~/src/abyss/.open-work/` so the commands above keep working. Everything the scripts read and write
+— `open-prs.json`, `people.json`, `settled.json`, `board.html`, decisions — stays in
+`~/src/abyss/.open-work/` (override with `OPEN_WORK_DATA`), as do `OPEN_WORK.md` and `closed-work/`,
+which are not versioned.
 
 | File | Does |
 | --- | --- |

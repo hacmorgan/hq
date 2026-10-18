@@ -1,0 +1,202 @@
+<datalist id="known-reviewers"></datalist>
+<script>
+(function () {
+  "use strict";
+
+  const LANES = ["P1", "P2", "P3", "parked"];
+  const decisions = new Map();
+  let store = null;
+
+  const escapeId = (value) => (window.CSS && CSS.escape ? CSS.escape(value) : value.replace(/"/g, '\\"'));
+  const nodesFor = (id) => document.querySelectorAll('[data-item="' + escapeId(id) + '"]');
+
+  // --- known reviewer logins, for the hand-off input's suggestions ---
+  const reviewers = new Set();
+  document.querySelectorAll('[data-action="handoff"][data-value]').forEach((button) => {
+    reviewers.add(button.dataset.value);
+  });
+  document.querySelectorAll(".suggest strong").forEach((node) => reviewers.add(node.textContent.trim()));
+  const datalist = document.getElementById("known-reviewers");
+  reviewers.forEach((login) => {
+    const option = document.createElement("option");
+    option.value = login;
+    datalist.appendChild(option);
+  });
+
+  // --- render one item's decision ---
+  function applyDecision(id, decision) {
+    nodesFor(id).forEach((node) => {
+      const state = node.querySelector(".ctl-state");
+      const isThread = node.dataset.kind === "thread" || node.classList.contains("thread");
+      node.classList.toggle("is-parked", decision && decision.priority === "parked");
+      node.classList.toggle("is-handed-off", Boolean(decision && decision.handoff));
+
+      if (state) {
+        const parts = [];
+        if (decision && decision.priority) parts.push(decision.priority);
+        if (decision && decision.handoff) parts.push("→ " + decision.handoff.to);
+        if (decision && decision.promote) parts.push("promote at next sync");
+        state.textContent = parts.length ? parts.join(" · ") + " (from this board)" : "";
+      }
+
+      if (isThread && decision && decision.priority && LANES.includes(decision.priority)) {
+        const badge = node.querySelector(".chip-pri");
+        if (badge) {
+          badge.textContent = decision.priority;
+          badge.className = "chip chip-pri chip-" + decision.priority.toLowerCase();
+        }
+        node.dataset.priority = decision.priority;
+        const lane = document.querySelector('[data-lane-body="' + decision.priority + '"]');
+        if (lane && node.parentElement !== lane) lane.appendChild(node);
+      }
+    });
+    renderHandoffs();
+    renderLaneCounts();
+  }
+
+  function renderHandoffs() {
+    const list = document.getElementById("handoff-list");
+    if (!list) return;
+    const handed = [...decisions.entries()].filter(([, value]) => value && value.handoff);
+    if (!handed.length) {
+      list.innerHTML = '<p class="muted empty-note">Nothing handed off yet — use the ' +
+        "<strong>hand off</strong> button on any thread or PR.</p>";
+      return;
+    }
+    list.innerHTML = handed
+      .map(([id, value]) => {
+        const source = document.querySelector('[data-item="' + escapeId(id) + '"]');
+        const title = source
+          ? (source.querySelector("h3, .mini-title, .pr-title") || {}).textContent || id
+          : value.label || id;
+        return '<div class="mini is-handoff"><span class="pr-num">→ ' + value.handoff.to +
+          '</span><span class="mini-title">' + title.trim() +
+          '</span><span class="mini-note">' + (value.handoff.at || "") + "</span></div>";
+      })
+      .join("");
+  }
+
+  function renderLaneCounts() {
+    LANES.forEach((lane) => {
+      const body = document.querySelector('[data-lane-body="' + lane + '"]');
+      if (!body) return;
+      const head = body.parentElement.querySelector(".lane-head");
+      const count = body.querySelectorAll(".thread").length;
+      let badge = head.querySelector(".lane-count");
+      if (!badge) {
+        badge = document.createElement("span");
+        badge.className = "lane-count repo-count";
+        head.appendChild(badge);
+      }
+      badge.textContent = count;
+    });
+  }
+
+  // --- the hand-off input, opened from a button ---
+  function openHandoff(controls, id, current) {
+    if (controls.querySelector(".handoff-form")) return;
+    const form = document.createElement("form");
+    form.className = "handoff-form";
+    form.innerHTML =
+      '<input list="known-reviewers" name="to" placeholder="hand to…" autocomplete="off" ' +
+      'value="' + (current && current.handoff ? current.handoff.to : "") + '">' +
+      '<button class="ctl" type="submit">ok</button>' +
+      '<button class="ctl" type="button" data-cancel>cancel</button>';
+    controls.appendChild(form);
+    form.querySelector("input").focus();
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const to = form.querySelector("input").value.trim();
+      form.remove();
+      if (to) await write(id, controls, { handoff: { to: to, at: new Date().toISOString().slice(0, 10) } });
+    });
+    form.querySelector("[data-cancel]").addEventListener("click", () => form.remove());
+  }
+
+  async function write(id, controls, patch) {
+    if (!store) return;
+    const node = controls.closest("[data-item]");
+    const label = node
+      ? ((node.querySelector("h3, .mini-title, .pr-title") || {}).textContent || "").trim().slice(0, 120)
+      : "";
+    const current = decisions.get(id) || {};
+    const next = Object.assign({ kind: controls.dataset.kind, label: label }, current, patch, {
+      updated_at: new Date().toISOString(),
+    });
+    controls.classList.add("is-saving");
+    try {
+      await store.doc("decisions/" + id).set(next);
+    } catch (error) {
+      controls.classList.add("is-error");
+      const state = controls.querySelector(".ctl-state");
+      if (state) state.textContent = "could not save (" + (error && error.code ? error.code : "error") + ")";
+    } finally {
+      controls.classList.remove("is-saving");
+    }
+  }
+
+  document.addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-action]");
+    if (!button || !store) return;
+    const controls = button.closest(".controls");
+    if (!controls) return;
+    const id = controls.dataset.item;
+    event.preventDefault();
+    if (button.dataset.action === "priority") {
+      await write(id, controls, { priority: button.dataset.value });
+    } else if (button.dataset.action === "promote") {
+      await write(id, controls, { promote: true });
+    } else if (button.dataset.action === "park") {
+      await write(id, controls, { priority: "parked" });
+    } else if (button.dataset.action === "handoff") {
+      if (button.dataset.value) {
+        await write(id, controls, {
+          handoff: { to: button.dataset.value, at: new Date().toISOString().slice(0, 10) },
+        });
+      } else {
+        openHandoff(controls, id, decisions.get(id));
+      }
+    } else if (button.dataset.action === "clear") {
+      try {
+        await store.doc("decisions/" + id).delete();
+      } catch (error) {
+        /* a decision that was never written is already clear */
+      }
+    }
+  });
+
+  // --- connect, then light the controls up ---
+  (async function connect() {
+    const db = window.claude && (await window.claude.use("db"));
+    if (!db) {
+      document.body.dataset.controls = "off";
+      return;
+    }
+    store = db;
+    document.body.dataset.controls = "on";
+    db.collection("decisions").onSnapshot(
+      (snapshot) => {
+        const seen = new Set();
+        snapshot.docs.forEach((doc) => {
+          seen.add(doc.id);
+          decisions.set(doc.id, doc.data());
+          applyDecision(doc.id, doc.data());
+        });
+        [...decisions.keys()].forEach((id) => {
+          if (!seen.has(id)) {
+            decisions.delete(id);
+            applyDecision(id, null);
+          }
+        });
+        renderHandoffs();
+        renderLaneCounts();
+      },
+      () => {
+        document.body.dataset.controls = "off";
+      }
+    );
+  })();
+
+  renderLaneCounts();
+})();
+</script>
