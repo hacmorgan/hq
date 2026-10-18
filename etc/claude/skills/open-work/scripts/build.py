@@ -451,11 +451,17 @@ stale_rows = "\n".join(
     for pr in stale
 )
 
-# a sub-thread whose parent is no longer tracked (archived to closed-work/) stands on its own
-tracked_slugs = {thread["slug"] for thread in threads}
+# a sub-thread only folds into a live parent: one whose parent is done (rendered only in the
+# done list) or archived to closed-work/ would vanish from the board, so it stands on its own
+live_parent_slugs = {thread["slug"] for thread in threads if thread["fields"].get("status") != "done"}
+for thread in threads:
+    parent = thread["fields"].get("parent")
+    if parent and parent not in live_parent_slugs and thread["fields"].get("status") != "done":
+        print(f"warning: {thread['slug']} is open but its parent {parent} is done or archived "
+              "— shown top-level; clear its Parent: or finish it")
 live_threads = [thread for thread in threads
                 if thread["fields"].get("status") != "done"
-                and thread["fields"].get("parent") not in tracked_slugs]
+                and thread["fields"].get("parent") not in live_parent_slugs]
 done_threads = [thread for thread in threads if thread["fields"].get("status") == "done"]
 
 lanes = "".join(
