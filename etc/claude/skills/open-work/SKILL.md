@@ -65,6 +65,30 @@ Artifact  action=read_db  url=<board>  db_op=list  collection=decisions \
 python3 ~/src/abyss/.open-work/apply_decisions.py
 ```
 
+## Closed work — kept for later reference
+
+Finished work is archived, not deleted. `~/src/abyss/closed-work/YYYY-MM.md` holds one month each
+— the archive rolls over by month of closure, so no file grows without bound:
+
+- **Threads.** Once a thread is `done` and the user has seen it, `closed_work.py archive` moves it
+  out of `OPEN_WORK.md` verbatim, stamped `Closed:` with its last `Updated:` date. It refuses a
+  thread that still has open sub-threads (`Parent:` pointing at it) — a release with open findings
+  is not finished, whatever its own status says.
+- **Pull requests.** `sweep.py` logs every PR that left the open list — merged or closed, with the
+  date and the thread whose `Links:` named it — under the month it landed.
+- **Merged threads.** Blocks folded into another thread during interrogation go under the month's
+  "Merged into other threads" section; the surviving thread points there.
+
+```
+python3 ~/src/abyss/.open-work/closed_work.py archive --dry-run   # what would move
+python3 ~/src/abyss/.open-work/closed_work.py archive             # move every done thread
+python3 ~/src/abyss/.open-work/closed_work.py find TERM           # search every month
+```
+
+**When the user asks about past work** — "what happened with X", "when did Y land", "didn't we
+already look at Z" — search the archive with `find` before reading code or GitHub. A TODO link to
+an archived slug is history, not drift: `todo_sync.py` counts those separately.
+
 ## Report the drift in chat
 
 The syncs print it; the user wants it in conversation, not buried in the artifact. Always cover:
@@ -167,7 +191,8 @@ a TODO edit — the cookie is the source of truth, the tracker mirrors it.
 3. The TODO — priority cookies only, via `todo_sync.py --apply`, backed up first.
 4. GitHub — request the reviewers that were agreed, close what was agreed closed. Say what was
    done, not what was decided.
-5. `build.py`, then republish.
+5. `closed_work.py archive` — every thread closed in this session, now the user has seen it.
+6. `build.py`, then republish.
 
 ### What it must not do
 
@@ -204,4 +229,5 @@ a shared epic is not evidence. Ask about `parked` work at all.
 | `.open-work/local_state.py` | worktrees, dirty trees, stashes, unpushed branches |
 | `.open-work/tracker.py` | shared thread parser/writer — writes are surgical, only changed fields are re-rendered |
 | `.open-work/interrogate.py` | the analysis an interrogation session runs on: merges, folds, contradictions, agenda |
+| `.open-work/closed_work.py` | archive done threads and landed PRs to `closed-work/YYYY-MM.md`; search them |
 | `.open-work/settled.py` | remembers answered questions and stamps `Reviewed:`, so they are not asked twice |
