@@ -41,10 +41,16 @@ components:
   - name: bake
     steps:
       - stone or steel on the top-third shelf, oven as hot as it goes (250-280°C), preheat a full 45-60 mins. a half-heated stone is the usual reason for a pale, soft base
-      - no stone or steel — an upturned heavy baking tray, preheated the same way. less good but works
+      - no stone or steel — the upturned cast iron dutch oven, preheated in the oven the same way. iron soaks up heat and dumps it into the base like a stone does
+      - step: the pot's base is only ~22-26cm across, so
+        substeps:
+          - split the dough into 5-6 balls and stretch each to just under the pot's width. overhang droops and stays raw
+          - build each pizza on a sheet of baking paper cut to size and slide paper and all onto the pot — a small, hot, domed target is hard to launch onto. pull the paper out after 2-3 mins once the base has set, so it crisps straight on the iron
+          - if it's enamelled, keep the oven at or under 260°C (le creuset's rating) — a long empty preheat at max is hard on enamel. bare cast iron takes anything the oven does
+      - failing that, an upturned heavy baking tray, preheated the same way. much less heat in it than iron, but still far better than a cold tray — pizza that goes in on a cold tray comes out with a pale, soft base
       - top sparingly and quickly once the base is on the peel. a pizza that sits topped glues itself to the peel. give it a shake before the oven — if it doesn't slide, lift the edge and toss in more semolina
       - launch with a short sharp jerk back, not a slow slide
-      - steel ~5-7 mins, stone ~7-10 mins, until the rim is well coloured and the base is spotted dark underneath
+      - steel ~5-7 mins, stone or pot ~7-10 mins, until the rim is well coloured and the base is spotted dark underneath
       - if the base is done but the top is pale, switch to the grill for the last 1-2 mins. watch it
       - let the stone recover 5 mins between pizzas, and switch back from grill to bake if you used it
 variants:
