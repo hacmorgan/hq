@@ -218,11 +218,18 @@ fan ramps. But if the real problem is (b), then (c) will disappoint, and it is
 by far the most expensive of the three. Do (a) and (b) first and re-measure
 idle temps before deciding.
 
-### 2. `nvidia-container-*` file conflict
+### 2. 32 orphaned packages, and why `--remove-orphans` deserves care
 
-`nvidia-container-runtime` / `nvidia-container-toolkit` have a file conflict
-over `/usr/bin/nvidia-container-runtime`; `pacman -Dk` exits 1. Database
-hygiene rather than a live failure.
+`pacman -Qdt` lists 32 packages nothing depends on, and `sysbs
+--remove-orphans` offers exactly that list. Most are plainly stale
+(`gcc15`, `ffmpeg4.4`, `haskell-*`, `libxvmc`), but **`libe57format`** is an
+E57 point-cloud library — the kind of thing the vision tooling pulls in. An
+orphan is only "nothing *currently installed* depends on it", which is not the
+same as unused: a locally built AUR package that was reinstalled or rebuilt can
+leave its dependencies looking orphaned.
+
+Read the list before accepting it, rather than taking the prompt at face
+value.
 
 ### 3. Orphaned kernel module directories
 
@@ -411,3 +418,25 @@ the console on `nvidia-drmdrmfb`, driver 580.196.07, OpenCL reporting one
 platform, `/boot` at `0700` with no world-accessible warning from `bootctl`,
 ESP at 88 MB of 599 MB. Both kernels were booted on their rebuilt images before
 this was called done.
+
+Finally, cleared the superseded initramfs backups from `~/.nvidia-fix-backup/`
+(244 MB → 32 KB; the small config backups are kept), and resolved the
+`nvidia-container-*` conflict. `nvidia-container-runtime` 3.8.1 turned out to
+be a **2022 leftover that is no longer in any repo** — upstream folded the
+runtime into `nvidia-container-toolkit`, which now ships
+`/usr/bin/nvidia-container-runtime` itself along with 17 other files. Nothing
+depended on the old package.
+
+Two things that are easy to get wrong here, both hit during the fix:
+
+1. **Removing it deletes the shared binary.** pacman does not check whether
+   another package also owns a file, so `-R nvidia-container-runtime` took
+   `/usr/bin/nvidia-container-runtime` with it. Reinstalling
+   `nvidia-container-toolkit` restored it byte-identically.
+2. **The toolkit was then an orphan.** It had been installed as a dependency
+   *of the package just removed*, so `pacman -Qdt` listed it and
+   `sysbs --remove-orphans` would have offered to delete the whole container
+   stack. Marked explicit with `pacman -D --asexplicit`.
+
+`pacman -Dk` now reports no database errors, and
+`nvidia-container-runtime --version` reports 1.20.1.
