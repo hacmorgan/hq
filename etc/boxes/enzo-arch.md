@@ -262,11 +262,9 @@ involved, and nothing needs changing to go back.
 carries `nomodeset nvidia_drm.modeset=0` and lands on `simpledrm`, so sway
 cannot work there at all. Use `arch`, which has `nvidia_drm.modeset=1`.
 
-**The real blocker is `barrier`.** Barrier 2.4.0 is X11-only, and `.xinitrc`
-starts it as a server sharing keyboard and mouse with diego and george. Under
-sway it will not work. `input-leap` (3.0.3, in `extra`) is the maintained fork
-with Wayland support and is the migration path, but it is a genuine piece of
-work rather than a flag. Assume daily sway use is blocked until this is solved.
+**The blockers are not sway itself — they are the X11-only tools around the
+edges.** See item 7; that is where the actual work lives, and it is what keeps
+this item low priority.
 
 **Other things in the X config needing Wayland equivalents:** `picom` becomes
 unnecessary (sway composites natively); `feh --bg-*` becomes `swaybg` /
@@ -277,6 +275,47 @@ unnecessary (sway composites natively); `feh --bg-*` becomes `swaybg` /
 `sway --help` no longer lists `--unsupported-gpu`, which suggests recent
 wlroots no longer needs it for the proprietary NVIDIA driver — unverified,
 since it has not been run yet.
+
+### 7. X11-only tooling that must be replaced before Wayland is viable
+
+The window manager is the easy part. Sway reads an i3 config nearly unchanged.
+What costs real effort is returning the *peripheral* tooling to parity — these
+are the things that would silently stop working, and the reason item 6 stays
+aspirational.
+
+**`barrier` → `input-leap`.** Barrier 2.4.0 is X11-only. `.xinitrc` runs it as
+a server sharing keyboard and mouse with diego and george, so under sway it
+simply will not work. `input-leap` 3.0.3 is in `extra`; it is the maintained
+fork of barrier and has Wayland support. Migration is genuine work rather than
+a flag, and it is bilateral — the other machines run barrier too, so they have
+to move in step. Probably the single largest obstacle to daily sway use.
+
+**`peek` → most likely `kooha`.** Peek 1.5.1 produces GIFs from a screen
+region, which is a rare and genuinely useful capability, and it is X11-only.
+
+Worth knowing before considering a fork: upstream **deprecated Peek
+specifically because of Wayland**. The author's position was that the UI
+approach has no future, because Wayland changed how applications are handled,
+and that a replacement needs a new project with a new UI and a clean slate.
+
+That is architectural rather than incidental. Peek works by positioning a
+transparent frame over a screen region and capturing what is underneath —
+Wayland deliberately refuses to tell a client where it is on screen or what
+other windows contain. The capture backend would have to become
+portal + PipeWire based, and region selection would have to be redesigned
+around the portal's own picker. At that point very little of Peek survives,
+and the result is approximately `kooha`.
+
+So: try `kooha` (2.3.2, in `extra`) first — it is purpose-built for Wayland on
+exactly this stack and does GIF output. `wf-recorder` (0.6.0) plus `gifski`
+(1.34.0) is the CLI alternative and gives better GIF quality. A fork remains
+reasonable if Kooha's UX disappoints, but it should be chosen with eyes open:
+it is writing a new application, not patching an old one.
+
+**Prerequisite for any of them:** `xdg-desktop-portal-wlr` is **not installed**.
+Screen capture under sway needs it alongside `pipewire` and
+`xdg-desktop-portal`, both of which are present. Nothing can capture the screen
+under sway until it is added.
 
 ## Change log
 
