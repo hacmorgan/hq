@@ -13,6 +13,10 @@ source "$hq/applications/bash-std"
 
 function install_python_module
 {
+    if (( options_dry_run )); then
+        say "pip install --upgrade --use-pep517 $hq/"
+        return
+    fi
     python3 -m pip install --upgrade --use-pep517 "$hq/" ||
         die "python3-pip is required to install HQ Python module"
 }
@@ -92,6 +96,10 @@ function symlink_dots
 
 function configure_zsh
 {
+    if (( options_dry_run )); then
+        say "clone powerlevel10k, zsh-syntax-highlighting and zsh-autosuggestions into ~/.oh-my-zsh"
+        return
+    fi
     mkdir -p$verbose ~/.oh-my-zsh/themes
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/themes/powerlevel10k
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
@@ -101,6 +109,10 @@ function configure_zsh
 
 function configure_git
 {
+    if (( options_dry_run )); then
+        say "set global git user/email, pull.rebase, commit.template and push defaults"
+        return
+    fi
     git config --global user.email "ham430@gmail.com"
     git config --global user.name "Hamish Morgan"
     git config --global pull.rebase false
@@ -113,6 +125,10 @@ function configure_git
 function configure_emacs
 {
     type -p emacs > /dev/null || say "warning: emacs is not installed"
+    if (( options_dry_run )); then
+        say "clone hacmorgan/emacs into ~/.emacs.d, plus copilot.el"
+        return
+    fi
     if [[ -e "~/.emacs.d" ]]; then
         if (( options_move_existing )); then
             mv ~/.emacs.d ~/.emacs.d.old
@@ -167,6 +183,10 @@ function install_oh_my_zsh
 {
     type -p zsh  > /dev/null || die "zsh not found, please install it first"
     type -p curl > /dev/null || die "curL not found, please install it first"
+    if (( options_dry_run )); then
+        say "run the oh-my-zsh install script"
+        return
+    fi
     yes "n" | sh -c "$( curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh )"
 }
 
@@ -188,6 +208,10 @@ function symlink_systemd_services
 
 function enable_ssh_agent
 {
+    if (( options_dry_run )); then
+        say "systemctl --user enable --now ssh-agent"
+        return
+    fi
     systemctl --user enable --now ssh-agent
 }
 
@@ -437,6 +461,10 @@ EOF
 
 function configure_tmux
 {
+    if (( options_dry_run )); then
+        say "clone tmux-plugins/tpm into ~/.tmux/plugins/tpm"
+        return
+    fi
     mkdir -p ~/.tmux/plugins
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 }
@@ -446,7 +474,9 @@ function install_zellij
 {
     local install_prefix="${options_install_prefix:-$HOME/.local}"
     local bin_dir="$install_prefix/bin"
-    mkdir -p "$bin_dir"
+    if (( ! options_dry_run )); then
+        mkdir -p "$bin_dir"
+    fi
 
     # Detect architecture for the correct release tarball
     local arch
@@ -468,6 +498,10 @@ function install_zellij
 
     say "Installing zellij ${version} (${arch_tag}) to ${bin_dir}"
     local url="https://github.com/zellij-org/zellij/releases/download/${version}/zellij-${arch_tag}.tar.gz"
+    if (( options_dry_run )); then
+        say "download $url and install to $bin_dir/zellij"
+        return
+    fi
     curl -L "$url" | tar -xzf - -C /tmp zellij
     mv /tmp/zellij "$bin_dir/zellij"
     chmod +x "$bin_dir/zellij"
@@ -477,6 +511,10 @@ function install_zellij
 
 function install_hq_secret
 {
+    if (( options_dry_run )); then
+        say "git clone hacmorgan/hq-secret into ~/.hq-secret"
+        return
+    fi
     git clone git@github.com:hacmorgan/hq-secret.git ~/.hq-secret
 }
 
@@ -772,7 +810,6 @@ STANDARD_OPERATIONS=(
     --enable-ssh-agent
     --install-oh-my-zsh
     --install-python-module
-    --install-zellij
     --install-hq-claude
     --install-hq-secret
     --move-existing
