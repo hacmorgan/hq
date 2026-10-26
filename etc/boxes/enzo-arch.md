@@ -317,6 +317,25 @@ it is writing a new application, not patching an old one.
 tools, and what a sway-native `wf-recorder` GIF workflow would use). Neither is
 tested yet.
 
+**`dmenu-custom` needs reworking — and `dmenu` itself is the first problem.**
+`applications/dmenu-custom` (150 lines) is the launcher front-end for a lot of
+daily routines, and `dmenu` is X11-only, so the entry point goes before any of
+its entries do. Replacements, all in `extra`: `wmenu` (sway's own default,
+0.2.0), `bemenu`, `fuzzel`, `wofi`. `wmenu` is the closest drop-in.
+
+Then its X11-bound actions, which are a decent map of the wider migration:
+
+| in `dmenu-custom` | under sway |
+|---|---|
+| `scrot -z [-s] -e …` (4 call sites) | `grim` + `slurp` — both already installed |
+| `picom-run` (turn compositor on/off) | delete it; sway composites natively |
+| `xset -display :0.0 dpms force off` | `swaymsg "output * dpms off"` |
+| `configure-xinput` | sway `input` directives in the config |
+
+Only the `scrot` paths need real thought — two of the four use `-s` for
+interactive region select, which is `slurp` piped into `grim`, and all four use
+`-e` to post-process the capture, so the shell around them changes shape.
+
 **Kooha is Wayland-only here, so peek is not replaced — it is complemented.**
 Kooha needs the ScreenCast portal, and no installed backend offers that under
 i3/X11: `wlr.portal` provides `ScreenCast`/`Screenshot` but declares
