@@ -312,10 +312,21 @@ exactly this stack and does GIF output. `wf-recorder` (0.6.0) plus `gifski`
 reasonable if Kooha's UX disappoints, but it should be chosen with eyes open:
 it is writing a new application, not patching an old one.
 
-**Prerequisite for any of them:** `xdg-desktop-portal-wlr` is **not installed**.
-Screen capture under sway needs it alongside `pipewire` and
-`xdg-desktop-portal`, both of which are present. Nothing can capture the screen
-under sway until it is added.
+**Installed 2026-10-26:** `kooha` 2.3.2 and `xdg-desktop-portal-wlr` 0.8.4
+(which pulled in `grim` and `slurp` — the wlroots screenshot and region-picker
+tools, and what a sway-native `wf-recorder` GIF workflow would use). Neither is
+tested yet.
+
+**Kooha is Wayland-only here, so peek is not replaced — it is complemented.**
+Kooha needs the ScreenCast portal, and no installed backend offers that under
+i3/X11: `wlr.portal` provides `ScreenCast`/`Screenshot` but declares
+`UseIn=wlroots;sway;Wayfire;river;phosh;Hyprland`, so it never activates under
+X11; `gtk.portal` does not implement ScreenCast at all and is `UseIn=gnome`.
+Only GNOME's own backend would cover X11, and GNOME is not in use.
+
+Keep both: `peek` for i3/X11, `kooha` for sway. That also means item 6 cannot
+be evaluated on screen-recording grounds from the X session — the comparison
+has to happen inside sway.
 
 ## Change log
 
