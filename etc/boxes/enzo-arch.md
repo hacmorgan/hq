@@ -134,46 +134,106 @@ the entry **id**, which includes the `.conf` suffix. Always write
 Note that `bootctl list` marks the running entry `(selected)`, which is *not*
 the same as `(default)`. Don't read one as confirmation of the other.
 
-## Open items
+## Campaign backlog
 
-- `opencl-nvidia` 615.78.08 is installed, from the normal repos, while the
-  driver is on the 580 branch — a version mismatch. The AUR has a matching
-  `opencl-nvidia-580xx` which is **not** installed. Untested whether OpenCL
-  actually works right now.
-- `nvidia-container-runtime` / `nvidia-container-toolkit` have a file conflict;
-  `pacman -Dk` exits 1.
-- Orphaned `/usr/lib/modules` directories from long-gone kernels
-  (`5.19.13-arch1-1`, `6.0.2-arch1-1`, `6.14.7-arch2-1`).
-- Wayland has never been tried. KMS is now on for mainline, which was the
-  blocker. `sway` is the natural first experiment given i3.
-- **`amd_pstate` cannot load — firmware `_CPC` is incomplete.** Diagnosed
-  2026-10-26. CPPC itself is present: `/sys/devices/system/cpu/cpu0/acpi_cppc/`
-  exists and the *performance* fields are populated (`highest_perf=216`,
-  `nominal_perf=135`, `lowest_nonlinear_perf=79`, `lowest_perf=20`). But every
-  *frequency* field reads zero — `lowest_freq=0`, `nominal_freq=0`,
-  `guaranteed_perf=0` — so `amd_pstate` has no way to map a performance level
-  onto MHz and bails with `-ENODEV`.
+Ongoing tidy-up of a long-running install. Ordered by value to Hamish, not by
+effort. Keep this list current: tick things off into the change log, and add
+what you find.
 
-  (The absent `cppc` CPU flag is a red herring: that flag is the MSR-based
-  CPPC of Zen 3+. Zen 2 uses the ACPI shared-memory interface, which is why
-  the sysfs directory exists at all.)
+### 1. Fan noise and idle thermals
 
-  The cost is coarse scaling. `acpi-cpufreq` exposes exactly **three** P-states
-  — 3800 / 2800 / 2200 MHz — with `schedutil` on top, instead of the continuous
-  range and EPP control `amd_pstate` would give. Not a correctness problem;
-  worse power efficiency and slower frequency response.
+**The one that is actually felt day to day** — the CPU fan audibly spins up and
+down at idle. Measured 2026-10-26 at load average 0.03:
 
-  The only real fix is a firmware update, since the zeroed `_CPC` is the
-  board's. F11 dates to 2019-12-06 and Gigabyte shipped later BIOSes (Ryzen
-  5000 support arrived well after), so newer definitely exists — but BIOS files
-  are specific to board **revision 1.0 vs 1.1**, so check which this is first.
-  Weigh it properly: a six-year-old board that currently boots reliably, a
-  Windows dual-boot, and a CMOS reset that would need everything reconfigured.
-  Low priority, non-zero risk, real but modest payoff.
-- `/mnt/storage` (the 3.6 TB NTFS drive) mounts as `fuseblk` — the userspace
-  `ntfs-3g` driver — not the in-kernel `ntfs3`. `findmnt --verify` flags it as
-  "ntfs seems unsupported by the current kernel". Works fine; `ntfs3` would be
-  considerably faster for large transfers.
+| | |
+|---|---|
+| `Tctl` / `Tccd1` | **68.0 °C / 73.5 °C** — a 3900X should idle nearer 40 °C |
+| cores at ~4.1 GHz | **10 of 24**, while essentially idle |
+| frequency floor | **2200 MHz** (`cpuinfo_min_freq`) — the CPU cannot be asked to go lower |
+| C-state residency | dominated by C2, so cores *are* sleeping properly |
+| GPU | 50 °C, 31 % fan, 60 W — **not** the noise source |
+
+Three independent levers, cheapest first. They are not alternatives; 1 and 2
+are worth doing regardless of 3.
+
+**(a) Fan curve hysteresis — free, no flashing.** Gigabyte Smart Fan 5 in the
+existing F11 BIOS has step-up/step-down time and temperature hysteresis
+settings. Oscillation ("spinning up and down") is usually a curve that reacts
+too fast, and this targets it directly without touching anything else. Try this
+first. `fancontrol` from `lm_sensors` is the software equivalent if the BIOS
+options prove too coarse.
+
+**(b) Thermal interface — cheap, an hour.** The build is around six years old.
+68-73 °C at genuine idle is abnormal for this chip and suggests dried-out paste
+or a dust-loaded cooler. This addresses *why the fan has to work at all*,
+rather than how it reacts. Strong candidate, and independent of anything
+software can do.
+
+**(c) `amd_pstate`, which needs a BIOS update — riskier, do last.**
+
+The driver cannot load at all. CPPC is present —
+`/sys/devices/system/cpu/cpu0/acpi_cppc/` exists and its *performance* fields
+are populated (`highest_perf=216`, `nominal_perf=135`,
+`lowest_nonlinear_perf=79`, `lowest_perf=20`) — but every *frequency* field
+reads zero (`lowest_freq=0`, `nominal_freq=0`, `guaranteed_perf=0`), so
+`amd_pstate` has no way to map a performance level onto MHz and exits
+`-ENODEV`. The board's ACPI `_CPC` object is simply incomplete. No BIOS menu
+setting fixes that; the table itself is wrong.
+
+(The absent `cppc` CPU flag is a red herring — that is the MSR-based CPPC of
+Zen 3+. Zen 2 uses the ACPI shared-memory interface, which is why the sysfs
+directory exists at all.)
+
+What it costs today: `acpi-cpufreq` exposes exactly **three** P-states —
+3800 / 2800 / 2200 MHz. Scaling `lowest_perf` against `nominal_perf` (20 of
+135, where 135 is the 3800 MHz base) puts `amd_pstate`'s floor near
+**560 MHz** against today's **2200 MHz**. That is a real reduction in idle
+power, plus continuous frequency selection and EPP instead of three coarse
+steps that overshoot.
+
+Fixing it means a firmware update. F11 dates to 2019-12-06 and Gigabyte shipped
+considerably later BIOSes, so newer certainly exists — but files are specific
+to board **revision 1.0 vs 1.1**, so confirm which this board is first.
+Q-Flash Plus can flash without CPU, RAM or GPU installed, which lowers the
+risk. Against it: a six-year-old board that currently boots reliably, a Windows
+dual-boot, and a CMOS reset that would mean reconfiguring everything.
+
+**Be honest about the causal chain before flashing.** (c) would lower idle
+power and smooth frequency transitions, which plausibly reduces how often the
+fan ramps. But if the real problem is (b), then (c) will disappoint, and it is
+by far the most expensive of the three. Do (a) and (b) first and re-measure
+idle temps before deciding.
+
+### 2. `opencl-nvidia` version mismatch
+
+`opencl-nvidia` 615.78.08 is installed from the normal repos while the driver
+is on the 580 branch. The AUR has a matching `opencl-nvidia-580xx`, **not**
+installed. Untested whether OpenCL works at all right now — worth finding out,
+since it may be silently broken and nothing would have told anyone.
+
+### 3. `nvidia-container-*` file conflict
+
+`nvidia-container-runtime` / `nvidia-container-toolkit` have a file conflict;
+`pacman -Dk` exits 1. Database hygiene rather than a live failure.
+
+### 4. Orphaned kernel module directories
+
+`/usr/lib/modules/{5.19.13-arch1-1, 6.0.2-arch1-1, 6.14.7-arch2-1}` from
+long-gone kernels. About 6.8 MB. Two minutes.
+
+### 5. `ntfs3` for `/mnt/storage`
+
+The 3.6 TB NTFS drive mounts as `fuseblk` — userspace `ntfs-3g` — not the
+in-kernel `ntfs3`. `findmnt --verify` flags it. Works fine, but `ntfs3` is
+considerably faster for large transfers.
+
+### 6. Wayland — aspirational, low priority
+
+Never tried. KMS on mainline was the blocker and is now resolved, so the
+experiment is available whenever it is wanted. Hamish has explicitly said not
+to put much stock in this: it is a someday-maybe, not a goal driving other
+decisions. `sway` is the natural first step from i3, installed alongside X
+rather than replacing it.
 
 ## Change log
 
