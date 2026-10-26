@@ -70,6 +70,15 @@ components:
       - item: rosemary leaves
         mass: 0.15
         note: from approx 0.2g in sprig form, with stem; try oregano
+      - item: coriander
+        mass: 0.15
+        note: experiment
+      - item: dried ground sage
+        mass: 0.1
+        note: experiment
+      - item: pun chun
+        mass: 0.15
+        note: experiment, only in egg wash
       - item: panko
         mass: 18
       - item: eggs

@@ -1,0 +1,91 @@
+name: aglio e olio (kenji's, with fried shallots)
+source: https://youtu.be/6PfG_GMFlJg
+uses:
+  - carbs/pasta
+yield: serves 2-3
+notes: |
+  J. Kenji López-Alt, "The Magic of Fried Shallots (and a Simple Aglio e Olio to Show Them Off)".
+  The shallots are the point — the pasta is the delivery mechanism. Written for his NYT column on
+  fried shallots, and the full quantities sit behind the NYT paywall, so the amounts below are
+  standard aglio e olio proportions built around his described method rather than his exact
+  numbers. The technique is his; check the video or NYT if you want the numbers verbatim.
+
+  Two things make it work. First, half the fried shallots go in during the toss and soften into
+  the sauce rather than staying crisp — that's what gives it body and a savoury backbone plain
+  aglio e olio doesn't have. The other half go on at the end for the crunch. Second, the sauce is
+  an emulsion of olive oil and starchy pasta water, and it only forms under vigorous agitation
+  over heat. Undertoss it and you get oily pasta with garlic on it.
+
+  Use dried pasta here, not fresh — see the note in the components below.
+components:
+  - name: fried shallots
+    notes: |
+      Make far more than you need. They keep 2 weeks airtight at room temp and the oil is the
+      real prize — shallot-infused, and it goes into the sauce.
+    ingredients:
+      - item: shallots
+        mass: 250
+        note: sliced thin and evenly — a mandoline is worth it, uneven slices burn and undercook in the same pan
+      - item: neutral oil
+        qty: 500
+        unit: ml
+        note: enough to cover. canola, peanut, rice bran
+    steps:
+      - put the sliced shallots and cold oil in a saucepan together and bring up to heat from cold — starting cold drives the water off gradually instead of flash-frying the outside
+      - cook at a steady moderate bubble, stirring, until the bubbling slows right down and they turn pale gold. 15-25 mins
+      - pull them at pale gold, not brown. they carry over hard and go bitter if you take them to the colour you actually want in the bowl
+      - strain, spread on paper towel, salt lightly. they crisp as they cool
+      - keep the oil
+  - name: pasta and sauce
+    ingredients:
+      - item: dried spaghetti
+        mass: 250
+        basis: true
+        note: or linguine. dried, not fresh
+      - item: garlic
+        qty: 6
+        unit: clove
+        note: sliced thin, not crushed or minced — you want it to stay in identifiable pieces
+      - item: extra virgin olive oil
+        mass: 60
+        note: substitute some of the reserved shallot oil for more of the same flavour
+      - item: chilli flakes
+        qty: 0.5
+        unit: tsp
+        note: peperoncino. to taste
+      - item: flat leaf parsley
+        note: chopped, a good handful
+      - item: fried shallots
+        note: half into the toss, half on top
+      - item: pecorino or parmesan
+        optional: true
+        note: not traditional in aglio e olio, and it competes with the shallots. leave it off the first time
+    steps:
+      - boil the pasta in well-salted water, pulling it a good minute shy of al dente — it finishes in the pan
+      - meanwhile, warm the olive oil in a wide skillet over medium-low and add the sliced garlic
+      - cook the garlic gently to pale golden. low and slow — browned garlic is bitter and there's nowhere in a four-ingredient sauce for it to hide
+      - add the chilli flakes and swirl for 30 secs off the direct heat
+      - add the drained pasta, a good splash of pasta water, and half the fried shallots
+      - toss hard over high heat until the water and oil come together into a glossy sauce that coats the strands. add more pasta water as it tightens. this takes a solid minute of real agitation
+      - off the heat, stir through the parsley
+      - plate and pile the remaining fried shallots on top
+  - name: why dried pasta
+    notes: |
+      This is a southern Italian dish and it's a dried-pasta idiom top to bottom. Three reasons
+      fresh egg pasta is the wrong call:
+
+      Egg. The whole dish is garlic, oil and chilli — austere by design. Egg dough is rich and
+      eggy and it blurs that. There's nothing for the shallots to stand out against.
+
+      Starch and time. The emulsion runs on starch shed into the water and picked up off the
+      pasta's surface during the toss. Dried durum pasta sheds that starch steadily over 9-10
+      mins and comes out of the pot firm enough to survive a hard minute of tossing. Fresh pasta
+      is done in 90 secs and softens fast — you're trying to build an emulsion against a clock,
+      with pasta that's shredding while you do it.
+
+      Surface. Bronze-die dried spaghetti is rough and grabs sauce. A rolled fresh sheet is
+      smooth by comparison, and the sauce slides.
+
+      If you want it fresh anyway, use the eggless semolina-and-water dough from carbs/fresh-pasta
+      as spaghetti alla chitarra or pici — no egg, durum, firm enough to toss. That's a legitimate
+      dish. Fresh egg tagliatelle under aglio e olio is not.

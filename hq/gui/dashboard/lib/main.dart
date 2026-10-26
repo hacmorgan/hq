@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 void main() {
   runApp(MyApp());
@@ -34,25 +35,17 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<String> recipes = [];
+  List<Map<String, dynamic>> recipeIndex = [];
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   List<Widget> _widgetOptions() => <Widget>[
-    // Recipes page
-    Scaffold(
-      appBar: AppBar(title: const Text('Recipes')),
-      body: ListView.builder(
-        itemCount: recipes.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(recipes[index]),
-            onTap: () {
-              _fetchRecipeDetails(recipes[index]);
-            },
-          );
-        },
-      ),
+    // Recipes page (grouped/searchable list <-> graph)
+    RecipesPage(
+      index: recipeIndex,
+      fallbackPaths: recipes,
+      onOpen: _fetchRecipeDetails,
     ),
     // Relationship counter page
     Scaffold(
@@ -93,6 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     fetchRecipes();
+    fetchRecipeIndex();
   }
 
   Future<void> fetchRecipes() async {
@@ -106,6 +100,26 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     } else {
       throw Exception('Failed to load recipes');
+    }
+  }
+
+  Future<void> fetchRecipeIndex() async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://192.168.0.247:10498/recipe-index'),
+        headers: {'Accept': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
+        if (!mounted) return;
+        setState(() {
+          recipeIndex = data.cast<Map<String, dynamic>>();
+        });
+      }
+    } catch (e) {
+      // Older backend without the index endpoint: the Recipes page falls back
+      // to plain paths from fetchRecipes().
+      print('Error fetching recipe index: $e');
     }
   }
 
@@ -834,9 +848,12 @@ String _fmtNum(num value) {
   return s;
 }
 
-/// Find the single ingredient flagged `basis: true`, searching top-level
-/// ingredients first, then each component's ingredients.
-Map? _findBasis(Map recipe) {
+/// Find the single ingredient flagged `basis: true` in `scopes`, searching each
+/// scope's top-level ingredients first, then its components' ingredients.
+///
+/// Scopes are searched in order, so passing the selected variant ahead of the
+/// recipe lets a variant override the recipe-wide basis with its own.
+Map? _findBasis(List<Map> scopes) {
   Map? scan(dynamic list) {
     if (list is List) {
       for (final ing in list) {
@@ -846,19 +863,129 @@ Map? _findBasis(Map recipe) {
     return null;
   }
 
-  final top = scan(recipe['ingredients']);
-  if (top != null) return top;
-  final comps = recipe['components'];
-  if (comps is List) {
-    for (final c in comps) {
-      if (c is Map) {
-        final found = scan(c['ingredients']);
-        if (found != null) return found;
+  for (final scope in scopes) {
+    final top = scan(scope['ingredients']);
+    if (top != null) return top;
+    final comps = scope['components'];
+    if (comps is List) {
+      for (final c in comps) {
+        if (c is Map) {
+          final found = scan(c['ingredients']);
+          if (found != null) return found;
+        }
       }
     }
   }
   return null;
 }
+
+/// One display block of a `notes:` string: either a reflowed prose paragraph or
+/// a chunk the author laid out by hand, kept verbatim.
+class _NotesBlock {
+  const _NotesBlock(this.text,
+      {required this.preformatted, this.heading = false});
+
+  final String text;
+  final bool preformatted;
+
+  /// A line that stood alone as a heading: rendered on its own line, bold,
+  /// tight against the paragraph it introduces.
+  final bool heading;
+}
+
+/// The heading text of a line that stands alone as one — `## Foo`, or a line
+/// that is entirely bold, `**Foo**` — or null when the line is ordinary prose.
+String? _headingText(String line) {
+  final l = line.trim();
+  final atx = RegExp(r'^#{1,6}\s+(.+)$').firstMatch(l);
+  if (atx != null) return atx.group(1)!.trim();
+  // `[^*]+`, not `.+?`: a line of two separate bold runs — `**a** and **b**`
+  // — is a sentence, not a heading.
+  final bold = RegExp(r'^\*\*([^*]+)\*\*:?$').firstMatch(l);
+  if (bold != null) return bold.group(1)!.trim();
+  return null;
+}
+
+/// Inline markdown — `**bold**`, `*italic*` / `_italic_`, `` `code` `` — as
+/// spans over [base].
+///
+/// Deliberately small rather than a markdown package: the notes are prose with
+/// the occasional emphasis, and a full renderer would have to be taught the
+/// unwrapping and preformatted rules above before it agreed with them. The
+/// italic lookarounds keep `snake_case` and mid-word asterisks literal.
+List<InlineSpan> _mdSpans(String text, TextStyle base) {
+  final pattern = RegExp(
+      r'\*\*(.+?)\*\*|(?<![A-Za-z0-9])[*_](.+?)[*_](?![A-Za-z0-9])|`(.+?)`');
+  final spans = <InlineSpan>[];
+  var i = 0;
+  for (final m in pattern.allMatches(text)) {
+    if (m.start > i) spans.add(TextSpan(text: text.substring(i, m.start)));
+    if (m.group(1) != null) {
+      spans.add(TextSpan(
+          text: m.group(1),
+          style: const TextStyle(fontWeight: FontWeight.bold)));
+    } else if (m.group(2) != null) {
+      spans.add(TextSpan(
+          text: m.group(2),
+          style: const TextStyle(fontStyle: FontStyle.italic)));
+    } else {
+      spans.add(TextSpan(
+          text: m.group(3), style: const TextStyle(fontFamily: 'monospace')));
+    }
+    i = m.end;
+  }
+  if (i < text.length) spans.add(TextSpan(text: text.substring(i)));
+  return spans;
+}
+
+/// Split a YAML block scalar into display blocks, undoing its hard wrapping.
+///
+/// The notes in the recipe files are wrapped at ~95 columns so the YAML stays
+/// readable, but the UI box is as wide as the window, so wrapping twice at two
+/// different widths is what makes them hard to read. Prose paragraphs are
+/// therefore rejoined into one long line and left to the widget to wrap; blank
+/// lines survive as paragraph breaks.
+///
+/// A paragraph is only treated as prose when every line sits flush at column
+/// zero and none of them opens like a list item. Anything indented or bulleted
+/// was aligned by hand — the sourdough (A)/(B) key, for instance — so its line
+/// breaks are meaningful and are kept exactly as written.
+List<_NotesBlock> _reflowNotes(String notes) {
+  final blocks = <_NotesBlock>[];
+  for (final chunk in notes.trim().split(RegExp(r'\n[ \t]*\n'))) {
+    final lines = chunk.split('\n').where((l) => l.trim().isNotEmpty).toList();
+    if (lines.isEmpty) continue;
+    final indents =
+        lines.map((l) => l.length - l.trimLeft().length).toSet().toList();
+    final isProse = indents.length == 1 &&
+        indents.first == 0 &&
+        !lines.any(_looksLikeListItem);
+    if (isProse) {
+      var body = lines;
+      final head = _headingText(lines.first);
+      if (head != null) {
+        blocks.add(_NotesBlock(head, preformatted: false, heading: true));
+        body = lines.sublist(1);
+      }
+      if (body.isNotEmpty) {
+        blocks.add(_NotesBlock(body.map((l) => l.trim()).join(' '),
+            preformatted: false));
+      }
+    } else {
+      final base = indents.reduce(min);
+      blocks.add(_NotesBlock(
+        lines.map((l) => l.substring(base)).join('\n').trimRight(),
+        preformatted: true,
+      ));
+    }
+  }
+  return blocks;
+}
+
+/// Whether a line opens like a bullet or an enumerator — `- x`, `* x`, `(A) x`,
+/// `1. x` — and so starts a new visual line rather than continuing a sentence.
+bool _looksLikeListItem(String line) =>
+    RegExp(r'^\s*([-*•]|\(?[A-Za-z0-9]{1,2}[.)])\s').hasMatch(line);
 
 /// The reference amount of the basis ingredient (mass preferred, else qty).
 double? _basisReference(Map? basis) {
@@ -920,15 +1047,43 @@ class _RecipeDetailDialogState extends State<RecipeDetailDialog> {
   double? _reference;
   late final TextEditingController _basisController;
   double _scale = 1.0;
+  int _variantIndex = 0;
+
+  /// The recipe's `variants:` entries, or empty when it has none.
+  List<Map> get _variants {
+    final v = widget.recipe['variants'];
+    return v is List ? v.whereType<Map>().toList() : const <Map>[];
+  }
+
+  Map? get _selectedVariant {
+    final vs = _variants;
+    return vs.isEmpty ? null : vs[_variantIndex.clamp(0, vs.length - 1)];
+  }
+
+  /// Whether the components list says where the variant body goes, via a
+  /// `- variants: here` entry standing in for it. Without one the variants come
+  /// first, straight after the scaling control.
+  bool get _hasVariantMarker {
+    final comps = widget.recipe['components'];
+    return comps is List &&
+        comps.any((c) => c is Map && c['variants'] != null && c['name'] == null);
+  }
 
   @override
   void initState() {
     super.initState();
-    _basis = _findBasis(widget.recipe);
+    _basis = _findBasis(_basisScopes);
     _reference = _basisReference(_basis);
     _basisController = TextEditingController(
       text: _reference != null ? _fmtNum(_reference!) : '',
     );
+  }
+
+  /// Scopes to look for the basis ingredient in, selected variant first so a
+  /// variant that scales off its own ingredient wins over the recipe's.
+  List<Map> get _basisScopes {
+    final variant = _selectedVariant;
+    return [if (variant != null) variant, widget.recipe];
   }
 
   @override
@@ -955,9 +1110,34 @@ class _RecipeDetailDialogState extends State<RecipeDetailDialog> {
     });
   }
 
+  /// Switch variants, keeping the amount you typed rather than the scale.
+  ///
+  /// Variants can differ in their basis (and so in its reference amount), but
+  /// the amount in the box is how much of the thing you actually have, which
+  /// doesn't change just because you picked a different method — so re-derive
+  /// the scale from it against the new reference.
+  void _selectVariant(int index) {
+    setState(() {
+      _variantIndex = index;
+      final entered = double.tryParse(_basisController.text.trim());
+      _basis = _findBasis(_basisScopes);
+      _reference = _basisReference(_basis);
+      if (_reference == null || _reference! <= 0) {
+        _basisController.text = '';
+        _scale = 1.0;
+      } else if (entered != null) {
+        _scale = entered / _reference!;
+      } else {
+        _basisController.text = _fmtNum(_reference!);
+        _scale = 1.0;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final recipe = widget.recipe;
+    final variants = _variants;
     final children = <Widget>[];
 
     final yieldText = recipe['yield']?.toString();
@@ -976,7 +1156,7 @@ class _RecipeDetailDialogState extends State<RecipeDetailDialog> {
     if (source != null && source.trim().isNotEmpty) {
       children.add(Padding(
         padding: const EdgeInsets.only(bottom: 6),
-        child: SelectableText(
+        child: Text(
           'source: $source',
           style: const TextStyle(fontSize: 12, color: Colors.blue),
         ),
@@ -1022,65 +1202,13 @@ class _RecipeDetailDialogState extends State<RecipeDetailDialog> {
       children.add(const SizedBox(height: 4));
     }
 
-    // Top-level ingredients.
-    final ingredients = recipe['ingredients'];
-    if (ingredients is List && ingredients.isNotEmpty) {
-      children.add(_sectionHeader('Ingredients'));
-      children.addAll(ingredients.map((ing) => _ingredientWidget(ing)));
-      children.add(const SizedBox(height: 8));
-    }
+    final variantBody =
+        variants.isEmpty ? const <Widget>[] : _variantWidgets(_selectedVariant!);
 
-    // Top-level steps.
-    final steps = recipe['steps'];
-    if (steps is List && steps.isNotEmpty) {
-      children.add(_sectionHeader('Steps'));
-      children.addAll(_stepWidgets(steps));
-      children.add(const SizedBox(height: 8));
-    }
+    if (!_hasVariantMarker) children.addAll(variantBody);
 
-    // Components.
-    final components = recipe['components'];
-    if (components is List) {
-      for (final comp in components) {
-        if (comp is! Map) continue;
-        children.add(const Divider());
-        final cname = (comp['name'] ?? '').toString();
-        if (cname.isNotEmpty) {
-          children.add(Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Text(
-              cname,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: Colors.indigo),
-            ),
-          ));
-        }
-        final cyield = comp['yield']?.toString();
-        if (cyield != null && cyield.trim().isNotEmpty) {
-          children.add(Text(
-            cyield,
-            style: const TextStyle(
-                fontStyle: FontStyle.italic, color: Colors.black54),
-          ));
-        }
-        final cIng = comp['ingredients'];
-        final hasCIng = cIng is List && cIng.isNotEmpty;
-        if (hasCIng) {
-          children.addAll(cIng.map((ing) => _ingredientWidget(ing)));
-        }
-        final cSteps = comp['steps'];
-        if (cSteps is List && cSteps.isNotEmpty) {
-          if (hasCIng) children.add(const SizedBox(height: 4));
-          children.addAll(_stepWidgets(cSteps));
-        }
-        final cNotes = comp['notes']?.toString();
-        if (cNotes != null && cNotes.trim().isNotEmpty) {
-          children.add(_notesWidget(cNotes));
-        }
-      }
-    }
+    // Shared ingredients, steps and components — the parts every variant uses.
+    children.addAll(_scopeWidgets(recipe, variantBody: variantBody));
 
     // Top-level notes.
     final notes = recipe['notes']?.toString();
@@ -1094,22 +1222,40 @@ class _RecipeDetailDialogState extends State<RecipeDetailDialog> {
       children.add(const Text('(empty recipe)'));
     }
 
+    // Track the window width so the notes boxes wrap where the window does,
+    // rather than at whatever column the YAML happens to be wrapped at.
+    final media = MediaQuery.of(context);
+    final width = min(media.size.width - 80, 1100.0);
+
     return AlertDialog(
       title: Text(widget.title),
-      content: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.7,
-          maxWidth: 500,
-        ),
-        child: SizedBox(
-          width: 460,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: children,
+      // The default insets assume a narrow dialog; shrink them so the content
+      // width above is what actually decides how wide the dialog gets.
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      content: SizedBox(
+        width: width,
+        height: media.size.height * 0.7,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Outside the scroll view: switching variants is a control, so it
+            // stays put rather than scrolling away mid-recipe.
+            if (variants.length > 1) _variantSelector(variants),
+            Expanded(
+              // One selection region over the whole body, so you can drag
+              // across steps and notes and copy what you select.
+              child: SelectionArea(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: children,
+                  ),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
       actions: [
@@ -1121,6 +1267,135 @@ class _RecipeDetailDialogState extends State<RecipeDetailDialog> {
     );
   }
 
+  /// Horizontally scrolling chip bar for picking a variant.
+  Widget _variantSelector(List<Map> variants) => Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: SizedBox(
+          height: 40,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: variants.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 6),
+            itemBuilder: (context, i) => Center(
+              child: ChoiceChip(
+                label: Text(_variantName(variants[i], i)),
+                selected: i == _variantIndex,
+                onSelected: (_) => _selectVariant(i),
+              ),
+            ),
+          ),
+        ),
+      );
+
+  String _variantName(Map variant, int index) {
+    final name = (variant['name'] ?? '').toString().trim();
+    return name.isEmpty ? 'variant ${index + 1}' : name;
+  }
+
+  /// The selected variant's own body, headed by its name so it's clear which
+  /// part of the page the chips above just swapped out.
+  List<Widget> _variantWidgets(Map variant) {
+    final widgets = <Widget>[
+      const Divider(),
+      Padding(
+        padding: const EdgeInsets.only(bottom: 2),
+        child: Text(
+          _variantName(variant, _variantIndex),
+          style: const TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 17, color: Colors.indigo),
+        ),
+      ),
+    ];
+    widgets.addAll(_scopeWidgets(variant));
+    final vNotes = variant['notes']?.toString();
+    if (vNotes != null && vNotes.trim().isNotEmpty) {
+      widgets.add(_sectionHeader('Notes'));
+      widgets.add(_notesWidget(vNotes));
+    }
+    return widgets;
+  }
+
+  /// Ingredients, steps and components of a recipe or a variant — the parts of
+  /// the schema that both share.
+  List<Widget> _scopeWidgets(Map scope, {List<Widget> variantBody = const []}) {
+    final widgets = <Widget>[];
+
+    final scopeYield = scope['yield']?.toString();
+    if (scope != widget.recipe &&
+        scopeYield != null &&
+        scopeYield.trim().isNotEmpty) {
+      widgets.add(Text(
+        scopeYield,
+        style: const TextStyle(
+            fontStyle: FontStyle.italic, color: Colors.black54),
+      ));
+    }
+
+    final ingredients = scope['ingredients'];
+    if (ingredients is List && ingredients.isNotEmpty) {
+      widgets.add(_sectionHeader('Ingredients'));
+      widgets.addAll(ingredients.map((ing) => _ingredientWidget(ing)));
+      widgets.add(const SizedBox(height: 8));
+    }
+
+    final steps = scope['steps'];
+    if (steps is List && steps.isNotEmpty) {
+      widgets.add(_sectionHeader('Steps'));
+      widgets.addAll(_stepWidgets(steps));
+      widgets.add(const SizedBox(height: 8));
+    }
+
+    final components = scope['components'];
+    if (components is List) {
+      for (final comp in components) {
+        if (comp is! Map) continue;
+        // `- variants: here` is a placeholder, not a component: it marks the
+        // point in the recipe where the selected variant's body belongs.
+        if (comp['variants'] != null && comp['name'] == null) {
+          widgets.addAll(variantBody);
+          continue;
+        }
+        widgets.add(const Divider());
+        final cname = (comp['name'] ?? '').toString();
+        if (cname.isNotEmpty) {
+          widgets.add(Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Text(
+              cname,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.indigo),
+            ),
+          ));
+        }
+        final cyield = comp['yield']?.toString();
+        if (cyield != null && cyield.trim().isNotEmpty) {
+          widgets.add(Text(
+            cyield,
+            style: const TextStyle(
+                fontStyle: FontStyle.italic, color: Colors.black54),
+          ));
+        }
+        final cIng = comp['ingredients'];
+        final hasCIng = cIng is List && cIng.isNotEmpty;
+        if (hasCIng) {
+          widgets.addAll(cIng.map((ing) => _ingredientWidget(ing)));
+        }
+        final cSteps = comp['steps'];
+        if (cSteps is List && cSteps.isNotEmpty) {
+          if (hasCIng) widgets.add(const SizedBox(height: 4));
+          widgets.addAll(_stepWidgets(cSteps));
+        }
+        final cNotes = comp['notes']?.toString();
+        if (cNotes != null && cNotes.trim().isNotEmpty) {
+          widgets.add(_notesWidget(cNotes));
+        }
+      }
+    }
+    return widgets;
+  }
+
   Widget _sectionHeader(String text) => Padding(
         padding: const EdgeInsets.only(top: 4, bottom: 2),
         child: Text(text,
@@ -1128,17 +1403,67 @@ class _RecipeDetailDialogState extends State<RecipeDetailDialog> {
                 const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
       );
 
-  Widget _notesWidget(String notes) => Container(
-        width: double.infinity,
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(4),
+  Widget _notesWidget(String notes) {
+    final blocks = _reflowNotes(notes);
+    if (blocks.isEmpty) return const SizedBox.shrink();
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (var i = 0; i < blocks.length; i++)
+            Padding(
+              // A heading belongs to the paragraph under it, so the gap goes
+              // above the heading rather than between it and its body.
+              padding: EdgeInsets.only(
+                  top: i == 0
+                      ? 0
+                      : blocks[i].heading
+                          ? 14
+                          : blocks[i - 1].heading
+                              ? 2
+                              : 10),
+              child: _notesBlockWidget(blocks[i]),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _notesBlockWidget(_NotesBlock block) {
+    if (block.preformatted) {
+      // Hand-aligned blocks are left exactly as written — no inline markdown,
+      // since a bold run would shift the columns they were aligned for — and
+      // they scroll sideways rather than re-wrap.
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Text(
+          block.text,
+          style: const TextStyle(
+            fontSize: 13,
+            height: 1.35,
+            color: Colors.black87,
+            fontFamily: 'monospace',
+          ),
         ),
-        child: Text(notes.trimRight(),
-            style: const TextStyle(fontSize: 13, color: Colors.black87)),
       );
+    }
+    const base = TextStyle(fontSize: 13, height: 1.35, color: Colors.black87);
+    final style = block.heading
+        ? base.copyWith(
+            fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black)
+        : base;
+    return Text.rich(
+      TextSpan(style: style, children: _mdSpans(block.text, base)),
+    );
+  }
 
   Widget _bullet(InlineSpan content, {double indent = 0}) => Padding(
         padding: EdgeInsets.only(left: indent, top: 2, bottom: 2),
@@ -1147,12 +1472,13 @@ class _RecipeDetailDialogState extends State<RecipeDetailDialog> {
           children: [
             const Text('•  '),
             Expanded(
-              child: RichText(
-                text: TextSpan(
-                  style: const TextStyle(
-                      color: Colors.black, fontSize: 14, height: 1.3),
-                  children: [content],
-                ),
+              // Text.rich, not a bare RichText: only Text registers itself with
+              // the enclosing SelectionArea, and a raw RichText would leave the
+              // step text unselectable while its bullet beside it selected fine.
+              child: Text.rich(
+                TextSpan(children: [content]),
+                style: const TextStyle(
+                    color: Colors.black, fontSize: 14, height: 1.3),
               ),
             ),
           ],
@@ -1322,4 +1648,617 @@ class _RecipeEditDialogState extends State<RecipeEditDialog> {
       ],
     );
   }
+}
+
+// ---------------------------------------------------------------------------
+// Recipes browser: grouped/searchable list  <->  reference/ingredient graph
+// ---------------------------------------------------------------------------
+
+const List<Color> _kCategoryPalette = [
+  Color(0xFFE57373), Color(0xFF64B5F6), Color(0xFF81C784), Color(0xFFFFB74D),
+  Color(0xFFBA68C8), Color(0xFF4DB6AC), Color(0xFFA1887F), Color(0xFF90A4AE),
+  Color(0xFFF06292), Color(0xFF7986CB), Color(0xFFAED581), Color(0xFFFFD54F),
+  Color(0xFF4FC3F7), Color(0xFFFF8A65), Color(0xFF9575CD), Color(0xFF4DD0E1),
+  Color(0xFFDCE775), Color(0xFFFFB300), Color(0xFF26A69A),
+];
+
+Color _categoryColor(String category, List<String> categories) {
+  final i = categories.indexOf(category);
+  if (i < 0) return Colors.grey;
+  return _kCategoryPalette[i % _kCategoryPalette.length];
+}
+
+enum _RecipeView { list, graph }
+
+/// The Recipes page: a List ⇄ Graph toggle over the recipe index.
+class RecipesPage extends StatefulWidget {
+  const RecipesPage({
+    super.key,
+    required this.index,
+    required this.fallbackPaths,
+    required this.onOpen,
+  });
+
+  final List<Map<String, dynamic>> index;
+  final List<String> fallbackPaths;
+  final void Function(String path) onOpen;
+
+  @override
+  State<RecipesPage> createState() => _RecipesPageState();
+}
+
+class _RecipesPageState extends State<RecipesPage> {
+  _RecipeView _view = _RecipeView.list;
+  String _query = '';
+  bool _scalableOnly = false;
+  final Set<String> _expandedCats = {};
+  final _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  /// Rich index when available, else minimal entries built from plain paths.
+  List<Map<String, dynamic>> get _entries {
+    if (widget.index.isNotEmpty) return widget.index;
+    return widget.fallbackPaths
+        .map((p) => <String, dynamic>{
+              'path': p,
+              'category': p.contains('/') ? p.split('/').first : '',
+              'name': p.split('/').last.replaceAll('-', ' '),
+              'hasBasis': false,
+              'ingredients': const <String>[],
+              'refs': const <String>[],
+            })
+        .toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final entries = _entries;
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Recipes'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: SegmentedButton<_RecipeView>(
+              segments: const [
+                ButtonSegment(
+                    value: _RecipeView.list,
+                    icon: Icon(Icons.list),
+                    label: Text('List')),
+                ButtonSegment(
+                    value: _RecipeView.graph,
+                    icon: Icon(Icons.hub),
+                    label: Text('Graph')),
+              ],
+              selected: {_view},
+              showSelectedIcon: false,
+              onSelectionChanged: (s) => setState(() => _view = s.first),
+            ),
+          ),
+        ],
+      ),
+      body: entries.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : (_view == _RecipeView.list
+              ? _buildList(entries)
+              : RecipeGraphView(index: entries, onOpen: widget.onOpen)),
+    );
+  }
+
+  Widget _buildList(List<Map<String, dynamic>> entries) {
+    final q = _query.toLowerCase().trim();
+    bool matches(Map<String, dynamic> r) {
+      if (_scalableOnly && r['hasBasis'] != true) return false;
+      if (q.isEmpty) return true;
+      final hay = StringBuffer()
+        ..write((r['path'] ?? '').toString().toLowerCase())
+        ..write(' ')
+        ..write((r['name'] ?? '').toString().toLowerCase());
+      for (final i in (r['ingredients'] as List? ?? const [])) {
+        hay
+          ..write(' ')
+          ..write(i.toString().toLowerCase());
+      }
+      return hay.toString().contains(q);
+    }
+
+    final filtered = entries.where(matches).toList();
+    final byCat = <String, List<Map<String, dynamic>>>{};
+    for (final r in filtered) {
+      final c = (r['category'] ?? '').toString();
+      byCat.putIfAbsent(c.isEmpty ? 'other' : c, () => []).add(r);
+    }
+    final cats = byCat.keys.toList()..sort();
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+          child: TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              hintText: 'search name or ingredient…',
+              prefixIcon: const Icon(Icons.search),
+              isDense: true,
+              border: const OutlineInputBorder(),
+              suffixIcon: _query.isEmpty
+                  ? null
+                  : IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        _searchController.clear();
+                        setState(() => _query = '');
+                      },
+                    ),
+            ),
+            onChanged: (v) => setState(() => _query = v),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Row(
+            children: [
+              FilterChip(
+                label: const Text('⚖ scalable'),
+                selected: _scalableOnly,
+                onSelected: (v) => setState(() => _scalableOnly = v),
+              ),
+              const Spacer(),
+              Builder(builder: (context) {
+                final allExpanded =
+                    cats.isNotEmpty && _expandedCats.containsAll(cats);
+                return TextButton.icon(
+                  icon: Icon(
+                      allExpanded ? Icons.unfold_less : Icons.unfold_more,
+                      size: 18),
+                  label: Text(allExpanded ? 'collapse all' : 'expand all'),
+                  onPressed: cats.isEmpty
+                      ? null
+                      : () => setState(() {
+                            if (allExpanded) {
+                              _expandedCats.removeAll(cats);
+                            } else {
+                              _expandedCats.addAll(cats);
+                            }
+                          }),
+                );
+              }),
+            ],
+          ),
+        ),
+        Expanded(
+          child: filtered.isEmpty
+              ? const Center(child: Text('no matches'))
+              : ListView(
+                  children: [
+                    for (final c in cats) ...[
+                      _categoryHeader(c, byCat[c]!.length,
+                          q.isNotEmpty || _expandedCats.contains(c)),
+                      if (q.isNotEmpty || _expandedCats.contains(c))
+                        for (final r in byCat[c]!)
+                          ListTile(
+                            dense: true,
+                            contentPadding:
+                                const EdgeInsets.only(left: 32, right: 16),
+                            title: Text(_displayLabel(r)),
+                            trailing: r['hasBasis'] == true
+                                ? const Text('⚖',
+                                    style: TextStyle(color: Colors.blue))
+                                : null,
+                            onTap: () => widget.onOpen((r['path']).toString()),
+                          ),
+                    ],
+                  ],
+                ),
+        ),
+      ],
+    );
+  }
+
+  Widget _categoryHeader(String category, int count, bool expanded) {
+    return InkWell(
+      onTap: () => setState(() {
+        if (_expandedCats.contains(category)) {
+          _expandedCats.remove(category);
+        } else {
+          _expandedCats.add(category);
+        }
+      }),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            Icon(expanded ? Icons.expand_more : Icons.chevron_right, size: 20),
+            const SizedBox(width: 8),
+            Text('$category  ($count)',
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _displayLabel(Map<String, dynamic> r) {
+    final path = (r['path'] ?? '').toString();
+    final cat = (r['category'] ?? '').toString();
+    if (cat.isNotEmpty && path.startsWith('$cat/')) {
+      return path.substring(cat.length + 1);
+    }
+    return path;
+  }
+}
+
+/// Force-directed graph of recipes. Nodes are coloured by category; edges are
+/// explicit cross-references (strong) plus shared distinctive ingredients
+/// (weak). Pan/zoom via InteractiveViewer; tap a node to open the recipe.
+class RecipeGraphView extends StatefulWidget {
+  const RecipeGraphView({super.key, required this.index, required this.onOpen});
+
+  final List<Map<String, dynamic>> index;
+  final void Function(String path) onOpen;
+
+  @override
+  State<RecipeGraphView> createState() => _RecipeGraphViewState();
+}
+
+class _RecipeGraphViewState extends State<RecipeGraphView> {
+  double _w = 1000;
+  double _h = 1000;
+
+  List<_GNode> _nodes = [];
+  List<_GEdge> _edges = [];
+  List<String> _categories = [];
+  List<_ClusterLabel> _labels = [];
+
+  final TransformationController _tc = TransformationController();
+  bool _fitted = false;
+  bool _showSimilarity = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _layout();
+  }
+
+  @override
+  void didUpdateWidget(RecipeGraphView old) {
+    super.didUpdateWidget(old);
+    if (old.index.length != widget.index.length) {
+      _fitted = false;
+      _layout();
+    }
+  }
+
+  @override
+  void dispose() {
+    _tc.dispose();
+    super.dispose();
+  }
+
+  void _layout() {
+    final entries = widget.index;
+    final n = entries.length;
+    _categories = entries
+        .map((e) => (e['category'] ?? '').toString())
+        .toSet()
+        .toList()
+      ..sort();
+
+    final idxOf = <String, int>{};
+    for (var i = 0; i < n; i++) {
+      idxOf[(entries[i]['path']).toString()] = i;
+    }
+
+    final edgeKeys = <String>{};
+    final edges = <_GEdge>[];
+    void addEdge(int a, int b, bool strong) {
+      if (a == b) return;
+      final key = a < b ? '$a-$b' : '$b-$a';
+      if (edgeKeys.add(key)) edges.add(_GEdge(a, b, strong));
+    }
+
+    // Strong edges: explicit `uses:` sub-recipe links (curated in the YAML).
+    for (var i = 0; i < n; i++) {
+      for (final r in (entries[i]['uses'] as List? ?? const [])) {
+        final j = idxOf[r.toString()];
+        if (j != null) addEdge(i, j, true);
+      }
+    }
+
+    // Weak edges (optional overlay): pairs sharing >=3 distinctive ingredients
+    // (doc-frequency in 2..8). Off by default — toggled by the user.
+    if (_showSimilarity) {
+      final df = <String, int>{};
+      for (final e in entries) {
+        for (final i in (e['ingredients'] as List? ?? const [])) {
+          df[i.toString()] = (df[i.toString()] ?? 0) + 1;
+        }
+      }
+      final inverted = <String, List<int>>{};
+      for (var i = 0; i < n; i++) {
+        for (final ing in (entries[i]['ingredients'] as List? ?? const [])) {
+          final c = df[ing.toString()] ?? 0;
+          if (c >= 2 && c <= 8) {
+            inverted.putIfAbsent(ing.toString(), () => []).add(i);
+          }
+        }
+      }
+      final shared = <String, int>{};
+      for (final members in inverted.values) {
+        for (var x = 0; x < members.length; x++) {
+          for (var y = x + 1; y < members.length; y++) {
+            final a = members[x], b = members[y];
+            final key = a < b ? '$a-$b' : '$b-$a';
+            shared[key] = (shared[key] ?? 0) + 1;
+          }
+        }
+      }
+      shared.forEach((key, count) {
+        if (count >= 3) {
+          final parts = key.split('-');
+          addEdge(int.parse(parts[0]), int.parse(parts[1]), false);
+        }
+      });
+    }
+
+    // --- positions: pack each category into its own disk, clusters on a grid
+    final byCat = <String, List<int>>{};
+    for (var i = 0; i < n; i++) {
+      byCat
+          .putIfAbsent((entries[i]['category'] ?? '').toString(), () => [])
+          .add(i);
+    }
+
+    const baseR = 30.0; // cluster radius scales with sqrt(member count)
+    const gap = 130.0; // space between cluster bounding circles
+    final radius = <String, double>{};
+    double maxR = 1;
+    for (final c in _categories) {
+      final r = baseR * sqrt((byCat[c]?.length ?? 1).toDouble());
+      radius[c] = r;
+      maxR = max(maxR, r);
+    }
+
+    final cols = max(1, sqrt(_categories.length).ceil());
+    final rows = max(1, (_categories.length / cols).ceil());
+    final cell = 2 * maxR + gap;
+    _w = cols * cell;
+    _h = rows * cell;
+
+    final nodes = List.generate(n, (i) {
+      return _GNode(
+        path: (entries[i]['path']).toString(),
+        label: (entries[i]['path'])
+            .toString()
+            .split('/')
+            .last
+            .replaceAll('-', ' '),
+        category: (entries[i]['category'] ?? '').toString(),
+        x: 0,
+        y: 0,
+      );
+    });
+
+    // Phyllotaxis (sunflower) packing gives an even disk of nodes per cluster.
+    final golden = pi * (3 - sqrt(5));
+    final labels = <_ClusterLabel>[];
+    for (var ci = 0; ci < _categories.length; ci++) {
+      final c = _categories[ci];
+      final members = byCat[c] ?? const [];
+      final cx = (ci % cols) * cell + cell / 2;
+      final cy = (ci ~/ cols) * cell + cell / 2;
+      final r = radius[c] ?? baseR;
+      labels.add(_ClusterLabel(
+        text: c.isEmpty ? 'other' : c,
+        x: cx,
+        y: cy - r - 22,
+        color: _categoryColor(c, _categories),
+      ));
+      for (var k = 0; k < members.length; k++) {
+        final nr =
+            members.length <= 1 ? 0.0 : r * sqrt((k + 0.5) / members.length);
+        final ang = k * golden;
+        nodes[members[k]].x = cx + nr * cos(ang);
+        nodes[members[k]].y = cy + nr * sin(ang);
+      }
+    }
+
+    _nodes = nodes;
+    _edges = edges;
+    _labels = labels;
+  }
+
+  /// On first layout, fit the whole graph to the viewport.
+  void _maybeFit(BoxConstraints c) {
+    if (_fitted || _w <= 0 || !c.maxWidth.isFinite || !c.maxHeight.isFinite) {
+      return;
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _fitted) return;
+      final s = min(c.maxWidth / _w, c.maxHeight / _h) * 0.92;
+      _tc.value = Matrix4.identity()
+        ..translate((c.maxWidth - _w * s) / 2, (c.maxHeight - _h * s) / 2)
+        ..scale(s, s, 1.0);
+      _fitted = true;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        LayoutBuilder(builder: (context, constraints) {
+          _maybeFit(constraints);
+          return InteractiveViewer(
+            transformationController: _tc,
+            constrained: false,
+            minScale: 0.05,
+            maxScale: 4,
+            boundaryMargin: const EdgeInsets.all(400),
+            child: SizedBox(
+              width: _w,
+              height: _h,
+              child: Stack(
+                children: [
+                  CustomPaint(
+                    size: Size(_w, _h),
+                    painter: _GraphEdgePainter(_nodes, _edges),
+                  ),
+                  for (final label in _labels)
+                    Positioned(
+                      left: label.x - 60,
+                      top: label.y,
+                      width: 120,
+                      child: Text(
+                        label.text,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: label.color,
+                        ),
+                      ),
+                    ),
+                  for (final node in _nodes)
+                    Positioned(
+                      left: node.x - 6,
+                      top: node.y - 6,
+                      child: GestureDetector(
+                        onTap: () => widget.onOpen(node.path),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 12,
+                              height: 12,
+                              decoration: BoxDecoration(
+                                color:
+                                    _categoryColor(node.category, _categories),
+                                shape: BoxShape.circle,
+                                border:
+                                    Border.all(color: Colors.white, width: 1),
+                              ),
+                            ),
+                            Text(node.label,
+                                style: const TextStyle(fontSize: 7)),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          );
+        }),
+        Positioned(
+          left: 8,
+          top: 8,
+          child: Card(
+            color: Colors.white.withOpacity(0.85),
+            child: Padding(
+              padding: const EdgeInsets.all(6),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (final c in _categories)
+                    Row(mainAxisSize: MainAxisSize.min, children: [
+                      Container(
+                          width: 8,
+                          height: 8,
+                          color: _categoryColor(c, _categories)),
+                      const SizedBox(width: 4),
+                      Text(c.isEmpty ? 'other' : c,
+                          style: const TextStyle(fontSize: 9)),
+                    ]),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          right: 8,
+          top: 8,
+          child: FilterChip(
+            backgroundColor: Colors.white.withOpacity(0.85),
+            label: const Text('ingredient links',
+                style: TextStyle(fontSize: 11)),
+            selected: _showSimilarity,
+            onSelected: (v) => setState(() {
+              _showSimilarity = v;
+              _layout();
+            }),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _GNode {
+  _GNode({
+    required this.path,
+    required this.label,
+    required this.category,
+    required this.x,
+    required this.y,
+  });
+
+  final String path;
+  final String label;
+  final String category;
+  double x;
+  double y;
+}
+
+class _GEdge {
+  _GEdge(this.a, this.b, this.strong);
+  final int a;
+  final int b;
+  final bool strong;
+}
+
+class _ClusterLabel {
+  _ClusterLabel({
+    required this.text,
+    required this.x,
+    required this.y,
+    required this.color,
+  });
+
+  final String text;
+  final double x;
+  final double y;
+  final Color color;
+}
+
+class _GraphEdgePainter extends CustomPainter {
+  _GraphEdgePainter(this.nodes, this.edges);
+
+  final List<_GNode> nodes;
+  final List<_GEdge> edges;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final weak = Paint()
+      ..color = Colors.grey.withOpacity(0.25)
+      ..strokeWidth = 0.6;
+    final strong = Paint()
+      ..color = Colors.blueGrey.withOpacity(0.6)
+      ..strokeWidth = 1.4;
+    for (final e in edges) {
+      final a = nodes[e.a], b = nodes[e.b];
+      canvas.drawLine(
+          Offset(a.x, a.y), Offset(b.x, b.y), e.strong ? strong : weak);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_GraphEdgePainter old) =>
+      old.nodes != nodes || old.edges != edges;
 }

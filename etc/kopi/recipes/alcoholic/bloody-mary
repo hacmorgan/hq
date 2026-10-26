@@ -1,0 +1,36 @@
+yield: per-serve
+ingredients:
+  - item: vodka
+    mass: 45
+  - item: tomato juice
+    mass: 90
+  - item: lemon juice
+    mass: 15
+  - item: worcestershire sauce
+    mass: 3
+    note: few dashes
+  - item: tabasco
+    mass: 1
+    note: few dashes, to taste
+  - item: horseradish
+    mass: 5
+    optional: true
+    note: grated or from a jar
+  - item: celery salt
+    note: pinch
+  - item: black pepper
+    note: good crack
+  - item: celery stick
+    note: to garnish
+  - item: lemon wedge
+    note: to garnish
+steps:
+  - build everything but the garnish in a glass over ice
+  - roll between two glasses to mix — don't shake, it froths the tomato juice and turns it pink and foamy
+  - garnish with celery and lemon
+notes: |
+  Pairs with breakfast/sourdough-skillet — mirrors the tomato and savoury notes already in
+  the dish rather than contrasting them.
+
+  Season at the end, not the start. Tomato juice brands vary wildly in salt, so taste before
+  adding celery salt.

@@ -1,0 +1,29 @@
+yield: per-serve
+notes: |
+  The classic 3:2:1 — prosecco : aperol : soda. Masses below are that ratio at a normal
+  wine-glass serve.
+
+  Pairs with breakfast/sourdough-skillet — the bright bitter orange cuts through the creamy
+  feta.
+
+  Prosecco first, aperol second. Pour the aperol in after and it sits under the bubbles and
+  mixes itself; do it the other way round and you have to stir, which kills the fizz.
+ingredients:
+  - item: prosecco
+    mass: 90
+    qty: 3
+    unit: part
+  - item: aperol
+    mass: 60
+    qty: 2
+    unit: part
+  - item: soda water
+    mass: 30
+    qty: 1
+    unit: part
+  - item: orange slice
+    note: to garnish
+steps:
+  - big wine glass, filled with ice
+  - prosecco first, then aperol, then a splash of soda
+  - orange slice in

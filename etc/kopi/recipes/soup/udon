@@ -8,6 +8,7 @@ components:
         note: remove head and black intestines by pinching with fingers
       - item: water
         mass: 1000
+        basis: true
         qty: 1
         unit: l
       - item: kombu (dried kelp)
