@@ -125,16 +125,20 @@ function configure_git
 function configure_emacs
 {
     type -p emacs > /dev/null || say "warning: emacs is not installed"
-    if (( options_dry_run )); then
-        say "clone hacmorgan/emacs into ~/.emacs.d, plus copilot.el"
-        return
-    fi
-    if [[ -e "~/.emacs.d" ]]; then
+    if [[ -e ~/.emacs.d ]]; then
         if (( options_move_existing )); then
-            mv ~/.emacs.d ~/.emacs.d.old
+            if (( options_dry_run )); then
+                say "mv ~/.emacs.d ~/.emacs.d.old"
+            else
+                mv ~/.emacs.d ~/.emacs.d.old
+            fi
         else
             die "~/.emacs.d already exists, use --move-existing to move it to ~/.emacs.d.old"
         fi
+    fi
+    if (( options_dry_run )); then
+        say "clone hacmorgan/emacs into ~/.emacs.d, plus copilot.el"
+        return
     fi
     git clone git@github.com:hacmorgan/emacs.git ~/.emacs.d
     git clone git@github.com:copilot-emacs/copilot.el.git ~/.emacs.d/external-packages/copilot.el
