@@ -103,7 +103,10 @@ was firmware for other people's GPUs, serving a blacklisted driver.
 **Fix applied 2026-10-26:** `kms` removed from `HOOKS` in
 `/etc/mkinitcpio.conf`. Safe here because the NVIDIA modules were never in the
 initramfs anyway — modesetting happens after the root pivot. Images went
-127 MB → ~15 MB each; ESP 51% → 33% and falling.
+127 MB → 15.3 MB each; ESP **302 MB → 88 MB (51% → 15%)**.
+
+LTS was rebuilt and booted first, before mainline was touched, so the slim
+image was proven on a kernel that still had a known-good fallback.
 
 Also removed: the `initrd /amd-ucode.img` line from both entries. The
 `microcode` hook already embeds microcode in the early CPIO, and with
@@ -143,7 +146,15 @@ the same as `(default)`. Don't read one as confirmation of the other.
   (`5.19.13-arch1-1`, `6.0.2-arch1-1`, `6.14.7-arch2-1`).
 - Wayland has never been tried. KMS is now on for mainline, which was the
   blocker. `sway` is the natural first experiment given i3.
-- Board firmware F11 is from 2019 and has never been updated.
+- Board firmware F11 is from 2019 and has never been updated. Related:
+  `amd_pstate` fails to register at boot (`min_freq(0) … return -19`), so the
+  CPU falls back to `acpi-cpufreq` with the `schedutil` governor rather than
+  the better `amd_pstate` driver. Usually means CPPC is absent or disabled in
+  firmware — plausibly fixed by a BIOS update, which is its own risk.
+- `/boot` is mounted `fmask=0022,dmask=0022`, so it is world-readable and
+  `systemd-boot` warns on every boot that `/boot/loader/random-seed` "is world
+  accessible, which is a security hole". Fix is `fmask=0137,dmask=0077` in
+  `/etc/fstab`. Low severity on a single-user desktop, trivial to change.
 
 ## Change log
 
@@ -157,3 +168,4 @@ removed the `kms` hook to recover ~210 MB of ESP; deleted the dead
 `initramfs-linux-fallback.img` that is never generated (both presets are
 `PRESETS=('default')`); made mainline the boot default; and added these box
 records plus the `sysbs --install-hq-claude` wiring that installs `CLAUDE.md`.
+Both initramfs images rebuilt and verified booting; ESP ended at 88 MB (15%).
