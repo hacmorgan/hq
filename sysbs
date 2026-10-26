@@ -493,6 +493,7 @@ function install_hq_claude
     local plugin_dst="$HOME/.claude/plugins/hq"
     local marketplace="$HOME/.claude/plugins/.claude-plugin/marketplace.json"
     local settings="$HOME/.claude/settings.json"
+    local claude_md="$hq/CLAUDE.md"
 
     # Symlink hq claude plugin into place
     if (( options_dry_run )); then
@@ -508,6 +509,20 @@ function install_hq_claude
             rm -rf$verbose "$plugin_dst"
         fi
         ln -s$verbose "$( realpath "$hq_claude" )" "$plugin_dst"
+    fi
+
+    # Symlink repo CLAUDE.md to user-level memory so it applies outside ~/hq too
+    if (( options_dry_run )); then
+        say "$claude_md -> $HOME/.claude/CLAUDE.md"
+    else
+        if [[ -e "$HOME/.claude/CLAUDE.md" && ! -L "$HOME/.claude/CLAUDE.md" ]]; then
+            if (( options_move_existing )); then
+                mv $_verbose "$HOME/.claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md.old"
+            else
+                die "$HOME/.claude/CLAUDE.md exists and is not a symlink, use --move-existing to replace it"
+            fi
+        fi
+        ln -sfn$verbose "$( realpath "$claude_md" )" "$HOME/.claude/CLAUDE.md"
     fi
 
     # Register in marketplace.json (add hq alongside existing plugins)
