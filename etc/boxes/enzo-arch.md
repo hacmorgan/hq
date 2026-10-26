@@ -371,3 +371,10 @@ against a 580-branch kernel driver. Replaced with `opencl-nvidia-580xx`
 survives the swap. Now reports one platform, GTX 980, OpenCL 3.0, 16 compute
 units. Nothing would ever have reported this failure on its own — worth
 remembering for the other version-mismatch items above.
+
+**All of the above verified on the mainline boot** at the end of the day:
+kernel 7.2.11 on the 15.3 MB initramfs, `nvidia_drm.parameters.modeset=Y` with
+the console on `nvidia-drmdrmfb`, driver 580.196.07, OpenCL reporting one
+platform, `/boot` at `0700` with no world-accessible warning from `bootctl`,
+ESP at 88 MB of 599 MB. Both kernels were booted on their rebuilt images before
+this was called done.
