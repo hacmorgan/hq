@@ -1,3 +1,5 @@
+uses:
+  - crackling
 steps:
   - cut 45mm steaks from pok loin roast (cut skin off to make into crackling)
   - dry brine

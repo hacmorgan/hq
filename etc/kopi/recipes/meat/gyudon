@@ -6,6 +6,8 @@ notes: |
   no dry heat to toughen the fibres.
   Freeze the beef 20-30 mins before slicing for cleaner, thinner cuts; slice against the grain.
   Beef & broth keep separately up to 2 days; reheat gently with a splash of water.
+
+  Try searing at 200 then mixing with reduced version of broth, instead of poaching
 ingredients:
   - item: beef
     mass: 180
@@ -18,19 +20,15 @@ ingredients:
   - item: water
     mass: 100
   - item: dashi powder
-    qty: 0.5
-    unit: tsp
-    note: instant; Andy Cooks' site uses 1 tsp
+    mass: 1
+    note: instant; Andy Cooks' site uses double this
   - item: soy sauce
-    qty: 1
-    unit: tbsp
+    mass: 15
     note: light
   - item: mirin
-    qty: 1
-    unit: tbsp
+    mass: 13.5
   - item: sake
-    qty: 0.5
-    unit: tbsp
+    mass: 5
   - item: garlic
     qty: 1
     unit: clove

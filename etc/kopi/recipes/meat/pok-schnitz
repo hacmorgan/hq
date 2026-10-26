@@ -1,3 +1,5 @@
+uses:
+  - fried-chicken
 components:
   - name: crumb
     ingredients:

@@ -1,0 +1,81 @@
+uses:
+  - mayo
+notes: |
+  Two routes. The quick one stacks garlic onto finished mayo; the scratch one builds it in
+  from the yolk with part olive oil, which is the better sauce if you're making it anyway.
+
+  Note that mayo already carries a grated clove per 16g yolk, so the quick route is adding
+  garlic to garlic — that's the point, but taste before you add the second clove.
+
+  Don't build it on 100% extra virgin. High-speed blending shears EVOO and turns it bitter
+  and metallic; cut it with a neutral oil and you get the flavour without the harshness.
+
+  Raw garlic sharpens as it sits — it's mellowest in the first hour and aggressive by the
+  next day. Make it close to serving. Microplaned goes creamier and more pungent than
+  crushed, and won't leave you biting into a chunk.
+
+  No basis set on purpose — the two routes are alternatives, so scaling one off the other
+  would be nonsense. Scale by eye.
+components:
+  - name: quick (from mayo)
+    ingredients:
+      - item: mayo
+        mass: 100
+      - item: garlic
+        qty: 2
+        unit: clove
+        note: microplaned to a paste
+      - item: lemon juice
+        mass: 8
+      - item: extra virgin olive oil
+        mass: 10
+        note: stirred in at the end, not blended
+      - item: salt
+        note: to taste
+    steps:
+      - paste the garlic with a pinch of salt under the flat of a knife, or microplane it
+      - stir through the mayo with the lemon juice
+      - fold in the olive oil last, by hand
+      - rest 15 mins before tasting — the garlic needs a moment to come out
+  - name: from scratch
+    ingredients:
+      - item: egg yolk
+        mass: 16
+        qty: 1
+        unit: ea
+      - item: garlic
+        mass: 12
+        qty: 4
+        unit: clove
+        note: microplaned
+      - item: neutral oil
+        mass: 120
+      - item: extra virgin olive oil
+        mass: 40
+      - item: lemon juice
+        mass: 12
+      - item: dijon mustard
+        mass: 5
+      - item: salt
+        mass: 2
+    steps:
+      - egg yolk, garlic, salt and dijon in the bottom of a tall jug or carafe
+      - immersion blender down on the yolk, start blending before adding anything
+      - slowly incorporate the neutral oil until it takes
+      - lemon juice in, then the olive oil last and slowest
+      - if it splits, start a fresh yolk in a clean jug and blend the broken sauce into it as if it were the oil
+  - name: traditional (no egg)
+    ingredients:
+      - item: garlic
+        qty: 4
+        unit: clove
+      - item: salt
+        note: coarse, as the abrasive
+      - item: extra virgin olive oil
+        note: added drop by drop
+    steps:
+      - pound garlic and coarse salt to a smooth paste in a mortar
+      - work in the olive oil drop by drop, grinding constantly, until it thickens and holds
+    notes: |
+      The actual Provençal thing — garlic, salt, oil, no egg, emulsified by the garlic's own
+      pectin and a lot of patience. Fragile and much sharper than the mayo-based versions.
