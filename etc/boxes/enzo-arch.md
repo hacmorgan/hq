@@ -282,6 +282,23 @@ unnecessary (sway composites natively); `feh --bg-*` becomes `swaybg` /
   `--unsupported-gpu` or set `SWAY_UNSUPPORTED_GPU=true` to silence it.)
 - **`i3status-rust` 0.36.2 works unchanged.** swaybar speaks the same protocol
   as i3bar, so the status bar is one less thing to port.
+- **Sway is reading the i3 config directly — nothing was copied.** `sway(1)`
+  searches `~/.sway/config`, `$XDG_CONFIG_HOME/sway/config`, `~/.i3/config`,
+  then **`$XDG_CONFIG_HOME/i3/config`**, and falls through to the last of those
+  since no sway config exists. So sway and i3 currently share one file:
+  `~/.config/i3/config` → `hq/dots/i3/config`.
+
+  That explains why it worked out of the box, but it is a trap rather than a
+  feature. Both window managers now read the same tracked file, so any
+  sway-only directive added there makes **i3** fail to parse, and the X-only
+  `exec` lines (`xset`, `xss-lock`, `feh`, `configure-xinput`) are being run
+  and failing under sway every time it starts.
+
+  Before doing anything beyond casual experimenting, create
+  `~/.config/sway/config` — search position 2, which wins over the i3 path.
+  Track it as `dots/sway/config` so `sysbs` links it like the rest, and factor
+  the genuinely shared bindings out rather than maintaining two divergent
+  copies.
 - **`peek` runs under XWayland but captures only the cursor.** A neat, concrete
   demonstration of why it cannot be ported: an XWayland client sees only other
   XWayland surfaces, never native Wayland ones, so there is nothing underneath
@@ -298,9 +315,13 @@ aspirational.
 **`barrier` → `input-leap`.** Barrier 2.4.0 is X11-only. `.xinitrc` runs it as
 a server sharing keyboard and mouse with diego and george, so under sway it
 simply will not work. `input-leap` 3.0.3 is in `extra`; it is the maintained
-fork of barrier and has Wayland support. Migration is genuine work rather than
-a flag, and it is bilateral — the other machines run barrier too, so they have
-to move in step. Probably the single largest obstacle to daily sway use.
+fork of barrier and has Wayland support.
+
+Scope is smaller than it first looked: **george is dead** (sitting unpowered in
+the workshop as of 2026-10-26), so only **diego** has to move in step, and
+Hamish's plan is to migrate both ends at once rather than run a mixed setup.
+Still the largest piece of item 7, but a single coordinated change rather than
+an open-ended one.
 
 **`peek` → most likely `kooha`.** Peek 1.5.1 produces GIFs from a screen
 region, which is a rare and genuinely useful capability, and it is X11-only.
