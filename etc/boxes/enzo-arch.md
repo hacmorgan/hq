@@ -89,10 +89,6 @@ mainline entry.
 
 Root is `UUID=673c2ece-cd2d-49d7-8fb8-abf78009b61d`.
 
-`arch-lts.conf` deliberately keeps the old `nomodeset` flags. It is the
-known-good rescue entry and should be changed **only** after mainline has been
-stable for a good while — never in the same change as anything else.
-
 ### ESP budget
 
 600 MB is tight, and `mkinitcpio` has filled it before. The trap:
@@ -116,12 +112,24 @@ whole AMD set).
 
 If `kms` is ever restored, watch the ESP immediately.
 
-### Known wrinkle
+Default is **`arch.conf`** (mainline), set 2026-10-26 once mainline was proven.
 
-`/boot/loader/loader.conf` says `default arch-lts`, but `bootctl` reports
-**Arch** as the default. The `default` key matches against the entry *id*,
-which includes the `.conf` suffix — so a bare `arch-lts` appears not to match.
-Use `default arch-lts.conf` if LTS should genuinely be the default.
+`arch-lts.conf` deliberately keeps `nomodeset nvidia_drm.modeset=0` even though
+DKMS builds the driver for both kernels and it could run KMS. Its value as a
+rescue entry is being a *genuinely different* configuration — different kernel,
+different DKMS build, all the old workarounds on. If KMS itself ever turns out
+to be the problem, "everything off" is the fallback you want. The cost is only
+a low-res TTY on a boot you rarely see.
+
+### Gotcha: `default` must include `.conf`
+
+`loader.conf` previously read `default arch-lts` and silently matched nothing —
+`bootctl` kept reporting Arch as default. The `default` key is matched against
+the entry **id**, which includes the `.conf` suffix. Always write
+`default arch.conf`, not `default arch`.
+
+Note that `bootctl list` marks the running entry `(selected)`, which is *not*
+the same as `(default)`. Don't read one as confirmation of the other.
 
 ## Open items
 
@@ -147,4 +155,5 @@ pacman/yay caches and enabled `paccache.timer`; enabled KMS on mainline
 removed the `kms` hook to recover ~210 MB of ESP; deleted the dead
 `arch-fallback.conf` entry, which pointed at an
 `initramfs-linux-fallback.img` that is never generated (both presets are
-`PRESETS=('default')`).
+`PRESETS=('default')`); made mainline the boot default; and added these box
+records plus the `sysbs --install-hq-claude` wiring that installs `CLAUDE.md`.
