@@ -146,15 +146,34 @@ the same as `(default)`. Don't read one as confirmation of the other.
   (`5.19.13-arch1-1`, `6.0.2-arch1-1`, `6.14.7-arch2-1`).
 - Wayland has never been tried. KMS is now on for mainline, which was the
   blocker. `sway` is the natural first experiment given i3.
-- Board firmware F11 is from 2019 and has never been updated. Related:
-  `amd_pstate` fails to register at boot (`min_freq(0) … return -19`), so the
-  CPU falls back to `acpi-cpufreq` with the `schedutil` governor rather than
-  the better `amd_pstate` driver. Usually means CPPC is absent or disabled in
-  firmware — plausibly fixed by a BIOS update, which is its own risk.
-- `/boot` is mounted `fmask=0022,dmask=0022`, so it is world-readable and
-  `systemd-boot` warns on every boot that `/boot/loader/random-seed` "is world
-  accessible, which is a security hole". Fix is `fmask=0137,dmask=0077` in
-  `/etc/fstab`. Low severity on a single-user desktop, trivial to change.
+- **`amd_pstate` cannot load — firmware `_CPC` is incomplete.** Diagnosed
+  2026-10-26. CPPC itself is present: `/sys/devices/system/cpu/cpu0/acpi_cppc/`
+  exists and the *performance* fields are populated (`highest_perf=216`,
+  `nominal_perf=135`, `lowest_nonlinear_perf=79`, `lowest_perf=20`). But every
+  *frequency* field reads zero — `lowest_freq=0`, `nominal_freq=0`,
+  `guaranteed_perf=0` — so `amd_pstate` has no way to map a performance level
+  onto MHz and bails with `-ENODEV`.
+
+  (The absent `cppc` CPU flag is a red herring: that flag is the MSR-based
+  CPPC of Zen 3+. Zen 2 uses the ACPI shared-memory interface, which is why
+  the sysfs directory exists at all.)
+
+  The cost is coarse scaling. `acpi-cpufreq` exposes exactly **three** P-states
+  — 3800 / 2800 / 2200 MHz — with `schedutil` on top, instead of the continuous
+  range and EPP control `amd_pstate` would give. Not a correctness problem;
+  worse power efficiency and slower frequency response.
+
+  The only real fix is a firmware update, since the zeroed `_CPC` is the
+  board's. F11 dates to 2019-12-06 and Gigabyte shipped later BIOSes (Ryzen
+  5000 support arrived well after), so newer definitely exists — but BIOS files
+  are specific to board **revision 1.0 vs 1.1**, so check which this is first.
+  Weigh it properly: a six-year-old board that currently boots reliably, a
+  Windows dual-boot, and a CMOS reset that would need everything reconfigured.
+  Low priority, non-zero risk, real but modest payoff.
+- `/mnt/storage` (the 3.6 TB NTFS drive) mounts as `fuseblk` — the userspace
+  `ntfs-3g` driver — not the in-kernel `ntfs3`. `findmnt --verify` flags it as
+  "ntfs seems unsupported by the current kernel". Works fine; `ntfs3` would be
+  considerably faster for large transfers.
 
 ## Change log
 
@@ -169,3 +188,6 @@ removed the `kms` hook to recover ~210 MB of ESP; deleted the dead
 `PRESETS=('default')`); made mainline the boot default; and added these box
 records plus the `sysbs --install-hq-claude` wiring that installs `CLAUDE.md`.
 Both initramfs images rebuilt and verified booting; ESP ended at 88 MB (15%).
+Tightened `/boot` to `fmask=0137,dmask=0077` (was `0022`/`0022`), silencing
+systemd-boot's "random seed file is world accessible" warning. Note vfat
+ignores these on `remount` — it took a full umount/mount to take effect.
