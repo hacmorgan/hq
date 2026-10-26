@@ -78,6 +78,43 @@ shipped by the driver package. That blacklist is load-bearing — it is the only
 thing keeping nouveau off the GPU now that `nomodeset` is gone from the
 mainline entry.
 
+## Audio — PulseAudio, with PipeWire fenced off
+
+This box runs **PulseAudio** (17.0) as its sound server, not `pipewire-pulse`.
+That is a historical state, not a considered choice, and it became a live
+constraint on 2026-10-26.
+
+**What happened.** Installing `kooha` and `xdg-desktop-portal-wlr` for Wayland
+screencast pulled in `pipewire-audio`, `wireplumber` and
+`pipewire-session-manager` as hard dependencies. On the next boot WirePlumber
+started alongside PulseAudio and its ALSA monitor claimed
+`/dev/snd/controlC0..3`. Two session managers then held the same cards,
+neither could open the PCM devices, every sink and source sat `SUSPENDED`,
+and playback died with:
+
+```
+pulseaudio[1459]: Failed to create sink input: sink is suspended.
+```
+
+Symptom at the desk: YouTube and YouTube Music silent, microphone dead.
+Nothing in the UI said why, and **a reboot does not help** — both daemons are
+enabled, so they simply resume fighting.
+
+**The fix** is `~/.config/wireplumber/wireplumber.conf.d/50-no-alsa.conf`,
+which disables WirePlumber's `monitor.alsa` and `monitor.alsa-midi` profiles.
+WirePlumber keeps running and still enumerates *video* devices, so the
+screencast portal that needed it in the first place is unaffected; PulseAudio
+keeps every sound card to itself. Verified after the change: `wpctl status`
+shows an empty Audio section and a populated Video one, and `fuser /dev/snd/*`
+names only `pulseaudio`.
+
+**Why not just mask WirePlumber:** that would take the Wayland screencast
+portal down with it, which is the one thing it was installed for.
+
+**This file is not yet tracked in `dots/`** — it lives only in `~/.config`, so
+a reinstall would lose it and the fault would return silently. See backlog
+item 8.
+
 ## Boot
 
 **systemd-boot.** ESP is `/dev/nvme0n1p1` (600 MB) at `/boot`.
@@ -387,7 +424,38 @@ Keep both: `peek` for i3/X11, `kooha` for sway. That also means item 6 cannot
 be evaluated on screen-recording grounds from the X session — the comparison
 has to happen inside sway.
 
+### 8. Decide the audio stack: stay on PulseAudio, or migrate to PipeWire
+
+The 2026-10-26 conflict is contained, not resolved. Two coherent end states,
+and the box is currently in neither:
+
+- **Stay on PulseAudio.** Keep `50-no-alsa.conf` and *track it in `dots/`* so
+  `sysbs` links it. This is the small job and should be done regardless — an
+  untracked config is the difference between a reinstall that works and one
+  that is silently mute. Note that `pulseaudio` is installed only as a
+  dependency of `pulsemixer`; mark it explicit if it is to be the real stack,
+  or `--remove-orphans` may one day offer to take the sound server away.
+- **Migrate to PipeWire.** Install `pipewire-pulse`, remove `pulseaudio`,
+  delete `50-no-alsa.conf`. This is where Arch and the Wayland tooling are
+  both heading, and it removes the conflict at the root rather than fencing it
+  off. `pulsemixer` speaks the Pulse protocol and keeps working. The risk is
+  the **PreSonus AudioBox 22 VSL** — a USB interface whose profile and routing
+  would need re-selecting, which is exactly the kind of thing to attempt on a
+  day when being without audio is survivable.
+
+Do not leave it half-migrated: having both audio servers installed and enabled
+is precisely the fault above.
+
 ## Change log
+
+**2026-10-27** — YouTube/YTMusic silent and microphone dead. Cause was *not*
+sway, which was the natural suspicion: it was the previous day's `kooha` /
+`xdg-desktop-portal-wlr` install dragging in WirePlumber, which fought
+PulseAudio for the ALSA cards (see Audio, above). Fenced WirePlumber off the
+sound hardware with `~/.config/wireplumber/wireplumber.conf.d/50-no-alsa.conf`
+and restored audio live, without a reboot. Playback and capture both verified
+by measurement rather than assumption. Added backlog item 8 — the config is
+untracked, and the PulseAudio/PipeWire question is deferred, not answered.
 
 **2026-10-26** — `pacman -Syu` broke mainline graphics (DKMS failed against
 kernel 7.2.11; driver was 580.159.04). Fixed by updating the AUR driver to
