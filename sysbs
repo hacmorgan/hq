@@ -125,16 +125,16 @@ function configure_git
 function configure_emacs
 {
     type -p emacs > /dev/null || say "warning: emacs is not installed"
+    # Deliberately ignores --move-existing. ~/.emacs.d is a live config that may
+    # hold local work not present in hacmorgan/emacs, so it is never moved or
+    # clobbered automatically -- warn and skip, and let a human sort it out.
     if [[ -e ~/.emacs.d ]]; then
-        if (( options_move_existing )); then
-            if (( options_dry_run )); then
-                say "mv ~/.emacs.d ~/.emacs.d.old"
-            else
-                mv ~/.emacs.d ~/.emacs.d.old
-            fi
-        else
-            die "~/.emacs.d already exists, use --move-existing to move it to ~/.emacs.d.old"
-        fi
+        say "${fmt_yellow}${fmt_bold}WARNING: ~/.emacs.d exists -- skipping emacs setup.${fmt_reset}"
+        say "${fmt_yellow}It is not being moved, cloned over, or backed up.${fmt_reset}"
+        say "${fmt_yellow}Check what is there first: it may be an out-of-date clone of${fmt_reset}"
+        say "${fmt_yellow}hacmorgan/emacs, or it may hold local work that exists nowhere else.${fmt_reset}"
+        say "${fmt_yellow}Resolve it by hand, then re-run: sysbs --configure-emacs${fmt_reset}"
+        return
     fi
     if (( options_dry_run )); then
         say "clone hacmorgan/emacs into ~/.emacs.d, plus copilot.el"
