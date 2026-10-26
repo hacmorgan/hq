@@ -78,42 +78,55 @@ shipped by the driver package. That blacklist is load-bearing — it is the only
 thing keeping nouveau off the GPU now that `nomodeset` is gone from the
 mainline entry.
 
-## Audio — PulseAudio, with PipeWire fenced off
+## Audio — PipeWire
 
-This box runs **PulseAudio** (17.0) as its sound server, not `pipewire-pulse`.
-That is a historical state, not a considered choice, and it became a live
-constraint on 2026-10-26.
+Migrated from PulseAudio to **PipeWire** on 2026-10-27. One server now handles
+audio *and* video: `pipewire` is the graph engine, `wireplumber` is the policy
+layer that decides what devices exist and where streams go, and
+`pipewire-pulse` is a shim speaking the PulseAudio protocol on the usual
+socket.
 
-**What happened.** Installing `kooha` and `xdg-desktop-portal-wlr` for Wayland
-screencast pulled in `pipewire-audio`, `wireplumber` and
-`pipewire-session-manager` as hard dependencies. On the next boot WirePlumber
-started alongside PulseAudio and its ALSA monitor claimed
-`/dev/snd/controlC0..3`. Two session managers then held the same cards,
-neither could open the PCM devices, every sink and source sat `SUSPENDED`,
-and playback died with:
+Nothing was ported. `pulsemixer`, the `i3status-rs` sound block, browsers and
+VLC all link `libpulse` and reconnected without noticing — `pactl info`
+reports `Server Name: PulseAudio (on PipeWire 1.6.10)`. Device names survived
+the swap verbatim (`alsa_output.pci-0000_0a_00.4.analog-stereo` and friends),
+so per-application device preferences carried over too.
+
+**Why this happened.** The day before, installing `kooha` and
+`xdg-desktop-portal-wlr` for Wayland screencast pulled in `wireplumber` as a
+hard dependency. It started beside PulseAudio and its ALSA monitor claimed
+`/dev/snd/controlC0..3`; two session managers then held the same cards,
+neither could open the PCM devices, every sink sat `SUSPENDED`, and playback
+died with `Failed to create sink input: sink is suspended`. The first fix
+fenced WirePlumber off ALSA. Migrating properly removes the cause instead:
+there is now exactly one thing managing the sound cards, which is the point.
+
+**Two gains that were not the goal:**
+
+- The onboard ALC887 capture input (`alsa_input.pci-0000_0a_00.4`) is now
+  exposed. PulseAudio ran that card on an output-only profile and never
+  offered it.
+- Screencast and camera share the graph with audio, which is the arrangement
+  the Wayland portal wanted all along (item 6).
+
+### jack2 is deliberately still installed
+
+`carla`, `lmms` and `audacity` are present, and `jack2` was left alone —
+`pipewire-jack` *conflicts* with it, so adopting it is a separate decision
+with its own risk. See backlog item 8. Until then JACK and PipeWire are two
+servers that both want the hardware, so they must not run at once; this is the
+same class of fault as the one above, merely dormant because `jackd` is not
+started automatically.
+
+### If audio ever goes silent again
+
+Check for more than one daemon on the cards before anything else:
 
 ```
-pulseaudio[1459]: Failed to create sink input: sink is suspended.
+fuser -v /dev/snd/*      # should name wireplumber, and nothing else
+wpctl status             # Audio section should be populated
+pactl info               # should say "(on PipeWire ...)"
 ```
-
-Symptom at the desk: YouTube and YouTube Music silent, microphone dead.
-Nothing in the UI said why, and **a reboot does not help** — both daemons are
-enabled, so they simply resume fighting.
-
-**The fix** is `~/.config/wireplumber/wireplumber.conf.d/50-no-alsa.conf`,
-which disables WirePlumber's `monitor.alsa` and `monitor.alsa-midi` profiles.
-WirePlumber keeps running and still enumerates *video* devices, so the
-screencast portal that needed it in the first place is unaffected; PulseAudio
-keeps every sound card to itself. Verified after the change: `wpctl status`
-shows an empty Audio section and a populated Video one, and `fuser /dev/snd/*`
-names only `pulseaudio`.
-
-**Why not just mask WirePlumber:** that would take the Wayland screencast
-portal down with it, which is the one thing it was installed for.
-
-**This file is not yet tracked in `dots/`** — it lives only in `~/.config`, so
-a reinstall would lose it and the fault would return silently. See backlog
-item 8.
 
 ## Boot
 
@@ -424,29 +437,34 @@ Keep both: `peek` for i3/X11, `kooha` for sway. That also means item 6 cannot
 be evaluated on screen-recording grounds from the X session — the comparison
 has to happen inside sway.
 
-### 8. Decide the audio stack: stay on PulseAudio, or migrate to PipeWire
+### 8. `pipewire-jack` — unify the pro-audio side, or keep jack2
 
-The 2026-10-26 conflict is contained, not resolved. Two coherent end states,
-and the box is currently in neither:
+The audio server question is **settled** (PipeWire, see above). What remains is
+JACK. `carla`, `lmms` and `audacity` are installed alongside `jack2`.
 
-- **Stay on PulseAudio.** Keep `50-no-alsa.conf` and *track it in `dots/`* so
-  `sysbs` links it. This is the small job and should be done regardless — an
-  untracked config is the difference between a reinstall that works and one
-  that is silently mute. Note that `pulseaudio` is installed only as a
-  dependency of `pulsemixer`; mark it explicit if it is to be the real stack,
-  or `--remove-orphans` may one day offer to take the sound server away.
-- **Migrate to PipeWire.** Install `pipewire-pulse`, remove `pulseaudio`,
-  delete `50-no-alsa.conf`. This is where Arch and the Wayland tooling are
-  both heading, and it removes the conflict at the root rather than fencing it
-  off. `pulsemixer` speaks the Pulse protocol and keeps working. The risk is
-  the **PreSonus AudioBox 22 VSL** — a USB interface whose profile and routing
-  would need re-selecting, which is exactly the kind of thing to attempt on a
-  day when being without audio is survivable.
+Under the old arrangement, desktop audio and JACK were separate worlds and
+running a DAW meant getting PulseAudio off the card first. `pipewire-jack`
+collapses that: JACK clients become ordinary nodes in the same graph as the
+browser, so Carla and LMMS can run without evicting anything.
 
-Do not leave it half-migrated: having both audio servers installed and enabled
-is precisely the fault above.
+The cost is that `pipewire-jack` **conflicts with `jack2`** and provides
+`libjack.so` itself, so this is a swap, not an addition — and the **PreSonus
+AudioBox 22 VSL** is the thing to watch, since latency and buffer settings are
+configured differently (`pipewire.conf` quantum rather than `jackd -p`).
+
+Worth doing on a day with time to re-test a DAW project. Until then, do not
+start `jackd` while PipeWire holds the cards.
 
 ## Change log
+
+**2026-10-27 (later)** — Migrated the audio stack from PulseAudio to PipeWire:
+installed `pipewire-pulse` and `pipewire-alsa`, which removed `pulseaudio`, and
+retired the previous day's `50-no-alsa.conf` fence since WirePlumber is now
+meant to own the cards. Restored the prior default sink/source and volumes,
+which WirePlumber had reassigned to the AudioBox. Verified by measurement:
+playback stream opens, mic captures real signal, `pulsemixer` and the
+`i3status-rs` sound block reconnected through the shim unaided. `jack2` left
+installed and untouched — see item 8.
 
 **2026-10-27** — YouTube/YTMusic silent and microphone dead. Cause was *not*
 sway, which was the natural suspicion: it was the previous day's `kooha` /
