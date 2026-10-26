@@ -156,11 +156,25 @@ down at idle. Measured 2026-10-26 at load average 0.03:
 Three independent levers, cheapest first. They are not alternatives; 1 and 2
 are worth doing regardless of 3.
 
-**(a) Fan curve hysteresis — free, no flashing.** Gigabyte Smart Fan 5 in the
-existing F11 BIOS has step-up/step-down time and temperature hysteresis
-settings. Oscillation ("spinning up and down") is usually a curve that reacts
-too fast, and this targets it directly without touching anything else. Try this
-first. `fancontrol` from `lm_sensors` is the software equivalent if the BIOS
+**(a) Fan curve hysteresis — free, no flashing. Try this first.**
+
+*Hysteresis* means a system's response depends on its recent history, not just
+its present input — the threshold to switch one way sits apart from the
+threshold to switch back. A house thermostat is the everyday case: it starts
+heating at 19 °C but does not stop until 21 °C. Without that gap it would
+chatter on and off around a single setpoint. The deliberate "stickiness" is the
+point.
+
+A fan curve with no hysteresis does exactly that chattering. Sitting at the
+temperature where the curve steps up, the fan speeds up, which cools the chip,
+which drops it below the threshold, so the fan slows, so it heats again. That
+audible up-down-up cycle is the symptom here, and it is a control-loop problem
+rather than a cooling one.
+
+Gigabyte Smart Fan 5 in the existing F11 BIOS exposes temperature hysteresis
+plus step-up/step-down times (how long a reading must persist before the fan
+reacts). Widening both damps the oscillation without changing peak cooling at
+all. `fancontrol` from `lm_sensors` is the software equivalent if the BIOS
 options prove too coarse.
 
 **(b) Thermal interface — cheap, an hour.** The build is around six years old.
@@ -204,36 +218,65 @@ fan ramps. But if the real problem is (b), then (c) will disappoint, and it is
 by far the most expensive of the three. Do (a) and (b) first and re-measure
 idle temps before deciding.
 
-### 2. `opencl-nvidia` version mismatch
+### 2. `nvidia-container-*` file conflict
 
-`opencl-nvidia` 615.78.08 is installed from the normal repos while the driver
-is on the 580 branch. The AUR has a matching `opencl-nvidia-580xx`, **not**
-installed. Untested whether OpenCL works at all right now — worth finding out,
-since it may be silently broken and nothing would have told anyone.
+`nvidia-container-runtime` / `nvidia-container-toolkit` have a file conflict
+over `/usr/bin/nvidia-container-runtime`; `pacman -Dk` exits 1. Database
+hygiene rather than a live failure.
 
-### 3. `nvidia-container-*` file conflict
-
-`nvidia-container-runtime` / `nvidia-container-toolkit` have a file conflict;
-`pacman -Dk` exits 1. Database hygiene rather than a live failure.
-
-### 4. Orphaned kernel module directories
+### 3. Orphaned kernel module directories
 
 `/usr/lib/modules/{5.19.13-arch1-1, 6.0.2-arch1-1, 6.14.7-arch2-1}` from
 long-gone kernels. About 6.8 MB. Two minutes.
 
-### 5. `ntfs3` for `/mnt/storage`
+### 4. `ntfs3` for `/mnt/storage`
 
 The 3.6 TB NTFS drive mounts as `fuseblk` — userspace `ntfs-3g` — not the
 in-kernel `ntfs3`. `findmnt --verify` flags it. Works fine, but `ntfs3` is
 considerably faster for large transfers.
 
+### 5. `cuda` 13.4.3 against a 580-branch driver
+
+Worth verifying rather than assuming. CUDA 13.x wants a recent driver and the
+580 branch is roughly its floor, so this may be fine — but it has never been
+tested, and the OpenCL mismatch below shows this class of problem fails
+silently.
+
 ### 6. Wayland — aspirational, low priority
 
-Never tried. KMS on mainline was the blocker and is now resolved, so the
-experiment is available whenever it is wanted. Hamish has explicitly said not
-to put much stock in this: it is a someday-maybe, not a goal driving other
-decisions. `sway` is the natural first step from i3, installed alongside X
-rather than replacing it.
+Hamish has explicitly said not to put much stock in this: a someday-maybe, not
+a goal driving other decisions. Groundwork done 2026-10-26 so the experiment is
+cheap whenever it is wanted.
+
+`sway`, `swaybg`, `xorg-xwayland` and `wl-clipboard` are installed. Nothing
+about the X setup was changed.
+
+**How it starts — not via `.xinitrc`.** That file is consumed by
+`startx`/`xinit`, which launches an *X server*. Sway is a Wayland compositor
+and replaces the X server outright, so it reads none of it. `~/.zprofile` runs
+`exec startx` only on `$XDG_VTNR -eq 1`, so tty1 keeps booting into i3
+untouched; switch to another TTY and run `sway` to try it. No login manager is
+involved, and nothing needs changing to go back.
+
+**Requires the mainline boot.** Sway needs DRM/KMS. The `arch-lts` entry still
+carries `nomodeset nvidia_drm.modeset=0` and lands on `simpledrm`, so sway
+cannot work there at all. Use `arch`, which has `nvidia_drm.modeset=1`.
+
+**The real blocker is `barrier`.** Barrier 2.4.0 is X11-only, and `.xinitrc`
+starts it as a server sharing keyboard and mouse with diego and george. Under
+sway it will not work. `input-leap` (3.0.3, in `extra`) is the maintained fork
+with Wayland support and is the migration path, but it is a genuine piece of
+work rather than a flag. Assume daily sway use is blocked until this is solved.
+
+**Other things in the X config needing Wayland equivalents:** `picom` becomes
+unnecessary (sway composites natively); `feh --bg-*` becomes `swaybg` /
+`output * bg`; `xset r rate` and `numlockx` become sway `input` directives;
+`xset s`/`dpms` and `xss-lock` become `swayidle` + `swaylock`; and
+`configure-xinput` becomes sway `input` config.
+
+`sway --help` no longer lists `--unsupported-gpu`, which suggests recent
+wlroots no longer needs it for the proprietary NVIDIA driver — unverified,
+since it has not been run yet.
 
 ## Change log
 
@@ -251,3 +294,11 @@ Both initramfs images rebuilt and verified booting; ESP ended at 88 MB (15%).
 Tightened `/boot` to `fmask=0137,dmask=0077` (was `0022`/`0022`), silencing
 systemd-boot's "random seed file is world accessible" warning. Note vfat
 ignores these on `remount` — it took a full umount/mount to take effect.
+
+Also fixed OpenCL, which was **entirely broken**: `clinfo` reported
+`Number of platforms: 0`. The repo `opencl-nvidia` 615.78.08 was installed
+against a 580-branch kernel driver. Replaced with `opencl-nvidia-580xx`
+580.196.07 from the AUR, which `provides opencl-nvidia` so `cuda`'s dependency
+survives the swap. Now reports one platform, GTX 980, OpenCL 3.0, 16 compute
+units. Nothing would ever have reported this failure on its own — worth
+remembering for the other version-mismatch items above.
