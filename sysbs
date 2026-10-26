@@ -526,7 +526,9 @@ function install_hq_claude
     fi
 
     # Register in marketplace.json (add hq alongside existing plugins)
-    if [[ -f "$marketplace" ]]; then
+    if (( options_dry_run )); then
+        say "register hq plugin in $marketplace"
+    elif [[ -f "$marketplace" ]]; then
         python3 - "$marketplace" <<'PYEOF'
 import json, sys
 path = sys.argv[1]
@@ -547,7 +549,9 @@ PYEOF
     fi
 
     # Enable in settings.json
-    if [[ -f "$settings" ]]; then
+    if (( options_dry_run )); then
+        say "enable hq plugin in $settings"
+    elif [[ -f "$settings" ]]; then
         python3 - "$settings" <<'PYEOF'
 import json, sys
 path = sys.argv[1]
@@ -734,7 +738,7 @@ function options
 --enable-ssh-agent; Enable and start the systemd user ssh-agent service
 --enable-systemd-services; Enable services symlinked by --symlink-systemd-services
 --install-claude; Install Claude Code via the official install script
---install-hq-claude; Symlink hq Claude plugin into ~/.claude/plugins/hq and register it
+--install-hq-claude; Symlink hq Claude plugin into ~/.claude/plugins/hq, register it, and link CLAUDE.md into ~/.claude/
 --install-mattpocock-skills; Clone mattpocock/skills into ~/.claude/plugins/mattpocock and register it
 --install-cpp-manpages; Install C++ stdlib manpages using https://github.com/jeaye/stdman
 --install-fonts; Unpack fantasque (noLoopK) and FiraCode (ligatures) to /usr/share/fonts/fantasque
@@ -769,6 +773,7 @@ STANDARD_OPERATIONS=(
     --install-oh-my-zsh
     --install-python-module
     --install-zellij
+    --install-hq-claude
     --install-hq-secret
     --move-existing
     --no-sudo
