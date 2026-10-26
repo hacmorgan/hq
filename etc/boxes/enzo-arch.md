@@ -272,9 +272,21 @@ unnecessary (sway composites natively); `feh --bg-*` becomes `swaybg` /
 `xset s`/`dpms` and `xss-lock` become `swayidle` + `swaylock`; and
 `configure-xinput` becomes sway `input` config.
 
-`sway --help` no longer lists `--unsupported-gpu`, which suggests recent
-wlroots no longer needs it for the proprietary NVIDIA driver — unverified,
-since it has not been run yet.
+**Sway was run for the first time on 2026-10-26 and works.** Findings:
+
+- It shows a banner: *"Proprietary GPU drivers are not supported by sway. Do
+  not report issues."* This is a disclaimer, not a failure — sway runs fine.
+  (An earlier note here claimed `--unsupported-gpu` was gone because
+  `sway --help` does not list it. That was wrong: `--help` is abridged to six
+  options. The flag still exists, and the banner itself says to pass
+  `--unsupported-gpu` or set `SWAY_UNSUPPORTED_GPU=true` to silence it.)
+- **`i3status-rust` 0.36.2 works unchanged.** swaybar speaks the same protocol
+  as i3bar, so the status bar is one less thing to port.
+- **`peek` runs under XWayland but captures only the cursor.** A neat, concrete
+  demonstration of why it cannot be ported: an XWayland client sees only other
+  XWayland surfaces, never native Wayland ones, so there is nothing underneath
+  it to capture. Not a bug to fix — it is the isolation model working as
+  designed, and exactly the wall its author hit.
 
 ### 7. X11-only tooling that must be replaced before Wayland is viable
 
