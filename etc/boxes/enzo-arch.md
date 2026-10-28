@@ -128,6 +128,63 @@ wpctl status             # Audio section should be populated
 pactl info               # should say "(on PipeWire ...)"
 ```
 
+## Flatpak — two traps, both non-obvious
+
+Only one app is installed (`org.cloudcompare.CloudCompare`), but it brings two
+failure modes worth knowing before they bite again.
+
+### GL extensions are pinned to the exact host driver
+
+A flatpak ships its own userspace GL stack, which must match the host kernel
+module **exactly** — `org.freedesktop.Platform.GL.nvidia-<version>`. So every
+time the host NVIDIA driver moves, the installed extension is orphaned and GPU
+apps silently lose acceleration until the matching one is fetched.
+
+This is a standing consequence of the AUR driver situation in Graphics: each
+`nvidia-580xx-dkms` bump breaks flatpak GPU apps until `flatpak update` runs.
+Nothing warns you; the app just fails or falls back to software.
+
+**Flatpak never garbage-collects the old ones.** By 2026-10-27 that had
+accumulated 31 extensions spanning the 510 (2022) to 580 series, at 560–900 MB
+each — about 17 GB of the 21 GB flatpak store, none of which matched the
+running driver. `flatpak uninstall --unused` reclaimed it, taking the store to
+3.7 GB. Expect this to creep back; see backlog item 9.
+
+### Flatpak file dialogs hang when SSHFS mounts die
+
+A sandboxed app cannot draw its own file chooser — it has no view of the
+filesystem — so the dialog is a **separate top-level window owned by
+`xdg-desktop-portal-gtk`**, and the app merely waits on a D-Bus reply.
+
+The GTK chooser stats every entry in `~/.config/gtk-3.0/bookmarks` to draw its
+sidebar. Those bookmarks point at `/mnt/vault`, `/mnt/pond`, `/mnt/rapid`,
+`/mnt/2204` and `/mnt/work*` — the SSHFS mounts. When the VPN drops behind
+them, stat blocks forever and the portal's main loop wedges.
+
+**The important part: unmounting afterwards does not fix it.** Clearing the
+mount frees the path, but a process already blocked stays blocked, and
+`xdg-desktop-portal-gtk` is a long-lived session daemon — observed carrying
+the wedge for 1 day 18 hours, breaking every file dialog opened since.
+
+Diagnosis, because the symptom misleads. The *app* looks stuck but is in
+ordinary interruptible `poll()`; it is the portal that is blocked:
+
+```
+ps -o stat,wchan <app pid>     # Sl+ / poll_... = waiting on D-Bus, not I/O
+                               # D state would mean a genuinely dead mount
+gdbus call ... Peer.Ping                  # answers even when wedged
+gdbus call ... Settings.ReadAll '[]'      # times out iff the main loop is stuck
+```
+
+`Ping` is served by GDBus's worker thread, so it replying while a real method
+call hangs is the signature of a blocked main loop, not a healthy daemon.
+
+**Fix: `systemctl --user restart xdg-desktop-portal-gtk`** — restart the
+backend, not the application. The pending request fails cleanly and the app
+usually survives with its state intact. Native GTK apps (GIMP, etc.) are
+unaffected: they draw their own chooser in-process and never involve the
+portal, so only flatpaks are at risk.
+
 ## Boot
 
 **systemd-boot.** ESP is `/dev/nvme0n1p1` (600 MB) at `/boot`.
@@ -455,7 +512,35 @@ configured differently (`pipewire.conf` quantum rather than `jackd -p`).
 Worth doing on a day with time to re-test a DAW project. Until then, do not
 start `jackd` while PipeWire holds the cards.
 
+### 9. Teach `sysbs` to sweep unused flatpak refs
+
+`flatpak uninstall --unused` is the flatpak analogue of `--remove-orphans`, and
+nothing runs it automatically. Left alone it re-accumulates a GL extension per
+driver update, which is how 17 GB built up unnoticed.
+
+Safer than the pacman orphan list (item 2), since anything removed is simply
+re-downloaded, so it is a reasonable candidate for standard operations rather
+than a prompt. Worth pairing with a `flatpak update`, because the same driver
+bump that orphans the old extension is what requires the new one.
+
 ## Change log
+
+**2026-10-28** — CloudCompare had lost GPU acceleration: the 2026-10-26 driver
+bump to 580.196.07 orphaned its flatpak GL extension, which must match the
+host driver exactly. Swept 31 accumulated extensions (510-series onward) with
+`flatpak uninstall --unused`, taking the store from 21 GB to 3.7 GB, and
+updated — which also migrated CloudCompare off the end-of-life
+`org.kde.Platform 5.15-24.08` onto 6.11.
+
+Separately, a flatpak file dialog hung with every symptom of a dead SSHFS
+mount while no dead mount existed. The culprit was `xdg-desktop-portal-gtk`,
+wedged 1d18h earlier when the VPN dropped behind the mounts its bookmarks
+point at; unmounting had not released it. Restarting the backend fixed it
+without losing the application. Both recorded above.
+
+Also fixed `$refresh_i3status`, which had been signalling `i3status` while the
+bar runs as `i3status-rs`. Cosmetic only — the sound block is event-driven and
+was never stale.
 
 **2026-10-27 (later)** — Migrated the audio stack from PulseAudio to PipeWire:
 installed `pipewire-pulse` and `pipewire-alsa`, which removed `pulseaudio`, and
