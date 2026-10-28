@@ -84,6 +84,7 @@ Finished work is archived, not deleted. `~/src/abyss/closed-work/YYYY-MM.md` hol
 python3 ~/src/abyss/.open-work/closed_work.py archive --dry-run   # what would move
 python3 ~/src/abyss/.open-work/closed_work.py archive             # move every done thread
 python3 ~/src/abyss/.open-work/closed_work.py find TERM           # search every month
+python3 ~/src/abyss/.open-work/closed_work.py fold SRC INTO       # merge thread SRC into INTO
 ```
 
 **When the user asks about past work** — "what happened with X", "when did Y land", "didn't we

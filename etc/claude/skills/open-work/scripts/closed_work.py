@@ -12,6 +12,7 @@ can be read on its own.
   python3 closed_work.py archive              move every `done` thread out of OPEN_WORK.md
   python3 closed_work.py archive SLUG ...     move just these (must be `done`)
   python3 closed_work.py archive --dry-run    say what would move
+  python3 closed_work.py fold SRC INTO        fold thread SRC into thread INTO, archiving SRC
   python3 closed_work.py find TERM            search every month (slug, title, PR, ticket)
 """
 
@@ -128,6 +129,52 @@ def archive(slugs: list, dry_run: bool) -> None:
         print(f"archived {len(chosen)} thread(s)")
 
 
+# --- fold one thread into another ---
+
+def fold(source: str, target: str) -> None:
+    """
+    Merge `source` into `target`: its Next becomes a sub-bullet under the target's Next, its
+    whole block goes to this month's "Merged into other threads", and the target is dated.
+    """
+    text = tracker.TRACKER.read_text()
+    by_slug = {thread["slug"]: thread for thread in tracker.parse_threads(text)}
+    for slug in (source, target):
+        if slug not in by_slug:
+            sys.exit(f"no such thread: {slug}")
+    today = datetime.date.today().isoformat()
+    moved = by_slug[source]
+    status = moved["fields"].get("status", "?")
+    next_step = moved["fields"].get("next", "—")
+    if len(next_step) > 500:
+        next_step = next_step[:500].rsplit(" ", 1)[0] + " …"
+    sub_bullet = (f"  - **Folded in from `{source}` ({today}) — {moved['title']}** (was `{status}`, "
+                  f"{moved['fields'].get('priority', '?')}). Next was: {next_step} "
+                  f"Full text: `closed-work/{today[:7]}.md`.")
+
+    text = re.sub(re.escape(moved["raw"]) + r"\n+", "", text, count=1)
+    lines = text.split("\n")
+    start = next(i for i, line in enumerate(lines) if line.startswith(f"### {target} "))
+    end = next(i for i in range(start + 1, len(lines))
+               if lines[i].startswith(("### ", "## ", "<!-- BEGIN")))
+    next_line = next((i for i in range(start, end) if lines[i].startswith("- **Next:**")), None)
+    if next_line is None:
+        sys.exit(f"{target} has no Next: field to fold under")
+    insert_at = next_line + 1
+    while lines[insert_at].startswith("  "):
+        insert_at += 1
+    lines.insert(insert_at, sub_bullet)
+    updated = next((i for i in range(start, end + 1) if lines[i].startswith("- **Updated:**")), insert_at + 1)
+    lines.insert(updated, f"- **Updated:** {today} — folded in `{source}` (one piece of work); its block is "
+                          f"archived in `closed-work/{today[:7]}.md`.")
+    tracker.TRACKER.write_text("\n".join(lines))
+    path = month_file(today)
+    if "## Merged into other threads" not in path.read_text():
+        path.write_text(path.read_text().rstrip("\n") + "\n\n## Merged into other threads\n")
+    insert_under(path, "## Merged into other threads",
+                 f"### — Merged {today} into {target}\n\n{moved['raw']}")
+    print(f"folded {source} into {target}")
+
+
 # --- log PRs that left the open list ---
 
 def thread_for_url(url: str, threads: list) -> str:
@@ -187,11 +234,16 @@ def main():
     archive_parser = commands.add_parser("archive")
     archive_parser.add_argument("slugs", nargs="*")
     archive_parser.add_argument("--dry-run", action="store_true")
+    fold_parser = commands.add_parser("fold")
+    fold_parser.add_argument("source")
+    fold_parser.add_argument("target")
     find_parser = commands.add_parser("find")
     find_parser.add_argument("term")
     args = parser.parse_args()
     if args.command == "archive":
         archive(args.slugs, dry_run=args.dry_run)
+    elif args.command == "fold":
+        fold(args.source, args.target)
     else:
         find(args.term)
 
