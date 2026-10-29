@@ -188,7 +188,22 @@
     font-family:var(--display); font-weight:700; font-size:1.15rem;
   }
   .lane-lede { color:var(--ink-soft); font-size:0.9rem; margin:0 0 0.8rem; }
-  .lane-body { display:grid; gap:0.8rem; }
+  /* one row per priority, scrolled sideways; a long card scrolls inside itself so the
+     row stays a readable height */
+  .lane-body {
+    display:flex; gap:0.8rem; align-items:flex-start; overflow-x:auto;
+    scroll-snap-type:x proximity; padding-bottom:0.6rem; overscroll-behavior-x:contain;
+  }
+  .lane-body > .thread {
+    flex:0 0 min(27rem, calc(100vw - 3rem)); scroll-snap-align:start;
+    max-height:78vh; overflow-y:auto;
+  }
+  .lane-body .tf { grid-template-columns:1fr; gap:0; }
+  .lane-body .tf-key { display:block; margin-top:0.45rem; }
+  .tf-val ul { margin:0.25rem 0 0.1rem; padding-left:1.1rem; }
+  .tf-val li { margin:0.15rem 0; }
+  .history { margin-top:0.35rem; font-size:0.85rem; color:var(--ink-soft); }
+  .history > summary { cursor:pointer; }
   .lane[data-lane="parked"] .lane-body { opacity:0.72; }
   .thread .slug { color:var(--ink-soft); }
   .thread.is-parked { opacity:0.6; }

@@ -37,14 +37,21 @@ def parse_threads(markdown: str) -> list:
         lines = block.splitlines()
         heading = lines[0].strip()
         fields, body, last_field, in_fields = {}, [], None, True
+        # `fields` joins continuation lines into one string, which every script relies on;
+        # `field_lines` keeps them apart so the board can render nested bullets
+        field_lines, updates = {}, []
         for line in lines[1:]:
             match = re.match(r"^- \*\*([^:]+):\*\*\s*(.*)$", line)
             if match:
                 last_field = match.group(1).strip().lower()
                 fields[last_field] = match.group(2).strip()
+                field_lines[last_field] = [match.group(2).strip()]
+                if last_field == "updated":
+                    updates.append(field_lines[last_field])
                 in_fields = True
             elif in_fields and last_field and line.startswith("  ") and line.strip():
                 fields[last_field] += " " + line.strip()
+                field_lines[last_field].append(line[2:].rstrip())
             elif line.strip().startswith("---"):
                 in_fields = False
             elif line.strip():
@@ -57,6 +64,9 @@ def parse_threads(markdown: str) -> list:
             "slug": slug.strip(),
             "title": title.strip() or heading,
             "fields": fields,
+            "field_lines": field_lines,
+            # every Updated: line, newest first as written; `fields` keeps only the last
+            "updates": updates,
             "paragraphs": [p.strip() for p in " \n".join(body).split("\n \n") if p.strip()],
             # the block exactly as written, and the fields as they read then, so a write
             # can tell what actually changed and leave the rest of the text alone

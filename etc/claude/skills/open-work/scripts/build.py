@@ -210,6 +210,72 @@ def fold(thread) -> str:
     </details>"""
 
 
+def bullet_tree(lines: list) -> str:
+    """
+    Render `- ` lines as nested lists, nesting by indent. A plain line indented under a
+    bullet continues it; one at the bullet's own level is an item of its own.
+    """
+    items = []
+    for line in lines:
+        indent = len(line) - len(line.lstrip())
+        text = line.strip()
+        if items and not text.startswith("- ") and indent > items[-1][0]:
+            items[-1][1] += " " + text
+        else:
+            items.append([indent, text.removeprefix("- ")])
+    out, depths = [], []
+    for indent, text in items:
+        while depths and indent < depths[-1]:
+            out.append("</li></ul>")
+            depths.pop()
+        if depths and indent == depths[-1]:
+            out.append("</li><li>")
+        else:
+            out.append("<ul><li>")
+            depths.append(indent)
+        out.append(inline(text))
+    out.append("</li></ul>" * len(depths))
+    return "".join(out)
+
+
+def field_html(thread, key) -> str:
+    """
+    A field's first line as prose, its continuation bullets as a list. Bullets folded in
+    from merged threads are history, so they collapse.
+    """
+    head, *rest = thread["field_lines"].get(key, [thread["fields"][key]])
+    bullets = [line for line in rest if line.strip()]
+    folded_at = next((n for n, line in enumerate(bullets)
+                      if line.lstrip().startswith("- **Folded in")), len(bullets))
+    current, folded = bullets[:folded_at], bullets[folded_at:]
+    html_out = inline(head) if head else ""
+    if current:
+        html_out += bullet_tree(current)
+    if folded:
+        count = sum(1 for line in folded if line.lstrip().startswith("- **Folded in"))
+        html_out += (f'<details class="history"><summary>{count} folded-in '
+                     f'thread{"s" if count != 1 else ""}</summary>{bullet_tree(folded)}</details>')
+    return html_out
+
+
+def updates_html(thread) -> str:
+    """
+    Only the newest Updated: line is current; the rest are the log behind it.
+    """
+    updates = thread.get("updates") or []
+    if not updates:
+        return ""
+    newest, *earlier = updates
+    lines = [line for line in newest[1:] if line.strip()]
+    body = inline(newest[0]) + (bullet_tree(lines) if lines else "")
+    if earlier:
+        log = "".join(f"<li>{inline(' '.join(part.strip() for part in update))}</li>"
+                      for update in earlier)
+        body += (f'<details class="history"><summary>{len(earlier)} earlier '
+                 f'update{"s" if len(earlier) != 1 else ""}</summary><ul>{log}</ul></details>')
+    return f'<div class="tf"><span class="tf-key">updated</span><span class="tf-val">{body}</span></div>'
+
+
 def thread_card(thread, nested=False) -> str:
     fields = thread["fields"]
     status = fields.get("status", "backlog")
@@ -225,10 +291,10 @@ def thread_card(thread, nested=False) -> str:
     )
     rows = "".join(
         f'<div class="tf"><span class="tf-key">{esc(key)}</span>'
-        f'<span class="tf-val">{inline(fields[key])}</span></div>'
-        for key in ("todo", "waiting on", "next", "links", "repos", "updated")
+        f'<span class="tf-val">{field_html(thread, key)}</span></div>'
+        for key in ("todo", "waiting on", "next", "links", "repos")
         if fields.get(key)
-    )
+    ) + updates_html(thread)
     paragraphs = "".join(f"<p>{inline(paragraph)}</p>" for paragraph in thread["paragraphs"])
     return f"""<article class="thread{' is-sub' if nested else ''}" id="thread-{esc(thread['slug'])}"
       data-item="{item_id('thread', thread['slug'])}" data-priority="{priority}"
@@ -428,16 +494,16 @@ def review_row(review, note=None) -> str:
 
 
 review_cluster_map, review_loose = review_clusters(review_queue)
-review_sections = "".join(
-    f"""<div class="cluster">
+# freshest first, so the stale tail sinks; a cluster sits where its freshest PR would
+review_entries = [
+    (min(review["days_since_update"] for review in group),
+     f"""<div class="cluster">
       <h4 class="cluster-head">{esc(ticket)} <span class="muted">— {len(group)} PRs, one sitting</span></h4>
       {"".join(review_row(review) for review in sorted(group, key=lambda review: review["number"]))}
-    </div>"""
-    for ticket, group in sorted(review_cluster_map.items(), key=lambda item: -len(item[1]))
-) + "".join(
-    review_row(review) for review in
-    sorted(review_loose, key=lambda review: (review["is_draft"], -review["days_since_update"]))
-)
+    </div>""")
+    for ticket, group in review_cluster_map.items()
+] + [(review["days_since_update"], review_row(review)) for review in review_loose]
+review_sections = "".join(entry for _, entry in sorted(review_entries, key=lambda pair: pair[0]))
 claimed_reviews = [review for review in inbound if review["thread"]]
 parked_reviews = [review for review in inbound if is_parked(review)]
 handed_off_reviews = [review for review in inbound if handed_off(review)]
