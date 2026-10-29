@@ -44,7 +44,7 @@ python3 ~/src/abyss/.open-work/build.py      # regenerate the PR section and boa
 Then, when the drift looks right:
 
 ```
-python3 ~/src/abyss/.open-work/todo_sync.py --apply --write-links --adopt
+python3 ~/src/abyss/.open-work/todo_sync.py --apply --write-links --adopt --tidy
 python3 ~/src/abyss/.open-work/build.py
 ```
 
@@ -205,9 +205,11 @@ a shared epic is not evidence. Ask about `parked` work at all.
 ## Rules
 
 - **Never edit the user's TODO except for its machine-readable parts** — the `ow:` link, the
-  priority cookie, and the `HANDED-OFF` keyword with its `ow-to:` link. Every write backs the file
-  up to `.pre-ow` first. Do not reword, reorder or complete their items, and add new ones **only
-  when the user asks for them** (they did, for the release findings).
+  priority cookie, and the `HANDED-OFF` keyword with its `ow-to:` link — plus `--tidy`, which the
+  user asked for on 2026-10-29: drop finished WORK items and order the rest by priority cookie
+  (their order kept within a priority; other sections untouched). Every write backs the file up to
+  `.pre-ow` first. Do not reword or complete their items, and add new ones **only when the user
+  asks for them** (they did, for the release findings).
 - Statuses are a fixed vocabulary: `blocked` · `active` · `review` · `resolved` · `flagged` ·
   `backlog` · `done`. `resolved` means the root cause is found but the fix is not applied. Put the
   nuance in `Waiting on`, not in the status field — prose there sorts last and renders grey.

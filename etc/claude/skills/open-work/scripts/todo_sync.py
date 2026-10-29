@@ -144,9 +144,18 @@ def main():
     parser.add_argument("--apply", action="store_true", help="mirror TODO priorities into the tracker")
     parser.add_argument("--write-links", action="store_true", help="write ow links and missing cookies")
     parser.add_argument("--adopt", action="store_true", help="create a stub thread for each new item")
+    parser.add_argument("--tidy", action="store_true",
+                        help="drop finished WORK items and order the rest by priority (the user asked "
+                             "for this on 2026-10-29; run it after --apply so cookies are settled)")
     args = parser.parse_args()
 
     todo_path = args.file or latest_daily_todo()
+    if args.tidy:
+        removed, reordered = orgtodo.tidy(todo_path, WORK_SECTION)
+        for title in removed:
+            print(f"removed finished item: {title}")
+        print(f"tidied {todo_path}: {len(removed)} removed, "
+              f"{'reordered by priority' if reordered else 'order unchanged'}\n")
     items = parse_todo(todo_path)
     threads = tracker.parse_threads(tracker.TRACKER.read_text())
     by_slug = {thread["slug"]: thread for thread in threads}

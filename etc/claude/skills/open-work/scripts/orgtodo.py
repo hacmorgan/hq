@@ -162,6 +162,50 @@ def promote(path: Path, child_raw: str, parent_raw: str, promoted_line: str,
     return True
 
 
+def tidy(path: Path, section: str, backup_suffix: str = ".pre-ow") -> tuple:
+    """
+    Within one top-level section: drop finished items, then order the rest by priority
+    cookie (A first, no cookie last), keeping each item's subtree with it and the
+    user's order within a priority. Returns (removed titles, whether the order changed).
+
+    An item is finished when it and every child are DONE or CANCELLED. Other sections
+    are left alone.
+    """
+    lines = path.read_text().splitlines(keepends=True)
+    start = next((n for n, line in enumerate(lines) if re.match(r"^\* +", line)
+                  and line[1:].strip() == section), None)
+    if start is None:
+        return [], False
+    end = next((n for n in range(start + 1, len(lines)) if re.match(r"^\* ", lines[n])), len(lines))
+    body = lines[start + 1:end]
+    lead = []
+    while body and not body[0].startswith("** "):
+        lead.append(body.pop(0))
+    blocks = []
+    for line in body:
+        if line.startswith("** "):
+            blocks.append([line])
+        else:
+            blocks[-1].append(line)
+
+    def finished(block) -> bool:
+        keywords = [(parse_headline(line.rstrip("\n")) or {}).get("keyword") for line in block
+                    if parse_headline(line.rstrip("\n"))]
+        return all(keyword in ("DONE", "CANCELLED") for keyword in keywords)
+
+    rank = {"A": 0, "B": 1, "C": 2, "D": 3}
+    kept = [block for block in blocks if not finished(block)]
+    removed = [parse_headline(block[0].rstrip("\n"))["title"] for block in blocks if finished(block)]
+    ordered = sorted(kept, key=lambda block: rank.get(
+        parse_headline(block[0].rstrip("\n"))["cookie"], 4))
+    if not removed and ordered == kept:
+        return [], False
+    shutil.copy(path, str(path) + backup_suffix)
+    path.write_text("".join(lines[:start + 1] + lead + [line for block in ordered for line in block]
+                            + lines[end:]))
+    return removed, ordered != kept
+
+
 def rewrite(path: Path, changes: dict, backup_suffix: str = ".pre-ow") -> int:
     """
     Apply {original line: new line} to the file, backing it up first.
