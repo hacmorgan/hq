@@ -128,9 +128,9 @@ wpctl status             # Audio section should be populated
 pactl info               # should say "(on PipeWire ...)"
 ```
 
-## Flatpak — two traps, both non-obvious
+## Flatpak — three traps, all non-obvious
 
-Only one app is installed (`org.cloudcompare.CloudCompare`), but it brings two
+Only one app is installed (`org.cloudcompare.CloudCompare`), but it brings three
 failure modes worth knowing before they bite again.
 
 ### GL extensions are pinned to the exact host driver
@@ -184,6 +184,45 @@ backend, not the application. The pending request fails cleanly and the app
 usually survives with its state intact. Native GTK apps (GIMP, etc.) are
 unaffected: they draw their own chooser in-process and never involve the
 portal, so only flatpaks are at risk.
+
+### Qt6 refuses to decode very large textures
+
+Photogrammetry output routinely carries one enormous atlas texture. OpenMVS
+exports here are a single **16384 x 16384 JPEG** — 25 MB on disk, but about
+**1 GB** decoded as 32-bit RGBA. Qt6's `QImageReader` caps a single decode at
+256 MB by default and refuses outright:
+
+```
+qt.gui.imageio: QImageIOHandler: Rejecting image as it exceeds the
+                current allocation limit of 256 megabytes
+[ccMaterial::loadAndSetTexture] Failed to load image '...map_Kd.jpg'
+```
+
+**The mesh still loads.** Geometry and all texture coordinates come through
+intact, so the only signal is grey output and two lines in the CloudCompare
+console — nothing in the GUI says the material was dropped.
+
+Fixed with a user override:
+
+```
+flatpak override --user --env=QT_IMAGEIO_MAXALLOC=0 org.cloudcompare.CloudCompare
+```
+
+The cap is a denial-of-service guard against hostile images, which earns its
+keep in a browser and not in a local mesh tool fed our own reconstructions.
+`=2048` would keep a bounded guard if that is ever preferred.
+
+This arrived with the 2026-10-28 cleanup above: CloudCompare 2.12 on the 2021
+`org.kde.Platform 5.15-21.08` predates the limit entirely, so the same file
+loads untextured here and textured on an un-updated box. That is the general
+shape of the trap — **a flatpak pinned to an old runtime is running old
+library policy**, and updating it changes behaviour that has nothing to do
+with the application version.
+
+**16384 is also exactly the GTX 980's maximum texture dimension.** Lifting the
+Qt limit textures these models, but it buys no headroom: a 32k atlas will not
+render whatever this is set to, and would need tiling or downsampling at the
+OpenMVS end instead.
 
 ## Boot
 
@@ -524,6 +563,15 @@ than a prompt. Worth pairing with a `flatpak update`, because the same driver
 bump that orphans the old extension is what requires the new one.
 
 ## Change log
+
+**2026-10-29** — CloudCompare loaded OBJ meshes untextured while the same
+files, read over SSHFS, textured correctly on bisous. Not the data: Qt6 caps a
+single image decode at 256 MB and the OpenMVS atlas is 16384 x 16384, about
+1 GB decoded. bisous runs CloudCompare 2.12 on the 2021 `org.kde.Platform
+5.15-21.08`, which predates the limit — so this was fallout from the previous
+day's flatpak update, not from anything in the models. Set
+`QT_IMAGEIO_MAXALLOC=0` as a user override; recorded above as the third
+flatpak trap.
 
 **2026-10-28** — CloudCompare had lost GPU acceleration: the 2026-10-26 driver
 bump to 580.196.07 orphaned its flatpak GL extension, which must match the
