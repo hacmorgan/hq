@@ -1,5 +1,5 @@
 uses:
-  - fried-chicken
+  - schnitzel
 components:
   - name: crumb
     ingredients:
@@ -16,6 +16,6 @@ components:
       Starting oil temp: 180°C
       Cooking oil temp: 160°C
       Cooked internal temp: 56°C
-      See fried chicken recipe for seasoning mix details
+      See schnitzel recipe for seasoning mix details
     steps:
       - season flour, eggs (beaten), and breadcrumbs
