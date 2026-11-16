@@ -32,10 +32,13 @@ components:
   - name: instructions
     steps:
       - Whisk eggs with salt (1% of egg by weight), then sieve
-      - Get pan to a stable 140°C
-      - butter into pan
-      - take pan off heat
+      - Get pan to a stable 130°C
+      - butter into pan, should be bubbling
       - pour egg mix onto butter
-      - add cheese & pepper, cook slightly
+      - stir with spatula to mix up curds until 90% cooked/in curd form
+      - flatten 
+      - add cheese & pepper perpendicular to pan handle
       - sprinkle remaining ingredients
-      - fold over
+      - add lid to finish cooking
+      - fold edge closest to handle over centre
+      - fold other edge during the dismount (onto the plate)

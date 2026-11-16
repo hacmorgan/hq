@@ -1,0 +1,22 @@
+#!/bin/sh
+# Lock the screen. Used both by the i3 keybind and as xss-lock's locker.
+#
+# If i3lock isn't installed we must NOT fail silently: the user would think the
+# machine locks when it doesn't. Warn visibly instead and exit non-zero.
+
+LOCK_BG=1d2021
+
+if command -v i3lock >/dev/null 2>&1; then
+    # --nofork: xss-lock needs the locker to stay in the foreground so it can
+    # track when the screen is actually unlocked.
+    #   -e ignore empty password   -f show failed attempts
+    exec i3lock --nofork -c "$LOCK_BG" -e -f
+fi
+
+if command -v notify-send >/dev/null 2>&1; then
+    notify-send -u critical -a i3 \
+        "Screen lock unavailable" \
+        "i3lock is not installed - this machine will NOT lock. Install it with your package manager (e.g. pacman -S i3lock)."
+fi
+echo "lock-screen: i3lock not installed" >&2
+exit 1

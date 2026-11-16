@@ -1,0 +1,25 @@
+#!/bin/sh
+# Exit 0 if this machine looks like it is in a call, 1 otherwise.
+#
+# Used by idle-lock to avoid locking mid-meeting. This deliberately checks for
+# *active capture* rather than honouring the X screensaver inhibit that browsers
+# assert: Chromium and Firefox suppress the screensaver just for having certain
+# pages open, which would disable idle locking entirely. Holding the camera or
+# an uncorked microphone stream is much stronger evidence someone is present,
+# and browsers gate both behind a per-site permission prompt.
+
+# Camera: any process holding a video capture device.
+if command -v fuser >/dev/null 2>&1; then
+    for dev in /dev/video*; do
+        [ -e "$dev" ] || continue
+        fuser "$dev" >/dev/null 2>&1 && exit 0
+    done
+fi
+
+# Microphone: an uncorked capture stream. Corked means paused - which is what a
+# backgrounded or idle tab looks like - so those must not count.
+if command -v pactl >/dev/null 2>&1; then
+    pactl list source-outputs 2>/dev/null | grep -q 'Corked: no' && exit 0
+fi
+
+exit 1

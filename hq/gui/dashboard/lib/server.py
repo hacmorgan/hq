@@ -129,6 +129,114 @@ def list_recipes() -> list[Path]:
     )
 
 
+def _resolve_use(token, parsed: dict, by_base: dict, exclude: str):
+    """Resolve a `uses:` entry (a recipe path or filename) to a recipe path.
+
+    Returns the path, or None if it can't be resolved unambiguously.
+    """
+    t = str(token).strip()
+    if t in parsed and t != exclude:  # already a full path
+        return t
+    base = t.split("/")[-1].replace(" ", "-")  # filename, or a spaced name
+    cands = [c for c in by_base.get(base, []) if c != exclude]
+    return cands[0] if len(cands) == 1 else None
+
+
+def _scopes(data: dict):
+    """Every mapping in a recipe that can carry `ingredients` directly.
+
+    That is the recipe itself, its components, each variant, and each variant's
+    own components — so callers don't have to know where a recipe happens to
+    keep a given ingredient.
+    """
+
+    def components_of(node: dict):
+        for comp in node.get("components") or []:
+            if isinstance(comp, dict):
+                yield comp
+
+    yield data
+    yield from components_of(data)
+    for variant in data.get("variants") or []:
+        if isinstance(variant, dict):
+            yield variant
+            yield from components_of(variant)
+
+
+def _ingredient_items(data: dict) -> list[str]:
+    """All ingredient item names, across every scope, lowercased."""
+    out: list[str] = []
+    for scope in _scopes(data):
+        for ing in scope.get("ingredients") or []:
+            if isinstance(ing, dict) and ing.get("item"):
+                out.append(str(ing["item"]).strip().lower())
+            elif isinstance(ing, str):
+                out.append(ing.strip().lower())
+    return out
+
+
+def _has_basis(data: dict) -> bool:
+    return any(
+        isinstance(i, dict) and i.get("basis") is True
+        for scope in _scopes(data)
+        for i in scope.get("ingredients") or []
+    )
+
+
+@app.get("/recipe-index")
+def recipe_index() -> list[dict]:
+    """
+    Lightweight metadata for every recipe, in one call, for the dashboard's
+    grouped/searchable list and graph views.
+
+    Each entry has:
+        path: recipe path relative to the recipes dir (e.g. "meat/portugese-chicken")
+        category: the top-level directory (e.g. "meat"), or "" for root recipes
+        name: display name (the recipe's `name`, else the prettified filename)
+        hasBasis: whether the recipe has a scaling basis ingredient
+        ingredients: sorted unique ingredient item names (lowercased)
+        uses: resolved paths of recipes this one explicitly `uses:` (sub-recipes)
+    """
+    files = sorted(p for p in HQ_RECIPES.rglob("*") if not p.is_dir())
+    rels = ["/".join(p.relative_to(HQ_RECIPES).parts) for p in files]
+
+    parsed: dict[str, dict] = {}
+    for path, rel in zip(files, rels):
+        try:
+            data = yaml.safe_load(path.read_text(encoding="utf-8"))
+        except yaml.YAMLError:
+            data = None
+        parsed[rel] = data if isinstance(data, dict) else {}
+
+    # filename -> path(s), for resolving `uses:` entries written as bare names
+    by_base: dict[str, list[str]] = {}
+    for rel in rels:
+        by_base.setdefault(rel.split("/")[-1], []).append(rel)
+
+    index: list[dict] = []
+    for rel in rels:
+        data = parsed[rel]
+        uses_raw = data.get("uses") or []
+        if isinstance(uses_raw, str):
+            uses_raw = [uses_raw]
+        uses: list[str] = []
+        for token in uses_raw:
+            resolved = _resolve_use(token, parsed, by_base, rel)
+            if resolved and resolved not in uses:
+                uses.append(resolved)
+        index.append(
+            {
+                "path": rel,
+                "category": rel.split("/")[0] if "/" in rel else "",
+                "name": (data.get("name") or rel.split("/")[-1].replace("-", " ")),
+                "hasBasis": _has_basis(data),
+                "ingredients": sorted(set(_ingredient_items(data))),
+                "uses": uses,
+            }
+        )
+    return index
+
+
 @app.get("/relationship_time")
 def get_relationship_time() -> Response:
     """

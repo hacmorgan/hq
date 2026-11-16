@@ -1,0 +1,103 @@
+name: schnitz / katsu
+yield: per 100g meat
+variants:
+  - name: chicken (the default)
+    ingredients:
+      - item: chicken
+        mass: 100
+        basis: true
+      - item: salt
+        mass: 1.5
+      - item: MSG
+        mass: 1
+      - item: baking soda
+        mass: 1
+      - item: black pepper
+        mass: 0.2
+      - item: white pepper
+        mass: 0.2
+      - item: paprika
+        mass: 0.5
+      - item: italian herbs
+        mass: 0.4
+      - item: rosemary leaves
+        mass: 0.15
+        note: from approx 0.2g in sprig form, with stem; try oregano
+      - item: coriander
+        mass: 0.15
+        note: experiment
+      - item: dried ground sage
+        mass: 0.1
+        note: experiment
+      - item: pun chun
+        mass: 0.15
+        note: experiment, only in egg wash
+      - item: panko
+        mass: 18
+      - item: eggs
+        qty: 0.4
+        unit: ea
+      - item: flour
+        mass: 14
+    steps:
+      - season flour, eggs (beaten), and panko
+      - coat chicken breast bits and fry at 160°C (with probe, 200°C if measuring base heat)
+  - name: duck
+    ingredients:
+      - item: duck breast
+        mass: 100
+        basis: true
+        note: weighed skinless and trimmed — ~70% of skin-on weight
+      - item: salt
+        mass: 1.5
+      - item: MSG
+        mass: 1
+      - item: baking soda
+        mass: 0.5
+        optional: true
+        note: half the chicken amount, or skip — pink duck doesn't need tenderising and too much goes spongy and grey
+      - item: black pepper
+        mass: 0.2
+      - item: white pepper
+        mass: 0.2
+      - item: paprika
+        mass: 0.5
+      - item: italian herbs
+        mass: 0.4
+        note: or swap some for a pinch of 5 spice
+      - item: rosemary leaves
+        mass: 0.15
+      - item: coriander
+        mass: 0.15
+      - item: dried ground sage
+        mass: 0.2
+        note: doubled — sage is the duck herb
+      - item: pun chun
+        mass: 0.15
+        note: only in egg wash
+      - item: panko
+        mass: 18
+      - item: eggs
+        qty: 0.4
+        unit: ea
+      - item: flour
+        mass: 14
+      - item: duck fat
+        note: rendered from the skin, for some or all of the frying oil
+    steps:
+      - take the skin off, trim silverskin, pull off the tenderloin (fry it separately)
+      - render the skin for crackling and keep the fat for frying
+      - pound gently between cling film with the flat side to an even ~1cm — not chicken-thin, or it cooks through before the crumb browns
+      - season just before crumbing, not ahead
+      - season flour, eggs (beaten), and panko, then coat
+      - chill crumbed cutlets 15-30 mins so the coating sets and the middle starts cold
+      - fry starting at 180°C, cooking at 160°C, ~1.5-2 mins a side. pull at 53-54°C internal for 56°C — thin cutlets carry over very little
+    notes: |
+      Untested as of 2026-10-30. Duck breast is red meat and wants to be pink like
+      5-spice-duck; cooked through it goes livery and tough. Everything here is about
+      getting the crumb golden before the centre passes 56°C: thicker cutlet, hotter start,
+      cold going in.
+
+      Wild duck is much leaner and tougher — pound it thinner and accept it'll cook further.
+
+      Serve with something sharp and fruity: lingonberry, cherry, plum, orange, or lemon.

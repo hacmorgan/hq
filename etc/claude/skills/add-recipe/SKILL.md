@@ -21,7 +21,7 @@ before writing. This skill covers where the file goes and how to approach the co
 ## Shape
 
 Top-level keys, all optional: `name`, `source`, `uses`, `yield`, `notes`, `ingredients`,
-`steps`, `components`. See `RECIPE_FORMAT.md` for the full table, the ingredient/step entry
+`steps`, `components`, `variants`. See `RECIPE_FORMAT.md` for the full table, the ingredient/step entry
 fields, and worked examples.
 
 The short version:
@@ -53,6 +53,8 @@ sections.
 - Terse, imperative steps; lowercase preferred but not rigidly enforced
 - Temperatures in °C, kept inline in the step text — e.g. `bake at 180°C for 40 mins`
 - Block style, one field per line — **not** flow `{ }` style
+- **Alternative whole methods go in `variants`**, one entry each (the default included, named
+  and first) — not in a component called "variant — …". See `RECIPE_FORMAT.md`.
 - **Lose nothing.** Every quantity, temperature, time, note, substitution, and variant must
   survive — as structured fields where possible, otherwise in `note`, step text, or `notes`.
 - **Don't invent.** No amounts, steps, or a `basis` the original doesn't imply.

@@ -40,6 +40,7 @@ components:
       - item: chocolate
         qty: 45
         unit: g
+        note: try 80g milk choc
       - item: dark chocolate (optional)
         qty: 15
         unit: g

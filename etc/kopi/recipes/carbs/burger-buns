@@ -55,7 +55,7 @@ components:
       - item: bread flour
         mass: 320
       - item: granulated sugar
-        mass: 35
+        mass: 20
       - item: fine sea salt
         mass: 7
       - item: egg
@@ -70,9 +70,9 @@ components:
       - item: neutral oil
         note: for greasing the proofing bowl — canola, vegetable or grapeseed. see notes
     steps:
-      - warm 120g whole milk to 35°C
-      - whisk in 9g instant yeast until dissolved, rest in a warm spot 8 mins
-      - in stand mixer bowl, whisk together 320g bread flour, 35g granulated sugar, 7g fine sea salt
+      - warm milk to 35°C
+      - whisk in instant yeast until dissolved, rest in a warm spot 8 mins
+      - in stand mixer bowl, whisk together bread flour, granulated sugar, fine sea salt
       - fit dough hook, turn to low
       - slowly stream in milk/yeast mixture, mix briefly to combine
       - add tangzhong, 1 egg, 1 egg yolk; mix on medium-low until combined, scraping down sides

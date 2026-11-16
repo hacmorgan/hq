@@ -13,7 +13,7 @@ import sys
 from math import acos, atan2, cos, degrees, radians, sqrt
 from pathlib import Path
 from random import shuffle
-from serial import Serial
+from serial import Serial, SerialException
 from subprocess import run
 from time import sleep, time
 from typing import Optional
@@ -21,7 +21,7 @@ from threading import Thread
 
 import cv2
 import numpy as np
-from hq.cli.utils import getchar
+from hq.cli.utils import getchar, run_typer_app
 
 CTRL_C = b"\x03"
 BACKSPACE = b"\x7f"
@@ -56,6 +56,10 @@ COOLDOWN_TIME = 1.0
 
 # Webcam device we capture images from
 CAPTURE_DEVICE = 0
+
+# Serial terminal monitor we mirror the graph to (opt-in, via --monitor)
+MONITOR_PORT = "/dev/ttyUSB0"
+MONITOR_BAUDRATE = 19200
 
 # Thresholds for shot timing (Bar)
 PRE_INFUSE_PRESSURE_THRESHOLD = 0.5
@@ -281,16 +285,26 @@ class FlairPressure:
         """
         raise NotImplementedError("Learned gauge reading has not been implemented yet")
 
-    def cli_main(self, terminal_connection: Serial) -> None:
+    def cli_main(
+        self,
+        terminal_connection: Serial | None = None,
+        capture_device: int = CAPTURE_DEVICE,
+    ) -> None:
         """
         Main CLI tool routine
+
+        Args:
+            terminal_connection: Serial terminal monitor to mirror the graph to. If
+                None, the graph is only drawn to stdout.
+            capture_device: Webcam device index to capture the dial from
         """
         # Open video capture object
-        vid = cv2.VideoCapture(CAPTURE_DEVICE)
+        vid = cv2.VideoCapture(capture_device)
 
         # Clear screen
         clear()
-        terminal_connection.write(TERMINAL_CLEAR)
+        if terminal_connection is not None:
+            terminal_connection.write(TERMINAL_CLEAR)
 
         # Initialise loop variables
         start = time()
@@ -390,7 +404,8 @@ class FlairPressure:
 
                 # Print to the terminal again if enough time has elapsed
                 if (
-                    capture_time
+                    terminal_connection is not None
+                    and capture_time
                     > last_terminal_redraw_time + GRAPH_REDRAW_PERIOD_TERMINAL
                 ):
                     Thread(
@@ -486,7 +501,25 @@ def draw_graph(
         sys.stdout.write(pressure_str)
 
 
-if __name__ == "__main__":
+def fp(
+    monitor: bool = False,
+    monitor_port: str = MONITOR_PORT,
+    monitor_baudrate: int = MONITOR_BAUDRATE,
+    capture_device: int = CAPTURE_DEVICE,
+) -> None:
+    """
+    Read pressure from flair and provide a timer
+
+    Args:
+        monitor: Mirror the pressure graph to the serial terminal monitor. Off by
+            default, as the monitor is only wired up to some machines -- without it the
+            graph is drawn to stdout only.
+        monitor_port: Serial port the terminal monitor is attached to
+        monitor_baudrate: Baud rate to talk to the terminal monitor at
+        capture_device: Webcam device index to capture the dial from
+    """
+    global terminal_connection
+
     pressure_monitor = FlairPressure()
 
     # pressure_monitor.collect_data(output_directory="/tmp/flair_pressure_logs_2", interval=0.01)
@@ -495,12 +528,28 @@ if __name__ == "__main__":
     #     img=pressure_monitor.capture_frame(),
     # )
 
-    global terminal_conection
-    with Serial("/dev/ttyUSB0", baudrate=19200) as conn:
+    # Without the terminal monitor we just draw to stdout, so there is no port to open
+    if not monitor:
+        pressure_monitor.cli_main(capture_device=capture_device)
+        sys.exit(0)
+
+    try:
+        connection = Serial(monitor_port, baudrate=monitor_baudrate)
+    except SerialException as error:
+        sys.exit(
+            f"could not open terminal monitor on {monitor_port}: {error}\n"
+            "Is the USB-to-serial adapter plugged in? Run without --monitor to draw "
+            "to stdout only."
+        )
+
+    with connection as conn:
         terminal_connection = conn
 
         # Run the pressure graph main application loop
-        pressure_monitor.cli_main(terminal_connection=conn)
+        pressure_monitor.cli_main(
+            terminal_connection=conn,
+            capture_device=capture_device,
+        )
 
     # paths = list(Path("/home/pi/src/hq/etc/flair_pressure/datasets/regression").iterdir())
     # # shuffle(paths)
@@ -514,3 +563,7 @@ if __name__ == "__main__":
     #     input()
 
     sys.exit(0)
+
+
+if __name__ == "__main__":
+    run_typer_app(fp)

@@ -1,0 +1,77 @@
+source: https://www.facebook.com/share/v/1CHC1bhDCJ/
+yield: 6 naan, ~85g dough balls
+ingredients:
+  - item: warm water
+    mass: 120
+    qty: 0.5
+    unit: cup
+  - item: yeast
+    mass: 3
+    qty: 1
+    unit: tsp
+  - item: plain yogurt
+    mass: 80
+    qty: 0.33
+    unit: cup
+  - item: unsalted butter
+    mass: 28
+    qty: 2
+    unit: tbsp
+    note: melted
+  - item: sugar
+    mass: 8
+    qty: 2
+    unit: tsp
+  - item: salt
+    mass: 5
+    note: amount not given in the original — ~2% of the flour
+  - item: bread flour
+    mass: 260
+    qty: 2
+    unit: cup
+    basis: true
+  - item: oil
+    mass: 40
+    qty: 3
+    unit: tbsp
+    note: the original lists 3 tbsp but only says to put a little on the dough — use what it takes to coat the dough and bowl
+  - item: ghee
+    mass: 15
+    note: to cook the naans, ~1/2 tsp a side
+components:
+  - name: dough
+    steps:
+      - mix water, yeast, yogurt, butter and sugar
+      - when cool (lukewarm, not hot from the butter) add salt and bread flour
+      - mix everything in a dough mixer or by hand, ~5-8 mins until smooth and soft
+      - put a little oil on it, cover it and keep it in a warm place for at least an hour or until it doubles
+      - cut into 6 equal balls (~85g), cover and let it rise for half an hour
+  - name: garnish
+    ingredients:
+      - item: ghee
+        mass: 26
+        qty: 2
+        unit: tbsp
+        note: melted
+      - item: roasted garlic
+        mass: 5
+        qty: 1
+        unit: tsp
+        note: mashed
+      - item: cilantro
+        mass: 2
+        qty: 1
+        unit: tbsp
+        note: chopped
+    steps:
+      - mix ghee, garlic and cilantro
+  - name: cook
+    steps:
+      - roll each dough ball into an oval shape with little dry flour, ~5mm thick
+      - heat a flat pan on medium high heat (~200°C)
+      - cook it with applying a little ghee on both sides until light brown, ~1-2 mins a side — it should bubble up on the first side before you flip
+      - before serving brush it with ghee/garlic/cilantro mixture
+notes: |
+  From Ma's Kitchen. The original is in cups and spoons; the grams are conversions (bread
+  flour at 130g/cup). The salt amount, kneading time, rolled thickness, pan temp and cook
+  times aren't in the original and are filled in.

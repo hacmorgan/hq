@@ -1,0 +1,143 @@
+yield: 4 balls, ~210g each — 28-30cm thin pizzas. or 3 × 280g for bigger ones with more rim
+notes: |
+  Untested as of 2026-10-18. Pitched at a home oven (250-280°C) with a stone or steel, not a
+  450°C pizza oven — hence the oil, and bread flour over 00.
+
+  Flour. Bread flour (~12-13% protein) is the pick for a home oven. Tipo 00 like Caputo
+  Pizzeria is milled for 450°C+ ovens and 60-90 sec bakes; at 250°C it stays pale and goes
+  crackery before it browns. If you have 00, cut it 50/50 with bread flour. Plain flour works
+  but tears more when stretching thin.
+
+  Why the fridge. The cold ferment barely raises the dough — it's there for flavour and
+  texture. Yeast slows right down but enzymes keep breaking starch into sugars and the gluten
+  keeps relaxing, so you get a dough that tastes of something, browns better (those free
+  sugars), and stretches thin without springing back. Same-day dough is fine, just blander,
+  paler and more elastic. That's the whole trade.
+
+  Hydration is 65%, which stays easy to handle. 70% gets you a more open, blistered rim but is
+  stickier to shape — work up to it once the base recipe is behaving.
+
+  Judge the proof by the dough, not the clock — kitchen temp moves everything. Poke test: the
+  dent should spring back slowly and only part way. Springs straight back = under, give it
+  longer; it'll fight you and shrink when stretched. Doesn't spring back, slack and tearing =
+  over.
+
+  Cold dough won't stretch. The 2-3 hrs out of the fridge before baking isn't optional — it's
+  the most common reason a cold-fermented dough "doesn't work".
+
+  Freezing. Ball, coat lightly in oil, bag individually and freeze — either straight after
+  balling or after its 24 hrs in the fridge. Keeps 3 months. Thaw overnight in the fridge,
+  then the usual 2-3 hrs at room temp.
+components:
+  - variants: here
+  - name: stretch
+    steps:
+      - flour the bench generously. dust the peel with semolina, or flour if that's all you have — semolina rolls like ball bearings and the pizza launches far more reliably
+      - turn a ball out top side down onto the flour, flour the top
+      - press from the centre outward with your fingertips, leaving a 1-2cm rim untouched — that rim is where the gas is, pressing it is what makes a flat crust
+      - pick it up and stretch over your knuckles, rotating, letting gravity do it. stop at 28-30cm
+      - no rolling pin. it squeezes out all the gas and you get a cracker
+      - if it keeps springing back, leave it 10 mins and come back. it's not ready, forcing it tears it
+  - name: bake
+    steps:
+      - stone or steel on the top-third shelf, oven as hot as it goes (250-280°C), preheat a full 45-60 mins. a half-heated stone is the usual reason for a pale, soft base
+      - no stone or steel — the upturned cast iron dutch oven, preheated in the oven the same way. iron soaks up heat and dumps it into the base like a stone does
+      - step: the pot's base is only ~22-26cm across, so
+        substeps:
+          - split the dough into 5-6 balls and stretch each to just under the pot's width. overhang droops and stays raw
+          - build each pizza on a sheet of baking paper cut to size and slide paper and all onto the pot — a small, hot, domed target is hard to launch onto. pull the paper out after 2-3 mins once the base has set, so it crisps straight on the iron
+          - if it's enamelled, keep the oven at or under 260°C (le creuset's rating) — a long empty preheat at max is hard on enamel. bare cast iron takes anything the oven does
+      - failing that, an upturned heavy baking tray, preheated the same way. much less heat in it than iron, but still far better than a cold tray — pizza that goes in on a cold tray comes out with a pale, soft base
+      - top sparingly and quickly once the base is on the peel. a pizza that sits topped glues itself to the peel. give it a shake before the oven — if it doesn't slide, lift the edge and toss in more semolina
+      - launch with a short sharp jerk back, not a slow slide
+      - steel ~5-7 mins, stone or pot ~7-10 mins, until the rim is well coloured and the base is spotted dark underneath
+      - if the base is done but the top is pale, switch to the grill for the last 1-2 mins. watch it
+      - let the stone recover 5 mins between pizzas, and switch back from grill to bake if you used it
+variants:
+  - name: 24hr cold ferment (the default)
+    ingredients:
+      - item: bread flour
+        mass: 500
+        basis: true
+        note: see notes on flour
+      - item: water
+        mass: 325
+        note: cool from the tap, ~20°C. 65% hydration
+      - item: salt
+        mass: 13
+        note: fine. 2.6%
+      - item: instant yeast
+        mass: 1.5
+        qty: 0.5
+        unit: tsp
+        note: 0.3%. for 48-72 hrs in the fridge drop to 1g (1/3 tsp)
+      - item: extra virgin olive oil
+        mass: 10
+        qty: 2
+        unit: tsp
+        note: 2%. helps a home-oven crust brown and stay tender. leave out for a 400°C+ pizza oven
+      - item: neutral oil
+        note: for oiling the containers
+    components:
+      - name: dough (the day before)
+        steps:
+          - flour and yeast in the kitchenaid bowl, whisk to combine
+          - add water, dough hook speed 1 until no dry flour, ~1 min
+          - rest 20 mins covered. the flour hydrates and the gluten starts on its own, so the knead is shorter
+          - add salt and olive oil, knead speed 2 for 6-8 mins until smooth and it clears the sides. doesn't need a full windowpane — the long ferment finishes developing it
+          - rest covered at room temp 1 hr
+          - divide into 4 (~210g), ball each tight by tucking the edges under and dragging it towards you on the bench
+          - into individual lightly oiled lidded containers, or spaced well apart on an oiled tray under cling film — they spread and roughly double over the ferment, and stuck-together balls tear when separated
+          - fridge 24 hrs. fine anywhere from 18 to 72 hrs; past 48 drop the yeast (see ingredient note)
+      - name: on the day
+        steps:
+          - out of the fridge 2-3 hrs before baking, still covered. it needs to come to room temp and puff — poke test before stretching (see notes)
+          - start the oven preheat about an hour before you plan to bake
+  - name: same day (4-6 hrs)
+    ingredients:
+      - item: bread flour
+        mass: 500
+        basis: true
+        note: see notes on flour
+      - item: water
+        mass: 325
+        note: lukewarm, ~30°C. 65% hydration
+      - item: salt
+        mass: 13
+        note: fine. 2.6%
+      - item: instant yeast
+        mass: 2.5
+        qty: 0.75
+        unit: tsp
+        note: 0.5%
+      - item: extra virgin olive oil
+        mass: 10
+        qty: 2
+        unit: tsp
+        note: 2%
+      - item: honey
+        mass: 5
+        qty: 1
+        unit: tsp
+        optional: true
+        note: or sugar. stands in for the sugars a long ferment would have made, for browning. worth it here, skip it in the cold-ferment version
+      - item: neutral oil
+        note: for oiling the bowl and containers
+    steps:
+      - flour and yeast in the kitchenaid bowl, whisk to combine. dissolve the honey in the water if using
+      - add water, dough hook speed 1 until no dry flour, ~1 min
+      - rest 20 mins covered
+      - add salt and olive oil, knead speed 2 for 8-10 mins until smooth, elastic and it clears the sides. longer than the cold-ferment version — there's no time doing the work for you here
+      - into a lightly oiled bowl, covered, room temp 2 hrs until ~1.5×
+      - divide into 4 (~210g) and ball as in the default
+      - onto an oiled tray, well spaced, covered. proof 2-3 hrs until puffy and roughly doubled, poke test
+      - preheat the oven an hour before the balls are ready
+    notes: |
+      Starting in the morning for dinner: halve the yeast (1.25g) and give it ~8 hrs at room
+      temp, balling at about the halfway mark. Noticeably closer to the cold-ferment flavour
+      for no extra work. Or make it as above and put the balls in the fridge until 2 hrs before
+      baking — anything that buys it more time helps.
+
+      Rush (~2 hrs): a full 7g sachet of instant yeast, water at 35°C, 1 hr bulk somewhere
+      warm, ball, 30-45 mins proof. It works, but tastes yeasty and flat, browns less and
+      fights you more when stretching. Use the honey.

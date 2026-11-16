@@ -1,0 +1,19 @@
+yield: per 1 pack asparagus from coles
+ingredients:
+  - item: asparagus
+    qty: 1
+    unit: pack
+    basis: true
+    note: from coles
+  - item: pink peppercorns
+    mass: 0.5
+  - item: salt
+    mass: 2
+  - item: paprika
+    mass: 1
+  - item: mustard powder
+    mass: 0.2
+  - item: onion powder
+    mass: 0.5
+  - item: ground coriander seeds
+    mass: 0.2
