@@ -42,6 +42,7 @@ exec --no-startup-id sh -c 'command -v xss-lock >/dev/null 2>&1 && exec xss-lock
 
 # Lock on demand.
 bindsym $mod+Ctrl+l exec --no-startup-id $lockcmd
+bindsym Mod4+l exec --no-startup-id $lockcmd
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
