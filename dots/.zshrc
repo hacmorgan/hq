@@ -336,3 +336,8 @@ zstyle ':completion:*' menu select
 if command -v but &>/dev/null; then
   eval "$(but completions zsh)"
 fi
+
+# abyss-trinity: follow the tmux session's checkout bindings at each prompt
+[ -r "$HOME/devtools/etc/abyss-trinity/shell-hook.sh" ] && . "$HOME/devtools/etc/abyss-trinity/shell-hook.sh"
+# Resumable Claude panes (tclaude from devtools); plain claude where devtools is absent
+command -v tclaude >/dev/null 2>&1 && alias claude=tclaude

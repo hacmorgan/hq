@@ -116,3 +116,6 @@ export EDITOR=/usr/bin/vim.basic
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 . <(grep "^alias" ~/.zshrc)
 . <(grep "^alias" ~/.oh-my-zsh/plugins/git/git.plugin.zsh)
+
+# abyss-trinity: follow the tmux session's checkout bindings at each prompt
+[ -r "$HOME/devtools/etc/abyss-trinity/shell-hook.sh" ] && . "$HOME/devtools/etc/abyss-trinity/shell-hook.sh"
