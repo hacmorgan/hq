@@ -40,16 +40,18 @@ picom &
 # set numlock to be on 
 numlockx &
 
-# set background (sized for this laptop's 1920x1200 panel)
+# set background (both work laptops have 1920x1200 panels)
 feh --no-fehbg --bg-fill ~/hq/etc/wallpapers/eboy_tok_1920_1200.png &
 
 # set keyboard params
 xset r rate 250 50 &
 
 # Tap to click is handled by configure-xinput (run from the i3 config), which
-# finds the touchpad by name. Never hardcode xinput device/property ids here:
-# this file is sourced by Xsession under `set -e`, so a failing foreground
-# command aborts the whole login.
+# finds the touchpad by name. Don't hardcode xinput ids here: they differ per
+# machine (on both diego and diegbro, id 12 is the Intel HID button array).
+#
+# GDM sources this file from /etc/gdm3/Xsession, which is bash without set -e,
+# so a failing line just logs to the journal; keep it POSIX sh anyway.
 
 # map caps-lock to super - only required for IBM Model M. Don't want this for Displaywriter
 # setxkbmap -option caps:super &
