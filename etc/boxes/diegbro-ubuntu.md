@@ -87,7 +87,8 @@ pops one notification at login, and the feature quietly doesn't run.
   auto-lock**, and `in-call` could see the camera but not the mic. Installed
   on both 2026-11-23. `pactl` talks to PipeWire's Pulse layer here.
 - `feh`, `picom`, `numlockx`: called from `.xsessionrc`. Installed on diegbro.
-  **diego still lacks `picom` and `numlockx`.** That's harmless (journal
+  diego got `picom` 2026-11-23 (v10, which accepts `dots/picom.conf` without
+  errors on both). **diego still lacks `numlockx`.** That's harmless (journal
   noise), but it's the same class of gap.
 
 The 26.04 reinstall will lose all of these. Reinstall them, or better, add an
@@ -170,6 +171,6 @@ Checked 2026-11-23 against Launchpad, GitHub and Arch:
 - Made `.xsessionrc` machine-neutral (no display number, no xinput id) and
   merged it into `diego`, so both laptops share one file.
 - Installed `xprintidle` and `pulseaudio-utils` on both laptops: diego's
-  idle auto-lock had never been able to run.
+  idle auto-lock had never been able to run. Added `picom` to diego.
 - Corrected this record's original claims about `set -e` and `&!` (wrong
   shell) and about 26.04 dropping barrier (it doesn't).
