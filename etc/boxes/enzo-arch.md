@@ -465,19 +465,35 @@ What costs real effort is returning the *peripheral* tooling to parity — these
 are the things that would silently stop working, and the reason item 6 stays
 aspirational.
 
-**`barrier` → `input-leap`.** Barrier 2.4.0 is X11-only. `.xinitrc` runs it as
-a server sharing keyboard and mouse with diego and george, so under sway it
-simply will not work. `input-leap` 3.0.3 is in `extra`; it is the maintained
-fork of barrier and has Wayland support.
+**`barrier` under sway — no drop-in replacement exists.** Barrier 2.4.0 is
+X11-only. `.xinitrc` runs it as the server for the work laptops (diego and
+diegbro, left of enzo), so under sway the keyboard/mouse sharing stops.
+Checked 2026-11-23; this replaces an earlier claim here that `input-leap` was
+the fix:
 
-Scope is smaller than it first looked: **george is dead** (sitting unpowered in
-the workshop as of 2026-10-26). The clients that have to move in step are now
-**diego** and **diegbro** (the new work laptop, added 2026-11-23 to the left of
-diego). Hamish's plan is to migrate all ends at once rather than run a mixed
-setup. diegbro's 26.04 reinstall may force the issue first if 26.04 no longer
-ships `barrier`; see `diegbro-ubuntu.md`.
-Still the largest piece of item 7, but a single coordinated change rather than
-an open-ended one.
+- **`input-leap` is dead.** Its GitHub repo was archived (last push
+  2025-12-01). It was never in Ubuntu's archive. Don't migrate to it.
+- **Deskflow is the maintained line** (v1.27.0, 2026-10). It's `extra/deskflow`
+  on Arch, `deskflow` 1.26 in Ubuntu 26.04, and **not packaged for 24.04**
+  (that would need flatpak or an upstream .deb). Its README says it's
+  network-compatible with Barrier and Input Leap as either server or client,
+  so machines **can migrate one at a time**. A mixed fleet is fine, and there
+  is no need to move every end at once. Deskflow enables TLS by default, but
+  this setup runs barrier with `--disable-crypto`, so turn TLS off in Deskflow
+  to talk to the barrier ends.
+- **But Deskflow's Wayland support doesn't cover sway.** It relies on the
+  InputCapture/RemoteDesktop portals via libei, which GNOME and KDE implement
+  and wlroots doesn't. A wlroots backend PR (deskflow#10283) was closed
+  unmerged in 2026-10; maintainers want it as an out-of-tree plugin someday.
+  So **enzo on sway can't be a Deskflow/barrier server.**
+- The sway-capable option is **`lan-mouse`**, which supports wlroots. It is
+  *not* wire-compatible with barrier or Deskflow, so adopting it means moving
+  enzo, diego and diegbro together. That's the all-at-once migration this
+  section used to assume, but it's needed for lan-mouse, not for input-leap.
+
+So barrier is a real blocker for item 6, not just a package swap. While enzo
+stays on i3/X11, nothing needs to change. Barrier 2.4.0 is still packaged in
+Arch, 24.04 and 26.04 (`resolute`).
 
 **`peek` → most likely `kooha`.** Peek 1.5.1 produces GIFs from a screen
 region, which is a rare and genuinely useful capability, and it is X11-only.
@@ -568,8 +584,10 @@ bump that orphans the old extension is what requires the new one.
 ## Change log
 
 **2026-11-23**: Added diegbro (the new work laptop) to the barrier server
-config as the leftmost screen (`diegbro · diego · enzo`) and updated the
-input-leap note: two clients now have to migrate with enzo, not one.
+config as the leftmost screen (`diegbro · diego · enzo`). Researched the
+barrier successor and found the old "move to input-leap" plan was wrong:
+input-leap is archived, and Deskflow (its maintained cousin) doesn't support
+sway. Rewrote the item 7 barrier note accordingly.
 
 **2026-10-29** — CloudCompare loaded OBJ meshes untextured while the same
 files, read over SSHFS, textured correctly on bisous. Not the data: Qt6 caps a
