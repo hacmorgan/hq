@@ -471,8 +471,11 @@ simply will not work. `input-leap` 3.0.3 is in `extra`; it is the maintained
 fork of barrier and has Wayland support.
 
 Scope is smaller than it first looked: **george is dead** (sitting unpowered in
-the workshop as of 2026-10-26), so only **diego** has to move in step, and
-Hamish's plan is to migrate both ends at once rather than run a mixed setup.
+the workshop as of 2026-10-26). The clients that have to move in step are now
+**diego** and **diegbro** (the new work laptop, added 2026-11-23 to the left of
+diego). Hamish's plan is to migrate all ends at once rather than run a mixed
+setup. diegbro's 26.04 reinstall may force the issue first if 26.04 no longer
+ships `barrier`; see `diegbro-ubuntu.md`.
 Still the largest piece of item 7, but a single coordinated change rather than
 an open-ended one.
 
@@ -563,6 +566,10 @@ than a prompt. Worth pairing with a `flatpak update`, because the same driver
 bump that orphans the old extension is what requires the new one.
 
 ## Change log
+
+**2026-11-23**: Added diegbro (the new work laptop) to the barrier server
+config as the leftmost screen (`diegbro · diego · enzo`) and updated the
+input-leap note: two clients now have to migrate with enzo, not one.
 
 **2026-10-29** — CloudCompare loaded OBJ meshes untextured while the same
 files, read over SSHFS, textured correctly on bisous. Not the data: Qt6 caps a
