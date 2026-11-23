@@ -35,29 +35,32 @@ fi
 
 
 # start picom
-picom &!
+picom &
 
 # set numlock to be on 
-numlockx &!
+numlockx &
 
-# set backgrounds as a backup
-feh --bg-center ~/hq/etc/wallpapers/eboy_tok.png &!
+# set background (sized for this laptop's 1920x1200 panel)
+feh --no-fehbg --bg-fill ~/hq/etc/wallpapers/eboy_tok_1920_1200.png &
 
 # set keyboard params
-xset r rate 250 50 &!
+xset r rate 250 50 &
 
-# Enable tap to click
-xinput set-prop 12 372 1
+# Tap to click is handled by configure-xinput (run from the i3 config), which
+# finds the touchpad by name. Never hardcode xinput device/property ids here:
+# this file is sourced by Xsession under `set -e`, so a failing foreground
+# command aborts the whole login.
 
 # map caps-lock to super - only required for IBM Model M. Don't want this for Displaywriter
-# setxkbmap -option caps:super &!
+# setxkbmap -option caps:super &
 
 # # start the emacs server. disown so that exiting x session doesn't kill emacs
-# emacs --daemon &!
+# emacs --daemon &
 
 # this is the last thing we do!
 # exec startxfce4
 # exec i3
 
-# start barrier client to enzo
-barrierc --display :1 --disable-crypto 192.168.0.95 &!
+# start barrier client to enzo (server config: enzo-arch dots/barrier/)
+# Inherits $DISPLAY; screen name is the hostname.
+barrierc --disable-crypto 192.168.0.95 &
