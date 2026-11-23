@@ -130,6 +130,14 @@ neighbours, **so diegbro can only be reached through diego**: if diego is off
 or asleep, diegbro is unreachable. If diego is retired, re-link diegbro
 directly to enzo's left.
 
+**Changing networks drops barrier for about 30 seconds, then it recovers on its own.**
+Pulling the Ethernet cable (verified 2026-11-23) leaves the client's TCP link
+to enzo dead. barrierc only notices when its keepalive times out ("server is
+dead", ~25–30 s after the last traffic), then redials enzo within seconds
+over whatever link is up. No restart is needed: wait half a minute before
+diagnosing. The old socket lingers on enzo in `FIN-WAIT-1` for a while, which
+is harmless.
+
 ## Next: 26.04
 
 Checked 2026-11-23 against Launchpad, GitHub and Arch:
@@ -170,6 +178,8 @@ Checked 2026-11-23 against Launchpad, GitHub and Arch:
   `diegbro_wifi`.
 - Made `.xsessionrc` machine-neutral (no display number, no xinput id) and
   merged it into `diego`, so both laptops share one file.
+- Confirmed barrier recovers by itself when the Ethernet cable is pulled
+  (~30 s keepalive gap, then reconnects over Wi-Fi).
 - Installed `xprintidle` and `pulseaudio-utils` on both laptops: diego's
   idle auto-lock had never been able to run. Added `picom` to diego.
 - Corrected this record's original claims about `set -e` and `&!` (wrong
