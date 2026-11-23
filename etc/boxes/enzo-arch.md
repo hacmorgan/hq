@@ -491,6 +491,19 @@ the fix:
   enzo, diego and diegbro together. That's the all-at-once migration this
   section used to assume, but it's needed for lan-mouse, not for input-leap.
 
+**Barrier vs the screen lock.** While the cursor is on a client screen,
+barriers holds an active grab on enzo's keyboard and pointer. i3lock can't
+grab them, so it fails to lock, and `idle-lock` retries every 5 s. Overnight
+on 2026-11-23/24, with the cursor left on diegbro, that was a visible
+lock-fail loop. `lock-screen` now presses a barrier hotkey
+(Ctrl+Alt+Super+Shift+F12 → `switchToScreen(enzo)`, in the server config)
+via `dots/i3/barrier-home` before running i3lock. The fix was tested with an
+`XGrabKeyboard` probe: AlreadyGrabbed with the cursor away, GrabSuccess after
+`barrier-home`. If the hotkey is removed from the barrier config, the bug
+comes back the first night the cursor is left on a laptop that stays awake.
+`screenSaverSync` would normally pull the cursor home, but browsers block the
+X screensaver, so it can't be relied on.
+
 So barrier is a real blocker for item 6, not just a package swap. While enzo
 stays on i3/X11, nothing needs to change. Barrier 2.4.0 is still packaged in
 Arch, 24.04 and 26.04 (`resolute`).
@@ -582,6 +595,10 @@ than a prompt. Worth pairing with a `flatpak update`, because the same driver
 bump that orphans the old extension is what requires the new one.
 
 ## Change log
+
+**2026-11-24**: enzo sat in an i3lock fail-loop overnight because barrier
+held the input grab with the cursor parked on diegbro. Added a go-home hotkey
+to the barrier server and made `lock-screen` press it first (item 7 note).
 
 **2026-11-23**: Added diegbro (the new work laptop) to the barrier server
 config as the leftmost screen (`diegbro · diego · enzo`). Researched the
