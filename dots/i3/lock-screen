@@ -7,6 +7,13 @@
 LOCK_BG=1d2021
 
 if command -v i3lock >/dev/null 2>&1; then
+    # If this machine is a barrier server and the cursor is on a client screen,
+    # barriers holds the keyboard/pointer grab and i3lock fails to lock (idle-lock
+    # then retries every few seconds, forever). Pull the cursor home first.
+    if pgrep -x barriers >/dev/null 2>&1; then
+        "$(dirname "$(readlink -f "$0")")/barrier-home" && sleep 0.3
+    fi
+
     # --nofork: xss-lock needs the locker to stay in the foreground so it can
     # track when the screen is actually unlocked.
     #   -e ignore empty password   -f show failed attempts
