@@ -74,6 +74,25 @@ the touchpad. diego's old `xinput set-prop 12 372 1` had been silently doing
 nothing. Tap-to-click comes from `configure-xinput`, which matches the
 touchpad by name, and is confirmed on for both.
 
+### Session dependencies nothing installs
+
+hq has no Ubuntu package list (`etc/distro-packagelists/` is Arch-only), so
+on both laptops the tools the session config calls were installed by hand or
+not at all. The failure mode is silent: a missing tool logs to the journal or
+pops one notification at login, and the feature quietly doesn't run.
+
+- `xprintidle` and `pulseaudio-utils` (`pactl`): listed in `DEPENDENCIES` but
+  **missing on diego too**. So since diego's i3 lock work, its `idle-lock`
+  had exited at every login ("Idle auto-lock disabled"), meaning **no idle
+  auto-lock**, and `in-call` could see the camera but not the mic. Installed
+  on both 2026-11-23. `pactl` talks to PipeWire's Pulse layer here.
+- `feh`, `picom`, `numlockx`: called from `.xsessionrc`. Installed on diegbro.
+  **diego still lacks `picom` and `numlockx`.** That's harmless (journal
+  noise), but it's the same class of gap.
+
+The 26.04 reinstall will lose all of these. Reinstall them, or better, add an
+Ubuntu list so `sysbs` does it.
+
 ## Branches
 
 On 2026-11-23, both laptops ran the same session config and the remaining
@@ -134,6 +153,8 @@ Checked 2026-11-23 against Launchpad, GitHub and Arch:
   `known_hosts` entries on enzo won't, because the host key is regenerated:
   remove both `.165` and `.4` lines.
 - **Xsession**: re-check which wrapper GDM uses (see [Session](#session)).
+- **Session packages**: reinstall the hand-installed set (see
+  [Session dependencies](#session-dependencies-nothing-installs)).
 - **Branch**: this is the point to let `diegbro-ubuntu` diverge from `diego`.
 
 ## Change log
@@ -148,5 +169,7 @@ Checked 2026-11-23 against Launchpad, GitHub and Arch:
   `diegbro_wifi`.
 - Made `.xsessionrc` machine-neutral (no display number, no xinput id) and
   merged it into `diego`, so both laptops share one file.
+- Installed `xprintidle` and `pulseaudio-utils` on both laptops: diego's
+  idle auto-lock had never been able to run.
 - Corrected this record's original claims about `set -e` and `&!` (wrong
   shell) and about 26.04 dropping barrier (it doesn't).
