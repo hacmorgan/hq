@@ -49,9 +49,15 @@ xset r rate 250 50 &!
 # map caps-lock to super - only required for IBM Model M. Don't want this for Displaywriter
 # setxkbmap -option caps:super &!
 
-# start barrier server
-barriers --config $HOME/.config/barrier/diego-enzo-george.conf \
-         --disable-crypto &!
+# start barrier server, respawning it if it dies. barriers 2.4 can segfault in
+# libXi when the cursor crosses screens while a DisplayPort monitor is waking
+# (2026-11-24); clients reconnect on their own once it is back. -f keeps it in
+# the foreground so the loop sees it exit; the loop stops when X goes away.
+( while xset q >/dev/null 2>&1; do
+      barriers -f --config $HOME/.config/barrier/diego-enzo-george.conf \
+               --disable-crypto
+      sleep 3
+  done ) >/dev/null 2>&1 &!
 
 # # start the emacs server. disown so that exiting x session doesn't kill emacs
 # emacs --daemon &!
