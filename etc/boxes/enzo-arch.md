@@ -504,6 +504,17 @@ comes back the first night the cursor is left on a laptop that stays awake.
 `screenSaverSync` would normally pull the cursor home, but browsers block the
 X screensaver, so it can't be relied on.
 
+**Barrier crashes when a monitor wakes mid-switch.** On 2026-11-24 at 14:22,
+barriers 2.4 segfaulted in `libXi` (`XPeekEvent` → `_XCopyEventCookie`). The
+cursor was crossing to diego while the Acer EI491CR (DisplayPort) dropped and
+reconnected on waking from DPMS. The same wake at 12:22 with no crossing was
+harmless, so this is a race, not something that happens on every wake. The
+visible effect was misleading: both laptops "locked themselves" ten minutes
+later, because their idle timers stopped seeing forwarded input once the
+server was gone. `.xinitrc` now respawns barriers in a loop (tested with a
+SIGSEGV: back with both clients within 9 s). It's an upstream bug in
+unmaintained software, and the loop works around it rather than fixing it.
+
 So barrier is a real blocker for item 6, not just a package swap. While enzo
 stays on i3/X11, nothing needs to change. Barrier 2.4.0 is still packaged in
 Arch, 24.04 and 26.04 (`resolute`).
@@ -595,6 +606,9 @@ than a prompt. Worth pairing with a `flatpak update`, because the same driver
 bump that orphans the old extension is what requires the new one.
 
 ## Change log
+
+**2026-11-24**: barriers segfaulted when a DisplayPort monitor woke during a
+screen crossing. `.xinitrc` now respawns it (item 7 note).
 
 **2026-11-24**: enzo sat in an i3lock fail-loop overnight because barrier
 held the input grab with the cursor parked on diegbro. Added a go-home hotkey
