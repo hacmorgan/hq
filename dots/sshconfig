@@ -29,6 +29,14 @@ Host diego_wifi
     User hamish
     HostName 192.168.0.38
 
+Host diegbro
+    User hamish
+    HostName 192.168.0.165
+
+Host diegbro_wifi
+    User hamish
+    HostName 192.168.0.4
+
 Host enzo
     User hamish
     Hostname 192.168.0.95
